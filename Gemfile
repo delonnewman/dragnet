@@ -8,6 +8,7 @@ gem 'rails', '~> 7.0.3'
 gem 'pg', '~> 1.1'
 
 gem 'unicorn'
+gem 'webrick', group: :development
 
 gem 'sprockets-rails'
 gem 'jsbundling-rails'
