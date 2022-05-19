@@ -1,6 +1,6 @@
 class Inital < ActiveRecord::Migration[7.0]
   def change
-    # TODO: add groups
+    # TODO: add groups & permissions
     create_table :users do |t|
       t.string :login, null: false, index: true
       t.string :email, null: false, index: true
@@ -18,7 +18,8 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string :slug, null: false, index: true
       t.string :description
 
-      t.belongs_to :user, null: false, index: true
+      t.integer :author_id, null: false, index: true
+      t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
 
       t.timestamps null: false, index: true
     end
@@ -29,20 +30,26 @@ class Inital < ActiveRecord::Migration[7.0]
     end
 
     create_table :questions, id: :uuid do |t|
-      t.string     :text,                       null: false
-      t.bigint     :hash_code,     index: true, null: false
-      t.string     :type,          index: true
+      t.string  :text,                       null: false
+      t.bigint  :hash_code,     index: true, null: false
+      t.string  :type,          index: true
+      t.integer :display_order, null: false
 
       t.belongs_to :question_type, index: true, null: false
       t.belongs_to :survey,        index: true, null: false
-      t.belongs_to :question,      index: true
+
+      # Required for FollowupQuestions
+      t.belongs_to :question,        index: true
+      t.belongs_to :question_optoin, index: true
     end
 
     create_table :question_options do |t|
       t.belongs_to :question, index: true, null: false
 
-      t.string  :text,  null: false, index: true
-      t.integer :scale, null: false, index: true
+      t.string  :text,   null: false, index: true
+      t.integer :weight, null: false, index: true # used for numerical weight in generated reports
+
+      t.integer :display_order, null: false, default: 0
 
       t.uuid :followup_question_id, index: true
       t.foreign_key :questions, column: :followup_question_id, primary_key: :id
