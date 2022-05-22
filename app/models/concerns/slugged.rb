@@ -9,8 +9,7 @@ module Slugged
       @types ||= {}
       return @types[ident] if @types.key?(ident)
 
-      slug = (ident.is_a?(Symbol) ? ident.name : ident.to_s).dasherize
-      @types[ident] = find_by!(slug: slug)
+      @types[ident] = find_by!(slug: Dragnet::Utils.slug(ident))
     end
 
     def slugs

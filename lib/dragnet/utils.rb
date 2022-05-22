@@ -5,6 +5,7 @@ module Dragnet
     module_function
 
     def slug(string, delimiter: '-')
+      string = string.is_a?(Symbol) ? string.name : string.to_s
       string.gsub(/\W+/, delimiter).downcase!
     end
   end
