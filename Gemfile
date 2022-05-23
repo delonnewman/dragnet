@@ -42,7 +42,11 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
 
-  gem 'gen-test', path: '../gen-test'
+  gem 'gen-test', github: 'delonnewman/gen-test'
+
+  gem 'brakeman'
+  gem 'rubocop'
+  gem 'rubocop-rails'
 end
 
 group :development do
