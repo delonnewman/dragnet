@@ -11,8 +11,6 @@ gem 'unicorn'
 gem 'webrick', group: :development
 
 gem 'sprockets-rails'
-gem 'jsbundling-rails'
-gem 'cssbundling-rails'
 gem 'bootstrap', '~> 5.1.3'
 
 gem 'turbo-rails'
@@ -43,11 +41,12 @@ group :development, :test do
 
   gem 'rspec'
   gem 'rspec-rails'
+
+  gem 'gen-test', path: '../gen-test'
 end
 
 group :development do
   gem 'web-console'
-  gem 'faker'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem 'rack-mini-profiler'

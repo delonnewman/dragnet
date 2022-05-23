@@ -32,12 +32,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   create_table "question_options", force: :cascade do |t|
     t.bigint "question_id", null: false
     t.string "text", null: false
-    t.integer "scale", null: false
+    t.integer "weight", null: false
+    t.integer "display_order", default: 0, null: false
     t.uuid "followup_question_id"
     t.index ["followup_question_id"], name: "index_question_options_on_followup_question_id"
     t.index ["question_id"], name: "index_question_options_on_question_id"
-    t.index ["scale"], name: "index_question_options_on_scale"
     t.index ["text"], name: "index_question_options_on_text"
+    t.index ["weight"], name: "index_question_options_on_weight"
   end
 
   create_table "question_types", force: :cascade do |t|
@@ -51,11 +52,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.string "text", null: false
     t.bigint "hash_code", null: false
     t.string "type"
+    t.integer "display_order", null: false
     t.bigint "question_type_id", null: false
     t.bigint "survey_id", null: false
     t.bigint "question_id"
+    t.bigint "question_optoin_id"
     t.index ["hash_code"], name: "index_questions_on_hash_code"
     t.index ["question_id"], name: "index_questions_on_question_id"
+    t.index ["question_optoin_id"], name: "index_questions_on_question_optoin_id"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
     t.index ["survey_id"], name: "index_questions_on_survey_id"
     t.index ["type"], name: "index_questions_on_type"
@@ -72,14 +76,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.string "name", null: false
     t.string "slug", null: false
     t.string "description"
-    t.bigint "user_id", null: false
+    t.bigint "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_surveys_on_author_id"
     t.index ["created_at"], name: "index_surveys_on_created_at"
     t.index ["name"], name: "index_surveys_on_name"
     t.index ["slug"], name: "index_surveys_on_slug"
     t.index ["updated_at"], name: "index_surveys_on_updated_at"
-    t.index ["user_id"], name: "index_surveys_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -97,4 +101,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   end
 
   add_foreign_key "question_options", "questions", column: "followup_question_id"
+  add_foreign_key "surveys", "users", column: "author_id", on_delete: :cascade
 end

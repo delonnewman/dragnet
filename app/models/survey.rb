@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Survey < ApplicationRecord
+  include Slugged
+
   belongs_to :author, class_name: 'User'
 
   has_many :questions, dependent: :delete_all

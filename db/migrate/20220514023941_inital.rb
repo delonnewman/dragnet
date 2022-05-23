@@ -18,7 +18,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string :slug, null: false, index: true
       t.string :description
 
-      t.integer :author_id, null: false, index: true
+      t.bigint :author_id, null: false, index: true
       t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
 
       t.timestamps null: false, index: true
