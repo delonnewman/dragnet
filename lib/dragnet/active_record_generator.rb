@@ -10,7 +10,10 @@ module Dragnet
       end
 
       def generate(*args)
-        new(active_record_class).generate(*args)
+        obj = new(active_record_class)
+        return obj.generate if args.empty?
+
+        obj.generate(*args)
       end
 
       def active_record_class_name
@@ -39,6 +42,7 @@ module Dragnet
 
     # TODO: add logic for generating instances through reflection
     def generate(other_attributes = EMPTY_HASH)
+      return call                            if respond_to?(:call) && other_attributes.empty?
       return call(other_attributes.generate) if respond_to?(:call)
 
       active_record_class.new(attributes.merge(other_attributes.generate))

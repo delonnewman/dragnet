@@ -30,4 +30,10 @@ module Slugged
   def ident
     slug.underscore.to_sym
   end
+
+  def ===(other)
+    return false unless other.is_a?(self.class)
+
+    ident == other.ident
+  end
 end

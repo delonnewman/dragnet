@@ -33,7 +33,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string  :text,                       null: false
       t.bigint  :hash_code,     index: true, null: false
       t.string  :type,          index: true
-      t.integer :display_order, null: false
+      t.integer :display_order, null: false, default: 0
 
       t.belongs_to :question_type, index: true, null: false
       t.belongs_to :survey,        index: true, null: false

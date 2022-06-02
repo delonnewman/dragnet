@@ -13,6 +13,9 @@ gem 'webrick', group: :development
 gem 'sprockets-rails'
 gem 'bootstrap', '~> 5.1.3'
 
+gem 'pry'
+gem 'pry-rails'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
 
