@@ -7,15 +7,11 @@ gem 'rails', '~> 7.0.3'
 
 gem 'pg', '~> 1.1'
 
-gem 'unicorn'
+gem 'unicorn', require: false
 gem 'webrick', group: :development
 
 gem 'sprockets-rails'
 gem 'bootstrap', '~> 5.1.3'
-
-gem 'turbo-rails'
-gem 'stimulus-rails'
-gem 'view_component'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
