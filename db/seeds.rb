@@ -7,12 +7,36 @@ QuestionType.create(
 
 # Generate some sample data unless in production
 unless Rails.env.production?
-  users   = 5.times.map { User.generate.tap(&:save!) }
-  surveys = users.flat_map { |u| 5.times.map { Survey[user: u].generate.tap(&:save!) } }
+  puts 'Generating some data that should aid development 🦫🚧 ...'
 
-  surveys.each do |s|
-    (50..100).to_a.sample.times do
-      Reply[survey: s].generate
+  print 'Generating Users...'
+  users = 5.times.map do
+    User.generate.tap do |u|
+      u.save!
+      print '.'
     end
   end
+  puts 'Done.'
+
+  print 'Generating Surveys...'
+  surveys = users.flat_map do |u|
+    5.times.map do
+      Survey[user: u].generate.tap do |s|
+        s.save!
+        print '.'
+      end
+    end
+  end
+  puts 'Done.'
+
+  print 'Generating Replies...'
+  surveys.each do |s|
+    (50..100).to_a.sample.times do
+      Reply[survey: s].generate.tap do |r|
+        r.save!
+        print '.'
+      end
+    end
+  end
+  puts 'Done.'
 end

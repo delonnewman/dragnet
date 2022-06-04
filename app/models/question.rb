@@ -8,7 +8,6 @@ class Question < ApplicationRecord
   has_many :followup_questions, dependent: :delete_all
 
   after_initialize do
-    self.hash_code = text.hash
-    self.display_order = 0 unless display_order
+    self.hash_code = Dragnet::Utils.hash_code(text)
   end
 end

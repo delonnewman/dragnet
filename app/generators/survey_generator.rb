@@ -5,7 +5,9 @@ class SurveyGenerator < Dragnet::ActiveRecordGenerator
   def call(other_attributes = DEFAULT_SETTINGS)
     Survey.new(name: Faker::Lorem.sentence, author: attributes.fetch(:author, User.generate)) do |s|
       min, max = other_attributes.fetch(:questions).values_at(:min, :max)
-      s.questions_attributes = (min..max).to_a.sample.times.map { Question[survey: s].generate.attributes }
+      (min..max).to_a.sample.times do
+        s.questions << Question[survey: s].generate
+      end
     end
   end
 end

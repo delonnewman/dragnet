@@ -15,22 +15,26 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   enable_extension "plpgsql"
 
   create_table "answers", force: :cascade do |t|
-    t.bigint "survey_id", null: false
-    t.bigint "reply_id", null: false
-    t.bigint "question_id", null: false
+    t.uuid "survey_id", null: false
+    t.uuid "reply_id", null: false
+    t.uuid "question_id", null: false
     t.bigint "question_option_id"
     t.string "short_text_value"
     t.text "long_text_value"
     t.integer "number_value"
     t.decimal "float_value"
+    t.index ["float_value"], name: "index_answers_on_float_value"
+    t.index ["long_text_value"], name: "index_answers_on_long_text_value"
+    t.index ["number_value"], name: "index_answers_on_number_value"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["question_option_id"], name: "index_answers_on_question_option_id"
     t.index ["reply_id"], name: "index_answers_on_reply_id"
+    t.index ["short_text_value"], name: "index_answers_on_short_text_value"
     t.index ["survey_id"], name: "index_answers_on_survey_id"
   end
 
   create_table "question_options", force: :cascade do |t|
-    t.bigint "question_id", null: false
+    t.uuid "question_id", null: false
     t.string "text", null: false
     t.integer "weight", null: false
     t.integer "display_order", default: 0, null: false
@@ -52,21 +56,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.string "text", null: false
     t.bigint "hash_code", null: false
     t.string "type"
-    t.integer "display_order", null: false
+    t.integer "display_order", default: 0, null: false
     t.bigint "question_type_id", null: false
-    t.bigint "survey_id", null: false
-    t.bigint "question_id"
-    t.bigint "question_optoin_id"
+    t.uuid "survey_id", null: false
+    t.uuid "question_id"
+    t.bigint "question_option_id"
     t.index ["hash_code"], name: "index_questions_on_hash_code"
     t.index ["question_id"], name: "index_questions_on_question_id"
-    t.index ["question_optoin_id"], name: "index_questions_on_question_optoin_id"
+    t.index ["question_option_id"], name: "index_questions_on_question_option_id"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
     t.index ["survey_id"], name: "index_questions_on_survey_id"
     t.index ["type"], name: "index_questions_on_type"
   end
 
   create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "survey_id", null: false
+    t.uuid "survey_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["survey_id"], name: "index_replies_on_survey_id"

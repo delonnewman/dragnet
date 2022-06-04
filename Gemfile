@@ -16,6 +16,8 @@ gem 'bootstrap', '~> 5.1.3'
 gem 'pry'
 gem 'pry-rails'
 
+gem 'murmurhash3'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
 

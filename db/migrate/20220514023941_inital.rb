@@ -36,15 +36,15 @@ class Inital < ActiveRecord::Migration[7.0]
       t.integer :display_order, null: false, default: 0
 
       t.belongs_to :question_type, index: true, null: false
-      t.belongs_to :survey,        index: true, null: false
+      t.uuid       :survey_id,     index: true, null: false
 
       # Required for FollowupQuestions
-      t.belongs_to :question,        index: true
-      t.belongs_to :question_optoin, index: true
+      t.uuid       :question_id,     index: true
+      t.belongs_to :question_option, index: true
     end
 
     create_table :question_options do |t|
-      t.belongs_to :question, index: true, null: false
+      t.uuid :question_id, index: true, null: false
 
       t.string  :text,   null: false, index: true
       t.integer :weight, null: false, index: true # used for numerical weight in generated reports
@@ -56,22 +56,22 @@ class Inital < ActiveRecord::Migration[7.0]
     end
 
     create_table :replies, id: :uuid do |t|
-      t.belongs_to :survey, index: true, null: false
+      t.uuid :survey_id, index: true, null: false
 
       t.timestamps
     end
 
     create_table :answers do |t|
-      t.belongs_to :survey,   null: false, index: true
-      t.belongs_to :reply,    null: false, index: true
-      t.belongs_to :question, null: false, index: true
+      t.uuid :survey_id,   null: false, index: true
+      t.uuid :reply_id,    null: false, index: true
+      t.uuid :question_id, null: false, index: true
 
       # values
-      t.belongs_to :question_option
-      t.string     :short_text_value
-      t.text       :long_text_value
-      t.integer    :number_value
-      t.decimal    :float_value
+      t.belongs_to :question_option,  null: true, index: true
+      t.string     :short_text_value, null: true, index: true
+      t.text       :long_text_value,  null: true, index: true
+      t.integer    :number_value,     null: true, index: true
+      t.decimal    :float_value,      null: true, index: true
     end
   end
 end

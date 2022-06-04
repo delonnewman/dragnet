@@ -4,15 +4,13 @@ class AnswerGenerator < Dragnet::ActiveRecordGenerator
     r = attributes.fetch(:reply)     { raise 'A reply attribute is required'  }
     q = attributes.fetch(:question)  { raise 'A quesiton attribute is required' }
 
-    v = case q.question_type
+    v = case q.question_type.ident
         when :short_answer
-          Faker::Lorem.sentence
+          ShortAnswer.generate
         when :paragraph
-          Faker::Lorem.sentences
-        when :multiple_choice
-          q.question_options.to_a.sample((1..2).to_a.sample)
-        when :checkboxes
-          q.question_options.to_a.sample
+          Paragraph.generate
+        when :multiple_choice, :checkboxes
+          QuestionOptionAnswer[q].generate
         end
 
     Answer.new(survey: s, reply: r, question: q, value: v)
