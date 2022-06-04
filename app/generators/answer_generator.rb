@@ -13,6 +13,9 @@ class AnswerGenerator < Dragnet::ActiveRecordGenerator
           QuestionOptionAnswer[q].generate
         end
 
-    Answer.new(survey: s, reply: r, question: q, value: v)
+    Answer.new(survey: s, reply: r, question: q) do |a|
+      a.question_type = q.question_type
+      a.value = v
+    end
   end
 end

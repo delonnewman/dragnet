@@ -6,14 +6,10 @@ class Report
   end
 
   def questions
-    @questions ||= Question.where(id: question_ids)
-  end
-
-  def answers
-    @answers ||= Answer.where(question_id: question_ids)
+    @questions ||= Question.where(id: question_ids).select(:id, :text).to_a
   end
 
   def replies
-    @replies ||= Reply.joins(:answers).where('answers.question_id in (?)', question_ids)
+    @replies ||= Reply.includes(:answers).joins(:answers).where('answers.question_id in (?)', question_ids)
   end
 end

@@ -57,6 +57,7 @@ class Inital < ActiveRecord::Migration[7.0]
 
     create_table :replies, id: :uuid do |t|
       t.uuid :survey_id, index: true, null: false
+      t.string :answer_records
 
       t.timestamps
     end
@@ -65,6 +66,8 @@ class Inital < ActiveRecord::Migration[7.0]
       t.uuid :survey_id,   null: false, index: true
       t.uuid :reply_id,    null: false, index: true
       t.uuid :question_id, null: false, index: true
+
+      t.belongs_to :question_type, index: true # cached data
 
       # values
       t.belongs_to :question_option,  null: true, index: true

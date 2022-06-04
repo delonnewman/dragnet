@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.uuid "survey_id", null: false
     t.uuid "reply_id", null: false
     t.uuid "question_id", null: false
+    t.bigint "question_type_id"
     t.bigint "question_option_id"
     t.string "short_text_value"
     t.text "long_text_value"
@@ -30,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.index ["number_value"], name: "index_answers_on_number_value"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["question_option_id"], name: "index_answers_on_question_option_id"
+    t.index ["question_type_id"], name: "index_answers_on_question_type_id"
     t.index ["reply_id"], name: "index_answers_on_reply_id"
     t.index ["short_text_value"], name: "index_answers_on_short_text_value"
     t.index ["survey_id"], name: "index_answers_on_survey_id"
@@ -73,6 +75,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
 
   create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "survey_id", null: false
+    t.string "answer_records"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["survey_id"], name: "index_replies_on_survey_id"

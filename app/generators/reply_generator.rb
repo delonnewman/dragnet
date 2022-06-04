@@ -4,7 +4,7 @@ class ReplyGenerator < Dragnet::ActiveRecordGenerator
 
     Reply.new(survey: s) do |r|
       s.questions.each do |q|
-        r.answers << Answer[survey: s, reply: r, question: q].generate
+        r.answers << Answer[survey: s, reply: r, question: q, question_type_id: q.question_type_id].generate
       end
     end
   end

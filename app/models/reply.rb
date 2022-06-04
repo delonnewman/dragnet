@@ -6,11 +6,13 @@ class Reply < ApplicationRecord
   has_many :answers
   accepts_nested_attributes_for :answers
 
+  serialize :answer_records
+
+  before_save do
+    self.answer_records = answers
+  end
+
   def answers_to(question)
-    if new_record?
-      answers.select { |a| a.question == question }
-    else
-      answers.where(question: question)
-    end
+    answer_records.select { |a| a.question_id == question.id }
   end
 end

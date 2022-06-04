@@ -5,10 +5,14 @@ class Answer < ApplicationRecord
 
   # for question_option values
   belongs_to :question_option, optional: true
+  belongs_to :question_type
 
-  # TODO: Cache this
-  def question_type
-    question.question_type
+  before_save do
+    self.question_type = question.question_type if question
+  end
+
+  def to_s
+    value.to_s
   end
 
   def value=(value)
@@ -31,9 +35,5 @@ class Answer < ApplicationRecord
     when :multiple_choice, :checkboxes
       question_option
     end
-  end
-
-  def to_s
-    value.to_s
   end
 end

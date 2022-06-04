@@ -2,7 +2,6 @@
 
 class Survey < ApplicationRecord
   include Slugged
-  include Reportable
 
   belongs_to :author, class_name: 'User'
 
