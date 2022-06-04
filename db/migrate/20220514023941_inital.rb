@@ -72,6 +72,8 @@ class Inital < ActiveRecord::Migration[7.0]
       t.text       :long_text_value,  null: true, index: true
       t.integer    :number_value,     null: true, index: true
       t.decimal    :float_value,      null: true, index: true
+
+      t.timestamps
     end
   end
 end

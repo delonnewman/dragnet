@@ -1,0 +1,20 @@
+<h1><%= @report.name %></h1>
+
+<table>
+  <thead>
+      <tr>
+          <% @report.questions.each do |question| %>
+              <th><%= question.text %></th>
+          <% end %>
+      </tr>
+  </thead>
+  <tbody>
+      <% @replies.each do |reply| %>
+          <tr>
+              <% @report.questions.each do |question| %>
+                  <td><%= reply.answers_to(question).join(', ') %></td>
+              <% end %>
+          </tr>
+      <% end %>
+  </tbody>
+</table>

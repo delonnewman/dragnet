@@ -23,6 +23,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.text "long_text_value"
     t.integer "number_value"
     t.decimal "float_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["float_value"], name: "index_answers_on_float_value"
     t.index ["long_text_value"], name: "index_answers_on_long_text_value"
     t.index ["number_value"], name: "index_answers_on_number_value"
