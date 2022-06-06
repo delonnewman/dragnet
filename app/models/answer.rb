@@ -7,7 +7,7 @@ class Answer < ApplicationRecord
   belongs_to :question_option, optional: true
   belongs_to :question_type
 
-  before_save do
+  before_validation do
     self.question_type = question.question_type if question
   end
 

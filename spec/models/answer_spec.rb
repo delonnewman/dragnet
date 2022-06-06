@@ -3,10 +3,12 @@ require 'rails_helper'
 RSpec.describe Answer, type: :model do
   describe '#new' do
     context 'when a question is given, but no question type' do
-      let(:question) { Question.new(question_type: QuestionType.short_answer) }
-      subject(:answer) { described_class.new(question: question) }
+      let(:survey) { Survey.generate.tap(&:save!) }
+      let(:question) { survey.questions.to_a.sample }
+      let(:reply) { Reply[survey: survey].generate }
+      subject(:answer) { described_class.create!(survey: survey, reply: reply, question: question) }
 
-      it 'will have the same question type as the question' do
+      it 'the question type will be the same as the question' do
         expect(answer.question_type).to eq(question.question_type)
       end
     end
