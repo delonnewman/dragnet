@@ -6,6 +6,7 @@
                     <%= survey.name %>
                 </div>
                 <%= link_to 'View Data', report_path(question_ids: survey.question_ids, name: survey.name) %>
+                <%= link_to 'Reply', new_reply_path(survey_id: survey.id) %>
             </div>
         </div>
     <% end %>

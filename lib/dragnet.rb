@@ -1,4 +1,5 @@
 require_relative 'dragnet/utils'
+require_relative 'dragnet/core_ext'
 
 # Generators
 require_relative 'dragnet/generator'
