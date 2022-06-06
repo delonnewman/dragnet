@@ -15,6 +15,10 @@ class Answer < ApplicationRecord
     value.to_s
   end
 
+  def blank?
+    value.blank?
+  end
+
   def value=(value)
     case question_type.ident
     when :short_answer
