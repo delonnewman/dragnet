@@ -8,6 +8,8 @@ class Reply < ApplicationRecord
 
   serialize :answer_records
 
+  def_delegators :question, :survey
+
   before_save do
     self.answer_records = answers
   end

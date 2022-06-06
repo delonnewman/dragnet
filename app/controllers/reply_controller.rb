@@ -1,4 +1,6 @@
 class ReplyController < ApplicationController
+  layout 'external'
+
   def new
     survey = Survey.find_by_short_id!(params.require(:survey_id))
     reply  = Reply.create!(survey: survey)
@@ -27,7 +29,7 @@ class ReplyController < ApplicationController
   private
 
   def replies
-    Reply.includes(:survey, :answers)
+    Reply.includes(:survey, :answers, questions: [:question_type])
   end
 
   def update_params
