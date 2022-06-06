@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   get 'report', to: 'reports#show'
 
   resources :reply, only: %i[edit update] do
-    get 'successful'
+    get 'success'
   end
 
   # survey name is optional

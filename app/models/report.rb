@@ -10,6 +10,6 @@ class Report
   end
 
   def replies
-    @replies ||= Reply.includes(:answers).joins(:answers).where('answers.question_id in (?)', question_ids)
+    @replies ||= Reply.includes(:answers).joins(:answers).where('answers.question_id in (?)', question_ids).order('replies.created_at DESC')
   end
 end

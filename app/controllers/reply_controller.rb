@@ -16,14 +16,14 @@ class ReplyController < ApplicationController
     @reply = replies.find(params[:id])
 
     if @reply.update(update_params)
-      redirect_to reply_successful_path(@reply)
+      redirect_to reply_success_path(@reply)
     else
       render :edit
     end
   end
 
   def success
-    @reply = replies.find(params[:id])
+    @reply = replies.find(params[:reply_id])
   end
 
   private

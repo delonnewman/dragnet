@@ -14,4 +14,8 @@ module ReportsHelper
   def fmt_date(date)
     date.strftime('%Y-%m-%d')
   end
+
+  def fmt_datetime(date)
+    date.strftime('%Y-%m-%d %l:%M %p')
+  end
 end

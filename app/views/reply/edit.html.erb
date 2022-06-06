@@ -10,7 +10,7 @@
                         <span class="text-muted">(required)</span>
                     <% end %>
                 </h5>
-                <%= fields_for "answers_attributes[#{question.id}]", @reply.answers.build(survey_id: @reply.survey_id, question: question, question_type: question.question_type) do |answer_fields| %>
+                <%= fields_for "reply[answers_attributes][#{question.id}]", @reply.answers.build(survey_id: @reply.survey_id, question: question, question_type: question.question_type) do |answer_fields| %>
                     <%= answer_fields.hidden_field :reply_id %>
                     <%= answer_fields.hidden_field :survey_id %>
                     <%= answer_fields.hidden_field :question_id %>

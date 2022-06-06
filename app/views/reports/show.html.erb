@@ -18,7 +18,7 @@
         <tbody>
             <% @replies.each do |reply| %>
                 <tr>
-                    <td><%= fmt_date(reply.created_at) %></td>
+                    <td class="text-nowrap text-muted"><%= fmt_datetime(reply.created_at) %></td>
                     <% @report.questions.each do |question| %>
                         <td class="text-truncate" style="max-width: 150px" title="<%= answers_text(reply, question) %>">
                           <%= answers_text(reply, question) do %>
