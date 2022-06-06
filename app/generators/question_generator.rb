@@ -5,6 +5,7 @@ class QuestionGenerator < Dragnet::ActiveRecordGenerator
       q.text          = Faker::Lorem.question
       q.survey        = attributes.fetch(:survey) { raise 'A survey attribute is required' }
       q.question_type = attributes.fetch(:question_type, QuestionType.generate)
+      q.required      = Faker::Boolean.boolean(true_ratio: 0.3)
 
       case q.question_type.ident
       when :multiple_choice, :checkboxes

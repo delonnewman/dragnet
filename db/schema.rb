@@ -61,6 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.bigint "hash_code", null: false
     t.string "type"
     t.integer "display_order", default: 0, null: false
+    t.boolean "required", default: false, null: false
     t.bigint "question_type_id", null: false
     t.uuid "survey_id", null: false
     t.uuid "question_id"
