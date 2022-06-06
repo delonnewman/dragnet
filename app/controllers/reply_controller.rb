@@ -1,6 +1,7 @@
 class ReplyController < ApplicationController
   def new
-    reply = Reply.create!(params.assert_keys(:survey_id))
+    survey = Survey.find_by_short_id!(params.require(:survey_id))
+    reply  = Reply.create!(survey: survey)
 
     redirect_to edit_reply_path(reply)
   end

@@ -3,7 +3,11 @@ Rails.application.routes.draw do
 
   get 'report', to: 'reports#show'
 
-  resources :reply, only: %i[new edit update] do
+  resources :reply, only: %i[edit update] do
     get 'successful'
   end
+
+  # survey name is optional
+  get '/reply/to/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
+  get '/reply/to/:survey_id', to: 'reply#new'
 end

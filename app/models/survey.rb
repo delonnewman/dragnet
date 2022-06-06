@@ -2,6 +2,7 @@
 
 class Survey < ApplicationRecord
   include Slugged
+  include UniquelyIdentified
 
   belongs_to :author, class_name: 'User'
 

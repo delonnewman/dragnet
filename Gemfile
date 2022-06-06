@@ -16,7 +16,9 @@ gem 'bootstrap', '~> 5.1.3'
 gem 'pry'
 gem 'pry-rails'
 
+# encoding
 gem 'murmurhash3'
+gem 'shortuuid'
 
 gem 'jbuilder'
 
