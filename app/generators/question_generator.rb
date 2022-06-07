@@ -9,8 +9,9 @@ class QuestionGenerator < Dragnet::ActiveRecordGenerator
 
       case q.question_type.ident
       when :multiple_choice, :checkboxes
-        (2..5).to_a.sample.times do
-          q.question_options << QuestionOption[question: q].generate
+        count = (2..5).to_a.sample
+        count.times do |i|
+          q.question_options << QuestionOption[question: q, weight: i - (count / 2)].generate
         end
       end
     end

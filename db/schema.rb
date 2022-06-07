@@ -52,6 +52,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   create_table "question_types", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
+    t.boolean "countable", default: false, null: false
+    t.index ["countable"], name: "index_question_types_on_countable"
     t.index ["name"], name: "index_question_types_on_name"
     t.index ["slug"], name: "index_question_types_on_slug"
   end

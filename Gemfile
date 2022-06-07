@@ -10,8 +10,11 @@ gem 'pg', '~> 1.1'
 gem 'unicorn', require: false
 gem 'webrick', group: :development
 
-gem 'sprockets-rails'
+# UI / Assets
 gem 'bootstrap', '~> 5.1.3'
+gem 'chartkick'
+gem 'font-awesome-rails'
+gem 'sprockets-rails'
 
 gem 'pry'
 gem 'pry-rails'

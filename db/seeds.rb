@@ -1,8 +1,8 @@
 QuestionType.create(
   [{ name: 'Short Answer' },
    { name: 'Paragraph' },
-   { name: 'Multiple Choice' },
-   { name: 'Checkboxes' }]
+   { name: 'Multiple Choice', countable: true },
+   { name: 'Checkboxes', countable: true }]
 )
 
 # Generate some sample data unless in production

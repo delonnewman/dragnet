@@ -27,6 +27,7 @@ class Inital < ActiveRecord::Migration[7.0]
     create_table :question_types do |t|
       t.string :name, null: false, index: true
       t.string :slug, null: false, index: true
+      t.boolean :countable, null: false, index: true, default: false
     end
 
     create_table :questions, id: :uuid do |t|

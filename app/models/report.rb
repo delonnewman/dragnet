@@ -12,4 +12,8 @@ class Report
   def replies
     @replies ||= Reply.includes(:answers).joins(:answers).where('answers.question_id in (?)', question_ids).order('replies.created_at DESC')
   end
+
+  def answers
+    @answers ||= Answer.includes(question: [:question_type]).where(question_id: question_ids)
+  end
 end
