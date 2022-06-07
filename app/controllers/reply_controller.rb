@@ -15,7 +15,7 @@ class ReplyController < ApplicationController
   def update
     @reply = replies.find(params[:id])
 
-    if @reply.update(update_params)
+    if @reply.submitted!.update(update_params)
       redirect_to reply_success_path(@reply)
     else
       render :edit

@@ -79,8 +79,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "survey_id", null: false
     t.string "answer_records"
+    t.boolean "submitted", default: false, null: false
+    t.datetime "submitted_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["submitted"], name: "index_replies_on_submitted"
     t.index ["survey_id"], name: "index_replies_on_survey_id"
   end
 

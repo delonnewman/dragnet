@@ -1,6 +1,3 @@
-# TODO: add timestamped states (i.e. created, submitted)
-# they should only become visible for reporting when in the "submitted" state
-# and "submitted_at" timestamp should be used for reporting purposes
 class Reply < ApplicationRecord
   belongs_to :survey
 
@@ -17,5 +14,11 @@ class Reply < ApplicationRecord
 
   def answers_to(question)
     answer_records.select { |a| a.question_id == question.id }
+  end
+
+  def submitted!(submitted_at = Time.now)
+    self.submitted = true
+    self.submitted_at = submitted_at
+    self
   end
 end

@@ -9,11 +9,15 @@ class Report
     @questions ||= Question.where(id: question_ids).select(:id, :text).to_a
   end
 
-  def replies
-    @replies ||= Reply.includes(:answers).joins(:answers).where('answers.question_id in (?)', question_ids).order('replies.created_at DESC')
+  def answers
+    Answer.includes(question: [:question_type]).where(question_id: question_ids)
   end
 
-  def answers
-    @answers ||= Answer.includes(question: [:question_type]).where(question_id: question_ids)
+  def replies
+    Reply
+      .includes(:answers)
+      .joins(:answers)
+      .where('replies.submitted and answers.question_id in (?)', question_ids)
+      .order('replies.created_at DESC')
   end
 end

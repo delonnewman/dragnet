@@ -3,8 +3,10 @@ class ReplyGenerator < Dragnet::ActiveRecordGenerator
     s = attributes.fetch(:survey) { raise 'A survey attribute is required' }
 
     Reply.new(survey: s) do |r|
-      r.created_at = Faker::Date.between(from: 2.years.ago, to: Date.today)
-      r.updated_at = r.created_at
+      r.created_at   = Faker::Date.between(from: 2.years.ago, to: Date.today)
+      r.updated_at   = r.created_at
+      r.submitted    = Faker::Boolean.boolean(true_ratio: 0.8)
+      r.submitted_at = r.created_at if r.submitted?
 
       s.questions.each do |q|
         next unless q.required? || Faker::Boolean.boolean(true_ratio: 0.6)
