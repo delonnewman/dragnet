@@ -61,6 +61,9 @@ class Inital < ActiveRecord::Migration[7.0]
       t.uuid :survey_id, index: true, null: false
       t.string :answer_records
 
+      t.boolean :submitted, null: false, index: true, default: false
+      t.timestamp :submitted_at
+
       t.timestamps
     end
 
