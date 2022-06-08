@@ -96,6 +96,10 @@ GEM
       reline (>= 0.2.7)
     diff-lcs (1.5.0)
     digest (3.1.0)
+    edn (1.1.1)
+    edn_turbo (0.7.4)
+      edn (~> 1.1)
+      rake (>= 12.3, < 14.0)
     erubi (1.10.0)
     execjs (2.8.1)
     faker (2.21.0)
@@ -280,6 +284,7 @@ DEPENDENCIES
   bullet
   chartkick
   debug
+  edn_turbo
   font-awesome-rails
   gen-test!
   jbuilder

@@ -19,9 +19,10 @@ gem 'sprockets-rails'
 gem 'pry'
 gem 'pry-rails'
 
-# encoding
+# encoding / data formats
 gem 'murmurhash3'
 gem 'shortuuid'
+gem 'edn_turbo'
 
 gem 'jbuilder'
 
