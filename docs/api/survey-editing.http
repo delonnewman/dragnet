@@ -1,0 +1,3 @@
+-*- restclient -*-
+
+GET http://localhost:3000/api/v1/editing/surveys/111f53fe-8de2-4658-9e2a-68d005189a3f

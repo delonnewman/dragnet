@@ -24,6 +24,16 @@ class Inital < ActiveRecord::Migration[7.0]
       t.timestamps null: false, index: true
     end
 
+    create_table :survey_drafts do |t|
+      t.uuid :survey_id, null: false, index: true
+      t.blob :survey_data
+
+      t.boolean :published, index: true, null: false, default: false
+      t.timestamp :published_at, index: true
+
+      t.timestamp :created_at, index: true
+    end
+
     create_table :question_types do |t|
       t.string :name, null: false, index: true
       t.string :slug, null: false, index: true

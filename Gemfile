@@ -24,6 +24,7 @@ gem 'murmurhash3'
 gem 'shortuuid'
 gem 'edn_turbo'
 
+gem 'activerecord-pull-alpha'
 gem 'jbuilder'
 
 gem 'pagy'

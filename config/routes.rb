@@ -13,4 +13,8 @@ Rails.application.routes.draw do
   # survey name is optional
   get '/reply/to/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
   get '/reply/to/:survey_id', to: 'reply#new'
+
+  scope '/api/v1/editing' do
+    resources :survey_editor, path: '/surveys', only: %i[show update]
+  end
 end
