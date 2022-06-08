@@ -30,14 +30,22 @@ class Answer < ApplicationRecord
     end
   end
 
-  def value
+  def text_value
     case question_type.ident
     when :short_answer
       short_text_value
     when :paragraph
       long_text_value
     when :multiple_choice, :checkboxes
-      question_option
+      question_option&.text
+    end
+  end
+  alias value text_value
+
+  def number_value
+    case question_type.ident
+    when :multiple_choice, :checkboxes
+      question_option&.weight
     end
   end
 end

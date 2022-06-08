@@ -12,12 +12,19 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-light mb-3">
         <div class="container-fluid">
-            <a href="<%= root_path %>" class="navbar-brand mb-0 h1">Dragnet</a>
+          <a href="<%= root_path %>" class="navbar-brand mb-0 h1">
+            Dragnet
+            <% unless Rails.env.production? %>
+                <span class="badge bg-danger"><%= Rails.env %></span>
+            <% end %>
+          </a>
         </div>
     </nav>
 
     <main class="container-fluid">
         <%= yield %>
     </main>
+
+    <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
   </body>
 </html>

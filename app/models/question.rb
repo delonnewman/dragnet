@@ -10,4 +10,8 @@ class Question < ApplicationRecord
   before_save do
     self.hash_code = Dragnet::Utils.hash_code(text) if text
   end
+
+  def countable?
+    question_type.countable?
+  end
 end

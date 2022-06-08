@@ -3,6 +3,9 @@ Rails.application.routes.draw do
 
   get 'report', to: 'reports#show'
 
+  get 'stats', to: 'stats#show'
+  get 'surveys/:survey_id/stats', to: 'stats#show', as: 'survey_stats'
+
   resources :reply, only: %i[edit update] do
     get 'success'
   end
