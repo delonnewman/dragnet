@@ -7,6 +7,8 @@ gem 'rails', '~> 7.0.3'
 
 gem 'pg', '~> 1.1'
 
+# HTTP
+gem 'rack-cors'
 gem 'unicorn', require: false
 gem 'webrick', group: :development
 
@@ -20,9 +22,9 @@ gem 'pry'
 gem 'pry-rails'
 
 # encoding / data formats
+gem 'transit-ruby', require: 'transit'
 gem 'murmurhash3'
 gem 'shortuuid'
-gem 'edn_turbo'
 
 gem 'activerecord-pull-alpha'
 gem 'jbuilder'

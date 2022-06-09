@@ -4,5 +4,9 @@
   "private": true,
   "devDependencies": {
     "shadow-cljs": "2.19.1"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
   }
 }

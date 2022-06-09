@@ -5,13 +5,15 @@
   "src/test"]
 
  :dependencies
- [[reagent "1.1.1"]]
-
- :dev-http {8080 "public"}
+ [[reagent "1.1.1"]
+  [cljs-http "0.1.46"]
+  [com.cognitect/transit-cljs "0.8.269"]]
 
  :builds
  {:frontend
   {:target :browser
+   :output-dir "../public/js/editor"
+   :asset-path "../public"
    :modules {:main {:init-fn dragnet.editor.core/init}}
    }}
  }
