@@ -4,13 +4,16 @@ class SurveyEditorController < ActionController::API
     data = survey.pull(
       :name,
       :description,
-      questions: %i[id
-                    text
-                    display_order
-                    required
-                    question_type_id
-                    question_id
-                    question_option_id]
+      questions: [
+        :id,
+        :text,
+        :display_order,
+        :required,
+        {
+          question_options: %i[id text weight],
+          question_type: %i[id name slug]
+        }
+      ]
     )
 
     render json: transit(data), content_type: 'application/transit+json'
