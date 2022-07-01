@@ -1,7 +1,7 @@
 class SurveyEditorController < ActionController::API
   # GET - /api/v1/editing/surveys/:id
   def show
-    data = survey.pull(
+    survey_data = survey.pull(
       :name,
       :description,
       questions: [
@@ -9,12 +9,17 @@ class SurveyEditorController < ActionController::API
         :text,
         :display_order,
         :required,
+        :question_type_id,
         {
-          question_options: %i[id text weight],
-          question_type: %i[id name slug]
+          question_options: %i[id text weight]
         }
       ]
     )
+
+    data = {
+      survey: survey_data.merge(questions: survey_data[:questions].group_by { |q| q[:id] }.transform_values(&:first)),
+      question_types: QuestionType.all.pull(:id, :name, :slug).group_by { |t| t[:id] }.transform_values(&:first)
+    }
 
     render json: transit(data), content_type: 'application/transit+json'
   end
@@ -36,7 +41,7 @@ class SurveyEditorController < ActionController::API
     io.string
   end
 
-  def read_transit(string)
-    Transit::Reader.new(:json, StringIO.new(string)).read
+  def read_transit(io)
+    Transit::Reader.new(:json, io).read
   end
 end

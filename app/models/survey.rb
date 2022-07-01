@@ -6,7 +6,7 @@ class Survey < ApplicationRecord
 
   belongs_to :author, class_name: 'User'
 
-  has_many :questions, dependent: :delete_all
+  has_many :questions, -> { order(:display_order) }, dependent: :delete_all
   accepts_nested_attributes_for :questions
 
   has_many :replies

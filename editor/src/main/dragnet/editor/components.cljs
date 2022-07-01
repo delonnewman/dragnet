@@ -1,17 +1,21 @@
-(ns dragnet.editor.components)
+(ns dragnet.editor.components
+  (:require [cljs.pprint :as pp]))
 
-(def question-types [{:id 1 :name "Short Answer" :slug "short-answer"}
-                     {:id 2 :name "Paragraph" :slug "paragraph"}
-                     {:id 3 :name "Multiple Choice" :slug "multiple-choice"}
-                     {:id 4 :name "Checkboxes" :slug "checkboxes"}])
+(defn survey
+  [state & key-path]
+  (get-in @state (cons :survey key-path)))
 
-(defn question-type-id
-  [question]
-  (get-in question [:question_type :id]))
+(defn question-types
+  [state]
+  (-> @state :question_types))
+
+(defn question-type-list
+  [state]
+  (-> @state :question_types vals))
 
 (defn question-type-slug
-  [question]
-  (get-in question [:question_type :slug]))
+  [types question]
+  (-> question :question_type_id types :slug))
 
 (defn question-type-key
   [ns type]
@@ -19,12 +23,10 @@
 
 (defn question-options-body
   [question]
-  (println "options-body" (:question_options question))
   [:div.question-options
    (for [option (:question_options question)]
      [:div.question-option {:key (str "question-" (:id question) "-options-" (:id option))}
-      (:text option)]
-     )])
+      (:text option)])])
 
 (defn short-answer-body [question]
   [:pre (str "short-answer-body" (prn-str question))])
@@ -33,8 +35,8 @@
   [:pre (str "paragraph-body" (prn-str question))])
 
 (defn question-card-body
-  [question]
-  (case (question-type-slug question)
+  [question-types question]
+  (case (question-type-slug question-types question)
     "short-answer" [short-answer-body question]
     "paragraph" [paragraph-body question]
     "multiple-choice" [question-options-body question]
@@ -42,36 +44,39 @@
     [question-options-body question]))
 
 (defn question-card
-  [survey question]
-  [:div.card.question.mb-4 {:key (str "question-card-" (:id question))}
+  [_ state question]
+  [:div.card.question.mb-4
    [:div.card-body
     [:div.card-title.d-flex.justify-content-between
      [:h5 (:text question)]
-     [:select.form-select.w-25 {:aria-label "Select Question Type" :on-change #(js/console.log %)}
-      (for [type question-types]
+     [:select.form-select.w-25 {:aria-label "Select Question Type"
+                                :on-change #(swap! state assoc-in [:survey :questions (question :id) :question_type_id] (-> % .-target .-value))
+                                :value (:question_type_id question)}
+      (for [type (question-type-list state)]
         [:option {:key (question-type-key (str "question-" (:id question)) type)
-                  :value (:id type)
-                  :selected (= (:id type) (question-type-id question))}
+                  :value (:id type)}
          (:name type)])]]
-      [question-card-body question]]])
+      [question-card-body (question-types state) question]]])
 
 (defn survey-questions
-  [survey]
+  [state]
   [:div.questions
-   (for [question (->> @survey :questions (sort-by :display_order))]
-     [question-card survey question])])
+   (let [qs (->> (survey state :questions) vals (sort-by :display_order))]
+     (prn qs)
+     (for [q qs]
+       [question-card {:key (str "question-card-" (:id q))} state q]))])
 
 (defn survey-details
-  [survey]
+  [state]
   [:div.card.survey-details.mb-5
    [:div.card-body
     [:div.card-title
-     [:h3 (:name @survey)]]
+     [:h3 (survey state :name)]]
     [:textarea.form-control {:rows 3 :placeholder "Description" :name "survey[description]"}
-     (:description @survey)]]])
+     (survey state :description)]]])
 
 (defn survey-editor
-  [survey]
+  [state]
   [:div {:class "container"}
-   [survey-details survey]
-   [survey-questions survey]])
+   [survey-details state]
+   [survey-questions state]])

@@ -22,9 +22,9 @@ gem 'pry'
 gem 'pry-rails'
 
 # encoding / data formats
-gem 'transit-ruby', require: 'transit'
 gem 'murmurhash3'
 gem 'shortuuid'
+gem 'transit-ruby', require: 'transit'
 
 gem 'activerecord-pull-alpha'
 gem 'jbuilder'
