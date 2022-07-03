@@ -1,8 +1,8 @@
 QuestionType.create(
-  [{ name: 'Short Answer' },
-   { name: 'Paragraph' },
-   { name: 'Multiple Choice', countable: true },
-   { name: 'Checkboxes', countable: true }]
+  [{ name: 'Text',   icon: 'fa-regular fa-keyboard',     options: { long_answer: :boolean } },
+   { name: 'Choice', icon: 'fa-regular fa-square-check', options: { multiple_choice: :boolean, countable: :boolean } },
+   { name: 'Number', icon: 'fa-regular fa-calculator',   options: { countable: :boolean } },
+   { name: 'Time',   icon: 'fa-regular fa-clock',        options: { include_date: :boolean, include_time: :boolean } }]
 )
 
 # Generate some sample data unless in production

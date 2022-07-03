@@ -8,7 +8,7 @@ class QuestionGenerator < Dragnet::ActiveRecordGenerator
       q.required      = Faker::Boolean.boolean(true_ratio: 0.3)
 
       case q.question_type.ident
-      when :multiple_choice, :checkboxes
+      when :choice
         count = (2..5).to_a.sample
         count.times do |i|
           q.question_options << QuestionOption[question: q, weight: i - (count / 2)].generate

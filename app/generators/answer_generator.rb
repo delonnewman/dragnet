@@ -5,12 +5,14 @@ class AnswerGenerator < Dragnet::ActiveRecordGenerator
     q = attributes.fetch(:question)  { raise 'A quesiton attribute is required' }
 
     v = case q.question_type.ident
-        when :short_answer
+        when :text
           ShortAnswer.generate
-        when :paragraph
-          Paragraph.generate
-        when :multiple_choice, :checkboxes
+        when :choice
           QuestionOptionAnswer[q].generate
+        when :number
+          Random.rand(100)
+        when :time
+          Faker::Time.between(from: 3.months.ago, to: Time.now)
         end
 
     Answer.new(survey: s, reply: r, question: q) do |a|

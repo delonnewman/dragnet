@@ -21,27 +21,43 @@
   [ns type]
   (str ns "-type-" (:id type)))
 
-(defn question-options-body
+(defn choice-body
   [question]
   [:div.question-options
    (for [option (:question_options question)]
      [:div.question-option {:key (str "question-" (:id question) "-options-" (:id option))}
       (:text option)])])
 
-(defn short-answer-body [question]
-  [:pre (str "short-answer-body" (prn-str question))])
+(defn text-body [question]
+  [:pre (str "text-body" (prn-str question))])
 
-(defn paragraph-body [question]
-  [:pre (str "paragraph-body" (prn-str question))])
+(defn number-body [question]
+  [:pre (str "number-body" (prn-str question))])
+
+(defn time-body [question]
+  [:pre (str "time-body" (prn-str question))])
+
+(def question-card-bodies
+  {"text" text-body
+   "choice" choice-body
+   "number" number-body
+   "time" time-body})
 
 (defn question-card-body
   [question-types question]
-  (case (question-type-slug question-types question)
-    "short-answer" [short-answer-body question]
-    "paragraph" [paragraph-body question]
-    "multiple-choice" [question-options-body question]
-    "checkboxes" [question-options-body question]
-    [question-options-body question]))
+  (let [type (question-type-slug question-types question)
+        body (question-card-bodies type)]
+    (if body
+      [body question]
+      (throw (js/Error. (str "Invalid question type '" type "'"))))))
+
+(defn change-type-handler
+  [state question]
+  (fn [e]
+    (swap! state
+           assoc-in
+           [:survey :questions (question :id) :question_type_id]
+           (-> e .-target .-value (js/parseInt 10)))))
 
 (defn question-card
   [_ state question]
@@ -50,12 +66,12 @@
     [:div.card-title.d-flex.justify-content-between
      [:h5 (:text question)]
      [:select.form-select.w-25 {:aria-label "Select Question Type"
-                                :on-change #(swap! state assoc-in [:survey :questions (question :id) :question_type_id] (-> % .-target .-value))
+                                :on-change (change-type-handler state question)
                                 :value (:question_type_id question)}
       (for [type (question-type-list state)]
         [:option {:key (question-type-key (str "question-" (:id question)) type)
                   :value (:id type)}
-         (:name type)])]]
+         (type :name)])]]
       [question-card-body (question-types state) question]]])
 
 (defn survey-questions

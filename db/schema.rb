@@ -52,9 +52,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   create_table "question_types", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
-    t.boolean "countable", default: false, null: false
-    t.index ["countable"], name: "index_question_types_on_countable"
+    t.string "icon"
+    t.string "options"
+    t.bigint "parent_type_id"
     t.index ["name"], name: "index_question_types_on_name"
+    t.index ["parent_type_id"], name: "index_question_types_on_parent_type_id"
     t.index ["slug"], name: "index_question_types_on_slug"
   end
 
@@ -85,6 +87,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.datetime "updated_at", null: false
     t.index ["submitted"], name: "index_replies_on_submitted"
     t.index ["survey_id"], name: "index_replies_on_survey_id"
+  end
+
+  create_table "survey_drafts", force: :cascade do |t|
+    t.uuid "survey_id", null: false
+    t.binary "survey_data"
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.index ["created_at"], name: "index_survey_drafts_on_created_at"
+    t.index ["published"], name: "index_survey_drafts_on_published"
+    t.index ["published_at"], name: "index_survey_drafts_on_published_at"
+    t.index ["survey_id"], name: "index_survey_drafts_on_survey_id"
   end
 
   create_table "surveys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

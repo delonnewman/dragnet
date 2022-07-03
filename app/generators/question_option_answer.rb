@@ -15,7 +15,7 @@ class QuestionOptionAnswer < Dragnet::ParameterizedGenerator
 
   def call(*)
     case question_type.ident
-    when :multiple_choice, :checkboxes
+    when :choice
       question_options.sample
     end
   end

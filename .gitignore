@@ -22,3 +22,7 @@
 /editor/.cpcache/
 /.nrepl-port
 /public/js/editor
+node_modules/
+.lsp/
+.clj-kondo/
+editor/.calva/
