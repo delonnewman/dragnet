@@ -46,7 +46,12 @@ class SurveyEditorController < ActionController::API
       ]
     )
 
-    data.merge(questions: data[:questions].inject({}) { |qs, q| qs.merge!(q[:id] => q) })
+    questions = data[:questions].inject({}) do |qs, q|
+      q[:question_options] = q[:question_options].inject({}) { |opts, opt| opts.merge!(opt[:id] => opt) }
+      qs.merge!(q[:id] => q)
+    end
+
+    data.merge(questions: questions)
   end
 
   def question_types

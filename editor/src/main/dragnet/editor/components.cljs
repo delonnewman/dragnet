@@ -21,16 +21,87 @@
   [ns type]
   (str ns "-type-" (:id type)))
 
+(defn question-settings-predicate
+  [setting]
+  (fn [question]
+    (get-in question [:settings setting] false)))
+
+(def long-answer? (question-settings-predicate :long_answer))
+(def multiple-answers? (question-settings-predicate :multiple_answers))
+
+(defn choice-icon
+  [question]
+  (if (multiple-answers? question)
+    [:i.fa-regular.fa-square-check]
+    [:i.fa-solid.fa-circle-dot]))
+
+(defn editing-option?
+  [state question option]
+  (= (option :id)
+     (get-in @state [:editing-option (question :id)])))
+
+(defn option-updater
+  [field value-fn]
+  (fn [state question option]
+    (fn [event]
+      (let [value (-> event .-target .-value value-fn)]
+        (println "option-updater" field (question :id) (option :id) value)
+        (swap! state assoc-in [:survey :questions (question :id) :question_options (option :id) field] value)))))
+
+(def option-text-updater (option-updater :text identity))
+(def option-weight-updater (option-updater :weight #(js/parseInt % 10)))
+
+(defn remove-option
+  [state question option]
+  (fn [e]
+    (let [key-path [:survey :questions (question :id) :question_options]
+          options (dissoc (get-in @state key-path {}) (option :id))]
+      (swap! state assoc-in key-path options))
+    (-> e .-nativeEvent .preventDefault)
+    (-> e .-nativeEvent .stopPropagation)
+    ))
+
+(defn choice-option
+  [state question option]
+  (let [dom-id (str "question-option-" (question :id) "-" (option :id))]
+    [:div.question-option.mb-2.d-flex.align-items-center
+     [:div.me-1
+      (if (multiple-answers? question)
+        [:input {:type "checkbox" :disabled true}]
+        [:input {:type "radio" :disabled true}])]
+     [:div.me-1
+      [:input.form-control {:type "text"
+                            :placeholder "Option Text"
+                            :default-value (option :text)
+                            :on-change (option-text-updater state question option)}]]
+     [:div
+      [:input.form-control {:type "number"
+                            :placeholder "Numerical Weight"
+                            :default-value (option :weight)
+                            :on-change (option-weight-updater state question option)}]]
+     [:div
+      [:a.btn.btn-link {:href "#" :on-click (remove-option state question option)} "Remove"]]]))
+
+(def option-temp-ids (atom {}))
+
+(defn add-option
+  [state question]
+  (fn [e]
+    (let [id (-> (get @option-temp-ids (question :id) 0) dec)]
+      (swap! option-temp-ids assoc (question :id) (dec id))
+      (swap! state assoc-in [:survey :questions (question :id) :question_options id] {:id id}))
+    (-> e .-nativeEvent .preventDefault)
+    (-> e .-nativeEvent .stopPropagation)
+    ))
+
 (defn choice-body
   [state question]
-  [:div.question-options
-   (for [option (:question_options question)]
-     [:div.question-option {:key (str "question-" (:id question) "-options-" (:id option))}
-      (:text option)])])
-
-(defn long-answer?
-  [question]
-  (get-in question [:settings :long_answer] false))
+  [:div
+   [:div.question-options
+    (for [option (vals (:question_options question))]
+      (let [dom-id (str "question-" (:id question) "-options-" (option :id))]
+        ^{:key dom-id} [choice-option state question option]))]
+   [:a.btn.btn-link {:href "#" :on-click (add-option state question)} "Add Option"]])
 
 (defn text-body
   [state question]
@@ -49,10 +120,10 @@
   [:pre (str "time-body" (prn-str question))])
 
 (def question-card-bodies
-  {"text" text-body
+  {"text"   text-body
    "choice" choice-body
    "number" number-body
-   "time" time-body})
+   "time"   time-body})
 
 (defn question-card-body
   [state question]
@@ -88,20 +159,20 @@
    (let [type ((question-types state) (question :question_type_id))]
      (when-not type
        (throw (js/Error. (str "Couldn't find question type with id=" (prn-str (question :question_type_id))))))
-     [:div.d-flex
-      (let [form-id (str "option-" (question :id) "-required")]
-        ^{:key form-id} [switch {:id form-id
-                                 :checked (question :required)
-                                 :on-change (change-required-handler state question)
-                                 :style {:margin-right "20px"}
-                                 :label "Required"}])
+     [:div.d-flex.justify-content-end
       (for [[ident {text :text type :type default :default}] (type :settings)]
         (let [form-id (str "option-" (question :id) "-" (name ident))]
           ^{:key form-id} [switch {:id form-id
                                    :checked (get-in question [:settings ident] default)
                                    :on-change (change-setting-handler state question ident)
                                    :style {:margin-right "20px"}
-                                   :label text}]))])])
+                                   :label text}]))
+      (let [form-id (str "option-" (question :id) "-required")]
+        ^{:key form-id} [switch {:id form-id
+                                 :checked (question :required)
+                                 :on-change (change-required-handler state question)
+                                 :style {:margin-right "20px"}
+                                 :label "Required"}])])])
    
 (defn change-type-handler
   [state question]
