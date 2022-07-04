@@ -9,7 +9,7 @@ QuestionType.create(
                   countable: { type: :boolean, text: 'Calculate Statistics' } } },
     { name: 'Number',
       icon: 'fa-regular fa-calculator',
-      settings: { countable: { type: :boolean, text: 'Calculate Statistics' } } },
+      settings: { countable: { type: :boolean, text: 'Calculate Statistics', default: true } } },
     { name: 'Time',
       icon: 'fa-regular fa-clock',
       settings: { include_date: { type: :boolean, text: 'Include Date', default: true },

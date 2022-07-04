@@ -49,7 +49,7 @@
         body (question-card-bodies type)]
     (if body
       [body question]
-      (throw (js/Error. (str "Invalid question type '" type "'"))))))
+      (throw (js/Error. (str "Invalid question type " (prn-str type)))))))
 
 (defn change-setting-handler
   [state question setting]
@@ -59,23 +59,38 @@
           settings (assoc (get-in @state path {}) setting checked)]
       (swap! state assoc-in path settings))))
 
+(defn change-required-handler
+  [state question]
+  (fn [event]
+    (let [checked (-> event .-target .-checked)]
+      (swap! state assoc-in [:survey :questions (question :id) :required] checked))))
+
+(defn switch
+  [& {:keys [id checked on-change label style class-name]}]
+  [:div.form-check.form-switch {:style style :class-name class-name}
+   [:input.form-check-input {:id id :type "checkbox" :on-change on-change :checked checked}]
+   [:label.form-check-label {:for id} label]])
+
 (defn question-card-footer
   [state question]
   [:div.card-footer
-   (let [types (question-types state)
-         type (types (question :question_type_id))]
-     (if type
-       [:div.row
-        (for [[ident {text :text type :type default :default}] (type :settings)]
-          (let [form-id (str "option-" (question :id) "-" (name ident))]
-            [:div.col
-             [:div.form-check.form-switch
-              [:input.form-check-input {:id form-id
-                                        :type "checkbox"
-                                        :checked (get-in question [:settings ident] default)
-                                        :on-change (change-setting-handler state question ident)}]
-              [:label.form-check-label {:for form-id} text]]]))]
-       (throw (js/Error. (str "Couldn't find question type with id=" (question :question_type_id))))))])
+   (let [type ((question-types state) (question :question_type_id))]
+     (when-not type
+       (throw (js/Error. (str "Couldn't find question type with id=" (prn-str (question :question_type_id))))))
+     [:div.d-flex
+      (let [form-id (str "option-" (question :id) "-required")]
+        ^{:key form-id} [switch {:id form-id
+                                 :checked (question :required)
+                                 :on-change (change-required-handler state question)
+                                 :style {:margin-right "20px"}
+                                 :label "Required"}])
+      (for [[ident {text :text type :type default :default}] (type :settings)]
+        (let [form-id (str "option-" (question :id) "-" (name ident))]
+          ^{:key form-id} [switch {:id form-id
+                                   :checked (get-in question [:settings ident] default)
+                                   :on-change (change-setting-handler state question ident)
+                                   :style {:margin-right "20px"}
+                                   :label text}]))])])
    
 (defn change-type-handler
   [state question]
@@ -86,11 +101,11 @@
            (-> event .-target .-value (js/parseInt 10)))))
 
 (defn question-card
-  [_ state question]
+  [state question]
   [:div.card.question.mb-4
    [:div.card-body
     [:div.card-title.d-flex.justify-content-between
-     [:h5 (:text question)]
+     [:h5 (:text question) (if (question :required) [:span {:title "Required"} "*"])]
      [:select.form-select.w-25 {:aria-label "Select Question Type"
                                 :on-change (change-type-handler state question)
                                 :value (:question_type_id question)}
@@ -105,9 +120,7 @@
   [state]
   [:div.questions
    (let [qs (->> (survey state :questions) vals (sort-by :display_order))]
-     (prn qs)
-     (for [q qs]
-       [question-card {:key (str "question-card-" (:id q))} state q]))])
+     (for [q qs] ^{:key (str "question-card-" (:id q))} [question-card state q]))])
 
 (defn survey-details
   [state]
