@@ -1,5 +1,6 @@
 (ns dragnet.editor.components
-  (:require [cljs.pprint :as pp]))
+  (:require [cljs.pprint :as pp]
+            [cljs-uuid-utils.core :as uuid]))
 
 (defn survey
   [state & key-path]
@@ -40,7 +41,6 @@
   (fn [state question option]
     (fn [event]
       (let [value (-> event .-target .-value value-fn)]
-        (println "option-updater" field (question :id) (option :id) value)
         (swap! state assoc-in [:survey :questions (question :id) :question_options (option :id) field] value)))))
 
 (def ^:private option-text-updater (option-updater :text identity))
@@ -130,8 +130,7 @@
   (let [type (question-type-slug (question-types state) question)
         body (question-card-bodies type)]
     (if body
-      [body state question]
-      (throw (js/Error. (str "Invalid question type " (prn-str type)))))))
+      [body state question])))
 
 (defn- change-setting-handler
   [state question setting]
@@ -156,10 +155,8 @@
 (defn question-card-footer
   [state question]
   [:div.card-footer
-   (let [type ((question-types state) (question :question_type_id))]
-     (when-not type
-       (throw (js/Error. (str "Couldn't find question type with id=" (prn-str (question :question_type_id))))))
-     [:div.d-flex.justify-content-end
+   [:div.d-flex.justify-content-end
+    (if-let [type ((question-types state) (question :question_type_id))]
       (for [[ident {text :text type :type default :default}] (type :settings)]
         (let [form-id (str "option-" (question :id) "-" (name ident))]
           ^{:key form-id} [switch
@@ -167,14 +164,14 @@
                             :checked (get-in question [:settings ident] default)
                             :on-change (change-setting-handler state question ident)
                             :style {:margin-right "20px"}
-                            :label text}]))
+                            :label text}])))
       (let [form-id (str "option-" (question :id) "-required")]
         ^{:key form-id} [switch
                          {:id form-id
                           :checked (question :required)
                           :on-change (change-required-handler state question)
                           :style {:margin-right "20px"}
-                          :label "Required"}])])])
+                          :label "Required"}])]])
    
 (defn- change-type-handler
   [state question]
@@ -186,15 +183,18 @@
 
 (defn question-type-selector
   [state question]
-  [:select.form-select.w-25
-   {:aria-label "Select Question Type"
-    :on-change (change-type-handler state question)
-    :value (:question_type_id question)}
-   (for [type (question-type-list state)]
-     [:option
-      {:key (question-type-key (str "question-" (:id question)) type)
-       :value (:id type)}
-      (type :name)])])
+  (let [type-id (question :question_type_id)
+        attrs {:aria-label "Select Question Type"
+               :on-change (change-type-handler state question)}]
+    [:select.form-select.w-25
+     (if type-id (assoc attrs :value type-id) attrs)
+     (if-not type-id
+       [:option "Select Question Type"])
+     (for [type (question-type-list state)]
+       [:option
+        {:key (question-type-key (str "question-" (:id question)) type)
+         :value (:id type)}
+        (type :name)])]))
 
 (defn str-length->px
   [s]
@@ -204,14 +204,43 @@
       Math/round
       (str "px")))
 
-; TODO: rewrite to use a channel for input
-(defn- resize-question-title
-  [state question]
+(defn- resize-text-field
+  [state id ref]
   (fn [e]
-    (let [sizes (get @state :question-title-sizes {})
-          value (-> e .-target .-value)
-          length (str-length->px value)]
-      (swap! state assoc :question-title-sizes (assoc sizes (question :id) length)))))
+    (reset! ref (js/setInterval
+                 #(let [sizes (get @state :text-field-sizes {})
+                        prev  (sizes id)
+                        value (-> e .-target .-value)
+                        current (str-length->px value)]
+                    (when (not= current prev)
+                      (swap! state assoc :text-field-sizes (assoc sizes id current))))
+                 50))))
+
+(defn- update-text-field
+  [on-change ref]
+  (fn [e]
+    (when @ref
+      (js/clearInterval @ref))
+    (on-change e)))
+
+(defn- text-field-size
+  [state id default]
+  (get-in @state [:text-field-sizes id] default))
+
+(defn resizing-text-field
+  [& {:keys [id class style default-value on-change]}]
+  [:input.resizing-text-field.w-100.border-bottom
+   {:class class
+    :default-value default-value
+    :type "text"
+    :on-blur on-change
+    :style (merge style {:border "none"})}])
+
+(defn- remove-question
+  [state question]
+  (fn []
+    (if-let [questions (get-in @state [:survey :questions])]
+      (swap! state assoc-in [:survey :questions] (dissoc questions (question :id))))))
 
 (defn question-card
   [state question]
@@ -219,13 +248,14 @@
    [:div.card-body
     [:div.card-title.d-flex.justify-content-between
      [:div.question-title.w-100.d-flex.me-3
-      [:span
-       [:input.h5.question-title-input
-        {:default-value (question :text)
-         :on-key-up (resize-question-title state question)
-         :style {:border "none" :width (get-in @state [:question-title-sizes (question :id)] (str-length->px (question :text)))}}]]
+      [resizing-text-field
+       {:id (question :id)
+        :class "h5"
+        :default-value (question :text)
+        :on-change #(swap! state assoc-in [:survey :questions (question :id) :text] (-> % .-target .-value))}]
       (if (question :required) [:span {:title "Required"} "*"])]
-     [question-type-selector state question]]
+     [question-type-selector state question]
+     [:a.btn.btn-link {:href "#" :on-click (remove-question state question)} "Remove"]]
     [question-card-body state question]]
     [question-card-footer state question]])
 
@@ -235,17 +265,37 @@
    (let [qs (->> (survey state :questions) vals (sort-by :display_order))]
      (for [q qs] ^{:key (str "question-card-" (:id q))} [question-card state q]))])
 
+(defn update-survey-field
+  [state field]
+  (fn [e]
+    (swap! state assoc-in [:survey field] (-> e .-target .-value))))
+
 (defn survey-details
   [state]
   [:div.card.survey-details.mb-5
    [:div.card-body
-    [:div.card-title
-     [:h3 (survey state :name)]]
-    [:textarea.form-control {:rows 3 :placeholder "Description" :name "survey[description]"}
+    [:div.card-title.pb-3
+      [resizing-text-field
+       {:id (survey state :id)
+        :class "h3"
+        :default-value (survey state :name)
+        :on-change (update-survey-field state :name)}]]
+    [:textarea.form-control
+     {:rows 3
+      :placeholder "Description"
+      :on-change (update-survey-field state :description)}
      (survey state :description)]]])
+
+(defn- add-question
+  [state]
+  (fn [e]
+    (let [id (-> (uuid/make-random-uuid) uuid/uuid-string)]
+      (swap! state assoc-in [:survey :questions id] {:id id}))))
 
 (defn survey-editor
   [state]
   [:div {:class "container"}
    [survey-details state]
+   [:div.mb-3.d-flex.justify-content-end
+    [:button.btn.btn-primary {:type "button" :on-click (add-question state)} "Add Question"]]
    [survey-questions state]])
