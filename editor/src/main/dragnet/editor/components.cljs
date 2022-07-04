@@ -21,7 +21,7 @@
   [ns type]
   (str ns "-type-" (:id type)))
 
-(defn question-settings-predicate
+(defn- question-settings-predicate
   [setting]
   (fn [question]
     (get-in question [:settings setting] false)))
@@ -35,18 +35,7 @@
   [q]
   (and (include-date? q) (include-time? q)))
 
-(defn choice-icon
-  [question]
-  (if (multiple-answers? question)
-    [:i.fa-regular.fa-square-check]
-    [:i.fa-solid.fa-circle-dot]))
-
-(defn editing-option?
-  [state question option]
-  (= (option :id)
-     (get-in @state [:editing-option (question :id)])))
-
-(defn option-updater
+(defn- option-updater
   [field value-fn]
   (fn [state question option]
     (fn [event]
@@ -54,10 +43,10 @@
         (println "option-updater" field (question :id) (option :id) value)
         (swap! state assoc-in [:survey :questions (question :id) :question_options (option :id) field] value)))))
 
-(def option-text-updater (option-updater :text identity))
-(def option-weight-updater (option-updater :weight #(js/parseInt % 10)))
+(def ^:private option-text-updater (option-updater :text identity))
+(def ^:private option-weight-updater (option-updater :weight #(js/parseInt % 10)))
 
-(defn remove-option
+(defn- remove-option
   [state question option]
   (fn [e]
     (let [key-path [:survey :questions (question :id) :question_options]
@@ -66,7 +55,7 @@
     (-> e .-nativeEvent .preventDefault)
     (-> e .-nativeEvent .stopPropagation)))
 
-(defn choice-option
+(defn- choice-option
   [state question option]
   (let [dom-id (str "question-option-" (question :id) "-" (option :id))]
     [:div.question-option.mb-2.d-flex.align-items-center
@@ -89,9 +78,10 @@
      [:div
       [:a.btn.btn-link {:href "#" :on-click (remove-option state question option)} "Remove"]]]))
 
+; TODO: move to global state atom
 (def option-temp-ids (atom {}))
 
-(defn add-option
+(defn- add-option
   [state question]
   (fn [e]
     (let [id (-> (get @option-temp-ids (question :id) 0) dec)]
@@ -143,7 +133,7 @@
       [body state question]
       (throw (js/Error. (str "Invalid question type " (prn-str type)))))))
 
-(defn change-setting-handler
+(defn- change-setting-handler
   [state question setting]
   (fn [event]
     (let [checked (-> event .-target .-checked)
@@ -151,7 +141,7 @@
           settings (assoc (get-in @state path {}) setting checked)]
       (swap! state assoc-in path settings))))
 
-(defn change-required-handler
+(defn- change-required-handler
   [state question]
   (fn [event]
     (let [checked (-> event .-target .-checked)]
@@ -186,7 +176,7 @@
                           :style {:margin-right "20px"}
                           :label "Required"}])])])
    
-(defn change-type-handler
+(defn- change-type-handler
   [state question]
   (fn [event]
     (swap! state
@@ -206,13 +196,34 @@
        :value (:id type)}
       (type :name)])])
 
+(defn str-length->px
+  [s]
+  (-> s
+      .-length
+      (* 10.3)
+      Math/round
+      (str "px")))
+
+; TODO: rewrite to use a channel for input
+(defn- resize-question-title
+  [state question]
+  (fn [e]
+    (let [sizes (get @state :question-title-sizes {})
+          value (-> e .-target .-value)
+          length (str-length->px value)]
+      (swap! state assoc :question-title-sizes (assoc sizes (question :id) length)))))
+
 (defn question-card
   [state question]
   [:div.card.question.mb-4
    [:div.card-body
     [:div.card-title.d-flex.justify-content-between
-     [:h5.question-title.w-100.d-flex.me-3
-      [:div.question-title-input {:content-editable "true" :spell-check "false"} (question :text)]
+     [:div.question-title.w-100.d-flex.me-3
+      [:span
+       [:input.h5.question-title-input
+        {:default-value (question :text)
+         :on-key-up (resize-question-title state question)
+         :style {:border "none" :width (get-in @state [:question-title-sizes (question :id)] (str-length->px (question :text)))}}]]
       (if (question :required) [:span {:title "Required"} "*"])]
      [question-type-selector state question]]
     [question-card-body state question]]
