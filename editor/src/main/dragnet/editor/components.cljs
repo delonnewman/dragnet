@@ -28,6 +28,12 @@
 
 (def long-answer? (question-settings-predicate :long_answer))
 (def multiple-answers? (question-settings-predicate :multiple_answers))
+(def include-date? (question-settings-predicate :include_date))
+(def include-time? (question-settings-predicate :include_time))
+
+(defn include-date-and-time?
+  [q]
+  (and (include-date? q) (include-time? q)))
 
 (defn choice-icon
   [question]
@@ -58,8 +64,7 @@
           options (dissoc (get-in @state key-path {}) (option :id))]
       (swap! state assoc-in key-path options))
     (-> e .-nativeEvent .preventDefault)
-    (-> e .-nativeEvent .stopPropagation)
-    ))
+    (-> e .-nativeEvent .stopPropagation)))
 
 (defn choice-option
   [state question option]
@@ -70,15 +75,17 @@
         [:input {:type "checkbox" :disabled true}]
         [:input {:type "radio" :disabled true}])]
      [:div.me-1
-      [:input.form-control {:type "text"
-                            :placeholder "Option Text"
-                            :default-value (option :text)
-                            :on-change (option-text-updater state question option)}]]
+      [:input.form-control
+       {:type "text"
+        :placeholder "Option Text"
+        :default-value (option :text)
+        :on-change (option-text-updater state question option)}]]
      [:div
-      [:input.form-control {:type "number"
-                            :placeholder "Numerical Weight"
-                            :default-value (option :weight)
-                            :on-change (option-weight-updater state question option)}]]
+      [:input.form-control
+       {:type "number"
+        :placeholder "Numerical Weight"
+        :default-value (option :weight)
+        :on-change (option-weight-updater state question option)}]]
      [:div
       [:a.btn.btn-link {:href "#" :on-click (remove-option state question option)} "Remove"]]]))
 
@@ -91,8 +98,7 @@
       (swap! option-temp-ids assoc (question :id) (dec id))
       (swap! state assoc-in [:survey :questions (question :id) :question_options id] {:id id}))
     (-> e .-nativeEvent .preventDefault)
-    (-> e .-nativeEvent .stopPropagation)
-    ))
+    (-> e .-nativeEvent .stopPropagation)))
 
 (defn choice-body
   [state question]
@@ -117,7 +123,11 @@
 
 (defn time-body
   [state question]
-  [:pre (str "time-body" (prn-str question))])
+  (cond
+    (include-date-and-time? question) [:input.form-control {:type "datetime-local"}]
+    (include-date? question) [:input.form-control {:type "date"}]
+    (include-time? question) [:input.form-control {:type "time"}]
+    :else [:input.form-control {:type "datetime-local"}]))
 
 (def question-card-bodies
   {"text"   text-body
@@ -162,17 +172,19 @@
      [:div.d-flex.justify-content-end
       (for [[ident {text :text type :type default :default}] (type :settings)]
         (let [form-id (str "option-" (question :id) "-" (name ident))]
-          ^{:key form-id} [switch {:id form-id
-                                   :checked (get-in question [:settings ident] default)
-                                   :on-change (change-setting-handler state question ident)
-                                   :style {:margin-right "20px"}
-                                   :label text}]))
+          ^{:key form-id} [switch
+                           {:id form-id
+                            :checked (get-in question [:settings ident] default)
+                            :on-change (change-setting-handler state question ident)
+                            :style {:margin-right "20px"}
+                            :label text}]))
       (let [form-id (str "option-" (question :id) "-required")]
-        ^{:key form-id} [switch {:id form-id
-                                 :checked (question :required)
-                                 :on-change (change-required-handler state question)
-                                 :style {:margin-right "20px"}
-                                 :label "Required"}])])])
+        ^{:key form-id} [switch
+                         {:id form-id
+                          :checked (question :required)
+                          :on-change (change-required-handler state question)
+                          :style {:margin-right "20px"}
+                          :label "Required"}])])])
    
 (defn change-type-handler
   [state question]
@@ -182,19 +194,27 @@
            [:survey :questions (question :id) :question_type_id]
            (-> event .-target .-value (js/parseInt 10)))))
 
+(defn question-type-selector
+  [state question]
+  [:select.form-select.w-25
+   {:aria-label "Select Question Type"
+    :on-change (change-type-handler state question)
+    :value (:question_type_id question)}
+   (for [type (question-type-list state)]
+     [:option
+      {:key (question-type-key (str "question-" (:id question)) type)
+       :value (:id type)}
+      (type :name)])])
+
 (defn question-card
   [state question]
   [:div.card.question.mb-4
    [:div.card-body
     [:div.card-title.d-flex.justify-content-between
-     [:h5 (:text question) (if (question :required) [:span {:title "Required"} "*"])]
-     [:select.form-select.w-25 {:aria-label "Select Question Type"
-                                :on-change (change-type-handler state question)
-                                :value (:question_type_id question)}
-      (for [type (question-type-list state)]
-        [:option {:key (question-type-key (str "question-" (:id question)) type)
-                  :value (:id type)}
-         (type :name)])]]
+     [:h5.question-title.w-100.d-flex.me-3
+      [:div.question-title-input {:content-editable "true" :spell-check "false"} (question :text)]
+      (if (question :required) [:span {:title "Required"} "*"])]
+     [question-type-selector state question]]
     [question-card-body state question]]
     [question-card-footer state question]])
 
