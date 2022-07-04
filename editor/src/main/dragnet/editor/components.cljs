@@ -22,19 +22,30 @@
   (str ns "-type-" (:id type)))
 
 (defn choice-body
-  [question]
+  [state question]
   [:div.question-options
    (for [option (:question_options question)]
      [:div.question-option {:key (str "question-" (:id question) "-options-" (:id option))}
       (:text option)])])
 
-(defn text-body [question]
-  [:pre (str "text-body" (prn-str question))])
+(defn long-answer?
+  [question]
+  (get-in question [:settings :long_answer] false))
 
-(defn number-body [question]
-  [:pre (str "number-body" (prn-str question))])
+(defn text-body
+  [state question]
+  (let [form-id (str "question-" (question :id))]
+    (if (long-answer? question)
+      [:textarea.form-control {:id form-id :rows 3}]
+      [:input.form-control {:id form-id :type "text"}])))
 
-(defn time-body [question]
+(defn number-body
+  [state question]
+  (let [form-id (str "question" (question :id))]
+    [:input.form-control {:id form-id :type "number"}]))
+
+(defn time-body
+  [state question]
   [:pre (str "time-body" (prn-str question))])
 
 (def question-card-bodies
@@ -44,11 +55,11 @@
    "time" time-body})
 
 (defn question-card-body
-  [question-types question]
-  (let [type (question-type-slug question-types question)
+  [state question]
+  (let [type (question-type-slug (question-types state) question)
         body (question-card-bodies type)]
     (if body
-      [body question]
+      [body state question]
       (throw (js/Error. (str "Invalid question type " (prn-str type)))))))
 
 (defn change-setting-handler
@@ -113,7 +124,7 @@
         [:option {:key (question-type-key (str "question-" (:id question)) type)
                   :value (:id type)}
          (type :name)])]]
-    [question-card-body (question-types state) question]]
+    [question-card-body state question]]
     [question-card-footer state question]])
 
 (defn survey-questions
