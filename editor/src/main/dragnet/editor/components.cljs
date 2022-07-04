@@ -196,37 +196,6 @@
          :value (:id type)}
         (type :name)])]))
 
-(defn str-length->px
-  [s]
-  (-> s
-      .-length
-      (* 10.3)
-      Math/round
-      (str "px")))
-
-(defn- resize-text-field
-  [state id ref]
-  (fn [e]
-    (reset! ref (js/setInterval
-                 #(let [sizes (get @state :text-field-sizes {})
-                        prev  (sizes id)
-                        value (-> e .-target .-value)
-                        current (str-length->px value)]
-                    (when (not= current prev)
-                      (swap! state assoc :text-field-sizes (assoc sizes id current))))
-                 50))))
-
-(defn- update-text-field
-  [on-change ref]
-  (fn [e]
-    (when @ref
-      (js/clearInterval @ref))
-    (on-change e)))
-
-(defn- text-field-size
-  [state id default]
-  (get-in @state [:text-field-sizes id] default))
-
 (defn resizing-text-field
   [& {:keys [id class style default-value on-change]}]
   [:input.resizing-text-field.w-100.border-bottom
