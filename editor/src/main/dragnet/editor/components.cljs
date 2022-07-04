@@ -51,13 +51,39 @@
       [body question]
       (throw (js/Error. (str "Invalid question type '" type "'"))))))
 
+(defn change-setting-handler
+  [state question setting]
+  (fn [event]
+    (let [checked (-> event .-target .-checked)
+          path [:survey :questions (question :id) :settings]
+          settings (assoc (get-in @state path {}) setting checked)]
+      (swap! state assoc-in path settings))))
+
+(defn question-card-footer
+  [state question]
+  [:div.card-footer
+   (let [types (question-types state)
+         type (types (question :question_type_id))]
+     (if type
+       [:div.row
+        (for [[ident {text :text type :type default :default}] (type :settings)]
+          (let [form-id (str "option-" (question :id) "-" (name ident))]
+            [:div.col
+             [:div.form-check.form-switch
+              [:input.form-check-input {:id form-id
+                                        :type "checkbox"
+                                        :checked (get-in question [:settings ident] default)
+                                        :on-change (change-setting-handler state question ident)}]
+              [:label.form-check-label {:for form-id} text]]]))]
+       (throw (js/Error. (str "Couldn't find question type with id=" (question :question_type_id))))))])
+   
 (defn change-type-handler
   [state question]
-  (fn [e]
+  (fn [event]
     (swap! state
            assoc-in
            [:survey :questions (question :id) :question_type_id]
-           (-> e .-target .-value (js/parseInt 10)))))
+           (-> event .-target .-value (js/parseInt 10)))))
 
 (defn question-card
   [_ state question]
@@ -72,7 +98,8 @@
         [:option {:key (question-type-key (str "question-" (:id question)) type)
                   :value (:id type)}
          (type :name)])]]
-      [question-card-body (question-types state) question]]])
+    [question-card-body (question-types state) question]]
+    [question-card-footer state question]])
 
 (defn survey-questions
   [state]

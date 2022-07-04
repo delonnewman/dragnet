@@ -31,7 +31,7 @@ class SurveyEditorController < ActionController::API
   end
 
   def survey
-    projection = draft.pull(
+    data = draft.pull(
       :name,
       :description,
       questions: [
@@ -46,13 +46,13 @@ class SurveyEditorController < ActionController::API
       ]
     )
 
-    projection.merge(questions: projection[:questions].inject({}) { |qs, q| qs.merge!(q[:id] => q) })
+    data.merge(questions: data[:questions].inject({}) { |qs, q| qs.merge!(q[:id] => q) })
   end
 
   def question_types
     QuestionType
       .all
-      .pull(:id, :name, :slug, :icon)
+      .pull(:id, :name, :slug, :icon, settings: %i[*])
       .reduce({}) { |types, type| types.merge!(type[:id] => type) }
   end
 end

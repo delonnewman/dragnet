@@ -1,8 +1,20 @@
 QuestionType.create(
-  [{ name: 'Text',   icon: 'fa-regular fa-keyboard',     options: { long_answer: :boolean } },
-   { name: 'Choice', icon: 'fa-regular fa-square-check', options: { multiple_choice: :boolean, countable: :boolean } },
-   { name: 'Number', icon: 'fa-regular fa-calculator',   options: { countable: :boolean } },
-   { name: 'Time',   icon: 'fa-regular fa-clock',        options: { include_date: :boolean, include_time: :boolean } }]
+  [
+    { name: 'Text',
+      icon: 'fa-regular fa-keyboard',
+      settings: { long_answer: { type: :boolean, text: 'Long Answer' } } },
+    { name: 'Choice',
+      icon: 'fa-regular fa-square-check',
+      settings: { multiple_answers: { type: :boolean, text: 'Multiple Answers' },
+                  countable: { type: :boolean, text: 'Calculate Statistics' } } },
+    { name: 'Number',
+      icon: 'fa-regular fa-calculator',
+      settings: { countable: { type: :boolean, text: 'Calculate Statistics' } } },
+    { name: 'Time',
+      icon: 'fa-regular fa-clock',
+      settings: { include_date: { type: :boolean, text: 'Include Date', default: true },
+                  include_time: { type: :boolean, text: 'Include Time', default: true } } }
+  ]
 )
 
 # Generate some sample data unless in production

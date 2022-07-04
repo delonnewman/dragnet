@@ -53,7 +53,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.string "name", null: false
     t.string "slug", null: false
     t.string "icon"
-    t.string "options"
+    t.string "settings"
     t.bigint "parent_type_id"
     t.index ["name"], name: "index_question_types_on_name"
     t.index ["parent_type_id"], name: "index_question_types_on_parent_type_id"
@@ -68,6 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.boolean "required", default: false, null: false
     t.bigint "question_type_id", null: false
     t.uuid "survey_id", null: false
+    t.string "settings"
     t.uuid "question_id"
     t.bigint "question_option_id"
     t.index ["hash_code"], name: "index_questions_on_hash_code"

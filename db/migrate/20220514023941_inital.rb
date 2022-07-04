@@ -39,7 +39,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string :slug, null: false, index: true
       t.string :icon
 
-      t.string :options
+      t.string :settings
 
       t.bigint :parent_type_id, index: true
     end
@@ -53,6 +53,8 @@ class Inital < ActiveRecord::Migration[7.0]
 
       t.belongs_to :question_type, index: true, null: false
       t.uuid       :survey_id,     index: true, null: false
+
+      t.string :settings
 
       # Required for FollowupQuestions
       t.uuid       :question_id,     index: true

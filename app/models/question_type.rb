@@ -3,5 +3,5 @@ class QuestionType < ApplicationRecord
 
   has_many :questions
 
-  serialize :options
+  serialize :settings
 end
