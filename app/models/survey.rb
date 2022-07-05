@@ -21,6 +21,7 @@ class Survey < ApplicationRecord
 
   def projection
     data = pull(
+      :id,
       :name,
       :description,
       questions: [

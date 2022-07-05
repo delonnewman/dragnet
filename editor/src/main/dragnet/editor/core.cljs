@@ -12,19 +12,31 @@
 (def root-url "http://localhost:3000")
 (def dom-id "survey-editor")
 
-(defn api-data [url]
-  (go (let [res (<! (http/get url {:with_credentials? false}))]
-        (:body res))))
+(defn api-data
+  [url]
+  (go (let [res (<! (http/get url))]
+        (res :body))))
 
-(defn survey-endpoint [survey-id]
+(defn api-update
+  [url data]
+  (println "api-update" url data)
+  (go (let [res (<! (http/put url {:transit-params data}))]
+        res)))
+
+(defn survey-endpoint
+  [survey-id]
   (str root-url "/api/v1/editing/surveys/" survey-id))
 
-(defn refresh-editor [state]
-  (pp/pprint @state)
+(defn refresh-editor
+  [state]
   (let [elem (.getElementById js/document dom-id)]
     (rdom/render [survey-editor state] elem)))
 
-(add-watch current-state :editor-refresh (fn [_ ref _ _] (refresh-editor ref)))
+(add-watch current-state :editor-refresh (fn [_ ref _ new-data] (refresh-editor ref)))
+(add-watch current-state :updates
+           (fn [_ ref old new]
+             (if (and old new)
+               (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))))
 
 (defn init []
   (go (let [survey-id (-> (.querySelector js/document "input[name=survey_id]") .-value)

@@ -250,7 +250,7 @@
         :default-value (survey state :name)
         :on-change (update-survey-field state :name)}]]
     [:textarea.form-control
-     {:rows 3
+     {:rows 2
       :placeholder "Description"
       :on-change (update-survey-field state :description)}
      (survey state :description)]]])
