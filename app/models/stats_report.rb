@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatsReport
   extend Forwardable
 
@@ -58,17 +60,17 @@ class StatsReport
     weight = question_options[:weight]
 
     data = reportable
-      .answers
-      .where(question: question)
-      .joins(:question_option)
-      .pluck(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
-      .first
+             .answers
+             .where(question: question)
+             .joins(:question_option)
+             .pluck(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
+             .first
 
-    { 'Min'       => data[0],
-      'Max'       => data[1],
-      'Sum'       => data[2],
-      'Average'   => data[3].round(1),
-      'Std. Dev.' => data[4].round(1) }
+    { 'Min'       => data[0].nil(0),
+      'Max'       => data[1].nil(0),
+      'Sum'       => data[2].nil(0),
+      'Average'   => data[3].nil(0).round(1),
+      'Std. Dev.' => data[4].nil(0).round(1) }
   end
 
   private

@@ -1,6 +1,8 @@
 class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
+  EMPTY_HASH = {}.freeze
+
   class << self
     def generator_class_name
       "#{name}Generator"

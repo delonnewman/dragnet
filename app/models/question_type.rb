@@ -4,4 +4,8 @@ class QuestionType < ApplicationRecord
   has_many :questions
 
   serialize :settings
+
+  def countable?
+    settings.fetch(:countable, false)
+  end
 end

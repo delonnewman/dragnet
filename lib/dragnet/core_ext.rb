@@ -17,3 +17,17 @@ class Hash
     h
   end
 end
+
+class NilClass
+  def nil(value = self, &block)
+    return value unless block_given?
+
+    block.call
+  end
+end
+
+class Object
+  def nil(*, &_)
+    self
+  end
+end
