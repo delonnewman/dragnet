@@ -1,4 +1,6 @@
 class StatsController < ApplicationController
+  layout 'survey'
+  
   def show
     @report = StatsReport.new(reportable)
   end

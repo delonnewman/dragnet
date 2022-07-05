@@ -6,7 +6,7 @@ class SurveyEditorController < ActionController::API
 
   # POST / PATCH - /api/v1/editing/surveys/:id
   def update
-    draft.update(read_transit(request.body))
+    draft.update(survey_data: read_transit(request.body))
   end
 
   private
@@ -21,37 +21,12 @@ class SurveyEditorController < ActionController::API
     Transit::Reader.new(:json, io).read
   end
 
-  # TODO: use actual SurveyDraft instance
   def draft
-    Survey.find(params[:id])
+    Survey.find(params[:id]).draft
   end
 
   def editing_data
-    { survey: survey, question_types: question_types }
-  end
-
-  def survey
-    data = draft.pull(
-      :name,
-      :description,
-      questions: [
-        :id,
-        :text,
-        :display_order,
-        :required,
-        :question_type_id,
-        {
-          question_options: %i[id text weight]
-        }
-      ]
-    )
-
-    questions = data[:questions].inject({}) do |qs, q|
-      q[:question_options] = q[:question_options].inject({}) { |opts, opt| opts.merge!(opt[:id] => opt) }
-      qs.merge!(q[:id] => q)
-    end
-
-    data.merge(questions: questions)
+    { survey: draft.survey_data, question_types: question_types }
   end
 
   def question_types

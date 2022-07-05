@@ -12,7 +12,7 @@ class Inital < ActiveRecord::Migration[7.0]
 
       t.timestamps null: false, index: true
     end
-   
+
     create_table :surveys, id: :uuid do |t|
       t.string :name, null: false, index: true
       t.string :slug, null: false, index: true
@@ -53,6 +53,7 @@ class Inital < ActiveRecord::Migration[7.0]
 
       t.belongs_to :question_type, index: true, null: false
       t.uuid       :survey_id,     index: true, null: false
+      t.foreign_key :surveys, column: :survey_id, primary_key: :id, on_delete: :cascade
 
       t.string :settings
 
@@ -63,6 +64,7 @@ class Inital < ActiveRecord::Migration[7.0]
 
     create_table :question_options do |t|
       t.uuid :question_id, index: true, null: false
+      t.foreign_key :questions, column: :question_id, primary_key: :id, on_delete: :cascade
 
       t.string  :text,   null: false, index: true
       t.integer :weight, null: false, index: true # used for numerical weight in generated reports

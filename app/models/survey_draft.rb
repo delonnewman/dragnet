@@ -14,4 +14,8 @@ class SurveyDraft < ApplicationRecord
     self.published_at = published_at
     self
   end
+
+  def publish!(published_at = Time.now)
+    published!(published_at).tap(&:save!)
+  end
 end

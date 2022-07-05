@@ -2,11 +2,12 @@ Rails.application.routes.draw do
   root 'surveys#index'
 
   get 'report', to: 'reports#show'
-
   get 'stats', to: 'stats#show'
-  get 'surveys/:survey_id/stats', to: 'stats#show', as: 'survey_stats'
 
-  resources :surveys, only: %i[index new edit]
+  resources :surveys, only: %i[index new edit] do
+    get 'results'
+    get 'stats', to: 'stats#show'
+  end
 
   resources :reply, only: %i[edit update] do
     get 'success'

@@ -7,10 +7,10 @@
                 <div class="card-title">
                     <%= survey.name %>
                 </div>
-                <%= link_to 'View Data', report_path(question_ids: survey.question_ids, name: survey.name) %>
-                <%= link_to 'Reply', reply_to_path(survey.short_id, survey.slug) %>
-                <%= link_to 'Stats', survey_stats_path(survey.short_id) %>
-                <%= link_to 'Edit', edit_survey_path(survey) %>
+                <%= link_to 'Results', report_path(question_ids: survey.question_ids, name: survey.name) %>
+                <%= link_to 'View', reply_to_path(survey.short_id, survey.slug) %>
+                <%= link_to 'Summary', survey_stats_path(survey.short_id) %>
+                <%= link_to 'Create', edit_survey_path(survey) %>
             </div>
         </div>
     <% end %>
