@@ -12,11 +12,17 @@ class Survey < ApplicationRecord
   has_many :replies
   has_many :answers
 
+  has_many :drafts, -> { where(published: false) }, class_name: 'SurveyDraft', dependent: :delete_all
+
   def self.init(attributes = EMPTY_HASH)
     n    = where("name = 'New Survey' or name like 'New Survey (%)'").count
     name = n.zero? ? 'New Survey' : "New Survey (#{n})"
 
     new(attributes.reverse_merge(name: name))
+  end
+
+  def draft
+    SurveyDraft.new(survey: self, survey_data: projection)
   end
 
   def projection
@@ -42,9 +48,5 @@ class Survey < ApplicationRecord
     end
 
     data.merge(questions: questions)
-  end
-
-  def draft
-    SurveyDraft.new(survey: self, survey_data: projection)
   end
 end

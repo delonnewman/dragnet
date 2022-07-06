@@ -14,7 +14,7 @@ class SurveyEditorController < ActionController::API
       .nil { raise "Couldn't find draft to publish" }
       .publish!
 
-    redirect_to root_path
+    render json: { redirect: root_path }
   end
 
   private

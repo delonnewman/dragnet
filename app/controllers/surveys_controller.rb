@@ -20,4 +20,10 @@ class SurveysController < ApplicationController
 
     render :edit, layout: 'survey'
   end
+
+  def delete
+    Survey.find(params[:id]).delete
+
+    redirect_to root_path
+  end
 end
