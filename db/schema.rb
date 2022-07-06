@@ -40,7 +40,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   create_table "question_options", force: :cascade do |t|
     t.uuid "question_id", null: false
     t.string "text", null: false
-    t.integer "weight", null: false
+    t.integer "weight"
     t.integer "display_order", default: 0, null: false
     t.uuid "followup_question_id"
     t.index ["followup_question_id"], name: "index_question_options_on_followup_question_id"
@@ -131,5 +131,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
   end
 
   add_foreign_key "question_options", "questions", column: "followup_question_id"
+  add_foreign_key "question_options", "questions", on_delete: :cascade
+  add_foreign_key "questions", "surveys", on_delete: :cascade
   add_foreign_key "surveys", "users", column: "author_id", on_delete: :cascade
 end

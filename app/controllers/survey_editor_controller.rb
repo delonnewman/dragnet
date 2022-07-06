@@ -9,6 +9,14 @@ class SurveyEditorController < ActionController::API
     survey.draft.update(survey_data: read_transit(request.body))
   end
 
+  def publish
+    latest_draft
+      .nil { raise "Couldn't find draft to publish" }
+      .publish!
+
+    redirect_to root_path
+  end
+
   private
 
   def transit(data)
@@ -29,8 +37,12 @@ class SurveyEditorController < ActionController::API
     SurveyDraft.where(survey_id: params[:id], published: false).order(created_at: :desc).first
   end
 
+  def draft
+    latest_draft || survey.draft
+  end
+
   def editing_data
-    { survey: latest_draft.survey_data, question_types: question_types }
+    { survey: draft.survey_data, question_types: question_types }
   end
 
   def question_types

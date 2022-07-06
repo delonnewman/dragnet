@@ -1,6 +1,7 @@
 (ns dragnet.editor.components
   (:require [cljs.pprint :as pp]
-            [cljs-uuid-utils.core :as uuid]))
+            [cljs-uuid-utils.core :as uuid]
+            [cljs-http.client :as http]))
 
 (defn survey
   [state & key-path]
@@ -260,18 +261,25 @@
     [:textarea.form-control
      {:rows 2
       :placeholder "Description"
-      :on-change (update-survey-field state :description)}
-     (survey state :description)]]])
+      :on-blur (update-survey-field state :description)
+      :default-value (survey state :description)}]]])
 
 (defn- add-question
   [state]
   (fn [e]
-    (let [id (-> (uuid/make-random-uuid) uuid/uuid-string)]
+    (let [id (swap! temp-id dec)]
       (swap! state assoc-in [:survey :questions id] {:id id}))))
+
+(defn- publish-survey
+  [survey-id]
+  (fn []
+    (http/post (str "/api/v1/editing/surveys/" survey-id "/publish"))))
 
 (defn survey-editor
   [state]
   [:div {:class "container"}
+   [:div.mb-3.d-flex.justify-content-end
+    [:button.btn.btn-secondary {:type "button" :on-click (publish-survey (survey state :id))} "Publish"]]
    [survey-details state]
    [:div.mb-3.d-flex.justify-content-end
     [:button.btn.btn-primary {:type "button" :on-click (add-question state)} "Add Question"]]

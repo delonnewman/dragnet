@@ -67,7 +67,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.foreign_key :questions, column: :question_id, primary_key: :id, on_delete: :cascade
 
       t.string  :text,   null: false, index: true
-      t.integer :weight, null: false, index: true # used for numerical weight in generated reports
+      t.integer :weight, index: true # used for numerical weight in generated reports
 
       t.integer :display_order, null: false, default: 0
 
