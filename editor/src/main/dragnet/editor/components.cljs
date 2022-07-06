@@ -22,6 +22,14 @@
   [ns type]
   (str ns "-type-" (:id type)))
 
+; TODO: Workout how to pass along contextual data without refreshing
+(defn this-question
+  [state]
+  (let [q (@state :this-question)]
+    (if-not q
+      (throw (js/Error. "this-question has not been set"))
+      q)))
+
 (defn- question-settings-predicate
   [setting]
   (fn [question]
@@ -78,14 +86,12 @@
      [:div
       [:a.btn.btn-link {:href "#" :on-click (remove-option state question option)} "Remove"]]]))
 
-; TODO: move to global state atom
-(def option-temp-ids (atom {}))
+(def ^:private temp-id (atom 0))
 
 (defn- add-option
   [state question]
   (fn [e]
-    (let [id (-> (get @option-temp-ids (question :id) 0) dec)]
-      (swap! option-temp-ids assoc (question :id) (dec id))
+    (let [id (swap! temp-id dec)]
       (swap! state assoc-in [:survey :questions (question :id) :question_options id] {:id id}))
     (-> e .-nativeEvent .preventDefault)
     (-> e .-nativeEvent .stopPropagation)))
@@ -232,7 +238,9 @@
   [state]
   [:div.questions
    (let [qs (->> (survey state :questions) vals (sort-by :display_order))]
-     (for [q qs] ^{:key (str "question-card-" (:id q))} [question-card state q]))])
+     (for [q qs]
+       (let [key (str "question-card-" (:id q))]
+         ^{:key key} [question-card state q])))])
 
 (defn update-survey-field
   [state field]

@@ -32,10 +32,14 @@
   (let [elem (.getElementById js/document dom-id)]
     (rdom/render [survey-editor state] elem)))
 
-(add-watch current-state :editor-refresh (fn [_ ref _ new-data] (refresh-editor ref)))
+(add-watch current-state :editor-refresh
+           (fn [_ ref old new]
+             (if (not= old new)
+               (refresh-editor ref))))
+
 (add-watch current-state :updates
            (fn [_ ref old new]
-             (if (and old new)
+             (if (and old (not= (:survey old) (:survey new)))
                (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))))
 
 (defn init []

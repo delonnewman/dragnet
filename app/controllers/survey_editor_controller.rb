@@ -6,7 +6,7 @@ class SurveyEditorController < ActionController::API
 
   # POST / PATCH - /api/v1/editing/surveys/:id
   def update
-    draft.update(survey_data: read_transit(request.body))
+    survey.draft.update(survey_data: read_transit(request.body))
   end
 
   private
@@ -21,12 +21,16 @@ class SurveyEditorController < ActionController::API
     Transit::Reader.new(:json, io).read
   end
 
-  def draft
-    Survey.find(params[:id]).draft
+  def survey
+    Survey.find(params[:id])
+  end
+
+  def latest_draft
+    SurveyDraft.where(survey_id: params[:id], published: false).order(created_at: :desc).first
   end
 
   def editing_data
-    { survey: draft.survey_data, question_types: question_types }
+    { survey: latest_draft.survey_data, question_types: question_types }
   end
 
   def question_types
