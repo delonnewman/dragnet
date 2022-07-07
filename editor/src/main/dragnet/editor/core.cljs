@@ -33,7 +33,8 @@
 
 (add-watch current-state :editor-refresh
            (fn [_ ref old new]
-             (if (not= (:survey old) (:survey new))
+             (when (not= (:survey old) (:survey new))
+               (println "Last update" (-> new :survey :updated_at))
                (refresh-editor ref))))
 
 (add-watch current-state :updates

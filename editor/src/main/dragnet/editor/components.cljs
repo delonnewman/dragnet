@@ -55,15 +55,22 @@
        ico
        [:span ico " " text]))))
 
-(defn remove-button
-  [& {:keys [on-click]}]
-  [:a.btn.btn-light {:href "#" :on-click on-click :title "Remove"}
-   (icon "fa-solid" "xmark")])
+(defn icon-button
+  [& {:keys [on-click icon-style icon-name title]}]
+  [:button.btn.btn-light
+   {:type "button"
+    :on-click on-click
+    :title title}
+   (icon icon-style icon-name)])
 
 (defn switch
   [& {:keys [id checked on-change label style class-name]}]
   [:div.form-check.form-switch {:style style :class-name class-name}
-   [:input.form-check-input {:id id :type "checkbox" :on-change on-change :checked checked}]
+   [:input.form-check-input
+    {:id id
+     :type "checkbox"
+     :on-change on-change
+     :checked checked}]
    [:label.form-check-label {:for id} label]])
 
 (defn text-field
@@ -140,11 +147,13 @@
 (defn- remove-option
   [state question option]
   (fn [e]
-    (let [key-path [:survey :questions (question :id) :question_options]
-          options (dissoc (get-in @state key-path {}) (option :id))]
-      (swap! state assoc-in key-path options))
+    (swap! state assoc-in [:survey :questions (question :id) :question_options (option :id) :_destroy] true)
     (-> e .-nativeEvent .preventDefault)
     (-> e .-nativeEvent .stopPropagation)))
+
+(defn remove-button
+  [opts]
+  (icon-button (merge opts {:icon-style "fa-solid" :icon-name "xmark" :title "Remove"})))
 
 (defn- choice-option
   [state question option]
@@ -183,7 +192,7 @@
   [state question]
   [:div
    [:div.question-options
-    (for [option (vals (:question_options question))]
+    (for [option (->> (:question_options question) vals (remove :_destroy))]
       (let [dom-id (str "question-" (:id question) "-options-" (option :id))]
         ^{:key dom-id} [choice-option state question option]))]
    [:a.btn.btn-link {:href "#" :on-click (add-option state question)} "Add Option"]])
@@ -282,8 +291,7 @@
 (defn- remove-question
   [state question]
   (fn []
-    (if-let [questions (get-in @state [:survey :questions])]
-      (swap! state assoc-in [:survey :questions] (dissoc questions (question :id))))))
+    (swap! state assoc-in [:survey :questions (question :id) :_destroy] true)))
 
 (defn question-card
   [state question]
@@ -306,7 +314,7 @@
 (defn survey-questions
   [state]
   [:div.questions
-   (let [qs (->> (survey state :questions) vals (sort-by :display_order))]
+   (let [qs (->> (survey state :questions) vals (remove :_destroy) (sort-by :display_order))]
      (for [q qs]
        (let [key (str "question-card-" (:id q))]
          ^{:key key} [question-card state q])))])
