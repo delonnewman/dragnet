@@ -4,17 +4,22 @@ class SurveyEditorController < ActionController::API
     render json: transit(editing_data), content_type: 'application/transit+json'
   end
 
-  # POST / PATCH - /api/v1/editing/surveys/:id
+  # PUT / PATCH - /api/v1/editing/surveys/:id
   def update
-    survey.draft.update(survey_data: read_transit(request.body))
+    draft = survey.drafts.create(survey_data: read_transit(request.body))
+
+    render json: transit(draft_id: draft.id, created_at: draft.created_at.to_time),
+           content_type: 'application/transit+json'
   end
 
-  def publish
-    latest_draft
-      .nil { raise "Couldn't find draft to publish" }
-      .publish!
+  # POST - /api/v1/editing/surveys/:id/apply
+  def apply
+    survey
+      .latest_draft
+      .nil { raise "Couldn't find draft to apply" }
+      .apply!
 
-    render json: { redirect: root_path }
+    render json: transit(editing_data), content_type: 'application/transit+json'
   end
 
   private
@@ -33,16 +38,17 @@ class SurveyEditorController < ActionController::API
     Survey.find(params[:id])
   end
 
-  def latest_draft
-    SurveyDraft.where(survey_id: params[:id], published: false).order(created_at: :desc).first
-  end
-
-  def draft
-    latest_draft || survey.draft
-  end
-
   def editing_data
-    { survey: draft.survey_data, question_types: question_types }
+    { survey: survey.current_draft.survey_data,
+      question_types: question_types,
+      drafts: survey_drafts }
+  end
+
+  def survey_drafts
+    survey
+      .drafts
+      .pull(:id, :created_at)
+      .map { |draft| { draft_id: draft[:id], created_at: draft[:created_at].to_time } }
   end
 
   def question_types

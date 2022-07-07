@@ -12,7 +12,7 @@ class Survey < ApplicationRecord
   has_many :replies
   has_many :answers
 
-  has_many :drafts, -> { where(published: false) }, class_name: 'SurveyDraft', dependent: :delete_all
+  has_many :drafts, -> { where(applied: false) }, class_name: 'SurveyDraft', dependent: :delete_all
 
   def self.init(attributes = EMPTY_HASH)
     n    = where("name = 'New Survey' or name like 'New Survey (%)'").count
@@ -21,8 +21,20 @@ class Survey < ApplicationRecord
     new(attributes.reverse_merge(name: name))
   end
 
-  def draft
+  def new_draft
     SurveyDraft.new(survey: self, survey_data: projection)
+  end
+
+  def latest_draft
+    drafts.where(applied: false).order(created_at: :desc).first
+  end
+
+  def draft?
+    latest_draft.present?
+  end
+
+  def current_draft
+    latest_draft || new_draft
   end
 
   def projection
@@ -30,6 +42,7 @@ class Survey < ApplicationRecord
       :id,
       :name,
       :description,
+      :updated_at,
       questions: [
         :id,
         :text,
@@ -41,6 +54,8 @@ class Survey < ApplicationRecord
         }
       ]
     )
+
+    data[:updated_at] = data[:updated_at].to_time
 
     questions = data[:questions].inject({}) do |qs, q|
       q[:question_options] = q[:question_options].inject({}) { |opts, opt| opts.merge!(opt[:id] => opt) }

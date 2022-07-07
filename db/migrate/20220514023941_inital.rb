@@ -28,8 +28,8 @@ class Inital < ActiveRecord::Migration[7.0]
       t.uuid :survey_id, null: false, index: true
       t.blob :survey_data
 
-      t.boolean :published, index: true, null: false, default: false
-      t.timestamp :published_at, index: true
+      t.boolean :applied, index: true, null: false, default: false
+      t.timestamp :applied_at, index: true
 
       t.timestamp :created_at, index: true
     end

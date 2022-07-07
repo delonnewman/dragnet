@@ -1,11 +1,91 @@
 (ns dragnet.editor.components
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.pprint :as pp]
+            [cljs.core.async :refer [<! chan]]
+            [clojure.string :as s]
             [cljs-uuid-utils.core :as uuid]
             [cljs-http.client :as http]))
+
+;; General purpose components & helpers
+
+; A nieve plural inflection, but good enough for this
+(defn pluralize
+  [word n]
+  (if (= 1 n)
+    (str "1 " word)
+    (if (.endsWith word "s")
+      (str n " " word "es")
+      (str n " " word "s"))))
+
+(def ^:private years   31104000000)
+(def ^:private months  2592000000)
+(def ^:private weeks   604800000)
+(def ^:private days    86400000)
+(def ^:private hours   3600000)
+(def ^:private minutes 60000)
+(def ^:private seconds 1000)
+
+(defn time-ago-in-words
+  [time]
+  (let [now    (js/Date.)
+        diff   (- (.valueOf time) (.valueOf now))
+        suffix (if (pos? diff) "from now" "ago")
+        diff'  (Math/abs diff)]
+    (cond
+      (> diff' years)   (str (->> (/ diff' years)   Math/floor (pluralize "year"))  " " suffix)
+      (> diff' months)  (str (->> (/ diff' months)  Math/floor (pluralize "month")) " " suffix)
+      (> diff' weeks)   (str (->> (/ diff' weeks)   Math/floor (pluralize "week"))  " " suffix)
+      (> diff' days)    (str (->> (/ diff' days)    Math/floor (pluralize "day"))   " " suffix)
+      (> diff' hours)   (str (->> (/ diff' hours)   Math/floor (pluralize "hour"))   " " suffix)
+      (> diff' minutes) (str (->> (/ diff' minutes) Math/floor (pluralize "minute"))   " " suffix)
+      (> diff' seconds) (str (->> (/ diff' seconds) Math/floor (pluralize "second"))   " " suffix)
+      :else "just now")))
+
+(defn icon
+  ([style name]
+   (icon style name nil {}))
+  ([style name x]
+   (if (map? x)
+     (icon style name nil x)
+     (icon style name x {})))
+  ([style name text opts]
+   (let [cls (conj [style (str "fa-" name)] (opts :class))
+         ico [:i (merge opts {:class (s/join " " cls)})]]
+     (if-not text
+       ico
+       [:span ico " " text]))))
+
+(defn remove-button
+  [& {:keys [on-click]}]
+  [:a.btn.btn-light {:href "#" :on-click on-click :title "Remove"}
+   (icon "fa-solid" "xmark")])
+
+(defn switch
+  [& {:keys [id checked on-change label style class-name]}]
+  [:div.form-check.form-switch {:style style :class-name class-name}
+   [:input.form-check-input {:id id :type "checkbox" :on-change on-change :checked checked}]
+   [:label.form-check-label {:for id} label]])
+
+(defn text-field
+  [& {:keys [id class style default-value on-change title]}]
+  [:input.text-field.w-100.border-bottom
+   {:class class
+    :default-value default-value
+    :title title
+    :aria-label title
+    :type "text"
+    :on-blur on-change
+    :style (merge style {:border "none"})}])
+
+;; Data abstraction
 
 (defn survey
   [state & key-path]
   (get-in @state (cons :survey key-path)))
+
+(defn survey-draft?
+  [state]
+  (-> (@state :drafts) empty? not))
 
 (defn question-types
   [state]
@@ -44,6 +124,8 @@
 (defn include-date-and-time?
   [q]
   (and (include-date? q) (include-time? q)))
+
+;; Editor Components
 
 (defn- option-updater
   [field value-fn]
@@ -84,8 +166,8 @@
         :placeholder "Numerical Weight"
         :default-value (option :weight)
         :on-change (option-weight-updater state question option)}]]
-     [:div
-      [:a.btn.btn-link {:href "#" :on-click (remove-option state question option)} "Remove"]]]))
+     [:div.ms-1
+      [remove-button {:on-click (remove-option state question option)}]]]))
 
 (def ^:private temp-id (atom 0))
 
@@ -153,12 +235,6 @@
     (let [checked (-> event .-target .-checked)]
       (swap! state assoc-in [:survey :questions (question :id) :required] checked))))
 
-(defn switch
-  [& {:keys [id checked on-change label style class-name]}]
-  [:div.form-check.form-switch {:style style :class-name class-name}
-   [:input.form-check-input {:id id :type "checkbox" :on-change on-change :checked checked}]
-   [:label.form-check-label {:for id} label]])
-
 (defn question-card-footer
   [state question]
   [:div.card-footer
@@ -203,15 +279,6 @@
          :value (:id type)}
         (type :name)])]))
 
-(defn resizing-text-field
-  [& {:keys [id class style default-value on-change]}]
-  [:input.resizing-text-field.w-100.border-bottom
-   {:class class
-    :default-value default-value
-    :type "text"
-    :on-blur on-change
-    :style (merge style {:border "none"})}])
-
 (defn- remove-question
   [state question]
   (fn []
@@ -224,14 +291,15 @@
    [:div.card-body
     [:div.card-title.d-flex.justify-content-between
      [:div.question-title.w-100.d-flex.me-3
-      [resizing-text-field
+      [text-field
        {:id (question :id)
+        :title "Enter question text"
         :class "h5"
         :default-value (question :text)
         :on-change #(swap! state assoc-in [:survey :questions (question :id) :text] (-> % .-target .-value))}]
       (if (question :required) [:span {:title "Required"} "*"])]
      [question-type-selector state question]
-     [:a.btn.btn-link {:href "#" :on-click (remove-question state question)} "Remove"]]
+     [remove-button {:on-click (remove-question state question)}]]
     [question-card-body state question]]
     [question-card-footer state question]])
 
@@ -253,34 +321,59 @@
   [:div.card.survey-details.mb-5
    [:div.card-body
     [:div.card-title.pb-3
-      [resizing-text-field
+      [text-field
        {:id (survey state :id)
+        :title "Enter form name"
         :class "h3"
         :default-value (survey state :name)
         :on-change (update-survey-field state :name)}]]
     [:textarea.form-control
-     {:rows 2
+     {:rows 1
       :placeholder "Description"
       :on-blur (update-survey-field state :description)
       :default-value (survey state :description)}]]])
 
+(def new-question-text
+  (let [n (atom -1)]
+    (fn []
+      (swap! n inc)
+      (if (zero? @n)
+        "New Question"
+        (str "New Question (" @n ")")))))
+
 (defn- add-question
   [state]
   (fn [e]
-    (let [id (swap! temp-id dec)]
-      (swap! state assoc-in [:survey :questions id] {:id id}))))
+    (let [id   (swap! temp-id dec)
+          text (new-question-text)]
+      (swap! state assoc-in [:survey :questions id] {:id id :text text}))))
 
-(defn- publish-survey
-  [survey-id]
+(defn- save-survey!
+  [state]
   (fn []
-    (http/post (str "/api/v1/editing/surveys/" survey-id "/publish"))))
+    (go
+      (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey state :id) "/apply")))]
+        (reset! state (res :body))))))
 
 (defn survey-editor
   [state]
   [:div {:class "container"}
-   [:div.mb-3.d-flex.justify-content-end
-    [:button.btn.btn-secondary {:type "button" :on-click (publish-survey (survey state :id))} "Publish"]]
+   [:div.mb-3.d-flex.justify-content-between
+    [:div
+     [:small.me-1
+      (if (survey-draft? state)
+       (str "Last saved " (time-ago-in-words (survey state :updated_at)))
+       (str "Up-to-date. Saved " (time-ago-in-words (survey state :updated_at))))]]
+    [:div
+     [:button.btn.btn-sm.btn-primary.me-1
+      {:type "button"
+       :disabled (not (survey-draft? state))
+       :on-click (save-survey! state)}
+      "Save"]]]
    [survey-details state]
    [:div.mb-3.d-flex.justify-content-end
-    [:button.btn.btn-primary {:type "button" :on-click (add-question state)} "Add Question"]]
+    [:button.btn.btn-sm.btn-secondary
+     {:type "button"
+      :on-click (add-question state)}
+     (icon "fa-solid" "plus" "Add Question")]]
    [survey-questions state]])

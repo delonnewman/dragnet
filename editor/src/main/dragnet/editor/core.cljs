@@ -19,9 +19,8 @@
 
 (defn api-update
   [url data]
-  (println "api-update" url data)
   (go (let [res (<! (http/put url {:transit-params data}))]
-        res)))
+        (res :body))))
 
 (defn survey-endpoint
   [survey-id]
@@ -34,13 +33,15 @@
 
 (add-watch current-state :editor-refresh
            (fn [_ ref old new]
-             (if (not= old new)
+             (if (not= (:survey old) (:survey new))
                (refresh-editor ref))))
 
 (add-watch current-state :updates
            (fn [_ ref old new]
              (if (and old (not= (:survey old) (:survey new)))
-               (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))))
+               (go
+                 (let [draft (<! (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))]
+                   (swap! ref assoc :drafts (conj (@ref :drafts) draft)))))))
 
 (defn init []
   (go (let [survey-id (-> (.querySelector js/document "input[name=survey_id]") .-value)

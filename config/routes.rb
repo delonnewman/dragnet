@@ -19,6 +19,6 @@ Rails.application.routes.draw do
 
   scope '/api/v1/editing' do
     resources :survey_editor, path: '/surveys', only: %i[show update]
-    post '/surveys/:id/publish', to: 'survey_editor#publish', as: 'survey_editor_publish'
+    post '/surveys/:id/apply', to: 'survey_editor#apply', as: 'survey_editor_apply'
   end
 end

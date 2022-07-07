@@ -15,7 +15,7 @@ gem 'webrick', group: :development
 # UI / Assets
 gem 'bootstrap', '~> 5.1.3'
 gem 'chartkick'
-gem 'font-awesome-rails', github: 'delonnewman/font-awesome-rails', tag: 'v6.1.1'
+gem 'font-awesome-sass'
 gem 'sprockets-rails'
 
 gem 'pry'

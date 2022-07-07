@@ -9,31 +9,41 @@ class SurveyDraft < ApplicationRecord
     @draft ||= Survey.new(survey_data)
   end
 
-  def published!(published_at = Time.now)
-    self.published = true
-    self.published_at = published_at
+  def applied!(timestamp = Time.now)
+    self.applied = true
+    self.applied_at = timestamp
     self
   end
 
-  def publish!(published_at = Time.now)
+  def apply!(timestamp = Time.now)
     SurveyDraft.transaction do
+      # Commit changes to survey
       survey.update(survey_attributes)
-      published!(published_at).tap(&:save!)
+
+      # Mark this draft as published
+      applied!(timestamp).save!
+
+      # Clean up old drafts
+      survey
+        .drafts
+        .where.not(id: id)
+        .delete_all
     end
   end
 
   def survey_attributes
     survey_data.slice(:id, :name, :description).tap do |attrs|
       attrs[:questions_attributes] = survey_data[:questions].map do |(_, q)|
-        q.slice(:text, :display_order, :required, :question_type_id).tap do |new|
+        keys = %i[text display_order required question_type_id]
+        keys << :id unless q[:id].is_a?(Integer) && q[:id].negative?
+        q.slice(*keys).tap do |new|
           unless q[:question_options].blank?
             new[:question_options_attributes] = q[:question_options].map do |(_, opt)|
-              new = opt.slice(:text, :weight)
-              opt[:id].negative? ? new : new.merge!(id: opt[:id])
+              keys = %i[text weight]
+              keys << :id if opt[:id].positive?
+              opt.slice(*keys)
             end
           end
-
-          new.merge!(id: q[:id]) if !q[:id].is_a?(Integer) || !q[:id].negative?
         end
       end
     end

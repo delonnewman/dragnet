@@ -1,4 +1,6 @@
-<%= link_to 'Create survey', new_survey_path, class: 'btn btn-primary' %>
+<%= link_to new_survey_path, class: 'btn btn-primary' do %>
+    <%= icon('fa-solid', 'screwdriver-wrench') %> Create Form
+<% end %>
 
 <div class="survey-listing d-flex flex-wrap">
     <% @surveys.each do |survey| %>
@@ -6,11 +8,13 @@
             <div class="card-body">
                 <div class="card-title">
                     <%= survey.name %>
+                    <% if survey.draft? %><span class="badge bg-secondary">Draft</span><% end %>
                 </div>
+
                 <%= link_to 'Results', report_path(question_ids: survey.question_ids, name: survey.name) %>
                 <%= link_to 'View', reply_to_path(survey.short_id, survey.slug) %>
                 <%= link_to 'Summary', survey_stats_path(survey.short_id) %>
-                <%= link_to 'Create', edit_survey_path(survey) %>
+                <%= link_to 'Edit', edit_survey_path(survey) %>
             </div>
         </div>
     <% end %>

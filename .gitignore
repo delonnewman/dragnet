@@ -26,3 +26,4 @@ node_modules/
 .lsp/
 .clj-kondo/
 editor/.calva/
+.DS_Store
