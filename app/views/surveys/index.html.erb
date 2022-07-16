@@ -10,10 +10,10 @@
             <div class="card-body">
                 <div class="card-title">
                     <%= survey.name %>
-                    <% if survey.draft? %><span class="badge bg-secondary">Draft</span><% end %>
+                    <% if survey.edited? %><span class="badge bg-secondary">Unsaved changes</span><% end %>
                 </div>
 
-                <div>
+                <div class="mb-2">
                     <span class="badge bg-secondary">
                         <%= pluralize survey.questions.count, "question" %>
                     </span>
@@ -21,7 +21,6 @@
                         <%= pluralize survey.replies.count, "reply" %>
                     </span>
                 </div>
-
 
                 <%= link_to 'Results', report_path(question_ids: survey.question_ids, name: survey.name) %>
                 <%= link_to 'View', reply_to_path(survey.short_id, survey.slug) %>

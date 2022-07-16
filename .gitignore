@@ -27,3 +27,6 @@ node_modules/
 .clj-kondo/
 editor/.calva/
 .DS_Store
+/.idea/
+/.yardoc/
+/doc/

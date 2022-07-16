@@ -31,3 +31,9 @@ class Object
     self
   end
 end
+
+class Class
+  def presenter?
+    false
+  end
+end

@@ -1,5 +1,7 @@
 module Dragnet
   class ActiveRecordGenerator
+    include Dragnet
+
     class << self
       def parameterized?
         true
@@ -26,8 +28,6 @@ module Dragnet
     end
 
     attr_reader :active_record_class, :attributes
-
-    EMPTY_HASH = {}.freeze
 
     def initialize(active_record_class, attributes = EMPTY_HASH)
       @attributes = attributes.generate

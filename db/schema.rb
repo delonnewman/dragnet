@@ -90,16 +90,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.index ["survey_id"], name: "index_replies_on_survey_id"
   end
 
-  create_table "survey_drafts", force: :cascade do |t|
+  create_table "survey_edits", force: :cascade do |t|
     t.uuid "survey_id", null: false
     t.binary "survey_data"
     t.boolean "applied", default: false, null: false
     t.datetime "applied_at", precision: nil
     t.datetime "created_at", precision: nil
-    t.index ["applied"], name: "index_survey_drafts_on_applied"
-    t.index ["applied_at"], name: "index_survey_drafts_on_applied_at"
-    t.index ["created_at"], name: "index_survey_drafts_on_created_at"
-    t.index ["survey_id"], name: "index_survey_drafts_on_survey_id"
+    t.index ["applied"], name: "index_survey_edits_on_applied"
+    t.index ["applied_at"], name: "index_survey_edits_on_applied_at"
+    t.index ["created_at"], name: "index_survey_edits_on_created_at"
+    t.index ["survey_id"], name: "index_survey_edits_on_survey_id"
   end
 
   create_table "surveys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -1,6 +1,4 @@
 class QuestionOptionGenerator < Dragnet::ActiveRecordGenerator
-  EMPTY_HASH = {}.freeze
-  
   def call(other_attributes = EMPTY_HASH)
     q      = attributes.fetch(:question) { raise 'A question attribute is required' }
     text   = Faker::Lorem.sentence

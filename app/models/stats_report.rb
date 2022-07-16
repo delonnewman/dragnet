@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class StatsReport
-  extend Forwardable
-
   attr_reader :reportable
 
-  def_delegators :reportable, :questions, :name
+  delegate :questions, :name, to: :reportable
 
   def initialize(reportable)
     @reportable = reportable
@@ -59,12 +57,13 @@ class StatsReport
   def answer_stats(question)
     weight = question_options[:weight]
 
-    data = reportable
-             .answers
-             .where(question: question)
-             .joins(:question_option)
-             .pluck(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
-             .first
+    data =
+      reportable
+        .answers
+        .where(question: question)
+        .joins(:question_option)
+        .pluck(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
+        .first
 
     { 'Min'       => data[0].nil(0),
       'Max'       => data[1].nil(0),

@@ -1,7 +1,8 @@
 class ApplicationRecord < ActiveRecord::Base
-  primary_abstract_class
+  extend Dragnet::Composing
+  include Dragnet
 
-  EMPTY_HASH = {}.freeze
+  primary_abstract_class
 
   class << self
     def generator_class_name
@@ -19,8 +20,8 @@ class ApplicationRecord < ActiveRecord::Base
     def inherited(klass)
       super
 
-      klass.extend(SingleForwardable)
-      klass.def_delegators(:generator, :[], :generate)
+      define_singleton_method(:[]) { |*args| generator[*args] }
+      define_singleton_method(:generate) { |*args| generator.generate(*args) }
     end
   end
 end
