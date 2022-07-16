@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  validates :text, presence: true
+
   belongs_to :survey
   belongs_to :question_type
 
