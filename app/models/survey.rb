@@ -13,7 +13,6 @@ class Survey < ApplicationRecord
   has_many :answers
 
   has_many :edits, -> { where(applied: false) }, class_name: 'SurveyEdit', dependent: :delete_all
-
   composes Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit]
 
   def self.init(attributes = EMPTY_HASH)
