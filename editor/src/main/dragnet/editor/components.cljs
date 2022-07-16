@@ -1,88 +1,9 @@
 (ns dragnet.editor.components
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs.pprint :as pp]
-            [cljs.core.async :refer [<! chan]]
-            [clojure.string :as s]
-            [cljs-uuid-utils.core :as uuid]
+  (:require [dragnet.utils :refer [time-ago-in-words]]
+            [dragnet.components :refer [icon icon-button switch text-field]]
+            [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]))
-
-;; General purpose components & helpers
-
-; A nieve plural inflection, but good enough for this
-(defn pluralize
-  [word n]
-  (if (= 1 n)
-    (str "1 " word)
-    (if (.endsWith word "s")
-      (str n " " word "es")
-      (str n " " word "s"))))
-
-(def ^:private years   31104000000)
-(def ^:private months  2592000000)
-(def ^:private weeks   604800000)
-(def ^:private days    86400000)
-(def ^:private hours   3600000)
-(def ^:private minutes 60000)
-(def ^:private seconds 1000)
-
-(defn time-ago-in-words
-  [time]
-  (let [now    (js/Date.)
-        diff   (- (.valueOf time) (.valueOf now))
-        suffix (if (pos? diff) "from now" "ago")
-        diff'  (Math/abs diff)]
-    (cond
-      (> diff' years)   (str (->> (/ diff' years)   Math/floor (pluralize "year"))  " " suffix)
-      (> diff' months)  (str (->> (/ diff' months)  Math/floor (pluralize "month")) " " suffix)
-      (> diff' weeks)   (str (->> (/ diff' weeks)   Math/floor (pluralize "week"))  " " suffix)
-      (> diff' days)    (str (->> (/ diff' days)    Math/floor (pluralize "day"))   " " suffix)
-      (> diff' hours)   (str (->> (/ diff' hours)   Math/floor (pluralize "hour"))   " " suffix)
-      (> diff' minutes) (str (->> (/ diff' minutes) Math/floor (pluralize "minute"))   " " suffix)
-      (> diff' seconds) (str (->> (/ diff' seconds) Math/floor (pluralize "second"))   " " suffix)
-      :else "just now")))
-
-(defn icon
-  ([style name]
-   (icon style name nil {}))
-  ([style name x]
-   (if (map? x)
-     (icon style name nil x)
-     (icon style name x {})))
-  ([style name text opts]
-   (let [cls (conj [style (str "fa-" name)] (opts :class))
-         ico [:i (merge opts {:class (s/join " " cls)})]]
-     (if-not text
-       ico
-       [:span ico " " text]))))
-
-(defn icon-button
-  [& {:keys [on-click icon-style icon-name title]}]
-  [:button.btn.btn-light
-   {:type "button"
-    :on-click on-click
-    :title title}
-   (icon icon-style icon-name)])
-
-(defn switch
-  [& {:keys [id checked on-change label style class-name]}]
-  [:div.form-check.form-switch {:style style :class-name class-name}
-   [:input.form-check-input
-    {:id id
-     :type "checkbox"
-     :on-change on-change
-     :checked checked}]
-   [:label.form-check-label {:for id} label]])
-
-(defn text-field
-  [& {:keys [id class style default-value on-change title]}]
-  [:input.text-field.w-100.border-bottom
-   {:class class
-    :default-value default-value
-    :title title
-    :aria-label title
-    :type "text"
-    :on-blur on-change
-    :style (merge style {:border "none"})}])
 
 ;; Data abstraction
 
@@ -90,9 +11,9 @@
   [state & key-path]
   (get-in @state (cons :survey key-path)))
 
-(defn survey-draft?
+(defn survey-edited?
   [state]
-  (-> (@state :drafts) empty? not))
+  (-> (@state :edits) empty? not))
 
 (defn question-types
   [state]
@@ -109,14 +30,6 @@
 (defn question-type-key
   [ns type]
   (str ns "-type-" (:id type)))
-
-; TODO: Workout how to pass along contextual data without refreshing
-(defn this-question
-  [state]
-  (let [q (@state :this-question)]
-    (if-not q
-      (throw (js/Error. "this-question has not been set"))
-      q)))
 
 (defn- question-settings-predicate
   [setting]
@@ -361,7 +274,7 @@
   (fn []
     (go
       (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey state :id) "/apply")))]
-        (reset! state (res :body))))))
+        (swap! state assoc :edits nil)))))
 
 (defn survey-editor
   [state]
@@ -369,13 +282,13 @@
    [:div.mb-3.d-flex.justify-content-between
     [:div
      [:small.me-1
-      (if (survey-draft? state)
+      (if (survey-edited? state)
        (str "Last saved " (time-ago-in-words (survey state :updated_at)))
        (str "Up-to-date. Saved " (time-ago-in-words (survey state :updated_at))))]]
     [:div
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
-       :disabled (not (survey-draft? state))
+       :disabled (not (survey-edited? state))
        :on-click (save-survey! state)}
       "Save"]]]
    [survey-details state]

@@ -1,7 +1,7 @@
 (ns dragnet.editor.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs-http.client :as http]
-            [cljs.core.async :refer [<! chan]]
+            [cljs.core.async :refer [<!]]
             [cljs.pprint :as pp]
             [reagent.core :as r]
             [reagent.dom :as rdom]
@@ -41,8 +41,8 @@
            (fn [_ ref old new]
              (if (and old (not= (:survey old) (:survey new)))
                (go
-                 (let [draft (<! (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))]
-                   (swap! ref assoc :drafts (conj (@ref :drafts) draft)))))))
+                 (let [edit (<! (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))]
+                   (swap! ref assoc :edits (conj (@ref :edits) edit)))))))
 
 (defn init []
   (go (let [survey-id (-> (.querySelector js/document "input[name=survey_id]") .-value)

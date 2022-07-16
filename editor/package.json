@@ -2,6 +2,10 @@
   "name": "editor",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "watch": "shadow-cljs watch frontend",
+    "browser-repl": "shadow-cljs browser-repl"
+  },
   "devDependencies": {
     "shadow-cljs": "2.19.1"
   },
