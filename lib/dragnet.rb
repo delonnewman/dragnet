@@ -9,6 +9,7 @@ require_relative 'dragnet/composing'
 # Generators
 require_relative 'dragnet/generator'
 require_relative 'dragnet/parameterized_generator'
+require_relative 'dragnet/generators'
 require_relative 'dragnet/active_record_generator'
 
 # View Layer

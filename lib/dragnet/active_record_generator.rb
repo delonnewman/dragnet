@@ -1,6 +1,7 @@
 module Dragnet
   class ActiveRecordGenerator
     include Dragnet
+    include Dragnet::Generators
 
     class << self
       def parameterized?

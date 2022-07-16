@@ -1,0 +1,5 @@
+require_relative 'generators/name'
+require_relative 'generators/login'
+require_relative 'generators/email'
+require_relative 'generators/paragraph'
+require_relative 'generators/short_answer'
