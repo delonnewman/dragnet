@@ -17,11 +17,6 @@ class ApplicationRecord < ActiveRecord::Base
       generator_class || Dragnet::ActiveRecordGenerator.new(self)
     end
 
-    def inherited(klass)
-      super
-
-      define_singleton_method(:[]) { |*args| generator[*args] }
-      define_singleton_method(:generate) { |*args| generator.generate(*args) }
-    end
+    delegate :generate!, :[], :generate, to: :generator
   end
 end

@@ -24,5 +24,21 @@ module Dragnet
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # ActiveRecord
+    config.active_record.yaml_column_permitted_classes = [
+      TrueClass,
+      FalseClass,
+      NilClass,
+      Integer,
+      Float,
+      String,
+      Symbol,
+      Array,
+      Hash,
+      ActiveSupport::HashWithIndifferentAccess,
+      Time,
+      DateTime
+    ]
   end
 end

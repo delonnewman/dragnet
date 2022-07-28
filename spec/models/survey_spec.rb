@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 # TODO: move this to a concern spec don't use shared spec
-RSpec.describe Survey, type: :model do
+describe Survey, type: :model do
   describe '#new' do
     context 'when no slug is given' do
       subject(:survey) { Survey.new(name: Name.generate) }

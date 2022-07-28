@@ -9,7 +9,9 @@
 
 (defn survey
   [state & key-path]
-  (get-in @state (cons :survey key-path)))
+  (if (empty? key-path)
+    (@state :survey)
+    (get-in @state (cons :survey key-path))))
 
 (defn survey-edited?
   [state]
@@ -218,7 +220,7 @@
         :class "h5"
         :default-value (question :text)
         :on-change #(swap! state assoc-in [:survey :questions (question :id) :text] (-> % .-target .-value))}]
-      (if (question :required) [:span {:title "Required"} "*"])]
+      (when (question :required) [:span {:title "Required"} "*"])]
      [question-type-selector state question]
      [remove-button {:on-click (remove-question state question)}]]
     [question-card-body state question]]
@@ -273,8 +275,11 @@
   [state]
   (fn []
     (go
-      (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey state :id) "/apply")))]
-        (swap! state assoc :edits nil)))))
+      (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey state :id) "/apply")))
+            t   (-> res :body :survey :updated_at)]
+        (println 't, t)
+        (swap! state assoc :edits nil)
+        (swap! state assoc-in [:survey :updated_at] t)))))
 
 (defn survey-editor
   [state]

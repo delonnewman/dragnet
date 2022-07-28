@@ -6,6 +6,8 @@
 # @see Question
 # @see QuestionOption
 class SurveyEdit::SurveyAttributeProjector
+  include Dragnet
+
   def initialize(edit)
     @edit = edit
   end
@@ -20,8 +22,12 @@ class SurveyEdit::SurveyAttributeProjector
     end
   end
 
+  def questions
+    edit.survey_data[:questions] || EMPTY_ARRAY
+  end
+
   def add_question_attributes!(attrs)
-    attrs[:questions_attributes] = edit.survey_data[:questions].map do |(_, q)|
+    attrs[:questions_attributes] = questions.map do |(_, q)|
       q.slice(*question_keys(q)).tap do |new|
         add_question_options_attributes!(new, q)
       end
@@ -34,10 +40,14 @@ class SurveyEdit::SurveyAttributeProjector
     end
   end
 
+  def question_options(question)
+    question[:question_options] || EMPTY_ARRAY
+  end
+
   def add_question_options_attributes!(new, old)
     return if old[:question_options].blank?
 
-    new[:question_options_attributes] = old[:question_options].map do |(_, opt)|
+    new[:question_options_attributes] = question_options(old).map do |(_, opt)|
       opt.slice(*question_option_keys(opt))
     end
   end
@@ -45,7 +55,7 @@ class SurveyEdit::SurveyAttributeProjector
   public
 
   def call
-    edit.survey_data.slice(:id, :name, :description).tap do |attrs|
+    edit.survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|
       add_question_attributes!(attrs)
     end
   end

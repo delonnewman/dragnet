@@ -30,6 +30,7 @@ class Survey::Editing
       :name,
       :description,
       :updated_at,
+      :author_id,
       questions: [
         :id,
         :text,
@@ -42,7 +43,7 @@ class Survey::Editing
       ]
     )
 
-    data[:updated_at] = data[:updated_at].to_time
+    data[:updated_at] = data[:updated_at]&.to_time
 
     questions = data[:questions].inject({}) do |qs, q|
       q[:question_options] = q[:question_options].inject({}) do |opts, opt|

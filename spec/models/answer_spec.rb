@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Answer, type: :model do
+describe Answer, type: :model do
   describe '#new' do
     context 'when a question is given, but no question type' do
       let(:survey) { Survey.generate.tap(&:save!) }

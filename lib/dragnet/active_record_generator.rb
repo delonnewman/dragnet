@@ -19,6 +19,10 @@ module Dragnet
         obj.generate(*args)
       end
 
+      def generate!(*args)
+        generate(*args).tap(&:save!)
+      end
+
       def active_record_class_name
         name.gsub(/Generator$/, '')
       end
@@ -47,6 +51,10 @@ module Dragnet
       return call(other_attributes.generate) if respond_to?(:call)
 
       active_record_class.new(attributes.merge(other_attributes.generate))
+    end
+
+    def generate!(other_attributes = EMPTY_HASH)
+      generate(other_attributes).tap(&:save!)
     end
   end
 end

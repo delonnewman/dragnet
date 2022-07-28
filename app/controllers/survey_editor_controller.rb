@@ -14,12 +14,12 @@ class SurveyEditorController < ActionController::API
 
   # POST - /api/v1/editing/surveys/:id/apply
   def apply
-    survey
-      .latest_edit
-      .nil { raise "Couldn't find draft to apply" }
-      .apply!
+    updated =
+      survey.latest_edit
+            .if_nil { raise "Couldn't find draft to apply" }
+            .apply!
 
-    render json: transit(survey_editing.editing_data), content_type: 'application/transit+json'
+    render json: transit(survey_editing(updated).editing_data), content_type: 'application/transit+json'
   end
 
   private
@@ -38,7 +38,7 @@ class SurveyEditorController < ActionController::API
     Survey.find(params[:id])
   end
 
-  def survey_editing
-    SurveyEditingPresenter.new(survey)
+  def survey_editing(s = survey)
+    SurveyEditingPresenter.new(s)
   end
 end

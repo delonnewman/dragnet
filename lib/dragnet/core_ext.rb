@@ -19,7 +19,7 @@ class Hash
 end
 
 class NilClass
-  def nil(value = self, &block)
+  def if_nil(value = self, &block)
     return value unless block_given?
 
     block.call
@@ -27,7 +27,7 @@ class NilClass
 end
 
 class Object
-  def nil(*, &_)
+  def if_nil(*, &_)
     self
   end
 end
