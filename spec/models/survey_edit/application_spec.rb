@@ -20,7 +20,7 @@ describe SurveyEdit::Application do
       end
     end
 
-    describe '#apply!' do
+    xdescribe '#apply!' do
       it 'will apply the edit to the survey' do
         expect(application.apply!).to eq(Survey.new(edit.survey_attributes))
       end

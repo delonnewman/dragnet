@@ -10,7 +10,6 @@ class SurveyEditingPresenter < Dragnet::View::Presenter
       edits:          survey_edits,
       question_types: question_types }
   end
-  alias to_h editing_data
 
   def survey_edits
     edits = survey.edits.pull(:id, :created_at)

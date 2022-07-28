@@ -25,20 +25,22 @@ module Dragnet
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    config.active_record.use_yaml_unsafe_load = true
     # ActiveRecord
-    config.active_record.yaml_column_permitted_classes = [
-      TrueClass,
-      FalseClass,
-      NilClass,
-      Integer,
-      Float,
-      String,
-      Symbol,
-      Array,
-      Hash,
-      ActiveSupport::HashWithIndifferentAccess,
-      Time,
-      DateTime
-    ]
+    # config.active_record.yaml_column_permitted_classes = [
+    #   TrueClass,
+    #   FalseClass,
+    #   NilClass,
+    #   Integer,
+    #   Float,
+    #   String,
+    #   Symbol,
+    #   Array,
+    #   Hash,
+    #   Time,
+    #   DateTime,
+    #   ActiveRecord::Base,
+    #   ActiveSupport::HashWithIndifferentAccess,
+    # ]
   end
 end

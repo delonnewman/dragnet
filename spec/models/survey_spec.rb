@@ -4,7 +4,7 @@ require 'rails_helper'
 describe Survey, type: :model do
   describe '#new' do
     context 'when no slug is given' do
-      subject(:survey) { Survey.new(name: Name.generate) }
+      subject(:survey) { Survey.new(name: Dragnet::Generators::Name.generate) }
 
       it 'will generate a slug' do
         expect(survey.slug).to eq Dragnet::Utils.slug(survey.name)
@@ -12,7 +12,7 @@ describe Survey, type: :model do
     end
 
     context 'when slug is given' do
-      subject(:survey) { Survey.new(name: Name.generate, slug: 'testing-123') }
+      subject(:survey) { Survey.new(name: Dragnet::Generators::Name.generate, slug: 'testing-123') }
 
       it 'will use the given slug' do
         expect(survey.slug).to eq 'testing-123'
