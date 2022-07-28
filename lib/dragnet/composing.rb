@@ -13,10 +13,8 @@ module Dragnet
   #   end
   #
   #   # app/model/survey/editing.rb
-  #   class Survey::Editing
-  #     def initialize(survey)
-  #       @survey = survey
-  #     end
+  #   class Survey::Editing < Dragnet::Aspect
+  #     aspect_of Survey
   #
   #     def edited? ... end
   #     def new_edit ... end
@@ -29,7 +27,9 @@ module Dragnet
     # @param klass [Class]
     #
     # @return [Symbol]
-    def composed_class_default_method_name(klass)
+    def composed_class_method_name(klass)
+      raise "can't generate method name for anonymous class" unless klass.name
+
       klass.name.split('::').last.underscore.to_sym
     end
 
@@ -42,16 +42,14 @@ module Dragnet
     # @param calling [Symbol] (optionally) a named method that will be called after the object is instantiated
     # @param memoize [Boolean] memoize the composed object, defaults to true
     def composes(klass, *args, as: nil, delegating: EMPTY_ARRAY, calling: nil, memoize: true)
-      meth = as || composed_class_default_method_name(klass)
+      meth = as || composed_class_method_name(klass)
 
       define_method(meth) do
-        obj = if composed_object_memos[meth]
-                composed_object_memos[meth]
-              else
-                klass.new(self, *args).tap do |obj|
-                  composed_object_memos[meth] = obj if memoize
-                end
-              end
+        obj = composed_object_memos.fetch(meth) do
+          klass.new(self, *args).tap do |obj|
+            composed_object_memos[meth] = obj if memoize
+          end
+        end
 
         calling ? obj.public_send(calling) : obj
       end

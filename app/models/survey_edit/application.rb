@@ -1,23 +1,27 @@
 # frozen_string_literal: true
 
 # Logic for survey edit application
-class SurveyEdit::Application
-  attr_reader :edit, :validating_survey
+class SurveyEdit::Application < Dragnet::Aspect
+  aspect_of SurveyEdit, alias_as: :edit
+
+  attr_reader :validating_survey
 
   delegate :valid?, :validate!, :errors, to: :validating_survey
 
   def initialize(edit)
-    @edit = edit
+    super(edit)
     @validating_survey = Survey.new(edit.survey_attributes)
+  end
+
+  def applied(timestamp = Time.now)
+    edit.applied = true
+    edit.applied_at = timestamp
+    edit
   end
 
   def applied!(timestamp = Time.now)
     validate!(:application)
-
-    edit.applied = true
-    edit.applied_at = timestamp
-
-    edit
+    applied(timestamp)
   end
 
   def apply!(timestamp = Time.now)

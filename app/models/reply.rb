@@ -6,6 +6,10 @@ class Reply < ApplicationRecord
   has_many :answers
   accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
+  composes Reply::Submission, delegating: %i[submit! submitted submitted!]
+
+  # @!attribute answer_records
+  #   @return [Array<Answer>]
   serialize :answer_records
 
   before_save do
@@ -14,11 +18,5 @@ class Reply < ApplicationRecord
 
   def answers_to(question)
     answer_records.select { |a| a.question_id == question.id }
-  end
-
-  def submitted!(submitted_at = Time.now)
-    self.submitted = true
-    self.submitted_at = submitted_at
-    self
   end
 end

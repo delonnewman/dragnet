@@ -8,3 +8,6 @@ Layout/MultilineMethodCallIndentation:
 
 Metrics/MethodLength:
   Max: 15
+
+Style/ClassAndModuleChildren:
+  Enabled: false

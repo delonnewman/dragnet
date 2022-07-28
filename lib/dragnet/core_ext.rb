@@ -36,4 +36,8 @@ class Class
   def presenter?
     false
   end
+
+  def aspect?
+    false
+  end
 end

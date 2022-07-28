@@ -15,7 +15,7 @@ class ReplyController < ApplicationController
   def update
     @reply = replies.find(params[:id])
 
-    if @reply.submitted!.update(update_params)
+    if @reply.submit!(reply_params)
       redirect_to reply_success_path(@reply)
     else
       render :edit
@@ -32,7 +32,7 @@ class ReplyController < ApplicationController
     Reply.includes(:survey, :answers, questions: [:question_type])
   end
 
-  def update_params
+  def reply_params
     params.require(:reply).permit!
   end
 end

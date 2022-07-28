@@ -5,6 +5,7 @@ require_relative 'dragnet/utils'
 require_relative 'dragnet/core_ext'
 require_relative 'dragnet/time_utils'
 require_relative 'dragnet/composing'
+require_relative 'dragnet/aspect'
 
 # Generators
 require_relative 'dragnet/generator'

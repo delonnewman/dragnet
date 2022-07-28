@@ -5,16 +5,16 @@
 # @see Survey
 # @see Question
 # @see QuestionOption
-class SurveyEdit::SurveyAttributeProjector
-  include Dragnet
+class SurveyEdit::SurveyAttributeProjector < Dragnet::Aspect
+  aspect_of SurveyEdit, alias_as: :edit
 
-  def initialize(edit)
-    @edit = edit
+  def call
+    edit.survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|
+      add_question_attributes!(attrs)
+    end
   end
 
   private
-
-  attr_reader :edit
 
   def question_keys(question)
     %i[text display_order required question_type_id _destroy].tap do |keys|
@@ -49,14 +49,6 @@ class SurveyEdit::SurveyAttributeProjector
 
     new[:question_options_attributes] = question_options(old).map do |(_, opt)|
       opt.slice(*question_option_keys(opt))
-    end
-  end
-
-  public
-
-  def call
-    edit.survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|
-      add_question_attributes!(attrs)
     end
   end
 end

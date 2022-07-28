@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 # Logic for survey edits
-class Survey::Editing
-  attr_reader :survey
-
-  def initialize(survey)
-    @survey = survey
-  end
+class Survey::Editing < Dragnet::Aspect
+  aspect_of Survey
 
   def latest_edit
     survey.edits.where(applied: false).order(created_at: :desc).first
