@@ -1,51 +1,14 @@
 (ns dragnet.editor.components
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [dragnet.utils :refer [time-ago-in-words]]
+  (:require [cljs.core.async :refer [<!]]
+            [cljs-http.client :as http]
+            [dragnet.utils :refer [time-ago-in-words]]
             [dragnet.components :refer [icon icon-button switch text-field]]
-            [cljs.core.async :refer [<!]]
-            [cljs-http.client :as http]))
-
-;; Data abstraction
-
-(defn survey
-  [state & key-path]
-  (if (empty? key-path)
-    (@state :survey)
-    (get-in @state (cons :survey key-path))))
-
-(defn survey-edited?
-  [state]
-  (-> (@state :edits) empty? not))
-
-(defn question-types
-  [state]
-  (-> @state :question_types))
-
-(defn question-type-list
-  [state]
-  (-> @state :question_types vals))
-
-(defn question-type-slug
-  [types question]
-  (-> question :question_type_id types :slug))
-
-(defn question-type-key
-  [ns type]
-  (str ns "-type-" (:id type)))
-
-(defn- question-settings-predicate
-  [setting]
-  (fn [question]
-    (get-in question [:settings setting] false)))
-
-(def long-answer? (question-settings-predicate :long_answer))
-(def multiple-answers? (question-settings-predicate :multiple_answers))
-(def include-date? (question-settings-predicate :include_date))
-(def include-time? (question-settings-predicate :include_time))
-
-(defn include-date-and-time?
-  [q]
-  (and (include-date? q) (include-time? q)))
+            [dragnet.editor.data :refer
+             [survey survey-edited? multiple-answers?
+              long-answer? include-date? include-time?
+              include-date-and-time? question-type-slug
+              question-types question-type-list question-type-key]]))
 
 ;; Editor Components
 
@@ -163,7 +126,7 @@
   [state question]
   [:div.card-footer
    [:div.d-flex.justify-content-end
-    (if-let [type ((question-types state) (question :question_type_id))]
+    (when-let [type ((question-types state) (question :question_type_id))]
       (for [[ident {text :text type :type default :default}] (type :settings)]
         (let [form-id (str "option-" (question :id) "-" (name ident))]
           ^{:key form-id} [switch
@@ -195,7 +158,7 @@
                :on-change (change-type-handler state question)}]
     [:select.form-select.w-25
      (if type-id (assoc attrs :value type-id) attrs)
-     (if-not type-id
+     (when-not type-id
        [:option "Select Question Type"])
      (for [type (question-type-list state)]
        [:option
@@ -281,7 +244,6 @@
 
 (defn survey-editor
   [state]
-  (println 'survey-editor @state)
   [:div {:class "container"}
    [:div.mb-3.d-flex.justify-content-between
     [:div
