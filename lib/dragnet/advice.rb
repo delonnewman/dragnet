@@ -1,5 +1,7 @@
 module Dragnet
   class Advice
+    include Dragnet
+
     class << self
       def aspect?
         true
