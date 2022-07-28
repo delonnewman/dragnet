@@ -8,8 +8,7 @@ class SurveyEditorController < ActionController::API
   def update
     edit = survey.edits.create!(survey_data: read_transit(request.body))
 
-    render json: transit(edit_id: edit.id, created_at: edit.created_at.to_time),
-           content_type: 'application/transit+json'
+    render json: transit(edit_id: edit.id, created_at: edit.created_at.to_time), content_type: 'application/transit+json'
   end
 
   # POST - /api/v1/editing/surveys/:id/apply

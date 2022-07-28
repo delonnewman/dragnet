@@ -276,20 +276,19 @@
   (fn []
     (go
       (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey state :id) "/apply")))
-            t   (-> res :body :survey :updated_at)]
-        (println 't, t)
-        (swap! state assoc :edits nil)
-        (swap! state assoc-in [:survey :updated_at] t)))))
+            t   (-> res :body :updated_at)]
+        (swap! state assoc :edits nil :updated_at t)))))
 
 (defn survey-editor
   [state]
+  (println 'survey-editor @state)
   [:div {:class "container"}
    [:div.mb-3.d-flex.justify-content-between
     [:div
      [:small.me-1
       (if (survey-edited? state)
-       (str "Last saved " (time-ago-in-words (survey state :updated_at)))
-       (str "Up-to-date. Saved " (time-ago-in-words (survey state :updated_at))))]]
+       (str "Last saved " (time-ago-in-words (@state :updated_at)))
+       (str "Up-to-date. Saved " (time-ago-in-words (@state :updated_at))))]]
     [:div
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"

@@ -5,9 +5,10 @@ class SurveyEditingPresenter < Dragnet::View::Presenter
   presents Survey, as: :survey
 
   def editing_data
-    { survey: survey.projection,
-      question_types: question_types,
-      edits: survey_edits }
+    { survey:         survey.projection,
+      updated_at:     survey.updated_at.to_time,
+      edits:          survey_edits,
+      question_types: question_types }
   end
   alias to_h editing_data
 
