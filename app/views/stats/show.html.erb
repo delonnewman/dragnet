@@ -24,7 +24,7 @@
     <% @report.questions.select(&:countable?).each do |question| %>
         <div class="mt-5 pb-5">
             <h2><%= question.text %></h2>
-            <%= auto_chart @report.answer_occurance(question) %>
+            <%= auto_chart @report.answer_occurrence(question) %>
         </div>
         <div class="pb-5">
             <%= data_table @report.answer_stats(question) %>
