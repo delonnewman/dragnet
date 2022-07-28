@@ -4,8 +4,8 @@ require_relative 'dragnet/constants'
 require_relative 'dragnet/utils'
 require_relative 'dragnet/core_ext'
 require_relative 'dragnet/time_utils'
-require_relative 'dragnet/composing'
-require_relative 'dragnet/aspect'
+require_relative 'dragnet/advising'
+require_relative 'dragnet/advice'
 
 # Generators
 require_relative 'dragnet/generator'

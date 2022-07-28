@@ -15,7 +15,7 @@ class Survey < ApplicationRecord
   has_many :answers
 
   has_many :edits, -> { where(applied: false) }, class_name: 'SurveyEdit', dependent: :delete_all
-  composes Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit projection]
+  advised_by Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit projection]
 
   # Initialize, but do not save, a new survey record. The initialization process will ensure
   # that the survey has a unique name (relative to the author).

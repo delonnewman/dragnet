@@ -1,6 +1,6 @@
 class ApplicationRecord < ActiveRecord::Base
-  extend Dragnet::Composing
   include Dragnet
+  extend  Dragnet::Advising
 
   primary_abstract_class
 

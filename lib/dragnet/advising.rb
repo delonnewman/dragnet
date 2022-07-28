@@ -6,22 +6,22 @@ module Dragnet
   # @example
   #   # app/model/survey.rb
   #   class Survey < ApplicationModel
-  #     extend Dragnet::Composing
+  #     extend Dragnet::Advising
   #
   #     # will create an instance method named "editing"
-  #     composes Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit]
+  #     advised_by Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit]
   #   end
   #
   #   # app/model/survey/editing.rb
-  #   class Survey::Editing < Dragnet::Aspect
-  #     aspect_of Survey
+  #   class Survey::Editing < Dragnet::Advice
+  #     advises Survey
   #
   #     def edited? ... end
   #     def new_edit ... end
   #     def current_edit ... end
   #     def latest_edit ... end
   #   end
-  module Composing
+  module Advising
     # Return the default method name for the class.
     #
     # @param klass [Class]
@@ -41,7 +41,7 @@ module Dragnet
     # @param delegating [Array<Symbol>] a list of methods to delegate to the generated method
     # @param calling [Symbol] (optionally) a named method that will be called after the object is instantiated
     # @param memoize [Boolean] memoize the composed object, defaults to true
-    def composes(klass, *args, as: nil, delegating: EMPTY_ARRAY, calling: nil, memoize: true)
+    def advised_by(klass, *args, as: nil, delegating: EMPTY_ARRAY, calling: nil, memoize: true)
       meth = as || composed_class_method_name(klass)
 
       define_method(meth) do

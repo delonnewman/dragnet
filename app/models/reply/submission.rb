@@ -1,6 +1,6 @@
 # Logic for reply submission
-class Reply::Submission < Dragnet::Aspect
-  aspect_of Reply
+class Reply::Submission < Dragnet::Advice
+  advises Reply
 
   # Mark the reply as submitted
   #

@@ -6,7 +6,7 @@ class Reply < ApplicationRecord
   has_many :answers
   accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
-  composes Reply::Submission, delegating: %i[submit! submitted submitted!]
+  advised_by Reply::Submission, delegating: %i[submit! submitted submitted!]
 
   # @!attribute answer_records
   #   @return [Array<Answer>]

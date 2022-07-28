@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # Logic for survey edit application
-class SurveyEdit::Application < Dragnet::Aspect
-  aspect_of SurveyEdit, alias_as: :edit
+class SurveyEdit::Application < Dragnet::Advice
+  advises SurveyEdit, alias_as: :edit
 
   attr_reader :validating_survey
 

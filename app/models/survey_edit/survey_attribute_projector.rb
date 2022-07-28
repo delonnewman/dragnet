@@ -5,8 +5,8 @@
 # @see Survey
 # @see Question
 # @see QuestionOption
-class SurveyEdit::SurveyAttributeProjector < Dragnet::Aspect
-  aspect_of SurveyEdit, alias_as: :edit
+class SurveyEdit::SurveyAttributeProjector < Dragnet::Advice
+  advises SurveyEdit, alias_as: :edit
 
   def call
     edit.survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|

@@ -3,6 +3,6 @@ class SurveyEdit < ApplicationRecord
 
   serialize :survey_data
 
-  composes SurveyEdit::Application, delegating: %i[apply! applied!]
-  composes SurveyEdit::SurveyAttributeProjector, as: :survey_attributes, calling: :call
+  advised_by SurveyEdit::Application, delegating: %i[apply! applied!]
+  advised_by SurveyEdit::SurveyAttributeProjector, as: :survey_attributes, calling: :call
 end
