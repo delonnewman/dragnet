@@ -3,33 +3,34 @@ module Dragnet
     include Dragnet
 
     class << self
-      def aspect?
+      def advice?
         true
       end
 
-      def composing_object_method_name(composing_class)
-        return unless composing_class
+      def advised_object_method_name(advised_class)
+        return unless advised_class
 
-        composing_class.name.split('::').last.underscore.to_sym
+        advised_class.name.split('::').last.underscore.to_sym
       end
 
-      def advises(*composing_classes, alias_as: composing_object_method_name(composing_classes.first))
-        self.composing_classes = composing_classes
+      def advises(*advised_classes, as: advised_object_method_name(advised_classes.first))
+        self.advised_classes = advised_classes
+        self.advised_object_alias = as
 
-        define_method(alias_as) { composing_object } if alias_as
+        define_method(as) { advised_object } if as
       end
 
-      attr_reader :composing_classes
+      attr_reader :advised_classes, :advised_object_alias
 
       private
 
-      attr_writer :composing_classes
+      attr_writer :advised_classes, :advised_object_alias
     end
 
-    attr_reader :composing_object
+    attr_reader :advised_object
 
-    def initialize(composing_object)
-      @composing_object = composing_object
+    def initialize(advised_object)
+      @advised_object = advised_object
     end
   end
 end

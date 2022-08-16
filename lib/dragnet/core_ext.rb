@@ -37,7 +37,7 @@ class Class
     false
   end
 
-  def aspect?
+  def advice?
     false
   end
 end
