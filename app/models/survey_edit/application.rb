@@ -2,7 +2,7 @@
 
 # Logic for survey edit application
 class SurveyEdit::Application < Dragnet::Advice
-  advises SurveyEdit, alias_as: :edit
+  advises SurveyEdit, as: :edit
 
   attr_reader :validating_survey
 

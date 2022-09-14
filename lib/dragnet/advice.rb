@@ -13,18 +13,18 @@ module Dragnet
         advised_class.name.split('::').last.underscore.to_sym
       end
 
-      def advises(*advised_classes, as: advised_object_method_name(advised_classes.first))
-        self.advised_classes = advised_classes
+      def advises(advised_class, as: advised_object_method_name(advised_class))
+        self.advised_class = advised_class
         self.advised_object_alias = as
 
         define_method(as) { advised_object } if as
       end
 
-      attr_reader :advised_classes, :advised_object_alias
+      attr_reader :advised_class, :advised_object_alias
 
       private
 
-      attr_writer :advised_classes, :advised_object_alias
+      attr_writer :advised_class, :advised_object_alias
     end
 
     attr_reader :advised_object
