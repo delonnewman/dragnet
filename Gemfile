@@ -8,9 +8,9 @@ gem 'rails', '~> 7.0.3.1'
 gem 'pg', '~> 1.1'
 
 # HTTP
+gem 'puma', group: :development
 gem 'rack-cors'
 gem 'unicorn', require: false
-gem 'webrick', group: :development
 
 # UI / Assets
 gem 'bootstrap', '~> 5.1.3'

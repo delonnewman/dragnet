@@ -44,7 +44,8 @@
                  (let [edit (<! (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))]
                    (swap! ref assoc :edits (conj (@ref :edits) edit)))))))
 
-(defn init []
+(defn init
+  []
   (go (let [survey-id (-> (.querySelector js/document "input[name=survey_id]") .-value)
             data (<! (api-data (survey-endpoint survey-id)))]
         (reset! current-state data))))
