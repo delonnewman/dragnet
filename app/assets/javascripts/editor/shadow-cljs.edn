@@ -4,8 +4,8 @@
  :builds
  {:frontend
   {:target :browser
-   :output-dir "../public/js/editor"
-   :asset-path "../public"
+   :output-dir "../../../../public/js/editor"
+   :asset-path "../../../../public"
    :modules {:main {:init-fn dragnet.editor.core/init}}
    }}
  }

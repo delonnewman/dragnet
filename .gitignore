@@ -30,3 +30,4 @@ editor/.calva/
 /.idea/
 /.yardoc/
 /doc/
+.cpcache/

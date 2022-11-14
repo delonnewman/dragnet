@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "editor": "file:app/assets/javascripts/editor"
+  }
+}

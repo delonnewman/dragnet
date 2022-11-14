@@ -9,7 +9,7 @@
 
 ; TODO: add validation
 (def current-state (r/atom nil))
-(def root-url "http://localhost:3000")
+(def root-url "http://dragnet.test")
 (def dom-id "survey-editor")
 
 (defn api-data
