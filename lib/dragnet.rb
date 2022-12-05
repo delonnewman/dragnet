@@ -12,6 +12,7 @@ require_relative 'dragnet/generator'
 require_relative 'dragnet/parameterized_generator'
 require_relative 'dragnet/generators'
 require_relative 'dragnet/active_record_generator'
+require_relative 'dragnet/generation'
 
 # View Layer
 require_relative 'dragnet/view/presenter'
