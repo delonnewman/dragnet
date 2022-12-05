@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "editor": "file:app/assets/javascripts/editor"
+    "frontend": "file:app/assets/javascripts/frontend"
   }
 }
