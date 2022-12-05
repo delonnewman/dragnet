@@ -20,7 +20,7 @@
 (defn time-ago-in-words
   [^js/Date time]
   (let [now    (js/Date.)
-        diff   (- (.valueOf time) (.valueOf now))
+        diff   (- time now)
         suffix (if (pos? diff) "from now" "ago")
         diff'  (Math/abs diff)]
     (cond
