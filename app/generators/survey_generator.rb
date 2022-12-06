@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Generate random surveys
 class SurveyGenerator < Dragnet::ActiveRecordGenerator
   DEFAULT_SETTINGS = { questions: { min: 4, max: 20 }.freeze }.freeze

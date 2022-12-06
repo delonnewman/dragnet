@@ -9,7 +9,7 @@ module Dragnet
     end
 
     def generator
-      generator_class || Dragnet::ActiveRecordGenerator.new(self)
+      generator_class || ActiveRecordGenerator.new(self)
     end
 
     delegate :generate!, :[], :generate, to: :generator
