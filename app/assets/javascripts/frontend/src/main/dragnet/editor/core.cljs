@@ -1,51 +1,52 @@
-(ns dragnet.editor.core
-  (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]]
-            [cljs.pprint :as pp]
-            [reagent.core :as r]
-            [reagent.dom :as rdom]
-            [dragnet.editor.components :refer [survey-editor]]))
+(ns dragnet.editor.core)
 
-; TODO: add validation
-(def current-state (r/atom nil))
-(def root-url "http://dragnet.test")
-(def dom-id "survey-editor")
+(def ^:dynamic *current-survey* nil)
 
-(defn api-data
-  [url]
-  (go (let [res (<! (http/get url))]
-        (res :body))))
+(defn set-current-survey!
+  [survey-state]
+  (set! *current-survey* survey-state))
 
-(defn api-update
-  [url data]
-  (go (let [res (<! (http/put url {:transit-params data}))]
-        (res :body))))
+(defn current-survey []
+  (if-let [survey *current-survey*]
+    (throw (ex-message "survey hasn't been set"))))
 
-(defn survey-endpoint
-  [survey-id]
-  (str root-url "/api/v1/editing/surveys/" survey-id))
+(defn survey
+  [state & key-path]
+  (if (empty? key-path)
+    (@state :survey)
+    (get-in @state (cons :survey key-path))))
 
-(defn refresh-editor
+(defn survey-edited?
   [state]
-  (let [elem (.getElementById js/document dom-id)]
-    (rdom/render [survey-editor state] elem)))
+  (-> (@state :edits) seq))
 
-(add-watch current-state :editor-refresh
-           (fn [_ ref old new]
-             (when (not= (:survey old) (:survey new))
-               (println "Last update" (-> new :updated_at))
-               (refresh-editor ref))))
+(defn question-types
+  [state]
+  (-> @state :question_types))
 
-(add-watch current-state :updates
-           (fn [_ ref old new]
-             (if (and old (not= (:survey old) (:survey new)))
-               (go
-                 (let [edit (<! (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))]
-                   (swap! ref assoc :edits (conj (@ref :edits) edit)))))))
+(defn question-type-list
+  [state]
+  (-> @state :question_types vals))
 
-(defn init
-  []
-  (go (let [survey-id (-> (.querySelector js/document "input[name=survey_id]") .-value)
-            data (<! (api-data (survey-endpoint survey-id)))]
-        (reset! current-state data))))
+(defn question-type-slug
+  [types question]
+  (-> question :question_type_id types :slug))
+
+(defn question-type-key
+  [ns type]
+  (str ns "-type-" (:id type)))
+
+(defn- question-settings-predicate
+  [setting]
+  (fn [question]
+    (get-in question [:settings setting] false)))
+
+(def long-answer? (question-settings-predicate :long_answer))
+(def multiple-answers? (question-settings-predicate :multiple_answers))
+(def include-date? (question-settings-predicate :include_date))
+(def include-time? (question-settings-predicate :include_time))
+
+(defn include-date-and-time?
+  [q]
+  (and (include-date? q) (include-time? q)))
+

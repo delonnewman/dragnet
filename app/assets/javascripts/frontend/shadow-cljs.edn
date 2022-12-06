@@ -6,6 +6,6 @@
   {:target :browser
    :output-dir "../../../../public/js/editor"
    :asset-path "../../../../public"
-   :modules {:main {:init-fn dragnet.editor.core/init}}
+   :modules {:main {:init-fn dragnet.editor.shell/init}}
    }}
  }

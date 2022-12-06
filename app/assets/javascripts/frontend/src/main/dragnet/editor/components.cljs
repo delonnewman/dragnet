@@ -4,7 +4,7 @@
             [cljs-http.client :as http]
             [dragnet.utils :refer [time-ago-in-words]]
             [dragnet.components :refer [icon icon-button switch text-field]]
-            [dragnet.editor.data :refer
+            [dragnet.editor.core :refer
              [survey survey-edited? multiple-answers?
               long-answer? include-date? include-time?
               include-date-and-time? question-type-slug
