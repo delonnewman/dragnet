@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe Survey::Editing do
+describe Form::Editing do
   let(:author) { User.generate! }
-  let(:survey) { Survey.init!(author) }
+  let(:form) { Form.init!(author) }
 
-  subject(:editing) { Survey::Editing.new(survey) }
+  subject(:editing) { Form::Editing.new(form) }
 
   context 'when the survey has no un-applied edits' do
     describe '#latest_edit' do

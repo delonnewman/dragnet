@@ -4,7 +4,7 @@
 class StatsReport
   attr_reader :reportable
 
-  delegate :questions, :name, to: :reportable
+  delegate :fields, :name, to: :reportable
 
   # @param reportable [#replies, #answers]
   def initialize(reportable)
@@ -14,8 +14,8 @@ class StatsReport
   # @return [Hash{Date, Integer}]
   def replies_by_date
     reportable
-      .replies
-      .group('replies.created_at::date')
+      .responses
+      .group('responses.created_at::date')
       .count
   end
 
@@ -36,7 +36,7 @@ class StatsReport
 
   # @return [Hash{String, Integer}]
   def replies_by_month
-    data = reportable.replies.group('extract(month from replies.created_at)').count
+    data = reportable.responses.group('extract(month from responses.created_at)').count
 
     MONTH_DEFAULT.merge(data).transform_keys do |key|
       Date::MONTHNAMES[key.to_i]
@@ -72,7 +72,7 @@ class StatsReport
 
   # @return [Hash{String, Integer}]
   def replies_by_time_of_day
-    data = reportable.replies.group('extract(hour from replies.created_at)').count
+    data = reportable.responses.group('extract(hour from responses.created_at)').count
 
     TIME_OF_DAY_DEFAULT.merge(data).transform_keys do |key|
       Dragnet::TimeUtils.fmt_hour(key.to_i)
@@ -92,34 +92,34 @@ class StatsReport
 
   # @return [Hash{String, Integer}]
   def replies_by_weekday
-    data = reportable.replies.group('extract(dow from replies.created_at)').count
+    data = reportable.responses.group('extract(dow from responses.created_at)').count
 
     WEEKDAY_DEFAULT.merge(data).transform_keys do |key|
       WEEKDAYS[key.to_i]
     end
   end
 
-  # @param question [Question]
+  # @param field [Field]
   #
   # @return [Hash{String, Integer}]
-  def answer_occurrence(question)
+  def answer_occurrence(field)
     opts = question.question_options.inject({}) { |map, opt| map.merge!(opt.id => opt.text) }
-    data = reportable.answers.where(question: question).group(:question_option_id).count
+    data = reportable.items.where(field: field).group(:field_option_id).count
 
     data.transform_keys(&opts)
   end
 
-  # @param question [Question]
+  # @param field [Field]
   #
   # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
-  def answer_stats(question)
-    weight = question_options[:weight]
+  def answer_stats(field)
+    weight = field_options[:weight]
 
     data =
       reportable
-        .answers
-        .where(question: question)
-        .joins(:question_option)
+        .items
+        .where(field: field)
+        .joins(:field_option)
         .pluck(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
         .first
 
@@ -136,8 +136,8 @@ class StatsReport
       'Std. Dev.' => data[4].if_nil(0).round(1) }
   end
 
-  def question_options
-    Arel::Table.new(:question_options)
+  def field_options
+    Arel::Table.new(:field_options)
   end
 
   def min(column)

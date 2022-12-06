@@ -1,0 +1,24 @@
+<h1><%= @response.survey.name %></h1>
+
+<%= form_for @response do |form| %>
+    <% @response.questions.each_with_index do |question, index| %>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <%= question.text %>
+                    <% if question.required? %>
+                        <span class="text-muted">(required)</span>
+                    <% end %>
+                </h5>
+                <%= fields_for "reply[answers_attributes][#{index}]", @response.answers.build(survey_id: @response.survey_id, question: question, question_type: question.question_type) do |answer_fields| %>
+                    <%= answer_fields.hidden_field :reply_id %>
+                    <%= answer_fields.hidden_field :survey_id %>
+                    <%= answer_fields.hidden_field :question_id %>
+                    <%= answer_fields.hidden_field :question_type_id %>
+                    <%= render "reply/#{question.question_type.ident}", { form: answer_fields, question: question } %>
+                <% end %>
+            </div>
+        </div>
+    <% end %>
+    <%= form.submit 'Submit', class: 'btn btn-primary' %>
+<% end %>

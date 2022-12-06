@@ -1,8 +1,8 @@
 class ReportsController < ApplicationController
-  layout 'survey'
+  layout 'form'
 
   def show
-    @report = Report.new(params.slice(:name, :question_ids))
-    @pagy, @replies = pagy(@report.replies)
+    @report = Report.new(params.slice(:name, :field_ids))
+    @pagy, @replies = pagy(@report.responses)
   end
 end

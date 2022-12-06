@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-describe SurveyEdit::Application do
+describe FormEdit::Application do
   let(:author) { User.generate! }
-  let(:survey_data) { Survey[author: author].generate!.projection }
-  let(:edit) { SurveyEdit[survey_data: survey_data].generate! }
+  let(:survey_data) { Form[author: author].generate!.projection }
+  let(:edit) { FormEdit[survey_data: survey_data].generate! }
 
-  subject(:application) { SurveyEdit::Application.new(edit) }
+  subject(:application) { FormEdit::Application.new(edit) }
 
   context 'when survey data is valid' do
     describe '#applied!' do
@@ -22,7 +22,7 @@ describe SurveyEdit::Application do
 
     xdescribe '#apply!' do
       it 'will apply the edit to the survey' do
-        expect(application.apply!).to eq(Survey.new(edit.survey_attributes))
+        expect(application.apply!).to eq(Form.new(edit.survey_attributes))
       end
 
       it 'will set SurveyEdit#applied to true' do

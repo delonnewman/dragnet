@@ -1,24 +1,24 @@
 Rails.application.routes.draw do
-  root 'surveys#index'
+  root 'forms#index'
 
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'
 
-  resources :surveys, only: %i[index new edit] do
+  resources :forms, only: %i[index new edit] do
     get 'results'
     get 'stats', to: 'stats#show'
   end
 
-  resources :reply, only: %i[edit update] do
+  resources :responses, only: %i[edit update] do
     get 'success'
   end
 
   # survey name is optional
-  get '/reply/to/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
-  get '/reply/to/:survey_id', to: 'reply#new'
+  get '/reply/to/:form_id/:form_name', to: 'responses#new', as: 'reply_to'
+  get '/reply/to/:form_id', to: 'responses#new'
 
   scope '/api/v1/editing' do
-    resources :survey_editor, path: '/surveys', only: %i[show update]
-    post '/surveys/:id/apply', to: 'survey_editor#apply', as: 'survey_editor_apply'
+    resources :form_editor, path: '/forms', only: %i[show update]
+    post '/forms/:id/apply', to: 'form_editor#apply', as: 'form_editor_apply'
   end
 end

@@ -1,3 +1,3 @@
 class User < ApplicationRecord
-  has_many :surveys, dependent: :delete_all
+  has_many :forms, dependent: :delete_all
 end

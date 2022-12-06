@@ -1,7 +1,7 @@
 module ReportsHelper
-  def answers_text(reply, question, alt: '-', &block)
-    answers = reply.answers_to(question)
-    return answers.join(', ') unless answers.empty?
+  def answers_text(response, field, alt: '-', &block)
+    items = response.items_for(field)
+    return items.join(', ') unless items.empty?
 
     if block_given?
       block.call

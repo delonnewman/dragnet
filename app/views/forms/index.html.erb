@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-end">
+    <%= link_to new_form_path, class: 'btn btn-sm btn-primary' do %>
+        <%= icon('fa-solid', 'screwdriver-wrench') %> Create Form
+    <% end %>
+</div>
+
+<div class="survey-listing d-flex flex-wrap">
+    <% @forms.each do |form| %>
+        <div class="survey-card card d-inline-block" style="width: 360px; margin: 7px">
+            <div class="card-body">
+                <div class="card-title">
+                    <%= form.name %>
+                    <% if form.edited? %><span class="badge bg-secondary">Unsaved changes</span><% end %>
+                </div>
+
+                <div class="mb-2">
+                    <span class="badge bg-secondary">
+                        <%= pluralize form.fields.count, "field" %>
+                    </span>
+                    <span class="badge bg-secondary">
+                        <%= pluralize form.responses.count, "response" %>
+                    </span>
+                </div>
+
+                <%= link_to 'Results', report_path(field_ids: form.field_ids, name: form.name) %>
+                <%= link_to 'View', reply_to_path(form.short_id, form.slug) %>
+                <%= link_to 'Summary', form_stats_path(form.short_id) %>
+                <%= link_to 'Edit', edit_form_path(form) %>
+            </div>
+        </div>
+    <% end %>
+</div>

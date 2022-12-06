@@ -17,7 +17,7 @@ class StatsController < ApplicationController
   end
 
   def survey_reportable
-    Survey
+    Form
       .includes(:answers, :replies, questions: %i[question_type question_options])
       .find_by_short_id!(params[:survey_id])
   end

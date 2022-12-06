@@ -24,7 +24,7 @@
 
 (defn survey-endpoint
   [survey-id]
-  (str root-url "/api/v1/editing/surveys/" survey-id))
+  (str root-url "/api/v1/editing/forms/" survey-id))
 
 (defn refresh-editor
   [state]

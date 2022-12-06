@@ -1,0 +1,15 @@
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <%= link_to 'Workspace', root_path, class: 'nav-link' %>
+  </li>
+  <li class="nav-item">
+    <%= link_to 'Create', edit_form_path(@form), class: 'nav-link active', 'aria-current': "page" %>
+  </li>
+  <li class="nav-item">
+    <%= link_to 'Results', form_results_path(@form), class: 'nav-link' %>
+  </li>
+</ul>
+
+<%= hidden_field_tag :survey_id, @form.id %>
+<main id="survey-editor"></main>
+<script src="/js/editor/main.js?ts=<%= Time.now.to_i %>" async></script>
