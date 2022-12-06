@@ -21,10 +21,12 @@ class ResponseItem < ApplicationRecord
 
   def value=(value)
     case field_type.ident
-    when :short_answer
-      self.short_text_value = value
-    when :paragraph
-      self.long_text_value = value
+    when :text
+      if field_type.long_answer?
+        self.long_text_value = value
+      else
+        self.short_text_value = value
+      end
     when :multiple_choice, :checkboxes
       self.field_option = value
     end
@@ -32,10 +34,8 @@ class ResponseItem < ApplicationRecord
 
   def text_value
     case field_type.ident
-    when :short_answer
-      short_text_value
-    when :paragraph
-      long_text_value
+    when :text
+      field_type.long_answer? ? long_text_value : short_text_value
     when :multiple_choice, :checkboxes
       field_option&.text
     end

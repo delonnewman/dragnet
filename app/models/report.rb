@@ -17,7 +17,7 @@ class Report
     Response
       .includes(:items)
       .joins(:items)
-      .where('responses.submitted and reponse_items.field_id in (?)', field_ids)
+      .where('responses.submitted and response_items.field_id in (?)', field_ids)
       .order('responses.created_at DESC')
   end
 end

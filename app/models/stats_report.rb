@@ -103,7 +103,7 @@ class StatsReport
   #
   # @return [Hash{String, Integer}]
   def answer_occurrence(field)
-    opts = question.question_options.inject({}) { |map, opt| map.merge!(opt.id => opt.text) }
+    opts = field.field_options.inject({}) { |map, opt| map.merge!(opt.id => opt.text) }
     data = reportable.items.where(field: field).group(:field_option_id).count
 
     data.transform_keys(&opts)

@@ -1,5 +1,5 @@
 class StatsController < ApplicationController
-  layout 'survey'
+  layout 'form'
   
   def show
     @report = StatsReport.new(reportable)
@@ -8,17 +8,17 @@ class StatsController < ApplicationController
   private
 
   def reportable
-    survey_id, name, question_ids = params.values_at(:survey_id, :name, :question_ids)
+    form_id, name, field_ids = params.values_at(:form_id, :name, :field_ids)
 
-    return survey_reportable if survey_id
-    return Report.new(params.slice(:name, :question_ids)) if name && question_ids
+    return form_reportable if form_id
+    return Report.new(params.slice(:name, :field_ids)) if name && field_ids
 
-    raise 'a survey_id, or name & question_ids are required'
+    raise 'a form_id, or name & field_ids are required'
   end
 
-  def survey_reportable
+  def form_reportable
     Form
-      .includes(:answers, :replies, questions: %i[question_type question_options])
-      .find_by_short_id!(params[:survey_id])
+      .includes(:items, :responses, fields: %i[field_type field_options])
+      .find_by_short_id!(params[:form_id])
   end
 end

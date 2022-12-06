@@ -10,18 +10,18 @@
         <thead>
             <tr>
                 <th>Created</th>
-                <% @report.questions.each do |question| %>
-                    <th class="text-nowrap"><%= question.text %></th>
+                <% @report.fields.each do |field| %>
+                    <th class="text-nowrap"><%= field.text %></th>
                 <% end %>
             </tr>
         </thead>
         <tbody>
-            <% @replies.each do |reply| %>
+            <% @responses.each do |response| %>
                 <tr>
-                    <td class="text-nowrap text-muted"><%= fmt_datetime(reply.created_at) %></td>
-                    <% @report.questions.each do |question| %>
-                        <td class="text-truncate" style="max-width: 150px" title="<%= answers_text(reply, question) %>">
-                          <%= answers_text(reply, question) do %>
+                    <td class="text-nowrap text-muted"><%= fmt_datetime(response.created_at) %></td>
+                    <% @report.fields.each do |field| %>
+                        <td class="text-truncate" style="max-width: 150px" title="<%= items_text(response, field) %>">
+                          <%= items_text(response, field) do %>
                             &mdash;
                           <% end %>
                         </td>

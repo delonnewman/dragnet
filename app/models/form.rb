@@ -12,7 +12,7 @@ class Form < ApplicationRecord
   accepts_nested_attributes_for :fields, allow_destroy: true
 
   has_many :responses
-  has_many :response_items
+  has_many :items, through: :responses
 
   has_many :edits, -> { where(applied: false) }, class_name: 'FormEdit', dependent: :delete_all
   advised_by Form::Editing, delegating: %i[edited? new_edit current_edit latest_edit projection]

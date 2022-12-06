@@ -1,11 +1,12 @@
 class FieldType < ApplicationRecord
   include Slugged
+  include Configurable
 
   has_many :fields
 
-  serialize :settings
-
-  def countable?
-    settings.fetch(:countable, false)
-  end
+  setting :countable,        default: false
+  setting :long_answer,      default: false
+  setting :multiple_answers, default: false
+  setting :include_date,     default: false
+  setting :include_time,     default: false
 end

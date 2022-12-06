@@ -1,5 +1,5 @@
 module ReportsHelper
-  def answers_text(response, field, alt: '-', &block)
+  def items_text(response, field, alt: '-', &block)
     items = response.items_for(field)
     return items.join(', ') unless items.empty?
 

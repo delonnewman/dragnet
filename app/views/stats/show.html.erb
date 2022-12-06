@@ -21,13 +21,13 @@
         <%= line_chart @report.replies_by_time_of_day %>
     </div>
 
-    <% @report.questions.select(&:countable?).each do |question| %>
+    <% @report.fields.select(&:countable?).each do |field| %>
         <div class="mt-5 pb-5">
-            <h2><%= question.text %></h2>
-            <%= auto_chart @report.answer_occurrence(question) %>
+            <h2><%= field.text %></h2>
+            <%= auto_chart @report.answer_occurrence(field) %>
         </div>
         <div class="pb-5">
-            <%= data_table @report.answer_stats(question) %>
+            <%= data_table @report.answer_stats(field) %>
         </div>
     <% end %>
 </div>

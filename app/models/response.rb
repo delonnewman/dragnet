@@ -13,10 +13,11 @@ class Response < ApplicationRecord
   serialize :response_item_cache
 
   before_save do
-    self.response_item_cache = items
+    self.response_item_cache = items.to_a
   end
 
+  # @return [Array<ResponseItem>]
   def items_for(field)
-    response_item_cache.select { |i| i.field_id == field.id }
+    response_item_cache.to_a.select { |i| i.field_id == field.id }
   end
 end

@@ -16,6 +16,6 @@ class Field < ApplicationRecord
   end
 
   def countable?
-    question_type.countable?
+    field_type.countable?
   end
 end

@@ -2,20 +2,20 @@ class ResponsesController < ApplicationController
   layout 'external'
 
   def new
-    survey = Form.find_by_short_id!(params.require(:survey_id))
-    reply  = Response.create!(form: survey)
+    form = Form.find_by_short_id!(params.require(:form_id))
+    reply  = Response.create!(form: form)
 
     redirect_to edit_response_path(reply)
   end
 
   def edit
-    @response = replies.find(params[:id])
+    @response = responses.find(params[:id])
   end
 
   def update
-    @response = replies.find(params[:id])
+    @response = responses.find(params[:id])
 
-    if @response.submit!(reply_params)
+    if @response.submit!(response_params)
       redirect_to response_success_path(@response)
     else
       render :edit
@@ -23,16 +23,16 @@ class ResponsesController < ApplicationController
   end
 
   def success
-    @response = replies.find(params[:reply_id])
+    @response = responses.find(params[:response_id])
   end
 
   private
 
-  def replies
+  def responses
     Response.includes(:form, :items, fields: [:field_type])
   end
 
-  def reply_params
+  def response_params
     params.require(:response).permit!
   end
 end
