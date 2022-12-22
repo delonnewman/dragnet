@@ -1,5 +1,4 @@
-(ns dragnet.components
-  "General purpose components shared for all front-end code"
+(ns dragnet.shared.components
   (:require [clojure.string :as s]))
 
 (defn icon
@@ -23,6 +22,10 @@
     :on-click on-click
     :title title}
    (icon icon-style icon-name)])
+
+(defn remove-button
+  [opts]
+  (icon-button (merge opts {:icon-style "fa-solid" :icon-name "xmark" :title "Remove"})))
 
 (defn switch
   [& {:keys [id checked on-change label style class-name]}]

@@ -1,4 +1,4 @@
-class SurveyEditorController < ActionController::API
+class SurveyEditorController < APIController
   # GET - /api/v1/editing/surveys/:id
   def show
     render json: transit(survey_editing.editing_data), content_type: 'application/transit+json'
@@ -24,18 +24,10 @@ class SurveyEditorController < ActionController::API
 
   private
 
-  def transit(data)
-    io = StringIO.new
-    Transit::Writer.new(:json, io).write(data)
-    io.string
-  end
-
-  def read_transit(io)
-    Transit::Reader.new(:json, io).read
-  end
-
   def survey
-    Survey.find(params[:id])
+    Survey
+      .includes(questions: %i[question_type question_options followup_questions])
+      .find(params[:id])
   end
 
   def survey_editing(s = survey)

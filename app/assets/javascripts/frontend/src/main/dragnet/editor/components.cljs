@@ -2,8 +2,8 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
-            [dragnet.utils :refer [time-ago-in-words]]
-            [dragnet.components :refer [icon icon-button switch text-field]]
+            [dragnet.shared.utils :refer [time-ago-in-words]]
+            [dragnet.shared.components :refer [icon icon-button switch text-field remove-button]]
             [dragnet.editor.core :refer
              [survey survey-edited? multiple-answers?
               long-answer? include-date? include-time?
@@ -28,10 +28,6 @@
     (swap! state assoc-in [:survey :questions (question :id) :question_options (option :id) :_destroy] true)
     (-> e .-nativeEvent .preventDefault)
     (-> e .-nativeEvent .stopPropagation)))
-
-(defn remove-button
-  [opts]
-  (icon-button (merge opts {:icon-style "fa-solid" :icon-name "xmark" :title "Remove"})))
 
 (defn- choice-option
   [state question option]

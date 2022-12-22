@@ -1,6 +1,0 @@
-<% question.question_options.each do |option| %>
-    <div class="form-check">
-        <%= form.check_box :question_option_id, value: option.id, id: form.field_id(:question_option_id, option.id), class: 'form-check-input' %>
-        <%= form.label :question_option_id, option.text, for: form.field_id(:question_option_id, option.id), class: 'form-check-label' %>
-    </div>
-<% end %>

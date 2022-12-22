@@ -10,6 +10,17 @@
   </li>
 </ul>
 
-<%= hidden_field_tag :survey_id, @survey.id %>
 <main id="survey-editor"></main>
-<script src="/js/editor/main.js?ts=<%= Time.now.to_i %>" async></script>
+<script>
+  (function() {
+    const surveyID = <%== @survey.id.to_json %>;
+    const rootElement = document.getElementById("survey-editor");
+
+    const script = document.createElement("script");
+    script.src = "http://dragnet.test/js/editor/main.js";
+    script.onload = function() {
+      dragnet.editor.shell.init(rootElement, surveyID);
+    };
+    document.head.append(script);
+  }())
+</script>

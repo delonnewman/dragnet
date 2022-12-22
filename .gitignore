@@ -31,3 +31,6 @@ editor/.calva/
 /.yardoc/
 /doc/
 .cpcache/
+public/js/frontend/
+public/js/submitter/
+public/js/editor/

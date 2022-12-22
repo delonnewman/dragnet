@@ -2,10 +2,15 @@
 {:deps {:aliases [:dev :test]}
 
  :builds
- {:frontend
-  {:target :browser
+ {:editor
+  {:target     :browser
    :output-dir "../../../../public/js/editor"
    :asset-path "../../../../public"
-   :modules {:main {:init-fn dragnet.editor.shell/init}}
-   }}
+   :modules    {:main {:init-fn dragnet.editor.shell/init}}}
+  :submitter
+  {:target     :browser
+   :output-dir "../../../../public/js/submitter"
+   :asset-path "../../../../public"
+   :modules    {:main {:init-fn dragnet.submitter.shell/init}}}
+  }
  }

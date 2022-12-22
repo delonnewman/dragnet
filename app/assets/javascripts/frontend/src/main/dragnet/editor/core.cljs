@@ -1,15 +1,5 @@
 (ns dragnet.editor.core)
 
-(def ^:dynamic *current-survey* nil)
-
-(defn set-current-survey!
-  [survey-state]
-  (set! *current-survey* survey-state))
-
-(defn current-survey []
-  (if-let [survey *current-survey*]
-    (throw (ex-message "survey hasn't been set"))))
-
 (defn survey
   [state & key-path]
   (if (empty? key-path)

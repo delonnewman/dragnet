@@ -10,7 +10,11 @@
 ; TODO: add validation
 (def current-state (r/atom nil))
 (def root-url "http://dragnet.test")
-(def dom-id "survey-editor")
+(def root-element (atom nil))
+
+(defn get-root-element []
+  (let [id @root-element]
+    (if id id (throw (ex-message "Root element has not be set")))))
 
 (defn api-data
   [url]
@@ -28,8 +32,7 @@
 
 (defn refresh-editor
   [state]
-  (let [elem (.getElementById js/document dom-id)]
-    (rdom/render [survey-editor state] elem)))
+  (rdom/render [survey-editor state] (get-root-element)))
 
 (add-watch current-state :editor-refresh
            (fn [_ ref old new]
@@ -45,7 +48,9 @@
                    (swap! ref assoc :edits (conj (@ref :edits) edit)))))))
 
 (defn init
-  []
-  (go (let [survey-id (-> (.querySelector js/document "input[name=survey_id]") .-value)
-            data (<! (api-data (survey-endpoint survey-id)))]
-        (reset! current-state data))))
+  [elem survey-id]
+  (when (and elem survey-id)
+    (println "initializing editor for " survey-id)
+    (go (let [data (<! (api-data (survey-endpoint survey-id)))]
+          (reset! root-element elem)
+          (reset! current-state data)))))

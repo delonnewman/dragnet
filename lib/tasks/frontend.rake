@@ -5,7 +5,7 @@ EDITOR_SOURCE_PATH = 'app/assets/javascripts/frontend'
 namespace :frontend do
   desc 'start dev server for frontend'
   task :server do
-    sh "cd #{EDITOR_SOURCE_PATH} && npx shadow-cljs watch frontend"
+    sh "cd #{EDITOR_SOURCE_PATH} && npx shadow-cljs watch editor submitter"
   end
 
   desc 'install frontend dependencies'

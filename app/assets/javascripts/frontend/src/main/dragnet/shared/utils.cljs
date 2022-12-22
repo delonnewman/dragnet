@@ -1,4 +1,4 @@
-(ns dragnet.utils)
+(ns dragnet.shared.utils)
 
 ; A naive plural inflection, but good enough for this
 (defn pluralize
