@@ -1,5 +1,9 @@
 (ns dragnet.shared.utils)
 
+(def ^:dynamic *window* js/window)
+
+(defn root-url [] (.-origin (.-location *window*)))
+
 ; A naive plural inflection, but good enough for this
 (defn pluralize
   [word n]

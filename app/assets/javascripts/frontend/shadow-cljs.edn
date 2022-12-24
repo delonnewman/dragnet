@@ -5,12 +5,10 @@
  {:editor
   {:target     :browser
    :output-dir "../../../../public/js/editor"
-   :asset-path "../../../../public"
+   :asset-path "../../../../js/editor"
    :modules    {:main {:init-fn dragnet.editor.shell/init}}}
   :submitter
   {:target     :browser
    :output-dir "../../../../public/js/submitter"
-   :asset-path "../../../../public"
-   :modules    {:main {:init-fn dragnet.submitter.shell/init}}}
-  }
- }
+   :asset-path "../../../../js/submitter"
+   :modules    {:main {:init-fn dragnet.submitter.shell/init}}}}}

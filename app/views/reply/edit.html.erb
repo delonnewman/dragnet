@@ -1,15 +1,13 @@
 <main id="survey-submitter"></main>
 <script>
   (function() {
-    const surveyID = <%== @reply.survey_id.to_json %>;
+    const replyID = <%== @reply.id.to_json %>;
     const rootElement = document.getElementById("survey-submitter");
 
     const script = document.createElement("script");
     script.src = "http://dragnet.test/js/submitter/main.js";
     script.onload = function() {
-      if (rootElement && surveyID) {
-        dragnet.submitter.shell.init(rootElement, surveyID);
-      }
+      dragnet.submitter.shell.init(rootElement, replyID);
     };
     document.head.append(script);
   }())

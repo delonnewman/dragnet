@@ -5,6 +5,11 @@ class ReplySubmissionPresenter < Dragnet::View::Presenter
   presents Reply, as: :reply
 
   def submission_data
-    reply.survey.projection
+    { survey:         reply.survey.projection,
+      question_types: question_types }
+  end
+
+  def question_types
+    QuestionTypesPresenter.new(QuestionType.all).question_types_mapping
   end
 end

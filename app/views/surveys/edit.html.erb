@@ -19,6 +19,7 @@
     const script = document.createElement("script");
     script.src = "http://dragnet.test/js/editor/main.js";
     script.onload = function() {
+      console.log("editor code loaded", rootElement, surveyID);
       dragnet.editor.shell.init(rootElement, surveyID);
     };
     document.head.append(script);

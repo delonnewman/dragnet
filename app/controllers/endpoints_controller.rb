@@ -1,4 +1,7 @@
-class APIController < ActionController::API
+# Controllers that provide front-end API endpoints
+class EndpointsController < ActionController::API
+  include ActionController::MimeResponds
+
   def transit(data)
     io = StringIO.new
     Transit::Writer.new(:json, io).write(data)

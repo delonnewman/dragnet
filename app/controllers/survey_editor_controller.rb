@@ -1,14 +1,18 @@
-class SurveyEditorController < APIController
+class SurveyEditorController < EndpointsController
   # GET - /api/v1/editing/surveys/:id
   def show
-    render json: transit(survey_editing.editing_data), content_type: 'application/transit+json'
+    respond_to do |format|
+      format.transit { render body: transit(survey_editing.editing_data) }
+    end
   end
 
   # PUT / PATCH - /api/v1/editing/surveys/:id
   def update
     edit = survey.edits.create!(survey_data: read_transit(request.body))
 
-    render json: transit(edit_id: edit.id, created_at: edit.created_at.to_time), content_type: 'application/transit+json'
+    respond_to do |format|
+      format.transit { render body: transit(edit_id: edit.id, created_at: edit.created_at.to_time) }
+    end
   end
 
   # POST - /api/v1/editing/surveys/:id/apply
@@ -19,7 +23,9 @@ class SurveyEditorController < APIController
         .if_nil { raise "Couldn't find draft to apply" }
         .apply!
 
-    render json: transit(survey_editing(updated).editing_data), content_type: 'application/transit+json'
+    respond_to do |format|
+      format.transit { render body: transit(survey_editing(updated).editing_data) }
+    end
   end
 
   private

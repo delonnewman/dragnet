@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-class ReplySubmissionController < APIController
+class ReplySubmissionController < EndpointsController
   def show
-    render json: transit(reply.survey.projection), content_type: 'application/transit+json'
+    respond_to do |format|
+      format.transit { render body: transit(reply_submission.submission_data) }
+    end
   end
 
   def submit
@@ -15,5 +17,9 @@ class ReplySubmissionController < APIController
     Reply
       .includes(:survey, :answers, questions: [:question_type])
       .find(params[:id])
+  end
+
+  def reply_submission
+    ReplySubmissionPresenter.new(reply)
   end
 end

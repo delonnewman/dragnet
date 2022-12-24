@@ -131,7 +131,7 @@
                             :on-change (change-setting-handler state question ident)
                             :style {:margin-right "20px"}
                             :label text}])))
-      (let [form-id (str "option-" (question :id) "-required")]
+    (let [form-id (str "option-" (question :id) "-required")]
         ^{:key form-id} [switch
                          {:id form-id
                           :checked (question :required)

@@ -20,10 +20,6 @@ class SurveyEditingPresenter < Dragnet::View::Presenter
   end
 
   def question_types
-    types = QuestionType.all.pull(:id, :name, :slug, :icon, settings: [:*])
-
-    types.reduce({}) do |qt, type|
-      qt.merge!(type[:id] => type)
-    end
+    QuestionTypesPresenter.new(QuestionType.all).question_types_mapping
   end
 end
