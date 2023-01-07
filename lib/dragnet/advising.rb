@@ -9,7 +9,7 @@ module Dragnet
   #     extend Dragnet::Advising
   #
   #     # will create an instance method named "editing"
-  #     advised_by Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit]
+  #     with Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit]
   #   end
   #
   #   # app/model/survey/editing.rb
@@ -74,5 +74,6 @@ module Dragnet
 
       delegate(*delegating, to: meth) unless delegating.empty?
     end
+    alias with advised_by
   end
 end

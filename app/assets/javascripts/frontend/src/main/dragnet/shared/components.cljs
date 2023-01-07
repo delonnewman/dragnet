@@ -37,6 +37,8 @@
      :checked checked}]
    [:label.form-check-label {:for id} label]])
 
+
+;; FIXME: the styling is editor specific
 (defn text-field
   [& {:keys [id class style default-value on-change title]}]
   [:input.text-field.w-100.border-bottom

@@ -8,3 +8,7 @@
 (defn reply-url
   [reply-id]
   (str (root-url) (reply-path reply-id)))
+
+(defn submission-path
+  [reply-id]
+  (str "/reply/" reply-id))

@@ -1,5 +1,5 @@
 # Controllers that provide front-end API endpoints
-class EndpointsController < ActionController::API
+class EndpointController < ActionController::API
   include ActionController::MimeResponds
 
   def transit(data)

@@ -3,11 +3,13 @@
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
             [dragnet.shared.utils :refer [time-ago-in-words]]
-            [dragnet.shared.components :refer [icon icon-button switch text-field remove-button]]
+            [dragnet.shared.components :refer
+             [icon icon-button switch text-field remove-button]]
+            [dragnet.share.core :refer
+             [multiple-answers? long-answer? include-date?
+              include-time? include-date-and-time?]]
             [dragnet.editor.core :refer
-             [survey survey-edited? multiple-answers?
-              long-answer? include-date? include-time?
-              include-date-and-time? question-type-slug
+             [survey survey-edited? question-type-slug
               question-types question-type-list question-type-key]]))
 
 ;; Editor Components

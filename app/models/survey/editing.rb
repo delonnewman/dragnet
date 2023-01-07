@@ -32,9 +32,11 @@ class Survey::Editing < Dragnet::Advice
         :text,
         :display_order,
         :required,
+        :settings,
         :question_type_id,
         {
-          question_options: %i[id text weight]
+          question_options: %i[id text weight],
+          question_type:    %i[id slug name]
         }
       ]
     )

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ReplySubmissionController < EndpointsController
+class ReplySubmissionController < EndpointController
   def show
     respond_to do |format|
       format.transit { render body: transit(reply_submission.submission_data) }
@@ -19,7 +19,7 @@ class ReplySubmissionController < EndpointsController
       .find(params[:id])
   end
 
-  def reply_submission
-    ReplySubmissionPresenter.new(reply)
+  def reply_submission(r = reply)
+    ReplySubmissionPresenter.new(r)
   end
 end

@@ -8,11 +8,11 @@
     [dragnet.submitter.core :refer [reply-url]]))
 
 (defn render-ui
-  [elem]
+  [elem reply-id]
   (fn
     [_ _ old new]
     (when (not= old new)
-      (rdom/render [reply-submitter new] elem))))
+      (rdom/render [reply-submitter reply-id new] elem))))
 
 (defn fetch-reply-data
   [reply-id]
@@ -24,7 +24,7 @@
   [elem reply-id]
   (when (and elem reply-id)
     (let [current (r/atom nil)]
-      (add-watch current :render-ui (render-ui elem))
+      (add-watch current :render-ui (render-ui elem reply-id))
       (go
         (let [state (<! (fetch-reply-data reply-id))]
           (reset! current state))))))

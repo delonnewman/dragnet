@@ -1,4 +1,4 @@
-class SurveyEditorController < EndpointsController
+class SurveyEditorController < EndpointController
   # GET - /api/v1/editing/surveys/:id
   def show
     respond_to do |format|

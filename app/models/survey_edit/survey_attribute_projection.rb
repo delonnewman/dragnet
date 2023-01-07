@@ -16,7 +16,7 @@ class SurveyEdit::SurveyAttributeProjection < Dragnet::Advice
 
   # @param question [Question]
   def question_keys(question)
-    %i[text display_order required question_type_id _destroy].tap do |keys|
+    %i[text display_order required question_type_id settings _destroy].tap do |keys|
       keys << :id unless question[:id].is_a?(Integer) && question[:id].negative?
     end
   end

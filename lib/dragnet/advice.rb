@@ -3,10 +3,6 @@ module Dragnet
     include Dragnet
 
     class << self
-      def advice?
-        true
-      end
-
       def advised_object_method_name(advised_class)
         return unless advised_class
 

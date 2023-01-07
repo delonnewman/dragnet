@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Logic for survey edit application
+# Logic for applying survey edits to a survey to preserve the changes
 class SurveyEdit::Application < Dragnet::Advice
   advises SurveyEdit, as: :edit
 
