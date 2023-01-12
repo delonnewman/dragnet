@@ -5,7 +5,7 @@
             [dragnet.shared.utils :refer [time-ago-in-words]]
             [dragnet.shared.components :refer
              [icon icon-button switch text-field remove-button]]
-            [dragnet.share.core :refer
+            [dragnet.shared.core :refer
              [multiple-answers? long-answer? include-date?
               include-time? include-date-and-time?]]
             [dragnet.editor.core :refer
@@ -195,27 +195,22 @@
        (let [key (str "question-card-" (:id q))]
          ^{:key key} [question-card state q])))])
 
-(defn update-survey-field
-  [state field]
-  (fn [e]
-    (swap! state assoc-in [:survey field] (-> e .-target .-value))))
-
 (defn survey-details
-  [state]
+  [& {:keys [id name description on-change-description on-change-name]}]
   [:div.card.survey-details.mb-5
    [:div.card-body
     [:div.card-title.pb-3
       [text-field
-       {:id (survey state :id)
+       {:id id
         :title "Enter form name"
         :class "h3"
-        :default-value (survey state :name)
-        :on-change (update-survey-field state :name)}]]
+        :default-value name
+        :on-change on-change-name}]]
     [:textarea.form-control
      {:rows 1
       :placeholder "Description"
-      :on-blur (update-survey-field state :description)
-      :default-value (survey state :description)}]]])
+      :on-blur on-change-description
+      :default-value description}]]])
 
 (def new-question-text
   (let [n (atom -1)]
@@ -225,7 +220,7 @@
         "New Question"
         (str "New Question (" @n ")")))))
 
-(defn- add-question
+(defn- add-question!
   [state]
   (fn [e]
     (let [id   (swap! temp-id dec)
@@ -240,6 +235,11 @@
             t   (-> res :body :updated_at)]
         (swap! state assoc :edits nil :updated_at t)))))
 
+(defn update-survey-field!
+  [state field]
+  (fn [e]
+    (swap! state assoc-in [:survey field] (-> e .-target .-value))))
+
 (defn survey-editor
   [state]
   [:div {:class "container"}
@@ -248,17 +248,21 @@
      [:small.me-1
       (if (survey-edited? state)
        (str "Last saved " (time-ago-in-words (@state :updated_at)))
-       (str "Up-to-date. Saved " (time-ago-in-words (@state :updated_at))))]]
+       (str "Up to date. Saved " (time-ago-in-words (@state :updated_at))))]]
     [:div
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
        :disabled (not (survey-edited? state))
        :on-click (save-survey! state)}
       "Save"]]]
-   [survey-details state]
+   [survey-details {:id (survey state :id)
+                    :name (survey state :name)
+                    :description (survey state :description)
+                    :on-change-description (update-survey-field! state :description)
+                    :on-change-name (update-survey-field! state :name)}]
    [:div.mb-3.d-flex.justify-content-end
     [:button.btn.btn-sm.btn-secondary
      {:type "button"
-      :on-click (add-question state)}
+      :on-click (add-question! state)}
      (icon "fa-solid" "plus" "Add Question")]]
    [survey-questions state]])
