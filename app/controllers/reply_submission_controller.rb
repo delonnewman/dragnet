@@ -8,10 +8,14 @@ class ReplySubmissionController < EndpointController
   end
 
   def submit
-    Reply.create!(read_transit(request.body))
+    Reply.create!(submission_params)
   end
 
   private
+
+  def submission_params
+    params[:reply].permit!
+  end
 
   def reply
     Reply

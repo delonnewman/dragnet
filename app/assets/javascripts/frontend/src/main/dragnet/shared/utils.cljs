@@ -4,6 +4,18 @@
 
 (defn root-url [] (.-origin (.-location *window*)))
 
+(defn form-name
+  [& keys]
+  (let [ks (if (and (= 1 (count keys)) (coll? (first keys)))
+             (first keys)
+             keys)]
+    (reduce
+     (fn [s k]
+       (let [k' (if (number? k) (str k) (name k))]
+         (str s "[" k' "]")))
+     (name (first ks))
+     (drop 1 ks))))
+
 ; A naive plural inflection, but good enough for this
 (defn pluralize
   [word n]

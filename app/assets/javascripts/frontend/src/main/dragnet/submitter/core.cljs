@@ -1,5 +1,5 @@
 (ns dragnet.submitter.core
-  (:require [dragnet.shared.utils :refer [root-url]]))
+  (:require [dragnet.shared.utils :refer [root-url form-name]]))
 
 (defn reply-path
   [reply-id]
@@ -11,4 +11,12 @@
 
 (defn submission-path
   [reply-id]
-  (str "/reply/" reply-id))
+  (str (reply-path reply-id) "/submit"))
+
+(defn answer-id
+  [q]
+  (str "answer-" (:id q)))
+
+(defn answer-form-name
+  [& keys]
+  (form-name (concat [:reply :answers_attributes] keys)))

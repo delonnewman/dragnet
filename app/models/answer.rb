@@ -21,22 +21,28 @@ class Answer < ApplicationRecord
 
   def value=(value)
     case question_type.ident
-    when :short_answer
-      self.short_text_value = value
-    when :paragraph
-      self.long_text_value = value
-    when :multiple_choice, :checkboxes
+    when :text
+      if question.long_answer?
+        self.long_text_value = value
+      else
+        self.short_text_value = value
+      end
+    when :choice
       self.question_option = value
+    when :number
+      self.number_value = value
     end
   end
 
   def text_value
     case question_type.ident
-    when :short_answer
-      short_text_value
-    when :paragraph
-      long_text_value
-    when :multiple_choice, :checkboxes
+    when :text
+      if question.long_answer?
+        long_text_value
+      else
+        short_text_value
+      end
+    when :choice
       question_option&.text
     end
   end
@@ -44,8 +50,10 @@ class Answer < ApplicationRecord
 
   def number_value
     case question_type.ident
-    when :multiple_choice, :checkboxes
+    when :choice
       question_option&.weight
+    when :number
+      number_value
     end
   end
 end

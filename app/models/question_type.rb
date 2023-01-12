@@ -5,7 +5,7 @@ class QuestionType < ApplicationRecord
 
   serialize :settings
 
-  def countable?
-    settings.fetch(:countable, false)
+  def setting_default(setting)
+    settings.dig(setting, :default)
   end
 end

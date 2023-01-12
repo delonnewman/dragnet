@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  include Settings
+
   validates :text, presence: true
 
   belongs_to :survey
@@ -9,13 +11,7 @@ class Question < ApplicationRecord
 
   has_many :followup_questions, dependent: :delete_all
 
-  serialize :settings
-
   before_save do
     self.hash_code = Dragnet::Utils.hash_code(text) if text
-  end
-
-  def countable?
-    question_type.countable?
   end
 end
