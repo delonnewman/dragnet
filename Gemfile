@@ -55,8 +55,10 @@ group :development, :test do
 
   gem 'gen-test', github: 'delonnewman/gen-test'
 
-  gem 'bullet'
   gem 'brakeman'
+  gem 'bullet'
+  gem 'bundler-audit'
+
   gem 'rubocop'
   gem 'rubocop-rails'
 end
