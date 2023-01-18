@@ -1,16 +1,13 @@
 (ns dragnet.editor.components
-  (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs.core.async :refer [<!]]
-            [cljs-http.client :as http]
-            [dragnet.shared.utils :refer [time-ago-in-words]]
-            [dragnet.shared.components :refer
-             [icon icon-button switch text-field remove-button]]
-            [dragnet.shared.core :refer
-             [multiple-answers? long-answer? include-date?
-              include-time? include-date-and-time?]]
-            [dragnet.editor.core :refer
-             [survey survey-edited? question-type-slug
-              question-types question-type-list question-type-key]]))
+  (:require-macros
+   [cljs.core.async.macros :refer [go]])
+  (:require
+   [cljs.core.async :refer [<!]]
+   [cljs-http.client :as http]
+   [dragnet.shared.utils :refer [time-ago-in-words]]
+   [dragnet.shared.components :refer [icon switch text-field remove-button]]
+   [dragnet.shared.core :refer [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
+   [dragnet.editor.core :refer [survey survey-edited? question-type-slug question-types question-type-list question-type-key]]))
 
 ;; Editor Components
 
@@ -37,8 +34,8 @@
     [:div.question-option.mb-2.d-flex.align-items-center
      [:div.me-1
       (if (multiple-answers? question)
-        [:input {:type "checkbox" :disabled true}]
-        [:input {:type "radio" :disabled true}])]
+        [:input {:id dom-id :type "checkbox" :disabled true}]
+        [:input {:id dom-id :type "radio" :disabled true}])]
      [:div.me-1
       [:input.form-control
        {:type "text"
@@ -74,19 +71,19 @@
    [:a.btn.btn-link {:href "#" :on-click (add-option state question)} "Add Option"]])
 
 (defn text-body
-  [state question]
+  [_ question]
   (let [form-id (str "question-" (question :id))]
     (if (long-answer? question)
       [:textarea.form-control {:id form-id :rows 3}]
       [:input.form-control {:id form-id :type "text"}])))
 
 (defn number-body
-  [state question]
+  [_ question]
   (let [form-id (str "question" (question :id))]
     [:input.form-control {:id form-id :type "number"}]))
 
 (defn time-body
-  [state question]
+  [_ question]
   (cond
     (include-date-and-time? question) [:input.form-control {:type "datetime-local"}]
     (include-date? question) [:input.form-control {:type "date"}]
@@ -222,7 +219,7 @@
 
 (defn- add-question!
   [state]
-  (fn [e]
+  (fn [_e]
     (let [id   (swap! temp-id dec)
           text (new-question-text)]
       (swap! state assoc-in [:survey :questions id] {:id id :text text}))))

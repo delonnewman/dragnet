@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Behavior for question settings
 module Question::Settings
   extend ActiveSupport::Concern
 
@@ -26,6 +29,8 @@ module Question::Settings
   end
 
   def setting_value(setting)
+    return unless settings
+
     settings.fetch(setting, question_type.setting_default(setting))
   end
 end

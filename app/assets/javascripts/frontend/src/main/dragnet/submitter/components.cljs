@@ -1,7 +1,7 @@
 (ns dragnet.submitter.components
-  (:require [dragnet.shared.core :refer
-             [long-answer? multiple-answers? include-time? include-date? question-type-slug]]
-            [dragnet.submitter.core :refer [submission-path answer-id answer-form-name]]))
+  (:require
+   [dragnet.shared.core :refer [long-answer? multiple-answers? include-time? include-date? question-type-slug]]
+   [dragnet.submitter.core :refer [submission-path answer-id answer-form-name]]))
 
 (defn prompt
   [& {:keys [id label required children]}]

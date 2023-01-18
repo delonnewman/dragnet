@@ -1,6 +1,5 @@
 ;; shadow-cljs configuration
 {:deps {:aliases [:dev :test]}
-
  :builds
  {:editor
   {:target     :browser
@@ -11,4 +10,11 @@
   {:target     :browser
    :output-dir "../../../../public/js/submitter"
    :asset-path "../../../../js/submitter"
-   :modules    {:main {:init-fn dragnet.submitter.shell/init}}}}}
+   :modules    {:main {:init-fn dragnet.submitter.shell/init}}}
+  :test
+  {:target :browser-test
+   :test-dir "../../../../public/js/test"}
+  :ci
+  {:target :karma
+   :output-to "target/ci.js"
+   :ns-regexp "-test$"}}}

@@ -9,7 +9,10 @@
     "editor-repl": "shadow-cljs cljs-repl editor"
   },
   "devDependencies": {
-    "shadow-cljs": "2.19.1"
+    "shadow-cljs": "2.19.1",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cljs-test": "^0.1.0"
   },
   "dependencies": {
     "react": "^17.0.2",
