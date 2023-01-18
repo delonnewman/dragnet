@@ -33,6 +33,6 @@ class ReplyController < ApplicationController
   end
 
   def reply_params
-    params.require(:reply).permit!
+    params.require(:reply)
   end
 end

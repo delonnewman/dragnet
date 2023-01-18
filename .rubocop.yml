@@ -1,3 +1,12 @@
+AllCops:
+  Exclude:
+    - 'Gemfile'
+    - 'bin/rake'
+    - 'bin/setup'
+    - 'config.ru'
+    - 'config/**'
+    - 'db/schema.rb'
+    - 'db/migrate/*.rb'
 
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
@@ -10,4 +19,7 @@ Metrics/MethodLength:
   Max: 15
 
 Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
   Enabled: false

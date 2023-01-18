@@ -1,0 +1,20 @@
+name: Frontend CI
+
+# Run on Pull Request to $branch only
+on:
+  pull_request:
+    branches: [ $branch ]
+
+# Job Setup
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2 #Checkout Repo
+    - uses: actions/setup-node@v1 #Setup Node
+      with:
+        node-version: '12'
+    - name: Run Tests
+      run: |
+        npm install
+        npm run test

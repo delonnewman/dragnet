@@ -14,7 +14,7 @@ class ReplySubmissionController < EndpointController
   private
 
   def submission_params
-    params[:reply].permit!
+    params.require(:reply)
   end
 
   def reply
