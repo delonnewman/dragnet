@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "watch": "shadow-cljs watch submitter editor",
+    "watch": "shadow-cljs watch submitter editor test",
     "browser-repl": "shadow-cljs browser-repl",
     "submitter-repl": "shadow-cljs cljs-repl submitter",
     "editor-repl": "shadow-cljs cljs-repl editor"

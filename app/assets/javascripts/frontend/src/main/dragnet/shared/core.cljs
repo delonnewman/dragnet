@@ -17,3 +17,7 @@
 (defn question-type-slug
   [types question]
   (-> question :question_type_id types :slug))
+
+(defn question-id
+  [q]
+  (str "question-" (:id q)))

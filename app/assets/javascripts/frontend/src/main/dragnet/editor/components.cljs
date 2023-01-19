@@ -5,9 +5,12 @@
    [cljs.core.async :refer [<!]]
    [cljs-http.client :as http]
    [dragnet.shared.utils :refer [time-ago-in-words]]
-   [dragnet.shared.components :refer [icon switch text-field remove-button]]
-   [dragnet.shared.core :refer [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
-   [dragnet.editor.core :refer [survey survey-edited? question-type-slug question-types question-type-list question-type-key]]))
+   [dragnet.shared.components :refer
+    [icon switch text-field remove-button]]
+   [dragnet.shared.core :refer
+    [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
+   [dragnet.editor.core :refer
+    [survey survey-edited? question-type-slug question-types question-type-list question-type-key]]))
 
 ;; Editor Components
 
@@ -100,15 +103,19 @@
   [state question]
   (let [type (question-type-slug (question-types state) question)
         body (question-card-bodies type)]
-    (if body
+    (when body
       [body state question])))
 
 (defn- change-setting-handler
   [state question setting]
   (fn [event]
+    (println "change-setting-handler" event)
     (let [checked (-> event .-target .-checked)
           path [:survey :questions (question :id) :settings]
           settings (assoc (get-in @state path {}) setting checked)]
+      (println "path" path)
+      (println "settings" settings)
+      (println "state" (-> @state :survey))
       (swap! state assoc-in path settings))))
 
 (defn- change-required-handler

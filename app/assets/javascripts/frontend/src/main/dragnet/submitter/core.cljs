@@ -13,10 +13,6 @@
   [reply-id]
   (str (reply-path reply-id) "/submit"))
 
-(defn answer-id
-  [q]
-  (str "answer-" (:id q)))
-
 (defn answer-form-name
   [& keys]
   (form-name (concat [:reply :answers_attributes] keys)))

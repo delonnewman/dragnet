@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   def index
-    @surveys = Survey.all # TODO: get the current user's surveys
+    @surveys = Survey.all.order(:name) # TODO: get the current user's surveys
   end
 
   def new
