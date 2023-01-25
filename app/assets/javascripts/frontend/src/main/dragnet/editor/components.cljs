@@ -10,7 +10,7 @@
    [dragnet.shared.core :refer
     [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
    [dragnet.editor.core :refer
-    [survey survey-edited? question-type-slug question-types question-type-list question-type-key]]))
+    [survey survey-edited? question-type-slug question-types question-type-list question-type-uid]]))
 
 ;; Editor Components
 
@@ -101,10 +101,8 @@
 
 (defn question-card-body
   [state question]
-  (let [type (question-type-slug (question-types state) question)
-        body (question-card-bodies type)]
-    (when body
-      [body state question])))
+  (when-let [body (question-card-bodies (question-type-slug @state question))]
+    [body state question]))
 
 (defn- change-setting-handler
   [state question setting]
@@ -128,7 +126,7 @@
   [state question]
   [:div.card-footer
    [:div.d-flex.justify-content-end
-    (when-let [type ((question-types state) (question :question_type_id))]
+    (when-let [type ((question-types @state) (question :question_type_id))]
       (for [[ident {text :text type :type default :default}] (type :settings)]
         (let [form-id (str "option-" (question :id) "-" (name ident))]
           ^{:key form-id} [switch
@@ -162,9 +160,9 @@
      (if type-id (assoc attrs :value type-id) attrs)
      (when-not type-id
        [:option "Select Question Type"])
-     (for [type (question-type-list state)]
+     (for [type (question-type-list @state)]
        [:option
-        {:key (question-type-key (str "question-" (:id question)) type)
+        {:key (question-type-uid question type)
          :value (:id type)}
         (type :name)])]))
 
@@ -194,7 +192,7 @@
 (defn survey-questions
   [state]
   [:div.questions
-   (let [qs (->> (survey state :questions) vals (remove :_destroy) (sort-by :display_order))]
+   (let [qs (->> (survey @state :questions) vals (remove :_destroy) (sort-by :display_order))]
      (for [q qs]
        (let [key (str "question-card-" (:id q))]
          ^{:key key} [question-card state q])))])
@@ -235,7 +233,7 @@
   [state]
   (fn []
     (go
-      (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey state :id) "/apply")))
+      (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey @state :id) "/apply")))
             t   (-> res :body :updated_at)]
         (swap! state assoc :edits nil :updated_at t)))))
 
@@ -250,18 +248,18 @@
    [:div.mb-3.d-flex.justify-content-between
     [:div
      [:small.me-1
-      (if (survey-edited? state)
+      (if (survey-edited? @state)
        (str "Last saved " (time-ago-in-words (@state :updated_at)))
        (str "Up to date. Saved " (time-ago-in-words (@state :updated_at))))]]
     [:div
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
-       :disabled (not (survey-edited? state))
+       :disabled (not (survey-edited? @state))
        :on-click (save-survey! state)}
       "Save"]]]
-   [survey-details {:id (survey state :id)
-                    :name (survey state :name)
-                    :description (survey state :description)
+   [survey-details {:id (survey @state :id)
+                    :name (survey @state :name)
+                    :description (survey @state :description)
                     :on-change-description (update-survey-field! state :description)
                     :on-change-name (update-survey-field! state :name)}]
    [:div.mb-3.d-flex.justify-content-end

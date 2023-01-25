@@ -5,11 +5,11 @@
     [cljs.core.async :refer [<!]]
     [reagent.core :as r]
     [reagent.dom :as rdom]
+    [dragnet.editor.core :refer [survey-url]]
     [dragnet.editor.components :refer [survey-editor]]))
 
 ; TODO: add validation
 (def current-state (r/atom nil))
-(def root-url "http://dragnet.test")
 (def root-element (atom nil))
 
 (defn get-root-element
@@ -27,10 +27,6 @@
   (go (let [res (<! (http/put url {:transit-params data}))]
         (res :body))))
 
-(defn survey-endpoint
-  [survey-id]
-  (str root-url "/api/v1/editing/surveys/" survey-id))
-
 (defn refresh-editor
   [state]
   (rdom/render [survey-editor state] (get-root-element)))
@@ -45,13 +41,13 @@
            (fn [_ ref old new]
              (if (and old (not= (:survey old) (:survey new)))
                (go
-                 (let [edit (<! (api-update (survey-endpoint (get-in new [:survey :id])) (:survey new)))]
+                 (let [edit (<! (api-update (survey-url new) (:survey new)))]
                    (swap! ref assoc :edits (conj (@ref :edits) edit)))))))
 
 (defn init
   [elem survey-id]
   (when (and elem survey-id)
     (println "initializing editor for " survey-id)
-    (go (let [data (<! (api-data (survey-endpoint survey-id)))]
+    (go (let [data (<! (api-data (survey-url survey-id)))]
           (reset! root-element elem)
           (reset! current-state data)))))

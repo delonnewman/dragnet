@@ -48,3 +48,7 @@
       (> diff' minutes) (str (->> (/ diff' minutes) Math/floor (pluralize "minute")) " " suffix)
       (> diff' seconds) (str (->> (/ diff' seconds) Math/floor (pluralize "second")) " " suffix)
       :else "just now")))
+
+(defmacro echo
+  [sym]
+  `(println ~(name sym) ~sym))
