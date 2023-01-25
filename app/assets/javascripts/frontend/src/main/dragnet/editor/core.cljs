@@ -2,6 +2,9 @@
   (:require
    [dragnet.shared.utils :as utils]))
 
+;; TODO: add validation for surveys, edits, questions, and question options
+;; TODO: add stateful functions
+
 (defn survey
   [state & key-path]
   (if (empty? key-path)
