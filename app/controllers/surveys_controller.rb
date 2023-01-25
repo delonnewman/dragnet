@@ -4,7 +4,7 @@ class SurveysController < ApplicationController
   end
 
   def new
-    survey = Survey.init(User.first).tap(&:save!)
+    survey = Survey.create!(author: User.first)
 
     redirect_to edit_survey_path(survey)
   end

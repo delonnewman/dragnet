@@ -30,6 +30,7 @@ class Survey::Projection < Dragnet::Advice
       :description,
       :updated_at,
       :author_id,
+      author: %i[id name nickname],
       questions: [
         :id,
         :text,

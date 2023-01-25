@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'advising/point_cut'
+
 module Dragnet
   # Compose instances of the named class into the current class.
   #
@@ -22,15 +24,35 @@ module Dragnet
   #     def latest_edit ... end
   #   end
   module Advising
-    # Return the default method name for the class.
-    #
-    # @param klass [Class]
-    #
-    # @return [Symbol]
-    def advising_class_method_name(klass)
-      raise "can't generate method name for anonymous class" unless klass.name
+    def advice
+      @advice ||= {}
+    end
 
-      klass.name.split('::').last.underscore.to_sym
+    def add_point_cut(point_cut)
+      meth = point_cut.method_name
+      define_advising_method(meth, point_cut.advice, point_cut.args, **point_cut.options.slice(:calling, :memoize))
+
+      delegate(*point_cut.delegate_methods, to: meth) unless point_cut.delegate_methods.empty?
+      point_cut
+    end
+
+    def remove_point_cut(point_cut)
+      point_cut.delegate_methods.each do |method|
+        remove_method(method)
+      end
+      remove_method(point_cut.method_name)
+      point_cut
+    end
+
+    def remove_advice(klass)
+      pc = advice.delete(klass)
+      remove_point_cut(pc)
+    end
+
+    def remove_all_advice
+      advice.each_value do |pc|
+        remove_point_cut(pc)
+      end
     end
 
     # @param method_name [Symbol]
@@ -66,14 +88,12 @@ module Dragnet
     # @param klass [Class]
     # @param args optionally pass arguments to the constructor
     # @param as [Symbol, nil] the name of the generated method, if nil will use the default name
-    # @param delegating [Array<Symbol>] a list of methods to delegate to the generated method
-    def advised_by(klass, *args, as: nil, delegating: EMPTY_ARRAY, **options)
-      meth = as || advising_class_method_name(klass)
-
-      define_advising_method(meth, klass, args, **options.slice(:calling, :memoize))
-
-      delegate(*delegating, to: meth) unless delegating.empty?
+    # @param delegating [Symbol, Array<Symbol>] a list of methods to delegate to the generated method
+    def with(klass, *args, as: nil, delegating: EMPTY_ARRAY, **options)
+      delegating = [delegating] unless delegating.is_a?(Array)
+      pc = PointCut.new(advice: klass, args: args, name: as, delegate_methods: delegating, options: options)
+      add_point_cut(pc)
+      advice[klass] = pc
     end
-    alias with advised_by
   end
 end

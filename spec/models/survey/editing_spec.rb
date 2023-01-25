@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Survey::Editing do
   let(:author) { User.generate! }
-  let(:survey) { Survey.init!(author) }
+  let(:survey) { Survey.create!(author: author) }
 
   subject(:editing) { Survey::Editing.new(survey) }
 
