@@ -33,7 +33,7 @@ unless Rails.env.production?
   print 'Generating Surveys...'
   surveys = users.flat_map do |u|
     5.times.map do
-      Survey[user: u].generate.tap do |s|
+      Survey[author: u].generate.tap do |s|
         s.save!
         print '.'
       end
