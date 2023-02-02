@@ -3,6 +3,7 @@ require 'rails_helper'
 describe Survey, type: :model do
   describe '#new' do
     subject(:survey) { described_class.new(name: name, author: author) }
+
     let(:name) { Dragnet::Generators::Name.generate }
     let(:author) { User.generate! }
 

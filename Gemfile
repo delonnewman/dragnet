@@ -3,9 +3,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.0.1'
 
-gem 'rails', '~> 7.0.3.1'
+gem 'rails', '~> 7.0.4.2'
 
 gem 'pg', '~> 1.1'
+gem 'activerecord-pull-alpha'
 
 # HTTP
 gem 'puma', group: :development
@@ -15,6 +16,7 @@ gem 'unicorn', require: false
 # UI / Assets
 gem 'bootstrap', '~> 5.1.3'
 gem 'chartkick'
+gem "mapkick-rb"
 gem 'font-awesome-sass'
 gem 'sprockets-rails'
 
@@ -26,10 +28,11 @@ gem 'murmurhash3'
 gem 'shortuuid'
 gem 'transit-ruby', require: 'transit'
 
-gem 'activerecord-pull-alpha'
-gem 'jbuilder'
-
 gem 'pagy'
+
+gem 'omniauth', '~> 2.1.1'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-apple'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
@@ -53,6 +56,9 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
 
+  gem 'guard', require: false
+  gem 'guard-rspec', require: false
+
   gem 'gen-test', github: 'delonnewman/gen-test'
 
   gem 'brakeman'
@@ -75,4 +81,3 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem 'spring'
 end
-

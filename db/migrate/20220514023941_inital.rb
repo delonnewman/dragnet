@@ -96,7 +96,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.belongs_to :question_option,  null: true, index: true
       t.string     :short_text_value, null: true, index: true
       t.text       :long_text_value,  null: true, index: true
-      t.integer    :number_value,     null: true, index: true
+      t.integer    :integer_value,    null: true, index: true
       t.decimal    :float_value,      null: true, index: true
 
       t.timestamps

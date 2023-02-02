@@ -22,13 +22,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_023941) do
     t.bigint "question_option_id"
     t.string "short_text_value"
     t.text "long_text_value"
-    t.integer "number_value"
+    t.integer "integer_value"
     t.decimal "float_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["float_value"], name: "index_answers_on_float_value"
+    t.index ["integer_value"], name: "index_answers_on_integer_value"
     t.index ["long_text_value"], name: "index_answers_on_long_text_value"
-    t.index ["number_value"], name: "index_answers_on_number_value"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["question_option_id"], name: "index_answers_on_question_option_id"
     t.index ["question_type_id"], name: "index_answers_on_question_type_id"

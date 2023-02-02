@@ -5,18 +5,15 @@ class Survey::Naming < Dragnet::Advice
 
   delegate :name, :slug, to: :advised_object
 
+  def generate_naming!
+    survey.name = unique_name if generate_name?
+    survey.slug = Dragnet::Utils.slug(name) if generate_slug?
+  end
+
   def generate_name?
     name.blank? || auto_named? and survey.new_record? || survey.will_save_change_to_author_id?
   end
   alias generated_name? generate_name?
-
-  def generate_name!
-    survey.name = unique_name
-  end
-
-  def generate_slug!
-    survey.slug = Dragnet::Utils.slug(name)
-  end
 
   def generate_slug?
     name.present? && slug.blank?

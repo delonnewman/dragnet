@@ -22,7 +22,13 @@
     </nav>
 
     <main class="container-fluid">
-        <%= yield %>
+      <% if notice %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+      <%= yield %>
     </main>
 
     <%= javascript_include_tag "application" %>

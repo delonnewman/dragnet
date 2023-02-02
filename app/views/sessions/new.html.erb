@@ -1,0 +1,6 @@
+<%= form_tag('/auth/developer/callback', method: 'post', data: { turbo: false }) do %>
+  <%= hidden_field_tag :authenticity_token, session[:_csrf_token] %>
+  <%= text_field_tag :name %>
+  <%= text_field_tag :email %>
+  <button type='submit'>Login with Developer</button>
+<% end %>

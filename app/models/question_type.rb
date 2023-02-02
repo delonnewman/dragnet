@@ -1,6 +1,8 @@
 class QuestionType < ApplicationRecord
   include Slugged
 
+  delegate :to_s, to: :name
+
   has_many :questions
 
   serialize :settings

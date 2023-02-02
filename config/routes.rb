@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'
 
+  # OmniAuth
+  post 'auth/:provider/callback', to: 'sessions#create'
+  get '/login', to: 'sessions#new'
+
   resources :surveys, only: %i[index new edit] do
     get 'results'
     get 'stats', to: 'stats#show'

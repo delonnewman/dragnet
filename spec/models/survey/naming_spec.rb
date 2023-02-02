@@ -1,9 +1,8 @@
 require 'rails_helper'
 
 describe Survey::Naming do
-  include Dragnet::Generators
-
   subject(:naming) { described_class.new(survey, default_name) }
+
   let(:default_name) { 'New Survey' }
   let(:survey) { Survey.new(author: author) }
   let(:author) { User.generate }
