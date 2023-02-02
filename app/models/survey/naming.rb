@@ -5,33 +5,30 @@ class Survey::Naming < Dragnet::Advice
 
   delegate :name, :slug, to: :advised_object
 
-  # @return [Symbol, nil]
-  def ident
-    return if slug.blank?
+  def generate_name?
+    name.blank? || auto_named? and survey.new_record? || survey.will_save_change_to_author_id?
+  end
+  alias generated_name? generate_name?
 
-    slug.underscore.to_sym
+  def generate_name!
+    survey.name = unique_name
   end
 
-  # @param [User] author
-  def author=(author)
-    @author = author
-    self.author_id = author.id
+  def generate_slug!
+    survey.slug = Dragnet::Utils.slug(name)
   end
 
-  # @param [Integer] author_id
-  def author_id=(author_id)
-    survey[:author_id] = author_id
-    self.name = unique_name unless manually_named?
+  def generate_slug?
+    name.present? && slug.blank?
   end
-
-  # @param [String] name
-  def name=(name)
-    survey[:name] = name
-    survey[:slug] = Dragnet::Utils.slug(name)
-  end
+  alias generated_slug? generate_slug?
 
   def manually_named?
-    name.present? && !name.start_with?(default_name)
+    name.present? && !auto_named?
+  end
+
+  def auto_named?
+    name.start_with?(default_name)
   end
 
   # @return [String]
@@ -61,5 +58,11 @@ class Survey::Naming < Dragnet::Advice
   # @return [Integer, nil]
   def author_id
     survey.author_id || survey.author&.id
+  end
+
+  def ident
+    return if slug.blank?
+
+    slug.underscore.to_sym
   end
 end

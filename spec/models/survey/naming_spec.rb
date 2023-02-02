@@ -1,9 +1,52 @@
 require 'rails_helper'
 
 describe Survey::Naming do
-  subject(:naming) { described_class.new(survey, 'New Survey') }
+  include Dragnet::Generators
+
+  subject(:naming) { described_class.new(survey, default_name) }
+  let(:default_name) { 'New Survey' }
   let(:survey) { Survey.new(author: author) }
-  let(:author) { User.generate! }
+  let(:author) { User.generate }
+
+  describe '#auto_named?' do
+    let(:survey) { Survey.new(author: author, name: name) }
+
+    context 'when a name is given that does not start with the default name' do
+      let(:name) { Dragnet::Generators::Name.generate }
+
+      it { should_not be_auto_named }
+    end
+
+    context 'when a name is given that starts with the default name' do
+      let(:name) { "#{default_name} #{Dragnet::Generators::Name.generate}" }
+
+      it { should be_auto_named }
+    end
+  end
+
+  describe '#generate_name?' do
+    let(:survey) { Survey.new(author: author, name: name) }
+
+    context 'when survey is new or will save a change to author_id' do
+      context 'when a name is not given' do
+        let(:name) { nil }
+
+        it { should be_generated_name }
+      end
+
+      context 'when a name is given' do
+        let(:name) { Dragnet::Generators::Name.generate }
+
+        it { should_not be_generated_name }
+      end
+
+      context 'when a name is given that starts with the default name' do
+        let(:name) { "#{default_name} #{Dragnet::Generators::Name.generate}" }
+
+        it { should be_generated_name }
+      end
+    end
+  end
 
   describe '#author_id' do
     context 'when survey has no author or author_id' do

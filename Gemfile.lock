@@ -300,6 +300,7 @@ DEPENDENCIES
   bundler-audit
   chartkick
   debug
+  faker
   font-awesome-sass
   gen-test!
   jbuilder
