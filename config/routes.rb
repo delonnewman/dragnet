@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'
 
-  resources :surveys, only: %i[index new edit] do
+  resources :surveys do
     get 'results'
+    post 'copy'
     get 'stats', to: 'stats#show'
   end
 

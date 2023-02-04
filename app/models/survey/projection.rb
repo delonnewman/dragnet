@@ -21,8 +21,6 @@ class Survey::Projection < Dragnet::Advice
     data.merge(questions: questions)
   end
 
-  private
-
   def survey_data
     survey.pull(
       :id,

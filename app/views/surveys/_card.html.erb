@@ -1,0 +1,64 @@
+<div id="survey-<%= survey.id %>" class="survey-card card d-inline-block" style="width: 360px; margin: 7px">
+  <div class="card-body">
+    <div class="card-title">
+      <%= survey.name %>
+      <% if survey.edited? %>
+        <div class="bg-warning d-inline-block"
+             style="width: 11px; height: 11px; border-radius: 50%;"
+             title="Unsaved Changes"></div>
+      <% end %>
+    </div>
+    <div class="mb-2">
+              <span class="badge bg-info">
+                <%= pluralize survey.replies.count, "reply" %>
+              </span>
+    </div>
+    <div class="d-flex justify-content-start">
+      <div class="me-3">
+        <small>
+          <%= link_to reply_to_path(survey.short_id, survey.slug) do %>
+            <%= icon 'fas', 'eye' %>
+            Preview Survey
+          <% end %>
+        </small>
+      </div>
+      <div>
+        <%= link_to survey_path(survey) do %>
+          <%= icon 'fas', 'table' %> Data
+        <% end %>
+        <br>
+        <%= link_to survey_stats_path(survey) do %>
+          <%= icon 'fas', 'chart-bar' %> Statistics
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="btn-group btn-group-sm">
+      <%= link_to edit_survey_path(survey), class: 'btn btn-secondary' do %>
+        <%= icon 'fas', 'pencil' %> Edit
+      <% end %>
+      <a href="#"
+         title="Create a copy of this survey"
+         class="btn btn-sm btn-secondary"
+         hx-post="<%= survey_copy_path(survey) %>"
+         hx-trigger="click"
+         hx-swap="afterend"
+         hx-vals='{"authenticity_token": <%= session[:_csrf_token].to_json %>}'
+         hx-target="#survey-<%= survey.id %>">
+        <%= icon 'fas', 'clone' %> Copy
+      </a>
+      <a href="#"
+         title="Delete survey"
+         class="btn btn-sm btn-secondary"
+         hx-delete="<%= survey_path(survey) %>"
+         hx-confirm="Are you sure you want to delete your survey?"
+         hx-trigger="click"
+         hx-swap="outerHTML"
+         hx-vals='{"authenticity_token": <%= session[:_csrf_token].to_json %>}'
+         hx-target="#survey-<%= survey.id %>">
+        <%= icon 'fa-solid', 'trash-can' %> Delete
+      </a>
+    </div>
+  </div>
+</div>

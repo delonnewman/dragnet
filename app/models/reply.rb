@@ -3,7 +3,7 @@ class Reply < ApplicationRecord
 
   has_many :questions, through: :survey
 
-  has_many :answers
+  has_many :answers, dependent: :delete_all
   accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
   with Reply::Submission, delegating: %i[submit! submitted submitted!]

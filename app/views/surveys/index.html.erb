@@ -1,32 +1,11 @@
 <div class="d-flex justify-content-end">
     <%= link_to new_survey_path, class: 'btn btn-sm btn-primary' do %>
-        <%= icon('fa-solid', 'screwdriver-wrench') %> Create Form
+        New Survey
     <% end %>
 </div>
 
 <div class="survey-listing d-flex flex-wrap">
     <% @surveys.each do |survey| %>
-        <div class="survey-card card d-inline-block" style="width: 360px; margin: 7px">
-            <div class="card-body">
-                <div class="card-title">
-                    <%= survey.name %>
-                    <% if survey.edited? %><span class="badge bg-secondary">Unsaved changes</span><% end %>
-                </div>
-
-                <div class="mb-2">
-                    <span class="badge bg-secondary">
-                        <%= pluralize survey.questions.count, "question" %>
-                    </span>
-                    <span class="badge bg-secondary">
-                        <%= pluralize survey.replies.count, "reply" %>
-                    </span>
-                </div>
-
-                <%= link_to 'Results', report_path(question_ids: survey.question_ids, name: survey.name) %>
-                <%= link_to 'View', reply_to_path(survey.short_id, survey.slug) %>
-                <%= link_to 'Summary', survey_stats_path(survey.short_id) %>
-                <%= link_to 'Edit', edit_survey_path(survey) %>
-            </div>
-        </div>
+      <%= render partial: 'surveys/card', locals: { survey: survey } %>
     <% end %>
 </div>

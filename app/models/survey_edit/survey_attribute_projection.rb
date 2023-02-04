@@ -8,23 +8,14 @@
 class SurveyEdit::SurveyAttributeProjection < Dragnet::Advice
   advises SurveyEdit, as: :edit
 
-  def attributes
-    edit.survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|
+  # @return [Hash]
+  def attributes(survey_data = edit.survey_data)
+    survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|
       attrs[:questions_attributes] = question_attributes
     end
   end
 
-  # @param question [Question]
-  def question_keys(question)
-    %i[text display_order required question_type_id settings _destroy].tap do |keys|
-      keys << :id unless question[:id].is_a?(Integer) && question[:id].negative?
-    end
-  end
-
-  def question_data
-    edit.survey_data[:questions] || EMPTY_ARRAY
-  end
-
+  # @return [Array]
   def question_attributes
     question_data.map do |(_, q)|
       q.slice(*question_keys(q)).tap do |new|
@@ -37,6 +28,23 @@ class SurveyEdit::SurveyAttributeProjection < Dragnet::Advice
     end
   end
 
+  # @return [Array]
+  def question_data
+    edit.survey_data[:questions] || EMPTY_ARRAY
+  end
+
+  # @param [Question] question
+  #
+  # @return [Array<Symbol>]
+  def question_keys(question)
+    %i[text display_order required question_type_id settings _destroy].tap do |keys|
+      keys << :id unless question[:id].is_a?(Integer) && question[:id].negative?
+    end
+  end
+
+  # @param [QuestionOption] option
+  #
+  # @return [Array<Symbol>]
   def question_option_keys(option)
     %i[text weight _destroy].tap do |keys|
       keys << :id if option[:id].positive?

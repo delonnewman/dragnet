@@ -13,10 +13,12 @@ class Survey < ApplicationRecord
   has_many :questions, -> { order(:display_order) }, dependent: :delete_all
   accepts_nested_attributes_for :questions, allow_destroy: true
 
-  has_many :replies
+  has_many :replies, dependent: :delete_all
   has_many :answers
 
   has_many :edits, -> { where(applied: false) }, class_name: 'SurveyEdit', dependent: :delete_all
   with Survey::Editing, delegating: %i[edited? new_edit current_edit latest_edit]
+
   with Survey::Projection, calling: :project
+  with Survey::Copying, delegating: %i[copy! copy]
 end

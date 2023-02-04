@@ -5,6 +5,10 @@ class SurveysController < ApplicationController
     @surveys = current_user.surveys.order(:name) # TODO: get the current user's surveys
   end
 
+  def show
+    @survey = DataGridPresenter.new(Survey.find(params[:id]), params)
+  end
+
   def new
     survey = Survey.create!(author: User.first)
 
@@ -23,9 +27,16 @@ class SurveysController < ApplicationController
     render :edit, layout: 'survey'
   end
 
-  def delete
+  def copy
+    copy = Survey.find(params[:survey_id]).copy!
+    # TODO: add error handling
+
+    render partial: 'surveys/card', locals: { survey: copy }
+  end
+
+  def destroy
     Survey.find(params[:id]).delete
 
-    redirect_to root_path
+    render html: ""
   end
 end

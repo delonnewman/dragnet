@@ -1,8 +1,6 @@
 class StatsController < ApplicationController
   include Authenticated
 
-  layout 'survey'
-
   def show
     @report = StatsReport.new(reportable)
   end
