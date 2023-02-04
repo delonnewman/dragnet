@@ -17,6 +17,8 @@ QuestionType.create(
   ]
 )
 
+User.create!(login: 'admin', email: 'contact@delonnewman.name', name: 'Delon Newman', nickname: 'Delon', password: 'testing123').confirm
+
 # Generate some sample data unless in production
 unless Rails.env.production?
   puts 'Generating some data that should aid development 🦫🚧 ...'

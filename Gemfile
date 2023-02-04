@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.1'
+ruby '3.2.0'
 
 gem 'rails', '~> 7.0.4.2'
 
@@ -15,10 +15,11 @@ gem 'unicorn', require: false
 
 # UI / Assets
 gem 'bootstrap', '~> 5.1.3'
-gem 'chartkick'
-gem "mapkick-rb"
 gem 'font-awesome-sass'
 gem 'sprockets-rails'
+
+gem 'chartkick'
+gem "mapkick-rb"
 
 gem 'pry'
 gem 'pry-rails'
@@ -30,6 +31,7 @@ gem 'transit-ruby', require: 'transit'
 
 gem 'pagy'
 
+gem 'devise'
 gem 'omniauth', '~> 2.1.1'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-apple'
@@ -78,6 +80,6 @@ group :development do
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   gem 'rack-mini-profiler'
 
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem 'spring'
+  gem 'yard'
+  gem 'yard-activerecord'
 end

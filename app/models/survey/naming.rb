@@ -5,7 +5,7 @@ class Survey::Naming < Dragnet::Advice
 
   delegate :name, :slug, to: :advised_object
 
-  def generate_naming!
+  def generate_name_and_slug
     survey.name = unique_name if generate_name?
     survey.slug = Dragnet::Utils.slug(name) if generate_slug?
   end

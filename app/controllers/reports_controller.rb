@@ -1,4 +1,6 @@
 class ReportsController < ApplicationController
+  include Authenticated
+
   layout 'survey'
 
   def show

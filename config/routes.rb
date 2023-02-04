@@ -1,12 +1,9 @@
 Rails.application.routes.draw do
+  devise_for :users
   root 'surveys#index'
 
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'
-
-  # OmniAuth
-  post 'auth/:provider/callback', to: 'sessions#create'
-  get '/login', to: 'sessions#new'
 
   resources :surveys, only: %i[index new edit] do
     get 'results'

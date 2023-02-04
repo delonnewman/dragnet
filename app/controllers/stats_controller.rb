@@ -1,4 +1,6 @@
 class StatsController < ApplicationController
+  include Authenticated
+
   layout 'survey'
 
   def show

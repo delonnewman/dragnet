@@ -1,6 +1,8 @@
 class SurveysController < ApplicationController
+  include Authenticated
+
   def index
-    @surveys = Survey.all.order(:name) # TODO: get the current user's surveys
+    @surveys = current_user.surveys.order(:name) # TODO: get the current user's surveys
   end
 
   def new

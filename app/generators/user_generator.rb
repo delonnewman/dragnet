@@ -7,7 +7,8 @@ class UserGenerator < Dragnet::ActiveRecordGenerator
     login = Login[name: name]
     email = Email[login: login]
     nick  = name.split(' ').first
+    pass  = 'testing123'
 
-    User.new(name: name, login: login, email: email, nickname: nick)
+    User.new(name: name, login: login, email: email, nickname: nick, password: pass)
   end
 end

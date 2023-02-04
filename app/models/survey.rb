@@ -6,8 +6,9 @@ class Survey < ApplicationRecord
   belongs_to :author, class_name: 'User'
   validates :name, presence: true
   validates :name, uniqueness: { scope: :author }, on: :create
-  with Survey::Naming, 'New Survey', delegating: %i[ident generate_naming!]
-  after_initialize :generate_naming!
+
+  with Survey::Naming, 'New Survey', delegating: %i[ident generate_name_and_slug]
+  after_initialize :generate_name_and_slug
 
   has_many :questions, -> { order(:display_order) }, dependent: :delete_all
   accepts_nested_attributes_for :questions, allow_destroy: true

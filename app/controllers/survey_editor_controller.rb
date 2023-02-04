@@ -1,4 +1,6 @@
 class SurveyEditorController < EndpointController
+  include Authenticated
+
   # GET - /api/v1/editing/surveys/:id
   def show
     respond_to do |format|
