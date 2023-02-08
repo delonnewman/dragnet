@@ -12,6 +12,12 @@ class Object
   end
 end
 
+class Hash
+  def rename_keys(mapping)
+    transform_keys(&mapping)
+  end
+end
+
 class Class
   def presenter?
     false

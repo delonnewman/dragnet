@@ -4,9 +4,7 @@
 class Survey::Editing < Dragnet::Advice
   advises Survey
 
-  def latest_edit
-    survey.edits.where(applied: false).order(created_at: :desc).first
-  end
+  delegate :valid?, to: :latest_edit, prefix: :latest_edit
 
   def edited?
     latest_edit.present?
@@ -14,6 +12,10 @@ class Survey::Editing < Dragnet::Advice
 
   def current_edit
     latest_edit || new_edit
+  end
+
+  def latest_edit
+    survey.edits.where(applied: false).order(created_at: :desc).first
   end
 
   def new_edit

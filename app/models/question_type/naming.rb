@@ -1,6 +1,4 @@
-# Models that have a slug that is automatically generated from it's name.
-# Cached lookup is provided with named class methods.
-module Slugged
+module QuestionType::Naming
   extend ActiveSupport::Concern
 
   class_methods do

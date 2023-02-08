@@ -1,5 +1,5 @@
 class QuestionType < ApplicationRecord
-  include Slugged
+  include Naming
 
   delegate :to_s, to: :name
 

@@ -6,4 +6,53 @@ module SurveysHelper
   def survey_qrcode(survey, **svg_opts)
     RQRCode::QRCode.new(reply_to_url(survey.short_id, survey.slug)).as_svg(svg_opts)
   end
+
+  def edit_survey_link(survey)
+    icon_link('Edit', edit_survey_path(survey),
+              icon: 'pencil', icon_type: 'fas', class: 'btn btn-secondary')
+  end
+
+  def survey_preview_link(survey)
+    path = reply_to_path(survey.short_id, survey.slug)
+    icon_link('Preview Survey', path, icon: 'eye', icon_type: 'fas')
+  end
+
+  def survey_data_link(survey)
+    icon_link('Data', survey_path(survey), icon: 'table', icon_type: 'fas')
+  end
+
+  def survey_stats_link(survey)
+    icon_link('Statistics', survey_stats_path(survey), icon: 'chart-bar', icon_type: 'fas')
+  end
+
+  def icon_link(label, path, icon:, icon_type: 'far', **html_options)
+    link_to path, **html_options do
+      icon(icon_type, icon) + '&nbsp;'.html_safe + label
+    end
+  end
+
+  def button
+
+  end
+
+  def survey_status_indicator(survey, size: 7)
+    desc = survey_status_description(survey)
+    bgcolor = survey_status_bg_color(survey)
+
+    tag.div(class: "#{bgcolor} d-inline-block", title: desc, style: "width: #{size}px; height: #{size}px; border-radius: 50%;")
+  end
+
+  def survey_status_bg_color(survey)
+    return 'bg-success' unless survey.edited?
+    return 'bg-danger'  unless survey.latest_edit_valid?
+
+    'bg-warning'
+  end
+
+  def survey_status_description(survey)
+    return 'All changes saved' unless survey.edited?
+    return 'Cannot save changes' unless survey.latest_edit_valid?
+
+    'Unsaved changes'
+  end
 end

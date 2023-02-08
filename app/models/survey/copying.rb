@@ -20,8 +20,14 @@ class Survey::Copying < Dragnet::Advice
   # @return [Hash]
   def copy_data
     survey.new_edit.survey_attributes.tap do |attrs|
-      # TODO: remove all :id attributes
       attrs.delete(:id)
+      attrs[:name] = "Copy of #{attrs[:name]}"
+      attrs.fetch(:questions_attributes, EMPTY_ARRAY).each do |q|
+        q.delete(:id)
+        q.fetch(:question_options_attributes, EMPTY_ARRAY).each do |opt|
+          opt.delete(:id)
+        end
+      end
     end
   end
 end
