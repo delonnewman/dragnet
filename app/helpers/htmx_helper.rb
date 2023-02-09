@@ -3,6 +3,8 @@
 module HTMXHelper
   include Dragnet
 
+  # TODO: add link_to UJS API support
+
   PASS_THROUGH_ATTRS = %i[get post delete put trigger swap target confirm].freeze
 
   def button_to(name = nil, options = nil, html_options = EMPTY_HASH, &block)

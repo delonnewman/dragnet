@@ -11,13 +11,10 @@
     </div>
     <div class="d-flex justify-content-start">
       <div class="me-3">
-        <small>
-          <%= survey_preview_link(survey) %>
-        </small>
+        <small><%= survey_preview_link(survey) %></small>
       </div>
       <div>
-        <%= survey_data_link(survey) %>
-        <br>
+        <%= survey_data_link(survey) %><br>
         <%= survey_stats_link(survey) %>
       </div>
     </div>
@@ -25,12 +22,8 @@
   <div class="card-footer">
     <div class="btn-group btn-group-sm">
       <%= edit_survey_link(survey) %>
-      <%= button_to survey_copy_path(survey), target: "#survey-#{survey.id}", swap: "afterend", title: 'Create a copy of this survey', class: 'btn btn-sm btn-secondary' do %>
-        <%= icon 'fas', 'clone' %> Copy
-      <% end %>
-      <%= button_to survey_path(survey), method: :delete, target: "#survey-#{survey.id}", confirm: "Are you sure you want to delete your survey?", title: 'Delete survey', class: 'btn btn-sm btn-secondary' do %>
-        <%= icon 'fa-solid', 'trash-can' %> Delete
-      <% end %>
+      <%= copy_survey_button(survey) %>
+      <%= delete_survey_button(survey) %>
     </div>
   </div>
 </div>

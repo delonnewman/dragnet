@@ -4,7 +4,7 @@
     <% end %>
 </div>
 
-<div class="survey-listing d-flex flex-wrap">
+<div id="survey-listing" class="d-flex flex-wrap">
     <% @surveys.each do |survey| %>
       <%= render partial: 'surveys/card', locals: { survey: survey } %>
     <% end %>
