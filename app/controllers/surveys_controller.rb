@@ -1,10 +1,6 @@
 class SurveysController < ApplicationController
   include Authenticated
 
-  def index
-    @surveys = current_user.surveys.order(:name) # TODO: get the current user's surveys
-  end
-
   def show
     @survey = DataGridPresenter.new(Survey.find(params[:id]), params)
   end

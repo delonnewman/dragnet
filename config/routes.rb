@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  root 'surveys#index'
+  root 'workspace#index'
 
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'
