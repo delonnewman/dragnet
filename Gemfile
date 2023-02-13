@@ -38,6 +38,8 @@ gem 'omniauth', '~> 2.1.1'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-apple'
 
+gem 'fast_blank'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 
