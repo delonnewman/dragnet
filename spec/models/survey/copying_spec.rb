@@ -13,7 +13,8 @@ describe Survey::Copying do
     end
 
     context 'when survey has questions' do
-      let(:survey) { Survey[id: Dragnet::UUID, question_type: QuestionType.choice].generate(questions: { count: 0 }) }
+      let(:survey) { Survey[id: Dragnet::UUID].generate(questions: { question_type: question_type }) }
+      let(:question_type) { QuestionType.create!(name: "Choice") }
 
       it 'will remove survey id' do
         expect(copying.copy_data).not_to have_key(:id)
