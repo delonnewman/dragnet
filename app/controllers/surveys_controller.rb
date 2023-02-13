@@ -27,7 +27,7 @@ class SurveysController < ApplicationController
     copy = Survey.find(params[:survey_id]).copy!
     # TODO: add error handling
 
-    render partial: 'surveys/card', locals: { survey: copy }
+    render partial: 'workspace/survey_card', locals: { survey: copy }
   end
 
   def destroy
