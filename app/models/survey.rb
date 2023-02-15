@@ -8,12 +8,12 @@ class Survey < ApplicationRecord
   validates :name, uniqueness: { scope: :author }, on: :create
 
   with Naming, 'New Survey', delegating: %i[ident generate_name_and_slug]
-  after_initialize :generate_name_and_slug
+  before_validation :generate_name_and_slug
 
   has_many :questions, -> { order(:display_order) }, dependent: :delete_all
   accepts_nested_attributes_for :questions, allow_destroy: true
 
-  has_many :replies, dependent: :delete_all
+  has_many :replies, -> { where(submitted: true) }, dependent: :delete_all
   has_many :answers
 
   has_many :edits, -> { where(applied: false) }, class_name: 'SurveyEdit', dependent: :delete_all

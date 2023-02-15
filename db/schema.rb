@@ -107,11 +107,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "slug", null: false
     t.string "description"
     t.bigint "author_id", null: false
+    t.boolean "open", default: false, null: false
+    t.boolean "public", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_surveys_on_author_id"
     t.index ["created_at"], name: "index_surveys_on_created_at"
     t.index ["name"], name: "index_surveys_on_name"
+    t.index ["open"], name: "index_surveys_on_open"
+    t.index ["public"], name: "index_surveys_on_public"
     t.index ["slug"], name: "index_surveys_on_slug"
     t.index ["updated_at"], name: "index_surveys_on_updated_at"
   end

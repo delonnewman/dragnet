@@ -23,9 +23,17 @@ class SurveyGenerator < Dragnet::ActiveRecordGenerator
   #
   # @return [Hash]
   def survey_attributes(others)
-    attrs = attributes.merge(others).with_defaults!(name: Faker::Movie.title, author: User.generate)
+    attrs = attributes.merge(others).with_defaults!(default_attributes)
     attrs.delete(:questions) if attrs[:questions].is_a?(Hash) # remove question options/attributes
     attrs
+  end
+
+  def default_attributes
+    {
+      name: Faker::Movie.title,
+      author: User.generate,
+      public: Faker::Boolean.boolean
+    }
   end
 
   # @param [Hash] others

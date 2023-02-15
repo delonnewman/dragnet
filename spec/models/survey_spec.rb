@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Survey, type: :model do
   describe '#new' do
-    subject(:survey) { described_class.new(name: name, author: author) }
+    subject(:survey) { described_class.create!(name: name, author: author) }
 
     let(:name) { Dragnet::Generators::Name.generate }
     let(:author) { User.generate! }
@@ -14,7 +14,7 @@ describe Survey, type: :model do
     end
 
     context 'when slug is given' do
-      subject(:survey) { described_class.new(name: name, slug: 'testing-123') }
+      subject(:survey) { described_class.create!(name: name, slug: 'testing-123', author: author) }
 
       it 'will use the given slug' do
         expect(survey.slug).to eq 'testing-123'

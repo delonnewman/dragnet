@@ -6,7 +6,8 @@ class Reply < ApplicationRecord
   has_many :answers, dependent: :delete_all
   accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
-  with Reply::Submission, delegating: %i[submit! submitted submitted!]
+  with Submission, delegating: %i[submit! submitted submitted!]
+  scope :incomplete, -> { where(submitted: false) }
 
   # @!attribute answer_records
   #   @return [Array<Answer>]

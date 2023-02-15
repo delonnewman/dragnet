@@ -21,6 +21,9 @@ class Inital < ActiveRecord::Migration[7.0]
       t.bigint :author_id, null: false, index: true
       t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
 
+      t.boolean :open, index: true, null: false, default: false
+      t.boolean :public, index: true, null: false, default: false
+
       t.timestamps null: false, index: true
     end
 

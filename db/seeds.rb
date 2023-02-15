@@ -24,8 +24,8 @@ unless Rails.env.production?
   puts 'Generating some data that should aid development 🦫🚧 ...'
 
   print 'Generating Users...'
-  users = 5.times.map do
-    User.generate.tap do |u|
+  5.times do
+    User[password: 'testing123'].generate.tap do |u|
       u.save!
       print '.'
     end
@@ -33,7 +33,7 @@ unless Rails.env.production?
   puts 'Done.'
 
   print 'Generating Surveys...'
-  surveys = users.flat_map do |u|
+  surveys = User.all.flat_map do |u|
     5.times.map do
       Survey[author: u].generate.tap do |s|
         s.save!
