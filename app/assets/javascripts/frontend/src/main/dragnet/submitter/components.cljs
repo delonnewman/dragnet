@@ -16,7 +16,7 @@
      children]]])
 
 (defn reply-submitter
-  [reply-id state]
+  [reply-id state & {:keys [preview]}]
   (let [survey (-> state :survey)]
     [:div.reply-submitter
      [:h1 (survey :name)]
@@ -28,4 +28,5 @@
                                 :reply-id reply-id
                                 :label (question :text)
                                 :children (prompt-body question :form-name-prefix [:reply :answers_attributes])])
-      [:button.btn.btn-primary {:type "submit"} "Submit"]]]))
+      (when-not preview
+        [:button.btn.btn-primary {:type "submit"} "Submit"])]]))

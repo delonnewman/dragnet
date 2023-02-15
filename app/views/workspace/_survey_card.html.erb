@@ -26,7 +26,9 @@
       <%= copy_survey_button(survey) %>
       <%= survey_share_dropdown(survey) %>
     </div>
-    <%= delete_survey_button(survey) %>
-    <%= survey_open_indicator(survey) %>
+    <%# delete_survey_button(survey) %>
+    <% unless survey.public? %>
+      <%= survey_open_indicator(survey) %>
+    <% end %>
   </div>
 </div>

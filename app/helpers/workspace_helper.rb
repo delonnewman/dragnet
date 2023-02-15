@@ -14,6 +14,16 @@ module WorkspaceHelper
     end
   end
 
+  def survey_preview_button(title:, icon: title.downcase, width:, height:)
+    tag.button(
+      script: "on click set #preview-frame.width to @data-width then set #preview.height to @data-height",
+      class: "btn btn-secondary",
+      title: title,
+      data: { width: width, height: width }) do
+        icon('fas', icon)
+    end
+  end
+
   EARTH_REGIONS = %w[americas europe asia oceania africa].freeze
 
   def survey_public_indicator(survey)
@@ -59,8 +69,7 @@ module WorkspaceHelper
   end
 
   def survey_preview_link(survey)
-    path = reply_to_path(survey.short_id, survey.slug)
-    icon_link('Preview Survey', path, icon: 'eye')
+    icon_link('Preview Survey', survey_preview_path(survey), icon: 'eye')
   end
 
   def survey_data_link(survey)

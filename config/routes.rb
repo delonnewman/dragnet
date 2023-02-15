@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     get 'results'
     post 'copy'
     get 'stats', to: 'stats#show'
+    get 'preview'
   end
 
   resources :reply, only: %i[edit update] do
@@ -28,6 +29,7 @@ Rails.application.routes.draw do
     scope '/submission' do
       resources :reply_submission, path: '/replies', only: %i[show]
       post '/replies/:id/submit', to: 'reply_submission#submit', as: 'submit_reply'
+      get '/replies/:survey_id/preview', to: 'reply_submission#preview', as: 'preview_reply'
     end
   end
 end

@@ -7,6 +7,15 @@ class ReplySubmissionController < EndpointController
     end
   end
 
+  def preview
+    respond_to do |format|
+      format.transit do
+        reply = Reply.new(survey: Survey.find(params[:survey_id]))
+        render body: transit(reply_submission(reply).submission_data)
+      end
+    end
+  end
+
   def submit
     Reply.create!(submission_params)
   end

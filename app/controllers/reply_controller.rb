@@ -3,8 +3,11 @@ class ReplyController < ApplicationController
 
   def new
     survey = Survey.find_by_short_id!(params.require(:survey_id))
+    policy = ReplySubmissionPolicy.for(current_user)
 
-    if ReplySubmissionPolicy.for(current_user).can_create_reply?(survey)
+    if policy.can_preview_survey?(survey, params)
+      render :edit, locals: { reply: survey.replies.build }
+    elsif policy.can_create_reply?(survey)
       reply = Reply.create!(survey: survey)
       redirect_to edit_reply_path(reply)
     else
@@ -14,6 +17,7 @@ class ReplyController < ApplicationController
 
   def edit
     reply = replies.find(params[:id])
+
     if ReplySubmissionPolicy.for(current_user).can_edit_reply?(reply)
       render :edit, locals: { reply: reply }
     else

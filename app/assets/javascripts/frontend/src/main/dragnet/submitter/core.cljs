@@ -6,8 +6,10 @@
   (str "/api/v1/submission/replies/" reply-id))
 
 (defn reply-url
-  [reply-id]
-  (str (root-url) (reply-path reply-id)))
+  [id & {:keys [preview]}]
+  (if preview
+    (str (root-url) (reply-path id) "/preview")
+    (str (root-url) (reply-path id))))
 
 (defn submission-path
   [reply-id]

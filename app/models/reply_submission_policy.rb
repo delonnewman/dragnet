@@ -12,4 +12,8 @@ class ReplySubmissionPolicy < Dragnet::Policy
   alias can_create_reply? can_submit_reply?
   alias can_edit_reply? can_submit_reply?
   alias can_update_reply? can_submit_reply?
+
+  def can_preview_survey?(survey, params)
+    can_submit_reply?(survey) && params[:preview].present?
+  end
 end

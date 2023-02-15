@@ -13,16 +13,18 @@ class SurveysController < ApplicationController
     redirect_to edit_survey_path(survey)
   end
 
+  def preview
+    survey = Survey.find(params[:survey_id])
+
+    render :preview, locals: { survey: survey }
+  end
+
   def results
     render :results, layout: 'survey', locals: { survey: Survey.find(params[:survey_id]) }
   end
 
   def edit
     render :edit, layout: 'survey', locals: { survey: Survey.find(params[:id]) }
-  end
-
-  def preview
-
   end
 
   def copy

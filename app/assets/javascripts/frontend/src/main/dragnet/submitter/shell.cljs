@@ -8,25 +8,27 @@
     [dragnet.submitter.core :refer [reply-url]]))
 
 (defn render-ui
-  [elem reply-id]
+  [elem reply-id & {:keys [preview]}]
   (fn
     [_ _ old new]
     (when (not= old new)
-      (rdom/render [reply-submitter reply-id new] elem))))
+      (rdom/render [reply-submitter reply-id new :preview preview] elem))))
 
 (defn fetch-reply-data
-  [reply-id]
+  [id & {:keys [preview]}]
   (go
-    (let [res (<! (http/get (reply-url reply-id)))]
+    (let [res (<! (http/get (reply-url id :preview preview)))]
       (:body res))))
 
 (defn init
   "Initialize reply submission UI with the root element an reply ID.
   Both the root element and reply ID should be non-nil."
-  [elem reply-id]
-  (when (and elem reply-id)
-    (let [current (r/atom nil)]
-      (add-watch current :render-ui (render-ui elem reply-id))
+  [elem survey-id reply-id]
+  (when (and elem survey-id reply-id)
+    (let [current (r/atom nil)
+          preview (= "preview" reply-id)
+          id (if preview survey-id reply-id)]
+      (add-watch current :render-ui (render-ui elem reply-id :preview :preview))
       (go
-        (let [state (<! (fetch-reply-data reply-id))]
+        (let [state (<! (fetch-reply-data id :preview preview))]
           (reset! current state))))))
