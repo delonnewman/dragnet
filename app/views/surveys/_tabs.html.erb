@@ -1,0 +1,52 @@
+<div class="navbar navbar-expand-lg p-1">
+  <div class="container-fluid">
+    <%= link_to root_path, class: 'navbar-brand fs-6' do %>
+      Dragnet
+    <% end %>
+    <span class="navbar-text"><%= survey.name %></span>
+    <ul class="navbar-nav mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">
+          <%= icon 'fas', 'question' %> Help
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <%= link_to root_path, class: 'nav-link' do %>
+      <%= icon 'fas', 'arrow-left' %> Back
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to survey_path(survey), class: "nav-link #{'active' if selected == :summary}" do %>
+      <%= icon 'fas', 'gauge' %> Summary
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to edit_survey_path(survey), class: "nav-link #{'active' if selected == :edit}" do %>
+      <%= icon 'fas', 'hammer' %> Create
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to survey_preview_path(survey), class: "nav-link #{'active' if selected == :preview}" do %>
+      <%= icon 'fas', 'eye' %> Preview
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to survey_stats_path(survey.short_id), class: "nav-link #{'active' if selected == :stats}" do %>
+      <%= icon 'fas', 'chart-column' %> Statistics
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to survey_data_path(survey), class: "nav-link #{'active' if selected == :data}" do %>
+      <%= icon 'fas', 'table' %> Records
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to survey_settings_path(survey), class: "nav-link #{'active' if selected == :settings}" do %>
+      <%= icon 'fas', 'gear' %> Settings
+    <% end %>
+  </li>
+</ul>

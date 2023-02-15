@@ -1,10 +1,10 @@
 class SurveysController < ApplicationController
   include Authenticated
 
-  def show
-    survey = DataGridPresenter.new(Survey.find(params[:id]), params)
+  layout 'survey'
 
-    render :show, locals: { survey: survey }
+  def show
+    render :show, locals: { survey: Survey.find(params[:id]) }
   end
 
   def new
@@ -13,18 +13,14 @@ class SurveysController < ApplicationController
     redirect_to edit_survey_path(survey)
   end
 
-  def preview
-    survey = Survey.find(params[:survey_id])
-
-    render :preview, locals: { survey: survey }
-  end
-
-  def results
-    render :results, layout: 'survey', locals: { survey: Survey.find(params[:survey_id]) }
-  end
-
   def edit
-    render :edit, layout: 'survey', locals: { survey: Survey.find(params[:id]) }
+    render :edit, locals: { survey: Survey.find(params[:id]) }
+  end
+
+  def destroy
+    Survey.find(params[:id]).delete
+
+    render html: ""
   end
 
   def copy
@@ -34,9 +30,13 @@ class SurveysController < ApplicationController
     render partial: 'workspace/survey_card', locals: { survey: copy }
   end
 
-  def destroy
-    Survey.find(params[:id]).delete
+  def preview
+    survey = Survey.find(params[:survey_id])
 
-    render html: ""
+    render :preview, locals: { survey: survey }
+  end
+
+  def settings
+    render :settings, locals: { survey: Survey.find(params[:survey_id]) }
   end
 end

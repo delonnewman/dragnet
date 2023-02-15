@@ -2,3 +2,15 @@
 
 @import "bootstrap";
 @import "font-awesome";
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+a.btn {
+  text-decoration: none !important;
+}

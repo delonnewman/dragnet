@@ -6,10 +6,11 @@ Rails.application.routes.draw do
   get 'stats', to: 'stats#show'
 
   resources :surveys do
-    get 'results'
     post 'copy'
-    get 'stats', to: 'stats#show'
     get 'preview'
+    get 'settings'
+    get 'stats', to: 'stats#show'
+    get 'data', to: 'data_grid#show'
   end
 
   resources :reply, only: %i[edit update] do

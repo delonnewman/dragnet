@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 module UrlHelper
-  def icon_link(label, path, icon:, icon_type: 'fas', **html_options)
+  def icon_link(label, path = nil, icon:, icon_type: 'fas', **html_options)
+    unless path
+      path  = label
+      label = nil
+    end
+
     link_to path, **html_options do
-      icon(icon_type, icon) + '&nbsp;'.html_safe + label
+      if label
+        icon(icon_type, icon) + '&nbsp;'.html_safe + label
+      else
+        icon(icon_type, icon)
+      end
     end
   end
 

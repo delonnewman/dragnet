@@ -1,14 +1,4 @@
-<ul class="nav nav-tabs mb-3">
-  <li class="nav-item">
-    <%= link_to 'Workspace', root_path, class: 'nav-link' %>
-  </li>
-  <li class="nav-item">
-    <%= link_to 'Create', edit_survey_path(survey), class: 'nav-link active', 'aria-current': "page" %>
-  </li>
-  <li class="nav-item">
-    <%= link_to 'Results', survey_results_path(survey), class: 'nav-link' %>
-  </li>
-</ul>
+<%= render 'tabs', survey: survey, selected: :edit %>
 
 <main id="survey-editor"></main>
 <script>

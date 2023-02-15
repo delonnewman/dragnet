@@ -18,7 +18,7 @@ module WorkspaceHelper
     tag.button(
       script: "on click set #preview-frame.width to @data-width then set #preview.height to @data-height",
       class: "btn btn-secondary",
-      title: title,
+      title: "#{title} #{width}x#{height}",
       data: { width: width, height: width }) do
         icon('fas', icon)
     end
@@ -29,14 +29,12 @@ module WorkspaceHelper
   def survey_public_indicator(survey)
     label = survey.public? ? 'Public' : 'Private'
 
-    tag.span(class: 'text-muted') do
-      icon('fas', survey.public? ? "earth-#{EARTH_REGIONS.sample}" : 'key') +
-        '&nbsp;'.html_safe + label
-    end
+    icon('fas', survey.public? ? "earth-#{EARTH_REGIONS.sample}" : 'key') +
+      '&nbsp;'.html_safe + label
   end
 
   def survey_share_dropdown(survey)
-    tag.div(class: 'dropdown') do
+    tag.div(class: 'dropdown me-1') do
       tag.a(class: 'btn btn-sm btn-secondary dropdown-toggle', href: '#', role: 'button', data: { bs_toggle: 'dropdown' }) {
         icon('fas', 'share') + '&nbsp;Share'.html_safe
       } + tag.ul(class: 'dropdown-menu') {
@@ -46,12 +44,12 @@ module WorkspaceHelper
   end
 
   def copy_survey_button(survey)
-    icon_button('Copy', survey_copy_path(survey),
+    icon_button(survey_copy_path(survey),
                 icon: 'clone',
                 target: "#survey-listing",
                 swap: "beforeend",
-                title: 'Create a copy of this survey',
-                class: 'btn btn-sm btn-secondary')
+                title: 'Copy survey',
+                class: 'btn btn-sm btn-outline-secondary me-1')
   end
 
   def delete_survey_button(survey)
@@ -65,7 +63,10 @@ module WorkspaceHelper
   end
 
   def edit_survey_link(survey)
-    icon_link('Edit', edit_survey_path(survey), icon: 'pencil', class: 'btn btn-secondary')
+    icon_link(edit_survey_path(survey),
+              icon: 'hammer',
+              class: 'btn btn-sm btn-outline-secondary me-1',
+              title: 'Edit survey')
   end
 
   def survey_preview_link(survey)
@@ -73,11 +74,11 @@ module WorkspaceHelper
   end
 
   def survey_data_link(survey)
-    icon_link('Data', survey_path(survey), icon: 'table')
+    icon_link('Records', survey_data_path(survey), icon: 'table')
   end
 
   def survey_stats_link(survey)
-    icon_link('Statistics', survey_stats_path(survey.short_id), icon: 'chart-bar')
+    icon_link('Statistics', survey_stats_path(survey.short_id), icon: 'chart-column')
   end
 
   def survey_status_indicator(survey, size: 7)

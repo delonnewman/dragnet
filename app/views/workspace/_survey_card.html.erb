@@ -1,32 +1,32 @@
 <div id="survey-<%= survey.id %>" class="survey-card card d-inline-block" style="width: 360px; margin: 7px">
   <div class="card-body">
-    <div class="card-title">
-      <%= survey.name %>
+    <div class="card-title d-flex justify-content-between align-items-center">
+      <%= link_to survey.name, survey_path(survey) %>
       <%= survey_status_indicator(survey) %>
     </div>
     <div class="mb-2">
-      <span class="badge bg-info">
-        <%= pluralize survey.replies.count, "reply" %>
+      <span class="badge bg-secondary">
+        <%= survey_public_indicator(survey) %>
       </span>
-      <%= survey_public_indicator(survey) %>
+      <span class="badge bg-info">
+        <%= pluralize survey.replies.count, "records" %>
+      </span>
     </div>
-    <div class="d-flex justify-content-start">
-      <div class="me-3">
-        <small><%= survey_preview_link(survey) %></small>
-      </div>
-      <div>
-        <%= survey_data_link(survey) %><br>
+    <div class="mt-2">
+      <div><small><%= survey_preview_link(survey) %></small></div>
+      <div class="mt-1">
+        <%= survey_data_link(survey) %>&nbsp;
         <%= survey_stats_link(survey) %>
       </div>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between align-items-center">
-    <div class="btn-group btn-group-sm">
+    <div class="d-flex align-items-center">
+      <%= survey_share_dropdown(survey) %>
       <%= edit_survey_link(survey) %>
       <%= copy_survey_button(survey) %>
-      <%= survey_share_dropdown(survey) %>
+      <%= delete_survey_button(survey) %>
     </div>
-    <%# delete_survey_button(survey) %>
     <% unless survey.public? %>
       <%= survey_open_indicator(survey) %>
     <% end %>

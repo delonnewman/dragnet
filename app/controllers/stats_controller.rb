@@ -1,8 +1,12 @@
 class StatsController < ApplicationController
   include Authenticated
 
+  layout 'survey'
+
   def show
-    @report = StatsReport.new(reportable)
+    report = StatsReport.new(reportable)
+
+    render :show, locals: { report: report, reportable: reportable }
   end
 
   private

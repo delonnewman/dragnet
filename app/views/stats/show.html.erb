@@ -1,33 +1,35 @@
-<div class="container">
-    <h1 class="border-bottom">Stats for <small class="text-muted"><%= @report.name  %></small></h1>
+<% if params[:survey_id] %>
+  <%= render 'surveys/tabs', survey: reportable, selected: :stats %>
+<% end %>
 
+<div class="container">
     <div class="mt-5 pb-5 border-bottom">
         <h2>Replies By Day</h2>
-        <%= line_chart @report.replies_by_date %>
+        <%= line_chart report.replies_by_date %>
     </div>
 
     <div class="mt-5 pb-5 border-bottom">
         <h2>Replies By Month</h2>
-        <%= line_chart @report.replies_by_month %>
+        <%= line_chart report.replies_by_month %>
     </div>
 
     <div class="mt-5 pb-5 border-bottom">
         <h2>Replies By Day Of Week</h2>
-        <%= line_chart @report.replies_by_weekday %>
+        <%= line_chart report.replies_by_weekday %>
     </div>
 
     <div class="mt-5 pb-5 border-bottom">
         <h2>Replies By Time Of Day</h2>
-        <%= line_chart @report.replies_by_time_of_day %>
+        <%= line_chart report.replies_by_time_of_day %>
     </div>
 
-    <% @report.questions.select(&:countable?).each do |question| %>
+    <% report.questions.select(&:countable?).each do |question| %>
         <div class="mt-5 pb-5">
             <h2><%= question.text %></h2>
-            <%= auto_chart @report.answer_occurrence(question) %>
+            <%= auto_chart report.answer_occurrence(question) %>
         </div>
         <div class="pb-5">
-            <%= data_table @report.answer_stats(question) %>
+            <%= data_table report.answer_stats(question) %>
         </div>
     <% end %>
 </div>

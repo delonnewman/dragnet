@@ -1,8 +1,6 @@
-<div class="d-flex justify-content-between align-items-center border-bottom pb-3">
-  <%= link_to root_path do %>
-    <%= icon('fas', 'arrow-left') %> Back
-  <% end %>
-  <h4>Preview</h4>
+<%= render 'tabs', survey: survey, selected: :preview %>
+
+<div class="d-flex justify-content-center align-items-center pb-3">
   <div class="btn-group">
     <%= survey_preview_button(title: 'Desktop', width: 1280, height: 800) %>
     <%= survey_preview_button(title: 'Tablet', width: 810, height: 1080) %>
@@ -14,6 +12,6 @@
   id="preview-frame"
   width="1280"
   height="800"
-  class="d-block mx-auto"
+  class="d-block mx-auto border mt-2"
   src="<%= reply_to_path(survey.short_id, survey.slug, preview: true) %>">
 </iframe>
