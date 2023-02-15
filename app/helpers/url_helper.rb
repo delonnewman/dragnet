@@ -7,9 +7,18 @@ module UrlHelper
     end
   end
 
-  def icon_button(label, path, icon:, icon_type: 'fas', method: :post, **html_options)
+  def icon_button(label, path = nil, icon:, icon_type: 'fas', method: :post, **html_options)
+    unless path
+      path  = label
+      label = nil
+    end
+
     button_to path, method: method, **html_options do
-      icon(icon_type, icon) + '&nbsp;'.html_safe + label
+      if label
+        icon(icon_type, icon) + '&nbsp;'.html_safe + label
+      else
+        icon(icon_type, icon)
+      end
     end
   end
 end

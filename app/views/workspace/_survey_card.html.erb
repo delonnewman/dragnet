@@ -8,6 +8,7 @@
       <span class="badge bg-info">
         <%= pluralize survey.replies.count, "reply" %>
       </span>
+      <%= survey_public_indicator(survey) %>
     </div>
     <div class="d-flex justify-content-start">
       <div class="me-3">
@@ -19,11 +20,13 @@
       </div>
     </div>
   </div>
-  <div class="card-footer">
+  <div class="card-footer d-flex justify-content-between align-items-center">
     <div class="btn-group btn-group-sm">
       <%= edit_survey_link(survey) %>
       <%= copy_survey_button(survey) %>
-      <%= delete_survey_button(survey) %>
+      <%= survey_share_dropdown(survey) %>
     </div>
+    <%= delete_survey_button(survey) %>
+    <%= survey_open_indicator(survey) %>
   </div>
 </div>

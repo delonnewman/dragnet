@@ -21,6 +21,8 @@
       (:body res))))
 
 (defn init
+  "Initialize reply submission UI with the root element an reply ID.
+  Both the root element and reply ID should be non-nil."
   [elem reply-id]
   (when (and elem reply-id)
     (let [current (r/atom nil)]

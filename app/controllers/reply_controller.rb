@@ -13,27 +13,28 @@ class ReplyController < ApplicationController
   end
 
   def edit
-    @reply = replies.find(params[:id])
-
-    unless ReplySubmissionPolicy.for(current_user).can_edit_reply?(@reply)
+    reply = replies.find(params[:id])
+    if ReplySubmissionPolicy.for(current_user).can_edit_reply?(reply)
+      render :edit, locals: { reply: reply }
+    else
       redirect_to root_path, flash: "You don't have permission to reply to this survey"
     end
   end
 
   def update
-    @reply = replies.find(params[:id])
+    reply = replies.find(params[:id])
 
-    if !ReplySubmissionPolicy.for(current_user).can_update_reply?(@reply)
+    if !ReplySubmissionPolicy.for(current_user).can_update_reply?(reply)
       redirect_to root_path, flash: "You don't have permission to reply to this survey"
-    elsif @reply.submit!(reply_params)
-      redirect_to reply_success_path(@reply)
+    elsif reply.submit!(reply_params)
+      redirect_to reply_success_path(reply)
     else
-      render :edit
+      render :edit, locals: { reply: reply }
     end
   end
 
   def success
-    @reply = replies.find(params[:reply_id])
+    render :success, locals: { reply: replies.find(params[:reply_id]) }
   end
 
   private

@@ -2,7 +2,9 @@ class SurveysController < ApplicationController
   include Authenticated
 
   def show
-    @survey = DataGridPresenter.new(Survey.find(params[:id]), params)
+    survey = DataGridPresenter.new(Survey.find(params[:id]), params)
+
+    render :show, locals: { survey: survey }
   end
 
   def new
@@ -12,15 +14,15 @@ class SurveysController < ApplicationController
   end
 
   def results
-    @survey = Survey.find(params[:survey_id])
-
-    render :results, layout: 'survey'
+    render :results, layout: 'survey', locals: { survey: Survey.find(params[:survey_id]) }
   end
 
   def edit
-    @survey = Survey.find(params[:id])
+    render :edit, layout: 'survey', locals: { survey: Survey.find(params[:id]) }
+  end
 
-    render :edit, layout: 'survey'
+  def preview
+
   end
 
   def copy

@@ -17,13 +17,13 @@ class ReplySubmissionController < EndpointController
     params.require(:reply)
   end
 
-  def reply
-    Reply
-      .includes(:survey, :answers, questions: [:question_type])
-      .find(params[:id])
-  end
-
   def reply_submission(r = reply)
     ReplySubmissionPresenter.new(r)
+  end
+
+  def reply
+    Reply
+      .includes(:survey, questions: [:question_type, :question_options, :followup_questions])
+      .find(params[:id])
   end
 end

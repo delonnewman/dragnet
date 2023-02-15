@@ -1,7 +1,7 @@
 <main id="survey-submitter"></main>
 <script>
   (function() {
-    const replyID = <%== @reply.id.to_json %>;
+    const replyID = <%== reply.id.to_json %>;
     const rootElement = document.getElementById("survey-submitter");
 
     const script = document.createElement("script");

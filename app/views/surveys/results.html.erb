@@ -3,21 +3,21 @@
     <%= link_to 'Workspace', root_path, class: 'nav-link' %>
   </li>
   <li class="nav-item">
-    <%= link_to 'Create', edit_survey_path(@survey), class: 'nav-link' %>
+    <%= link_to 'Create', edit_survey_path(survey), class: 'nav-link' %>
   </li>
   <li class="nav-item">
-    <%= link_to 'Results', survey_results_path(@survey), class: 'nav-link active', 'aria-current': "page" %>
+    <%= link_to 'Results', survey_results_path(survey), class: 'nav-link active', 'aria-current': "page" %>
   </li>
 </ul>
 
 <ul class="nav nav-tabs mb-3">
   <li class="nav-item">
-    <%= link_to 'Insights', survey_results_path(@survey), class: 'nav-link active', 'aria-current': "page" %>
+    <%= link_to 'Insights', survey_results_path(survey), class: 'nav-link active', 'aria-current': "page" %>
   </li>
   <li class="nav-item">
-    <%= link_to 'Summary', survey_stats_path(@survey.short_id), class: 'nav-link' %>
+    <%= link_to 'Summary', survey_stats_path(survey.short_id), class: 'nav-link' %>
   </li>
   <li class="nav-item">
-    <%= link_to 'Responses', report_path(question_ids: @survey.question_ids, name: @survey.name), class: 'nav-link' %>
+    <%= link_to 'Responses', report_path(question_ids: survey.question_ids, name: survey.name), class: 'nav-link' %>
   </li>
 </ul>

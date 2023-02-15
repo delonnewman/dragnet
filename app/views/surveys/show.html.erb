@@ -1,21 +1,21 @@
-<%= @survey.name %>
+<%= survey.name %>
 
 <div class="report-headers">
-  <%= @survey.pager.count %> records
+  <%= survey.pager.count %> records
 </div>
 <div class="table-responsive">
   <table class="table table-sm table-striped">
     <thead>
       <th>Created</th>
-      <% @survey.questions.each do |question| %>
+      <% survey.questions.each do |question| %>
         <th class="text-nowrap"><%= question.text %></th>
       <% end %>
     </thead>
     <tbody>
-      <% @survey.paginated_records.each do |record| %>
+      <% survey.paginated_records.each do |record| %>
         <tr>
           <td><%= fmt_datetime record.created_at %></td>
-          <% @survey.questions.each do |question| %>
+          <% survey.questions.each do |question| %>
             <td><%= answers_text record, question %></td>
           <% end %>
         </tr>
@@ -24,4 +24,4 @@
   </table>
 </div>
 
-<%== pagy_bootstrap_nav(@survey.pager) %>
+<%== pagy_bootstrap_nav(survey.pager) %>
