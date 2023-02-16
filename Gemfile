@@ -7,6 +7,7 @@ gem 'rails', '~> 7.0.4.2'
 
 gem 'pg', '~> 1.1'
 gem 'activerecord-pull-alpha'
+gem 'mini_sql'
 
 # HTTP
 gem 'puma', group: :development
@@ -19,16 +20,16 @@ gem 'font-awesome-sass'
 gem 'sprockets-rails'
 
 gem 'chartkick'
-gem "mapkick-rb"
+gem 'mapkick-rb'
+gem 'bumpspark'
 
 gem 'pry'
 gem 'pry-rails'
 
-# encoding / data formats
+# Encoding / Data Formats
 gem 'murmurhash3'
 gem 'shortuuid'
 gem 'transit-ruby', require: 'transit'
-
 gem 'rqrcode'
 
 gem 'pagy'
@@ -39,6 +40,10 @@ gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-apple'
 
 gem 'fast_blank'
+
+# Language Extentions
+gem 'invokable'
+gem 'memo_wise'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

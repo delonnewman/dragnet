@@ -17,13 +17,3 @@ class Hash
     transform_keys(&mapping)
   end
 end
-
-class Class
-  def presenter?
-    false
-  end
-
-  def advice?
-    false
-  end
-end

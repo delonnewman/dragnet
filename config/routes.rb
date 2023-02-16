@@ -2,10 +2,11 @@ Rails.application.routes.draw do
   devise_for :users
   root 'workspace#index'
 
+  get 'surveys', to: 'workspace#surveys'
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'
 
-  resources :surveys do
+  resources :surveys, only: %i[show new edit destroy] do
     post 'copy'
     get 'preview'
     get 'settings'

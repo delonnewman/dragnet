@@ -93,6 +93,7 @@ GEM
     bullet (7.0.7)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
+    bumpspark (2.0.0)
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
@@ -146,6 +147,7 @@ GEM
     hashie (5.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
+    invokable (1.0.0)
     io-console (0.6.0)
     irb (1.6.2)
       reline (>= 0.3.0)
@@ -172,8 +174,10 @@ GEM
       net-smtp
     mapkick-rb (0.1.1)
     marcel (1.0.2)
+    memo_wise (1.7.0)
     method_source (1.0.0)
     mini_mime (1.1.2)
+    mini_sql (1.4.0)
     minitest (5.17.0)
     msgpack (1.1.0)
     multi_xml (0.6.0)
@@ -392,6 +396,7 @@ DEPENDENCIES
   bootstrap (~> 5.1.3)
   brakeman
   bullet
+  bumpspark
   bundler-audit
   chartkick
   debug
@@ -402,7 +407,10 @@ DEPENDENCIES
   gen-test!
   guard
   guard-rspec
+  invokable
   mapkick-rb
+  memo_wise
+  mini_sql
   murmurhash3
   omniauth (~> 2.1.1)
   omniauth-apple

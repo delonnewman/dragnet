@@ -3,6 +3,9 @@ class SurveysController < ApplicationController
 
   layout 'survey'
 
+  def index
+  end
+
   def show
     render :show, locals: { survey: Survey.find(params[:id]) }
   end

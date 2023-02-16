@@ -1,11 +1,8 @@
-<div class="d-flex justify-content-end">
-    <%= link_to new_survey_path, class: 'btn btn-sm btn-primary' do %>
-        New Survey
-    <% end %>
-</div>
+<%= render 'workspace/tabs', selected: :overview, survey_count: overview.survey_count %>
 
+<div class="text-muted text-center"><small><%= overview.query_desc %></small></div>
 <div id="survey-listing" class="d-flex flex-wrap">
-    <% @surveys.each do |survey| %>
-      <%= render partial: 'workspace/survey_card', locals: { survey: survey } %>
-    <% end %>
+  <% overview.surveys.each do |survey| %>
+    <%= render partial: 'workspace/survey_card', locals: { survey: survey } %>
+  <% end %>
 </div>
