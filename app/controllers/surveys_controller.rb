@@ -21,16 +21,15 @@ class SurveysController < ApplicationController
   end
 
   def destroy
-    Survey.find(params[:id]).delete
+    survey = Survey.find(params[:id]).tap(&:delete)
 
-    render html: ""
+    redirect_to root_path, notice: "You've deleted #{survey.name.inspect}"
   end
 
   def copy
     copy = Survey.find(params[:survey_id]).copy!
-    # TODO: add error handling
 
-    render partial: 'workspace/survey_card', locals: { survey: copy }
+    redirect_to edit_survey_path(copy)
   end
 
   def preview

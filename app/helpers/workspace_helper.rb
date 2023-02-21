@@ -33,21 +33,19 @@ module WorkspaceHelper
       '&nbsp;'.html_safe + label
   end
 
-  def survey_share_dropdown(survey)
+  def survey_share_dropdown(survey, align_menu_end: false)
     tag.div(class: 'dropdown me-1') do
       tag.a(class: 'btn btn-sm btn-secondary dropdown-toggle', href: '#', role: 'button', data: { bs_toggle: 'dropdown' }) {
         icon('fas', 'share') + '&nbsp;Share'.html_safe
-      } + tag.ul(class: 'dropdown-menu') {
+      } + tag.ul(class: "dropdown-menu #{'dropdown-menu-end' if align_menu_end}") {
         tag.li(class: 'dropdown-item') { 'Copy Link' }
       }
     end
   end
 
-  def copy_survey_button(survey)
-    icon_button(survey_copy_path(survey),
+  def copy_survey_button(survey, include_label: false)
+    icon_button(include_label ? 'Copy' : nil, survey_copy_path(survey),
                 icon: 'clone',
-                target: "#survey-listing",
-                swap: "beforeend",
                 title: 'Copy survey',
                 class: 'btn btn-sm btn-outline-secondary me-1')
   end
@@ -62,8 +60,8 @@ module WorkspaceHelper
                 class: 'btn btn-sm btn-outline-danger')
   end
 
-  def edit_survey_link(survey)
-    icon_link(edit_survey_path(survey),
+  def edit_survey_link(survey, include_label: false)
+    icon_link(include_label ? 'Edit' : nil, edit_survey_path(survey),
               icon: 'hammer',
               class: 'btn btn-sm btn-outline-secondary me-1',
               title: 'Edit survey')

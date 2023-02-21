@@ -1,16 +1,15 @@
 <div class="navbar navbar-expand-lg p-1 bg-light mb-2">
   <div class="container-fluid">
-    <%= link_to root_path, class: 'navbar-brand fs-6' do %>
-      Dragnet
-    <% end %>
-    <span class="navbar-text"><%= survey.name %></span>
-    <ul class="navbar-nav mb-2 mb-lg-0">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">
-          <%= icon 'fas', 'question' %> Help
-        </a>
-      </li>
-    </ul>
+    <span class="navbar-text">
+      <%= survey.name %>
+      <span class="badge bg-secondary">
+        <%= survey_public_indicator(survey) %>
+      </span>
+    </span>
+    <div class="d-flex justify-content-end align-items-center">
+      <%= copy_survey_button(survey, include_label: true) %>
+      <%= survey_share_dropdown(survey, align_menu_end: true) %>
+    </div>
   </div>
 </div>
 <ul class="nav nav-tabs mb-3">

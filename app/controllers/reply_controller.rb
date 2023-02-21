@@ -11,7 +11,7 @@ class ReplyController < ApplicationController
       reply = Reply.create!(survey: survey)
       redirect_to edit_reply_path(reply)
     else
-      redirect_to root_path, flash: "You don't have permission to reply to this survey"
+      redirect_to root_path, alert: "You don't have permission to reply to this survey"
     end
   end
 
@@ -21,7 +21,7 @@ class ReplyController < ApplicationController
     if ReplySubmissionPolicy.for(current_user).can_edit_reply?(reply)
       render :edit, locals: { reply: reply }
     else
-      redirect_to root_path, flash: "You don't have permission to reply to this survey"
+      redirect_to root_path, alert: "You don't have permission to reply to this survey"
     end
   end
 
@@ -29,7 +29,7 @@ class ReplyController < ApplicationController
     reply = replies.find(params[:id])
 
     if !ReplySubmissionPolicy.for(current_user).can_update_reply?(reply)
-      redirect_to root_path, flash: "You don't have permission to reply to this survey"
+      redirect_to root_path, alert: "You don't have permission to reply to this survey"
     elsif reply.submit!(reply_params)
       redirect_to reply_success_path(reply)
     else

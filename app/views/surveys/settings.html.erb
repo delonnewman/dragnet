@@ -1,1 +1,12 @@
 <%= render 'tabs', survey: survey, selected: :settings %>
+
+<div class="container">
+  <div class="card p-4">
+    <h4 class="card-title">Housekeeping</h4>
+    <div class="card-body">
+      <%= button_to survey_path(survey), method: :delete, class: 'btn btn-danger w-100' do %>
+        Delete
+      <% end %>
+    </div>
+  </div>
+</div>

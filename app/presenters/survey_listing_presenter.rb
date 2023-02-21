@@ -18,4 +18,8 @@ class SurveyListingPresenter < Dragnet::View::PagedPresenter
 
   def reply_counts = RepliesBySurveyAndDateQuery.(user)
   memoize :reply_counts
+
+  def show_pagination?
+    pager.count > pager.items
+  end
 end

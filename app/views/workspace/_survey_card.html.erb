@@ -22,10 +22,8 @@
   </div>
   <div class="card-footer d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center">
+      <%= edit_survey_link(survey, include_label: true) %>
       <%= survey_share_dropdown(survey) %>
-      <%= edit_survey_link(survey) %>
-      <%= copy_survey_button(survey) %>
-      <%= delete_survey_button(survey) %>
     </div>
     <% unless survey.public? %>
       <%= survey_open_indicator(survey) %>
