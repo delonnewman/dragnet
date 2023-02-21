@@ -26,4 +26,8 @@ module QuestionType::Naming
   def ident
     slug.underscore.to_sym
   end
+
+  def is?(ident)
+    ident == self.ident
+  end
 end

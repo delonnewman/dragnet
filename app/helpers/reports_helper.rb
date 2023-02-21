@@ -1,14 +1,6 @@
 module ReportsHelper
-  def answers_text(reply, question, alt: '-', &block)
-    answers = reply.answers_to(question)
-    return answers.join(', ') unless answers.empty?
-
-    if block_given?
-      block.call
-      return
-    end
-
-    alt
+  def answers_text(reply, question, alt: '-')
+    AnswersDisplay.init(question.question_type, self).to_html(reply, question, alt: alt)
   end
 
   def fmt_date(date)

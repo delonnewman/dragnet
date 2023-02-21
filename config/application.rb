@@ -19,8 +19,7 @@ module Dragnet
 
     config.time_zone = 'Central Time (US & Canada)'
 
-    # eventually we may use these at runtime
-    config.autoload_paths << Rails.root.join('app/generators') if Rails.env.development?
+    config.autoload_paths << Rails.root.join('extentions')
 
     # Don't generate system test files.
     config.generators.system_tests = nil

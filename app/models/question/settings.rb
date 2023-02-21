@@ -29,8 +29,9 @@ module Question::Settings
   end
 
   def setting_value(setting)
-    return unless settings
+    default = question_type.setting_default(setting)
+    return default unless settings
 
-    settings.fetch(setting, question_type.setting_default(setting))
+    settings.fetch(setting, default)
   end
 end
