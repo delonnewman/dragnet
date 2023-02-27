@@ -12,18 +12,28 @@ module Dragnet
       end
 
       alias query_doc class_doc
+
+      def query_text(text = nil)
+        return @query_text unless text
+
+        @query_text = text
+      end
     end
 
 
     delegate :connection, to: :class
 
-    def model_query(model_class, query, *params)
-      Rails.logger.info "SQL Query - #{query.gsub(/\s+/, ' ').inspect} #{params.inspect}"
+    def model_query(model_class, *params)
+      query = query_text
+      Rails.logger.info "SQL Query - #{query.inspect} #{params.inspect}"
       connection.query_hash(query, *params).map do |h|
         model_class.new(h)
       end
     end
-
     alias q model_query
+
+    def query_text
+      self.class.query_text.gsub(/\s+/, ' ')
+    end
   end
 end

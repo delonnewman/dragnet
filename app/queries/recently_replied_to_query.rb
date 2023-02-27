@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
+# TODO: add edit status, i.e. saved, unsaved changes, cannot save (error state)
 class RecentlyRepliedToQuery < Dragnet::Query
   query_doc 'Your surveys that have most recently been replied to'
-
-  # TODO: add edit status, i.e. saved, unsaved changes, cannot save (error state)
-  QUERY = <<~SQL
+  query_text <<~SQL
     select
       s.id,
       s.name,
@@ -23,6 +22,6 @@ class RecentlyRepliedToQuery < Dragnet::Query
   SQL
 
   def call(user, limit: 6)
-    q Survey, QUERY, user.id, limit
+    q Survey, user.id, limit
   end
 end

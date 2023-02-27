@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepliesBySurveyAndDateQuery < Dragnet::Query
-  QUERY = <<~SQL
+  query_text <<~SQL
     select
       r.survey_id,
       extract(year from r.updated_at) || '-' ||
@@ -20,11 +20,12 @@ class RepliesBySurveyAndDateQuery < Dragnet::Query
   # @return [Hash{Date, Integer}]
   def call(user)
     connection
-      .query_hash(QUERY, user.id)
-      .group_by { |r| r['survey_id'] }
+      .query_hash(query_text, user.id)
+      .transform_keys!(&:to_sym)
+      .group_by { |r| r[:survey_id] }
       .transform_values { |rs|
-        rs.group_by { |r| r['reply_date'] }
-          .transform_values! { |r| r.first['reply_count'] }
+        rs.group_by { |r| r[:reply_date] }
+          .transform_values! { |r| r.first[:reply_count] }
           .transform_keys! { |d| Date.parse(d) } }
   end
 end
