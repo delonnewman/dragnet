@@ -1,5 +1,6 @@
 {
   "dependencies": {
     "frontend": "file:app/assets/javascripts/frontend"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }

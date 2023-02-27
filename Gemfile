@@ -91,4 +91,6 @@ group :development do
 
   gem 'yard'
   gem 'yard-activerecord'
+
+  gem 'dockerfile-rails'
 end
