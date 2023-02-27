@@ -101,6 +101,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.text       :long_text_value,  null: true, index: true
       t.integer    :integer_value,    null: true, index: true
       t.decimal    :float_value,      null: true, index: true
+      t.string     :sort_value,       null: false, index: true
 
       t.timestamps
     end

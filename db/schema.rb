@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.text "long_text_value"
     t.integer "integer_value"
     t.decimal "float_value"
+    t.string "sort_value", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["float_value"], name: "index_answers_on_float_value"
@@ -34,6 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.index ["question_type_id"], name: "index_answers_on_question_type_id"
     t.index ["reply_id"], name: "index_answers_on_reply_id"
     t.index ["short_text_value"], name: "index_answers_on_short_text_value"
+    t.index ["sort_value"], name: "index_answers_on_sort_value"
     t.index ["survey_id"], name: "index_answers_on_survey_id"
   end
 

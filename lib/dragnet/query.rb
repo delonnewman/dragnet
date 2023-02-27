@@ -35,5 +35,9 @@ module Dragnet
     def query_text
       self.class.query_text.gsub(/\s+/, ' ')
     end
+
+    def hash_query(*params)
+      connection.query_hash(query_text, *params)
+    end
   end
 end

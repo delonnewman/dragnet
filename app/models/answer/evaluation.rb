@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Answer::Evalutation < Dragnet::Advice
+class Answer::Evaluation < Dragnet::Advice
   advises Answer
 
   delegate :question_type, :question, :question_option, to: :advised_object
@@ -34,7 +34,7 @@ class Answer::Evalutation < Dragnet::Advice
   end
   alias value= assign_value!
 
-  def value
+  def text_value
     case question_type.ident
     when :text
       return long_text_value if question.long_answer?
@@ -53,6 +53,7 @@ class Answer::Evalutation < Dragnet::Advice
       raise Error, "can't convert #{question_type} to text"
     end
   end
+  alias value text_value
 
   def number_value
     case question_type.ident
@@ -65,5 +66,15 @@ class Answer::Evalutation < Dragnet::Advice
     else
       raise Error, "can't convert #{question_type} to number"
     end
+  end
+
+  def assign_sort_value!
+    answer.sort_value = sort_value
+  end
+
+  def sort_value
+    number_value.to_s(16)
+  rescue Error => e
+    text_value
   end
 end

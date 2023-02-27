@@ -5,7 +5,9 @@ class Answer < ApplicationRecord
 
   # for question_option values
   belongs_to :question_option, optional: true
-  with Answer::Evalutation, delegating: %i[value value= to_s to_i to_f blank?]
+
+  with Evaluation, delegating: %i[value value= to_s to_i to_f blank? assign_sort_value!]
+  before_save :assign_sort_value!
 
   belongs_to :question_type
   after_initialize do
