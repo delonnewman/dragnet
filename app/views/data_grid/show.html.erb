@@ -33,9 +33,15 @@
   <div class="table-responsive">
     <table class="table table-striped table-bordered">
       <thead>
-      <th>Created</th>
+      <th>
+        Created
+        <%= column_sort_link(survey, :created_at) %>
+      </th>
       <% survey.questions.each do |question| %>
-        <th class="text-nowrap"><%= question.text %></th>
+        <th class="text-nowrap">
+          <%= question.text %>
+          <%= column_sort_link(survey, question) %>
+        </th>
       <% end %>
       </thead>
       <tbody>

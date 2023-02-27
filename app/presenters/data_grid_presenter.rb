@@ -4,20 +4,22 @@
 class DataGridPresenter < Dragnet::View::PagedPresenter
   presents Survey, as: :survey
 
+  delegate :id, to: :survey, prefix: :survey
+
+  # Replies sorted, filtered and paginated based on params
+  #
   # @return [ActiveRecord::Relation<Reply>]
   def paginated_records
-    scope = survey.replies
-
-    scope = if sort_by_question?
-              scope.joins(:answers).where(answers: { question_id: params[:sort_by] }).order(sort_value: sort_direction)
-            else
-              scope.order(sort_by => sort_direction)
-            end
-
-    scope.offset(pager.offset).limit(pager.items)
+    if not sort_by_question?
+      survey.replies.order(sort_by => sort_direction)
+    else
+      survey.replies.joins(:answers).where(answers: { question_id: params[:sort_by] }).order(sort_value: sort_direction)
+    end.offset(pager.offset).limit(pager.items)
   end
   memoize :paginated_records
 
+  # Pager object populated with record and parameter data.
+  #
   # @return [Pagy]
   def pager = Pagy.new(count: survey.replies.count, page: page, items: items)
   memoize :pager
@@ -28,12 +30,43 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   def sort_by
     params.fetch(:sort_by, :created_at).to_sym
   end
+  alias sorted_by sort_by
 
   def sort_by_question?
     uuid?(params[:sort_by])
   end
+  alias sorted_by_question? sort_by_question?
 
+  # @param [Symbol, Question]
+  def sorted_by_column?(column)
+    if sorted_by_question? && column.is_a?(Question)
+      params[:sort_by] == column&.id
+    else
+      sort_by == column
+    end
+  end
+
+  # TODO: make this configurable
+  def default_sort_direction
+    :desc
+  end
+
+  def opposite_sort_direction
+    sorted_ascending? ? :desc : :asc
+  end
+
+  def sorted_ascending?
+    sort_direction == :asc
+  end
+
+  def sorted_descending?
+    sort_direction == :desc
+  end
+
+  # Return the sort direction indicated by the symbols :asc or :desc ascending or descending respectively.
+  #
+  # @return [:asc, :desc]
   def sort_direction
-    params.fetch(:sort_direction, :desc)
+    params.fetch(:sort_direction, default_sort_direction).to_sym
   end
 end

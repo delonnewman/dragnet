@@ -72,8 +72,9 @@ class Answer::Evaluation < Dragnet::Advice
     answer.sort_value = sort_value
   end
 
+  # TODO: need to figure out how to generate a value that will sort number correctly, also should be extensible
   def sort_value
-    number_value.to_s(16)
+    number_value
   rescue Error => e
     text_value
   end
