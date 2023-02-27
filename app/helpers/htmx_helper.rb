@@ -16,11 +16,10 @@ module HTMXHelper
 
     html_options, options = options, name if block_given?
     opts = ButtonToOptions.new(url_for(options), html_options)
-    block = Proc.new { name } unless block_given?
+    block = proc { name } unless block_given?
 
     htmx(:button, opts.htmx_options, opts.html_options, &block)
   end
-
 
   def htmx(element = :div, htmx_options = EMPTY_HASH, html_options = EMPTY_HASH, &block)
     vals = htmx_options.delete(:vals) || EMPTY_HASH

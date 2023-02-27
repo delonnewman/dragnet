@@ -38,7 +38,7 @@ class Survey::Naming < Dragnet::Advice
 
   # @return [String]
   def unique_name(name = nil)
-    name = default_name unless name
+    name ||= default_name
     n = auto_named_survey_count(name)
     n.zero? ? name : numbered_name(n, name)
   end
