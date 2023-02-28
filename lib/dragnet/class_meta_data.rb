@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module SelfDescribing
+  module ClassMetaData
     def class_doc(doc = nil)
       return metadata[:doc] unless doc
 

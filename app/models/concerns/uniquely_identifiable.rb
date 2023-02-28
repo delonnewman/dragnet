@@ -1,4 +1,4 @@
-module UniquelyIdentified
+module UniquelyIdentifiable
   extend ActiveSupport::Concern
 
   class_methods do

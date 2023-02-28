@@ -39,6 +39,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.index ["survey_id"], name: "index_answers_on_survey_id"
   end
 
+  create_table "meta_data", force: :cascade do |t|
+    t.string "self_describing_type"
+    t.uuid "self_describing_id"
+    t.string "key", null: false
+    t.string "key_type", default: "String", null: false
+    t.string "value", null: false
+    t.index ["key"], name: "index_meta_data_on_key"
+    t.index ["key_type"], name: "index_meta_data_on_key_type"
+    t.index ["self_describing_type", "self_describing_id"], name: "index_meta_data_on_self_describing"
+    t.index ["value"], name: "index_meta_data_on_value"
+  end
+
   create_table "question_options", force: :cascade do |t|
     t.uuid "question_id", null: false
     t.string "text", null: false
@@ -51,12 +63,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.index ["weight"], name: "index_question_options_on_weight"
   end
 
-  create_table "question_types", force: :cascade do |t|
+  create_table "question_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
     t.string "icon"
+    t.string "type_class_name", null: false
     t.string "settings"
-    t.bigint "parent_type_id"
+    t.uuid "parent_type_id"
     t.index ["name"], name: "index_question_types_on_name"
     t.index ["parent_type_id"], name: "index_question_types_on_parent_type_id"
     t.index ["slug"], name: "index_question_types_on_slug"
@@ -68,7 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "type"
     t.integer "display_order", default: 0, null: false
     t.boolean "required", default: false, null: false
-    t.bigint "question_type_id", null: false
+    t.uuid "question_type_id", null: false
     t.uuid "survey_id", null: false
     t.string "settings"
     t.uuid "question_id"
@@ -108,17 +121,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "name", null: false
     t.string "slug", null: false
     t.string "description"
+    t.string "type"
     t.bigint "author_id", null: false
+    t.uuid "copy_of_id"
     t.boolean "open", default: false, null: false
     t.boolean "public", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_surveys_on_author_id"
+    t.index ["copy_of_id"], name: "index_surveys_on_copy_of_id"
     t.index ["created_at"], name: "index_surveys_on_created_at"
     t.index ["name"], name: "index_surveys_on_name"
     t.index ["open"], name: "index_surveys_on_open"
     t.index ["public"], name: "index_surveys_on_public"
     t.index ["slug"], name: "index_surveys_on_slug"
+    t.index ["type"], name: "index_surveys_on_type"
     t.index ["updated_at"], name: "index_surveys_on_updated_at"
   end
 

@@ -2,16 +2,20 @@ QuestionType.create(
   [
     { name:     'Text',
       icon:     'fa-regular fa-keyboard',
+      type_class_name: 'Dragnet::QuestionTypes::TextType',
       settings: { long_answer: { type: :boolean, text: 'Long Answer' } } },
     { name:     'Choice',
       icon:     'fa-regular fa-square-check',
+      type_class_name: 'Dragnet::QuestionTypes::ChoiceType',
       settings: { multiple_answers: { type: :boolean, text: 'Multiple Answers' },
                   countable:        { type: :boolean, text: 'Calculate Statistics' } } },
     { name:     'Number',
       icon:     'fa-regular fa-calculator',
+      type_class_name: 'Dragnet::QuestionTypes::NumberType',
       settings: { countable: { type: :boolean, text: 'Calculate Statistics', default: true } } },
     { name:     'Time',
       icon:     'fa-regular fa-clock',
+      type_class_name: 'Dragnet::QuestionTypes::TimeType',
       settings: { include_date: { type: :boolean, text: 'Include Date', default: true },
                   include_time: { type: :boolean, text: 'Include Time', default: true } } }
   ]

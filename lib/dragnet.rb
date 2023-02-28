@@ -10,7 +10,7 @@ require_relative 'dragnet/constants'
 require_relative 'dragnet/predicates'
 require_relative 'dragnet/utils'
 require_relative 'dragnet/core_ext'
-require_relative 'dragnet/self_describing'
+require_relative 'dragnet/class_meta_data'
 require_relative 'dragnet/memoizable'
 
 require_relative 'dragnet/time_utils'

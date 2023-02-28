@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Survey < ApplicationRecord
-  include UniquelyIdentified
+  include SelfDescribable
+  include UniquelyIdentifiable
 
   belongs_to :author, class_name: 'User'
   validates :name, presence: true

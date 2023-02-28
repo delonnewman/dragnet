@@ -18,8 +18,12 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string :slug, null: false, index: true
       t.string :description
 
+      t.string :type, null: true, index: true
+
       t.bigint :author_id, null: false, index: true
       t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
+
+      t.uuid :copy_of_id, null: true, index: true
 
       t.boolean :open, index: true, null: false, default: false
       t.boolean :public, index: true, null: false, default: false
@@ -37,14 +41,16 @@ class Inital < ActiveRecord::Migration[7.0]
       t.timestamp :created_at, index: true
     end
 
-    create_table :question_types do |t|
+    create_table :question_types, id: :uuid do |t|
       t.string :name, null: false, index: true
       t.string :slug, null: false, index: true
       t.string :icon
 
+      t.string :type_class_name, null: false
+
       t.string :settings
 
-      t.bigint :parent_type_id, index: true
+      t.uuid :parent_type_id, index: true
     end
 
     create_table :questions, id: :uuid do |t|
@@ -54,7 +60,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.integer :display_order, null: false, default: 0
       t.boolean :required,      null: false, default: false
 
-      t.belongs_to :question_type, index: true, null: false
+      t.belongs_to :question_type, index: true, null: false, type: :uuid
       t.uuid       :survey_id,     index: true, null: false
       t.foreign_key :surveys, column: :survey_id, primary_key: :id, on_delete: :cascade
 
@@ -104,6 +110,13 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string     :sort_value,       null: false, index: true
 
       t.timestamps
+    end
+
+    create_table :meta_data do |t|
+      t.references :self_describing, polymorphic: true, type: :uuid
+      t.string :key, null: false, index: true
+      t.string :key_type, null: false, index: true, default: 'String'
+      t.string :value, null: false, index: true
     end
   end
 end

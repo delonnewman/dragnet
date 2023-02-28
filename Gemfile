@@ -45,6 +45,9 @@ gem 'fast_blank'
 gem 'invokable'
 gem 'memo_wise'
 
+gem 'dry-types'
+gem 'dry-schema'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 

@@ -47,6 +47,7 @@ class ReplyController < ApplicationController
     Reply.includes(:survey, :answers, questions: [:question_type])
   end
 
+  # TODO: create a strong parameters generator based on survey schema
   def reply_params
     params.require(:reply)
   end

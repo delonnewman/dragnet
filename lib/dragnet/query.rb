@@ -3,7 +3,7 @@
 module Dragnet
   class Query
     include Invokable
-    extend SelfDescribing
+    extend ClassMetaData
 
     class << self
       # TODO: memoize?
@@ -37,7 +37,9 @@ module Dragnet
     end
 
     def hash_query(*params)
-      connection.query_hash(query_text, *params)
+      connection
+        .query_hash(query_text, *params)
+        .lazy.map { _1.transform_keys!(&:to_sym) }
     end
   end
 end

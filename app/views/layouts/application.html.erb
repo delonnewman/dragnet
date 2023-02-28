@@ -56,11 +56,14 @@
       <div class="container">
         <%= yield %>
       </div>
-      <div class="sticky-bottom bg-light mt-5" style="height: 150px">
-
-      </div>
     </main>
 
+    <footer class="fixed-bottom bg-light mt-5" style="height: 200px">
+    </footer>
+
     <%= javascript_include_tag "application" %>
+    <% javascripts.each do |script| %>
+      <script><%= script %></script>
+    <% end %>
   </body>
 </html>

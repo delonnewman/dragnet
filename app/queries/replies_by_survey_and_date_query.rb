@@ -19,9 +19,7 @@ class RepliesBySurveyAndDateQuery < Dragnet::Query
   #
   # @return [Hash{Date, Integer}]
   def call(user)
-    connection
-      .query_hash(query_text, user.id)
-      .transform_keys!(&:to_sym)
+    hash_query(user.id)
       .group_by { |r| r[:survey_id] }
       .transform_values { |rs|
         rs.group_by { |r| r[:reply_date] }
