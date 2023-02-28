@@ -2,7 +2,10 @@
 
 module Dragnet
   module QuestionTypes
-    class NumberType
+    class NumberType < Base
+      def answer_value_field
+        :float_value
+      end
     end
   end
 end

@@ -11,15 +11,16 @@ class RepliesBySurveyAndDateQuery < Dragnet::Query
     from replies r
       inner join surveys s on s.id = r.survey_id
       inner join users u on u.id = s.author_id
-    where s.author_id = ?
+    where s.author_id = ? and r.updated_at >= ?
     group by r.survey_id, reply_date
+    order by reply_date desc
   SQL
 
   # @param [User] user
   #
   # @return [Hash{Date, Integer}]
-  def call(user)
-    hash_query(user.id)
+  def call(user, after: Date.today - 180)
+    hash_query(user.id, after)
       .group_by { |r| r[:survey_id] }
       .transform_values { |rs|
         rs.group_by { |r| r[:reply_date] }

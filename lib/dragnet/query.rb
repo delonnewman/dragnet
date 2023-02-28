@@ -3,6 +3,7 @@
 module Dragnet
   class Query
     include Invokable
+    include Dragnet
     extend ClassMetaData
 
     class << self

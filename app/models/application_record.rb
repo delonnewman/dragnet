@@ -1,6 +1,7 @@
 class ApplicationRecord < ActiveRecord::Base
   # instance-level application model extentions
   include Dragnet
+  include Dragnet::Memoizable
 
   # class-level application model extentions
   extend Dragnet::Advising
