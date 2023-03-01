@@ -30,12 +30,15 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
     question_ids = params.keys.select(&method(:uuid?))
     questions = question_ids.empty? ? EMPTY_HASH : Question.includes(:question_type).find(question_ids).group_by(&:id)
 
-    params.reduce(scope) do |s, (k, v)|
+
+    params.to_h.reduce(scope) do |s, (k, v)|
       if uuid?(k)
         t = questions[k].first.question_type
         s.joins(:answers).where(answers: { question_id: k, t.answer_value_field => t.filter_value(v) })
-      else
+      elsif k == :created_at || k == :user_id
         s.where(k => v)
+      else
+        s
       end
     end
   end

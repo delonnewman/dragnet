@@ -47,12 +47,8 @@
     </nav>
 
     <main class="container-fluid">
-      <% if notice %>
-        <div class="alert alert-success"><%= notice %></div>
-      <% end %>
-      <% if alert %>
-        <div class="alert alert-danger"><%= alert %></div>
-      <% end %>
+      <% if notice %><%= alert_box(message: notice, level: :info) %><% end %>
+      <% if alert %><%= alert_box(message: alert, level: :danger) %><% end %>
       <div class="container">
         <%= yield %>
       </div>
