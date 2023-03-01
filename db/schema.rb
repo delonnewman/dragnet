@@ -124,6 +124,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "type"
     t.bigint "author_id", null: false
     t.uuid "copy_of_id"
+    t.integer "edits_status", default: 0
     t.boolean "open", default: false, null: false
     t.boolean "public", default: false, null: false
     t.datetime "created_at", null: false
@@ -131,6 +132,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.index ["author_id"], name: "index_surveys_on_author_id"
     t.index ["copy_of_id"], name: "index_surveys_on_copy_of_id"
     t.index ["created_at"], name: "index_surveys_on_created_at"
+    t.index ["edits_status"], name: "index_surveys_on_edits_status"
     t.index ["name"], name: "index_surveys_on_name"
     t.index ["open"], name: "index_surveys_on_open"
     t.index ["public"], name: "index_surveys_on_public"

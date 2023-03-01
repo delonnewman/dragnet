@@ -38,7 +38,7 @@
         <%= column_sort_link(survey, :created_at) %>
       </th>
       <% survey.questions.each do |question| %>
-        <th class="text-nowrap">
+        <th class="text-nowrap" data-question-id="<%= question.id %>">
           <%= question.text %>
           <%= column_sort_link(survey, question) %>
         </th>

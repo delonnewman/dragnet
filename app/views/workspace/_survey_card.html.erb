@@ -1,7 +1,10 @@
 <div id="survey-<%= survey.id %>" class="survey-card card d-inline-block" style="width: 360px; margin: 7px">
   <div class="card-body">
     <div class="card-title d-flex justify-content-between align-items-center">
-      <%= link_to survey.name, survey_path(survey) %>
+      <div>
+        <%= link_to survey.name, survey_path(survey) %>
+        <%= survey_copy_of_link(survey) %>
+      </div>
       <%= survey_status_indicator(survey) %>
     </div>
     <div class="mb-2">

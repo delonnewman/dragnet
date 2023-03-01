@@ -12,6 +12,9 @@
       <div>
         <div class="h6">
           <%= link_to survey.name, survey_path(survey) %>
+          <%= survey_copy_of_link(survey) %>
+        </div>
+        <div>
           <span class="badge bg-secondary">
             <%= survey_public_indicator(survey) %>
           </span>

@@ -27,7 +27,7 @@ class SurveyEdit::Application < Dragnet::Advice
   def apply!(timestamp = Time.now)
     SurveyEdit.transaction do
       # Commit changes to survey
-      edit.survey.update(edit.survey_attributes.merge(updated_at: timestamp))
+      edit.survey.update(edit.survey_attributes.merge(updated_at: timestamp, edits_status: :saved))
 
       # Mark this draft as published
       applied!(timestamp).save!

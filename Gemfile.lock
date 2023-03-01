@@ -1,4 +1,10 @@
 GIT
+  remote: https://github.com/delonnewman/el-toolkit.git
+  revision: db8801a0ad8c977ff8e7a02b8c150511a8ebfdb2
+  specs:
+    el-core (0.1.0)
+
+GIT
   remote: https://github.com/delonnewman/gen-test.git
   revision: 2bc7a8dd19f2e445bfebba20ad257f884a9d43e9
   specs:
@@ -435,6 +441,7 @@ DEPENDENCIES
   dockerfile-rails
   dry-schema
   dry-types
+  el-core!
   faker
   fast_blank
   font-awesome-sass

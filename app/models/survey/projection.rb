@@ -28,6 +28,7 @@ class Survey::Projection < Dragnet::Advice
       :description,
       :updated_at,
       :author_id,
+      :edits_status,
       author: %i[id name nickname],
       questions: [
         :id,

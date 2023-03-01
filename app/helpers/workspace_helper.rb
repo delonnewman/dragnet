@@ -92,16 +92,25 @@ module WorkspaceHelper
   end
 
   def survey_status_bg_color(survey)
-    return 'bg-success' unless survey.edited?
-    return 'bg-danger'  unless survey.latest_edit_valid?
+    return 'bg-success' unless survey.edits_saved?
+    return 'bg-danger'  unless survey.edits_cannot_save?
 
     'bg-warning'
   end
 
   def survey_status_description(survey)
-    return 'All changes saved' unless survey.edited?
-    return 'Cannot save changes' unless survey.latest_edit_valid?
+    return 'All changes saved' unless survey.edits_saved?
+    return 'Cannot save changes' unless survey.edits_cannot_save?
 
     'Unsaved changes'
+  end
+
+  def survey_copy_of_link(survey)
+    return unless survey.copy?
+
+    tag.small(class: "text-muted fw-normal") do
+      "Copy of&nbsp;".html_safe +
+        link_to(survey.copy_of.name, survey_path(survey.copy_of))
+    end
   end
 end

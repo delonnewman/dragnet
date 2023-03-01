@@ -25,22 +25,21 @@ module Dragnet
     delegate :connection, to: :class
 
     def model_query(model_class, *params)
-      query = query_text
-      Rails.logger.info "SQL Query - #{query.inspect} #{params.inspect}"
-      connection.query_hash(query, *params).map do |h|
+      Rails.logger.info "SQL Query - #{query_text.inspect} #{params.inspect}"
+      hash_query(*params).map do |h|
         model_class.new(h)
       end
     end
     alias q model_query
 
-    def query_text
-      self.class.query_text.gsub(/\s+/, ' ')
-    end
-
     def hash_query(*params)
       connection
         .query_hash(query_text, *params)
-        .lazy.map { _1.transform_keys!(&:to_sym) }
+        .lazy.map { El::DataUtils.parse_nested_hash_keys(_1) }
+    end
+
+    def query_text
+      @query_text ||= self.class.query_text.gsub(/\s+/, ' ')
     end
   end
 end
