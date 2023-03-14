@@ -2,7 +2,6 @@
 
 class WorkspaceController < ApplicationController
   include Authenticated
-  include Bumpspark::Helper
 
   def index
     overview = OverviewPresenter.new(current_user)

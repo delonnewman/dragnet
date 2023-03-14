@@ -21,7 +21,6 @@ gem 'sprockets-rails'
 
 gem 'chartkick'
 gem 'mapkick-rb'
-gem 'bumpspark'
 
 gem 'pry'
 gem 'pry-rails'
@@ -39,6 +38,8 @@ gem 'omniauth', '~> 2.1.1'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-apple'
 
+# Performance
+gem 'oj'
 gem 'fast_blank'
 
 # Language Extentions
@@ -70,6 +71,7 @@ end
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri]
+  gem 'pry-stack_explorer'
 
   gem 'rspec'
   gem 'rspec-rails'

@@ -15,7 +15,8 @@ class RecentlyRepliedToQuery < Dragnet::Query
       s.edits_status,
       copy.id as "copy_of_attributes[id]",
       copy.name as "copy_of_attributes[name]",
-      copy.slug as "copy_of_attributes[slug]"
+      copy.slug as "copy_of_attributes[slug]",
+      copy.author_id as "copy_of_attributes[author_id]"
     from users as u
         inner join surveys as s on u.id = s.author_id
         inner join replies as r on s.id = r.survey_id

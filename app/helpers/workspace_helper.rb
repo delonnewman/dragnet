@@ -110,7 +110,11 @@ module WorkspaceHelper
 
     tag.small(class: "text-muted fw-normal") do
       "Copy of&nbsp;".html_safe +
-        link_to(survey.copy_of.name, survey_path(survey.copy_of))
+        if survey.copy_of.author_id == current_user.id
+          link_to(survey.copy_of.name, survey_path(survey.copy_of), class: 'text-muted')
+        else
+          survey.copy_of.name
+        end
     end
   end
 end

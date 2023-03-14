@@ -1,6 +1,6 @@
 module ReportsHelper
   def answers_text(reply, question, alt: '-')
-    AnswersDisplay.init(question.question_type, self).to_html(reply, question, alt: alt)
+    question.renderer(DataGridDisplayPerspective.new(self)).render(reply.answers_to(question), alt: alt)
   end
 
   def fmt_date(date)

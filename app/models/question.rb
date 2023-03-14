@@ -5,6 +5,7 @@ class Question < ApplicationRecord
 
   belongs_to :survey
   belongs_to :question_type
+  delegate :renderer, to: :question_type
 
   has_many :question_options, dependent: :delete_all
   accepts_nested_attributes_for :question_options, allow_destroy: true
