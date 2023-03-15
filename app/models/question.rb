@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
   include Settings
+  include SelfDescribable
 
   validates :text, presence: true
 

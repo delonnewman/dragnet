@@ -27,4 +27,33 @@ module DataGridHelper
       icon 'fas', 'arrows-up-down'
     end
   end
+
+  # Render the answers to the question as readonly HTML according to their question type.
+  #
+  # @param [Reply] reply
+  # @param [Question] question
+  # @param [String] alt
+  #
+  # @return [String] the corresponding HTML
+  def answers_text(reply, question, alt: '-')
+    question.renderer(DataGridDisplayPerspective.new(self)).render(reply.answers_to(question), alt: alt)
+  end
+
+  # Render the answers to the question as editable HTML inputs according to their question type.
+  #
+  # @param [Reply] reply
+  # @param [Question] question
+  #
+  # @return [String] the corresponding HTML
+  def answers_input(reply, question)
+    question.renderer(DataGridEditPerspective.new(self)).render(reply.answers_to(question))
+  end
+
+  def fmt_date(date)
+    date.strftime('%Y-%m-%d')
+  end
+
+  def fmt_datetime(date)
+    date.strftime('%Y-%m-%d %l:%M %p')
+  end
 end

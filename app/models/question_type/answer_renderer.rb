@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class QuestionType::Renderer
+class QuestionType::AnswerRenderer
   attr_reader :perspective, :question_type
 
   # @param [QuestionType::Perspective] perspective

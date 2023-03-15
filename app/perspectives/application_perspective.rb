@@ -20,7 +20,7 @@ class ApplicationPerspective
   end
 
   attr_reader :context
-  delegate :output_buffer=, :output_buffer, to: :@context
+  delegate :output_buffer=, :output_buffer, to: :@context, allow_nil: true
 
   attr_accessor :question_type
   private :question_type=
@@ -43,8 +43,9 @@ class ApplicationPerspective
   def render(question_type, answers, alt: '-')
     self.question_type = question_type
     method_name = :"render_#{question_type.ident}"
+
     if respond_to?(method_name)
-    public_send(method_name, answers, alt: alt)
+      public_send(method_name, answers, alt: alt)
     else
       render_default(answers, alt: alt)
     end

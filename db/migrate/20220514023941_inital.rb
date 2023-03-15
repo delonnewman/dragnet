@@ -114,10 +114,21 @@ class Inital < ActiveRecord::Migration[7.0]
     end
 
     create_table :meta_data do |t|
-      t.references :self_describing, polymorphic: true, type: :uuid
+      t.references :self_describable, polymorphic: true, type: :uuid
       t.string :key, null: false, index: true
       t.string :key_type, null: false, index: true, default: 'String'
       t.string :value, null: false, index: true
+    end
+
+    create_table :saved_reports, id: :uuid do |t|
+      t.bigint :author_id, null: false, index: true
+      t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
+
+      t.string :name, null: false
+      t.string :question_ids, null: false
+      t.string :filters
+      t.string :sort_by
+      t.string :sort_direction
     end
   end
 end

@@ -22,8 +22,8 @@ class QuestionType < ApplicationRecord
   end
   memoize :type
 
-  def renderer(perspective = Perspective.new)
-    Renderer.new(self, perspective)
+  def renderer(perspective = ApplicationPerspective.new(nil))
+    AnswerRenderer.new(self, perspective)
   end
   memoize :renderer
 end

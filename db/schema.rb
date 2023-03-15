@@ -40,14 +40,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
   end
 
   create_table "meta_data", force: :cascade do |t|
-    t.string "self_describing_type"
-    t.uuid "self_describing_id"
+    t.string "self_describable_type"
+    t.uuid "self_describable_id"
     t.string "key", null: false
     t.string "key_type", default: "String", null: false
     t.string "value", null: false
     t.index ["key"], name: "index_meta_data_on_key"
     t.index ["key_type"], name: "index_meta_data_on_key_type"
-    t.index ["self_describing_type", "self_describing_id"], name: "index_meta_data_on_self_describing"
+    t.index ["self_describable_type", "self_describable_id"], name: "index_meta_data_on_self_describable"
     t.index ["value"], name: "index_meta_data_on_value"
   end
 
@@ -103,6 +103,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.datetime "updated_at", null: false
     t.index ["submitted"], name: "index_replies_on_submitted"
     t.index ["survey_id"], name: "index_replies_on_survey_id"
+  end
+
+  create_table "saved_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.string "name", null: false
+    t.string "question_ids", null: false
+    t.string "filters"
+    t.string "sort_by"
+    t.string "sort_direction"
+    t.index ["author_id"], name: "index_saved_reports_on_author_id"
   end
 
   create_table "survey_edits", force: :cascade do |t|
@@ -173,5 +183,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
   add_foreign_key "question_options", "questions", column: "followup_question_id"
   add_foreign_key "question_options", "questions", on_delete: :cascade
   add_foreign_key "questions", "surveys", on_delete: :cascade
+  add_foreign_key "saved_reports", "users", column: "author_id", on_delete: :cascade
   add_foreign_key "surveys", "users", column: "author_id", on_delete: :cascade
 end
