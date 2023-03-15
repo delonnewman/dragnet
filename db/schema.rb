@@ -18,13 +18,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.uuid "survey_id", null: false
     t.uuid "reply_id", null: false
     t.uuid "question_id", null: false
-    t.bigint "question_type_id"
+    t.uuid "question_type_id"
     t.bigint "question_option_id"
     t.string "short_text_value"
     t.text "long_text_value"
     t.integer "integer_value"
     t.decimal "float_value"
-    t.string "sort_value", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["float_value"], name: "index_answers_on_float_value"
@@ -35,7 +34,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.index ["question_type_id"], name: "index_answers_on_question_type_id"
     t.index ["reply_id"], name: "index_answers_on_reply_id"
     t.index ["short_text_value"], name: "index_answers_on_short_text_value"
-    t.index ["sort_value"], name: "index_answers_on_sort_value"
     t.index ["survey_id"], name: "index_answers_on_survey_id"
   end
 
@@ -67,7 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "name", null: false
     t.string "slug", null: false
     t.string "icon"
-    t.string "type_class_name", null: false
+    t.string "answer_value_field", null: false
     t.string "settings"
     t.uuid "parent_type_id"
     t.index ["name"], name: "index_question_types_on_name"

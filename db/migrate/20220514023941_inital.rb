@@ -47,7 +47,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string :slug, null: false, index: true
       t.string :icon
 
-      t.string :type_class_name, null: false
+      t.string :answer_value_field, null: false
 
       t.string :settings
 
@@ -100,7 +100,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.uuid :reply_id,    null: false, index: true
       t.uuid :question_id, null: false, index: true
 
-      t.belongs_to :question_type, index: true # cached data
+      t.belongs_to :question_type, index: true, type: :uuid # cached data
 
       # values
       t.belongs_to :question_option,  null: true, index: true
@@ -108,7 +108,6 @@ class Inital < ActiveRecord::Migration[7.0]
       t.text       :long_text_value,  null: true, index: true
       t.integer    :integer_value,    null: true, index: true
       t.decimal    :float_value,      null: true, index: true
-      t.string     :sort_value,       null: false, index: true
 
       t.timestamps
     end
