@@ -6,6 +6,10 @@ class Survey::Editing < Dragnet::Advice
 
   delegate :valid?, to: :latest_edit, prefix: :latest_edit
 
+  def set_default_edits_status
+    survey.edits_status = :saved unless survey.edits_status?
+  end
+
   def edited?
     latest_edit.present?
   end

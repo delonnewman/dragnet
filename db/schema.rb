@@ -132,7 +132,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "type"
     t.bigint "author_id", null: false
     t.uuid "copy_of_id"
-    t.integer "edits_status", default: 0
+    t.integer "edits_status"
     t.boolean "open", default: false, null: false
     t.boolean "public", default: false, null: false
     t.datetime "created_at", null: false

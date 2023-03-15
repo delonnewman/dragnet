@@ -19,7 +19,8 @@ class Survey < ApplicationRecord
 
   enum :edits_status, { saved: 0, unsaved: 1, cannot_save: -1 }, prefix: :edits
   has_many :edits, -> { where(applied: false) }, class_name: 'SurveyEdit', dependent: :delete_all
-  with Editing, delegating: %i[edited? new_edit current_edit latest_edit latest_edit_valid?]
+  with Editing, delegating: %i[edited? new_edit current_edit latest_edit latest_edit_valid? set_default_edits_status]
+  before_validation :set_default_edits_status
 
   with Projection, calling: :project
 

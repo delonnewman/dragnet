@@ -92,15 +92,15 @@ module WorkspaceHelper
   end
 
   def survey_status_bg_color(survey)
-    return 'bg-success' unless survey.edits_saved?
-    return 'bg-danger'  unless survey.edits_cannot_save?
+    return 'bg-success' if survey.edits_saved?
+    return 'bg-danger'  if survey.edits_cannot_save?
 
     'bg-warning'
   end
 
   def survey_status_description(survey)
-    return 'All changes saved' unless survey.edits_saved?
-    return 'Cannot save changes' unless survey.edits_cannot_save?
+    return 'All changes saved' if survey.edits_saved?
+    return 'Cannot save changes' if survey.edits_cannot_save?
 
     'Unsaved changes'
   end

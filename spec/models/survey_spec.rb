@@ -8,7 +8,7 @@ describe Survey, type: :model do
     let(:author) { User.generate! }
   end
 
-  describe '#new' do
+  describe '#save' do
     subject(:survey) { described_class.create!(name: name, author: author) }
 
     let(:name) { Dragnet::Generators::Name.generate }
@@ -39,6 +39,21 @@ describe Survey, type: :model do
 
       it 'will generate a name' do
         expect(survey.name).not_to be_blank
+      end
+    end
+
+    context 'when no edit status is given' do
+      it 'will set the edit status to :saved' do
+        expect(survey).to be_edits_saved
+      end
+    end
+
+    context 'when an edit status is given' do
+      subject(:survey) { described_class.create!(name: name, edits_status: edits_status, author: author) }
+      let(:edits_status) { 'unsaved' }
+
+      it 'will set the edit status to :saved' do
+        expect(survey.edits_status).to eq(edits_status)
       end
     end
   end

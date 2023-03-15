@@ -24,7 +24,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
 
       t.uuid :copy_of_id, null: true, index: true
-      t.integer :edits_status, null: true, index: true, default: 0
+      t.integer :edits_status, null: true, index: true
 
       t.boolean :open, index: true, null: false, default: false
       t.boolean :public, index: true, null: false, default: false
