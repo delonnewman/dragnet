@@ -4,14 +4,7 @@ class SurveyEdit < ApplicationRecord
 
   serialize :survey_data
 
-  with Application, delegating: %i[apply! applied!]
   with SurveyAttributeProjection, as: :survey_attributes, calling: :attributes
-
-  after_save do
-    if application.valid?
-      survey.update(edits_status: :unsaved)
-    else
-      survey.update(edits_status: :cannot_save)
-    end
-  end
+  with Application, delegating: %i[apply! applied! set_survey_edits_status]
+  after_save :set_survey_edits_status
 end

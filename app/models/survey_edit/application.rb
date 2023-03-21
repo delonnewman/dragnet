@@ -7,6 +7,7 @@ class SurveyEdit::Application < Dragnet::Advice
   attr_reader :validating_survey
 
   delegate :valid?, :validate!, :errors, to: :validating_survey
+  delegate :survey, to: :edit
 
   def initialize(edit)
     super(edit)
@@ -24,18 +25,28 @@ class SurveyEdit::Application < Dragnet::Advice
     applied(timestamp)
   end
 
+  def set_survey_edits_status
+    return if edit.applied?
+
+    if valid?
+      survey.update(edits_status: :unsaved)
+    else
+      survey.update(edits_status: :cannot_save)
+    end
+  end
+
   def apply!(timestamp = Time.now)
     SurveyEdit.transaction do
       # Commit changes to survey
-      edit.survey.update(edit.survey_attributes.merge(updated_at: timestamp, edits_status: :saved))
+      survey.update!(edit.survey_attributes.merge(updated_at: timestamp, edits_status: :saved))
 
       # Mark this draft as published
       applied!(timestamp).save!
 
       # Clean up old drafts
-      edit.survey.edits.where.not(id: edit.id).delete_all
+      survey.edits.where.not(id: edit.id).delete_all
 
-      edit.survey
+      survey
     end
   end
 end
