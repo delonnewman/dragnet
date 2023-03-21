@@ -469,7 +469,7 @@ DEPENDENCIES
   puma
   rack-cors
   rack-mini-profiler
-  rails (~> 7.0.4.2)
+  rails (~> 7.0.4.3)
   rqrcode
   rspec
   rspec-rails
