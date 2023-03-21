@@ -5,6 +5,7 @@
     [cljs.core.async :refer [<!]]
     [reagent.core :as r]
     [reagent.dom :as rdom]
+    [dragnet.shared.utils :refer [blank? validate-presence!] :include-macros true]
     [dragnet.editor.core :refer [survey-url]]
     [dragnet.editor.components :refer [survey-editor]]))
 
@@ -46,8 +47,8 @@
 
 (defn init
   [elem survey-id]
-  (when (and elem survey-id)
-    (println "initializing editor for " survey-id)
-    (go (let [data (<! (api-data (survey-url survey-id)))]
-          (reset! root-element elem)
-          (reset! current-state data)))))
+  (validate-presence! elem survey-id)
+  (println "initializing editor for " survey-id)
+  (go (let [data (<! (api-data (survey-url survey-id)))]
+        (reset! root-element elem)
+        (reset! current-state data))))

@@ -1,4 +1,5 @@
-(ns dragnet.shared.utils)
+(ns dragnet.shared.utils
+  (:require [clojure.string :as s]))
 
 (def ^:dynamic *window* js/window)
 
@@ -6,9 +7,7 @@
 
 (defn form-name
   [& keys]
-  (let [ks (if (and (= 1 (count keys)) (coll? (first keys)))
-             (first keys)
-             keys)]
+  (let [ks (if (and (= 1 (count keys)) (coll? (first keys))) (first keys) keys)]
     (reduce
      (fn [s k]
        (let [k' (if (number? k) (str k) (name k))]
@@ -49,6 +48,41 @@
       (> diff' seconds) (str (->> (/ diff' seconds) Math/floor (pluralize "second")) " " suffix)
       :else "just now")))
 
-(defmacro echo
-  [sym]
-  `(println ~(name sym) ~sym))
+;; TODO: make a blank? protocol
+(defn blank?
+  ([x]
+   (if (seqable? x)
+     (or (empty? x) (and (string? x) (empty? (s/replace x #"\s+" ""))))
+     false))
+  ([x y & zs]
+   (and (blank? x) (blank? y) (every? blank? zs))))
+
+(defn present?
+  ([x] (not (blank? x)))
+  ([x & ys] (and (present? x) (every? present? ys))))
+
+(defn any-blank?
+  [col] (not-every? present? col))
+
+(defn every-blank
+  [col] (filter blank? col))
+
+(defn presence
+  [x] (if (blank? x) nil x))
+
+;; TODO: add locale support
+;; (see https://api.rubyonrails.org/classes/Array.html#method-i-to_sentence)
+(defn sentence
+  [col & {:keys [delimiter last-delimiter two-word-delimiter]
+          :or {delimiter ", " last-delimiter ", and " two-word-delimiter " and "}}]
+  (cond
+   (= 1 (count col)) (str (first col))
+   (and two-word-delimiter (= 2 (count col))) (str (first col) two-word-delimiter (second col))
+   last-delimiter (str (s/join delimiter (drop-last col)) last-delimiter (last col))
+   :else (s/join delimiter col)))
+
+(defn ex-blank
+  [& {:keys [missing-variables]}]
+  (let [mapped (if (map? missing-variables) (map #(str (pr-str (% 0)) " = " (pr-str (% 1))) missing-variables) missing-variables)]
+    (ex-info (str (sentence mapped) " should be present")
+             {:missing-variables missing-variables})))

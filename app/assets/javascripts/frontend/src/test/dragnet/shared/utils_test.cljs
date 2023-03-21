@@ -1,6 +1,6 @@
 (ns dragnet.shared.utils-test
   (:require
-   [dragnet.shared.utils :refer [form-name pluralize root-url *window*]]
+   [dragnet.shared.utils :refer [form-name pluralize root-url *window* sentence]]
    [clojure.test :refer [deftest testing is]]))
 
 (deftest form-name-test
@@ -25,3 +25,11 @@
   (binding [*window* #js{:location #js{:origin "https://example.com"}}]
     (is (= "https://example.com" (root-url))
         "returns the browsers current origin location")))
+
+(deftest sentence-test
+  (is (= "1" (sentence [1])) "a single value should just be coerced into a string")
+  (is (= "1, 2, and 3" (sentence [1 2 3])) "constructs a sentence from a sequence")
+  (is (= "1 and 2" (sentence [1 2])) "two element sequences are a special case")
+  (is (= "1-2-3" (sentence [1 2 3] :delimiter "-" :last-delimiter nil)) "delimiter is configurable")
+  (is (= "1, 2, or 3" (sentence [1 2 3] :last-delimiter ", or ")) "last delimiter is configurable")
+  (is (= "1 or 2" (sentence [1 2] :two-word-delimiter " or ")) "two-word-delimiter is configurable"))
