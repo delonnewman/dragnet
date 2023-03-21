@@ -15,7 +15,7 @@ QuestionType.create(
       settings: { countable: { type: :boolean, text: 'Calculate Statistics', default: true } } },
     { name:     'Time',
       icon:     'fa-regular fa-clock',
-      answer_value_field: 'integer_value',
+      answer_value_field: 'time_value',
       settings: { include_date: { type: :boolean, text: 'Include Date', default: true },
                   include_time: { type: :boolean, text: 'Include Time', default: true } } }
   ]

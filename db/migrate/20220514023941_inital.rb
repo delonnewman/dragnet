@@ -87,7 +87,7 @@ class Inital < ActiveRecord::Migration[7.0]
 
     create_table :replies, id: :uuid do |t|
       t.uuid :survey_id, index: true, null: false
-      t.string :answer_records
+      t.string :answer_records # cached records
 
       t.boolean :submitted, null: false, index: true, default: false
       t.timestamp :submitted_at
@@ -108,6 +108,8 @@ class Inital < ActiveRecord::Migration[7.0]
       t.text       :long_text_value,  null: true, index: true
       t.integer    :integer_value,    null: true, index: true
       t.decimal    :float_value,      null: true, index: true
+      t.time       :time_value,       null: true, index: true
+      t.date       :date_value,       null: true, index: true
 
       t.timestamps
     end

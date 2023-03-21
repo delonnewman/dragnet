@@ -24,8 +24,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.text "long_text_value"
     t.integer "integer_value"
     t.decimal "float_value"
+    t.time "time_value"
+    t.date "date_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["date_value"], name: "index_answers_on_date_value"
     t.index ["float_value"], name: "index_answers_on_float_value"
     t.index ["integer_value"], name: "index_answers_on_integer_value"
     t.index ["long_text_value"], name: "index_answers_on_long_text_value"
@@ -35,6 +38,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.index ["reply_id"], name: "index_answers_on_reply_id"
     t.index ["short_text_value"], name: "index_answers_on_short_text_value"
     t.index ["survey_id"], name: "index_answers_on_survey_id"
+    t.index ["time_value"], name: "index_answers_on_time_value"
   end
 
   create_table "meta_data", force: :cascade do |t|
