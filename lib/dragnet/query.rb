@@ -9,7 +9,10 @@ module Dragnet
     class << self
       # TODO: memoize?
       def connection
-        MiniSql::Connection.get(ActiveRecord::Base.connection)
+        conn = ActiveRecord::Base.connection
+        conn = conn.active? ? conn : ActiveRecord::Base.establish_connection
+
+        MiniSql::Connection.get(conn)
       end
 
       alias query_doc class_doc
