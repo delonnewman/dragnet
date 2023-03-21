@@ -1,4 +1,5 @@
 (ns dragnet.submitter.shell
+  "The reply submitter UI shell"
   (:require
     [cljs.core.async :refer [go <!]]
     [cljs-http.client :as http]
@@ -8,7 +9,7 @@
     [dragnet.submitter.components :refer [reply-submitter]]
     [dragnet.submitter.core :refer [reply-url]]))
 
-(defn render-ui
+(defn ui-renderer
   [elem reply-id & {:keys [preview]}]
   (fn
     [_ _ old new]
@@ -22,14 +23,14 @@
 
 (defn init
   "Initialize reply submission UI with the root element,
-  survey ID and reply ID, the third arugment (normally a reply ID)
+  survey-id and reply-id, the third arugment (normally a Reply ID)
   can also be a flag currently only a 'preview' flag is supported.
   All three arguments should be non-nil."
-  [elem survey-id reply-id]
-  (utils/validate-presence! elem survey-id reply-id)
+  [root-elem survey-id reply-id]
+  (utils/validate-presence! root-elem survey-id reply-id)
   (let [current (r/atom nil)
         preview (= "preview" reply-id)
         id      (if preview survey-id reply-id)]
-    (add-watch current :render-ui (render-ui elem reply-id :preview :preview))
+    (add-watch current :render-ui (ui-renderer root-elem reply-id :preview preview))
     (go (let [state (<! (fetch-reply-data id :preview preview))]
           (reset! current state)))))
