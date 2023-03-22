@@ -5,6 +5,6 @@ class SurveyEdit < ApplicationRecord
   serialize :survey_data
 
   with SurveyAttributeProjection, as: :survey_attributes, calling: :attributes
-  with Application, delegating: %i[apply! applied! set_survey_edits_status]
+  with Application, delegating: %i[apply apply! applied! set_survey_edits_status]
   after_save :set_survey_edits_status
 end

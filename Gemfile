@@ -15,7 +15,7 @@ gem 'rack-cors'
 gem 'unicorn', require: false
 
 # UI / Assets
-gem 'bootstrap', '~> 5.1.3'
+gem 'bootstrap', '~> 5.2.3'
 gem 'font-awesome-sass'
 gem 'sprockets-rails'
 
@@ -27,12 +27,14 @@ gem 'pry-rails'
 
 # Encoding / Data Formats
 gem 'murmurhash3'
+gem 'rqrcode'
 gem 'shortuuid'
 gem 'transit-ruby', require: 'transit'
-gem 'rqrcode'
+gem 'transit-rails'
 
 gem 'pagy'
 
+# Authentication
 gem 'devise'
 gem 'omniauth', '~> 2.1.1'
 gem 'omniauth-rails_csrf_protection'

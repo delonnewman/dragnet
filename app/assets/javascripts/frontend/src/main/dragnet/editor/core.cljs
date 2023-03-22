@@ -11,10 +11,12 @@
     (state :survey)
     (get-in state (cons :survey key-path))))
 
+(defn errors?
+  [state] (-> (state :errors) seq))
+
 (defn survey-edited?
   "Return true if the survey state has edits otherwise return false"
-  [state]
-  (-> (state :edits) seq))
+  [state] (-> (state :edits) seq))
 
 (defn question-types
   "Return the question types map from the survey state"
@@ -58,13 +60,8 @@
    (let [id (if (map? type) (type :id) type)]
      (str "question-" (question :id) "-type-" id))))
 
-(defn survey-path
-  "Return the API path for accessing survey data"
-  [state]
-  (let [id (if (map? state) (-> state :survey :id) state)]
-    (str "/api/v1/editing/surveys/" id)))
+(def survey-path (utils/path-helper ["/api/v1/editing/surveys" :id]))
+(def survey-url (utils/url-helper survey-path))
 
-(defn survey-url
-  "Return the full API url for accessing survey data"
-  [state]
-  (str (utils/root-url) (survey-path state)))
+(def apply-survey-edits-path (utils/path-helper ["/api/v1/editing/surveys" :id "apply"]))
+(def apply-survey-edits-url (utils/url-helper apply-survey-edits-path))

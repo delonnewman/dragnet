@@ -1,9 +1,57 @@
 (ns dragnet.shared.utils
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<! go]]))
 
 (def ^:dynamic *window* js/window)
 
 (defn root-url [] (.-origin (.-location *window*)))
+
+(defn ex-arguments
+  [& {:keys [expected received]}]
+  (ex-info
+   (str "wrong number of arguments, expected " (pr-str expected) " received " (pr-str received))
+   #:ex-arguments{:expected expected :received received}))
+
+(defn url-helper
+  [path-fn]
+  (fn [& args]
+    (str (root-url) (apply path-fn args))))
+
+(defn- parse-path-args!
+  [args argc]
+  (cond
+   (and (= 1 (count args)) (map? (first args)) (<= argc (count (first args))))
+    (first args)
+   (= argc (count args)) args
+   :else (throw (ex-arguments :expected argc :received (count args)))))
+
+(defn- args-map
+  [path-spec args]
+  (->> path-spec (filter keyword?) (map-indexed #(vector %2 (nth args %1))) (into {})))
+
+(defn- map->str-path
+  [path-spec m]
+  (->> path-spec (map #(get m % %)) (s/join "/")))
+
+(defn path-helper
+  [path-spec]
+  (let [argc (->> path-spec (filter keyword?) count)]
+    (fn [& args]
+      (let [args' (parse-path-args! args argc)]
+        (if (map? args')
+          (map->str-path path-spec args')
+          (map->str-path path-spec (args-map path-spec args')))))))
+
+(defn http-request
+  [& {:keys [error-fn method url transit-params]}]
+  (go (let [args  {:method method :url url :transit-params transit-params}
+            res   (<! (http/request args))
+            error (= :http-error (:error-code res))]
+        (cond
+         (and error error-fn) (error-fn res)
+         error (throw (ex-info "communication error" #:ex-http{:keys args :response res}))
+         :else (res :body)))))
 
 (defn form-name
   [& keys]
@@ -48,7 +96,6 @@
       (> diff' seconds) (str (->> (/ diff' seconds) Math/floor (pluralize "second")) " " suffix)
       :else "just now")))
 
-;; TODO: make a blank? protocol
 (defn blank?
   ([x]
    (if (seqable? x)
@@ -70,9 +117,20 @@
 (defn presence
   [x] (if (blank? x) nil x))
 
+(defn remove-blank
+  [col]
+  (if (map? col)
+    (->> col (filter #(present? (% 1))) (into {}))
+    (->> col (filter present?) (into (empty col)))))
+
+(defn fblank
+  ([f] (fblank f nil))
+  ([f alt]
+   (fn [x] (if (blank? x) alt x))))
+
 ;; TODO: add locale support
 ;; (see https://api.rubyonrails.org/classes/Array.html#method-i-to_sentence)
-(defn sentence
+(defn ->sentence
   [col & {:keys [delimiter last-delimiter two-word-delimiter]
           :or {delimiter ", " last-delimiter ", and " two-word-delimiter " and "}}]
   (cond
@@ -82,7 +140,53 @@
    :else (s/join delimiter col)))
 
 (defn ex-blank
+  "Create an ex-info exception with meta data regarding missing variables.
+  The :missing-variables keyword argument is required, it can be a collection
+  of symbols or a map of symbols and their values."
   [& {:keys [missing-variables]}]
-  (let [mapped (if (map? missing-variables) (map #(str (pr-str (% 0)) " = " (pr-str (% 1))) missing-variables) missing-variables)]
-    (ex-info (str (sentence mapped) " should be present")
-             {:missing-variables missing-variables})))
+  (let [mapped
+        (if (map? missing-variables)
+          (map #(str (pr-str (% 0)) " = " (pr-str (% 1))) missing-variables)
+          missing-variables)]
+    (ex-info (str (->sentence mapped) " should be present")
+             #:ex-blank{:missing-variables missing-variables})))
+
+(defn name-of-type
+  [t] (if (fn? t) (.-name t) t))
+
+(defn type-name
+  [x] (-> x type name-of-type))
+
+(defn ex-type
+  [& {:keys [expected-type received spec]}]
+  (let [received-type (type received)]
+    (ex-info
+     (str "wrong type, expected " (name-of-type expected-type) ", "
+          "received " (pr-str received) ":" (name-of-type received-type))
+     #:ex-type{:expected-type expected-type
+               :received-value received
+               :received-type received-type :spec spec})))
+
+(defn ex-coersion
+  [& {:keys [value target-type]}]
+  (ex-info (str "cannot coerce " (pr-str value) ":" (type-name value) " into a " target-type)
+           #:ex-coersion{:value value :target-type target-type}))
+
+(defn ->uuid
+  "Coerce the value into a UUID or fail trying"
+  [x]
+  (cond
+   (uuid? x) x
+   (string? x) (parse-uuid x)
+   :else (throw (ex-coersion :value x :target-type "UUID"))))
+
+(def ->?uuid (fnil ->uuid nil))
+
+(defn ->int
+  [x]
+  (cond
+   (int? x) x
+   (or (float? x) (string? x)) (js/parseInt x 10)
+   :else (throw (ex-coersion :value x :target-type "int"))))
+
+(def ->?int (fnil ->int 0))

@@ -54,7 +54,12 @@
       </div>
     </main>
 
-    <footer class="bg-light mt-5" style="height: 200px">
+    <footer class="bg-light mt-5 pt-5 text-muted" style="height: 200px">
+      <div class="container">
+        <% unless Rails.env.prduction? %>
+          <p><small><%= link_to 'UI Tests', '/js/test/index.html', class: 'text-muted', target: '_blank' %></small></p>
+        <% end %>
+      </div>
     </footer>
 
     <%= javascript_include_tag "application" %>

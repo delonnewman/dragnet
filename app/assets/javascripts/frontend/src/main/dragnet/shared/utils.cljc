@@ -12,4 +12,12 @@
 
 (defmacro echo
   [sym]
-  `(do (println ~(name sym) ~sym) ~sym))
+  `(do (println ~(name sym) (pr-str ~sym)) ~sym))
+
+(defmacro pp
+  [val]
+  `(cljs.pprint/pprint ~val))
+
+(defmacro pp-str
+  [val]
+  `(with-out-str (cljs.pprint/pprint ~val)))

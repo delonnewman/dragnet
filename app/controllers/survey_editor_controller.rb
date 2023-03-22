@@ -2,7 +2,7 @@ class SurveyEditorController < EndpointController
   # GET - /api/v1/editing/surveys/:id
   def show
     respond_to do |format|
-      format.transit { render body: transit(survey_editing.editing_data) }
+      format.transit { render transit: survey_editing.editing_data }
     end
   end
 
@@ -11,20 +11,23 @@ class SurveyEditorController < EndpointController
     edit = survey.edits.create!(survey_data: read_transit(request.body))
 
     respond_to do |format|
-      format.transit { render body: transit(edit_id: edit.id, created_at: edit.created_at.to_time) }
+      format.transit { render transit: { edit_id: edit.id, created_at: edit.created_at.to_time } }
     end
   end
 
   # POST - /api/v1/editing/surveys/:id/apply
   def apply
-    updated =
-      survey
-        .latest_edit
-        .if_nil { raise "Couldn't find draft to apply" }
-        .apply!
+    edit = survey.latest_edit
+    raise "Couldn't find draft to apply" unless edit
 
     respond_to do |format|
-      format.transit { render body: transit(survey_editing(updated).editing_data) }
+      format.transit do
+        if (updated = edit.apply)
+          render transit: survey_editing(updated).editing_data
+        else
+          render transit: edit.application.errors.full_messages, status: :unprocessable_entity
+        end
+      end
     end
   end
 

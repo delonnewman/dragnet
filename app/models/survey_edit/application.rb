@@ -15,6 +15,8 @@ class SurveyEdit::Application < Dragnet::Advice
   end
 
   def applied(timestamp = Time.now)
+    return false unless valid?(:application)
+
     edit.applied = true
     edit.applied_at = timestamp
     edit
@@ -37,16 +39,28 @@ class SurveyEdit::Application < Dragnet::Advice
 
   def apply!(timestamp = Time.now)
     SurveyEdit.transaction do
+      # Mark as published and validate without saving
+      unless applied(timestamp)
+        edit.errors.merge!(errors)
+        return false
+      end
+
       # Commit changes to survey
       survey.update!(edit.survey_attributes.merge(updated_at: timestamp, edits_status: :saved))
 
-      # Mark this draft as published
-      applied!(timestamp).save!
+      # Save changes to edit
+      edit.save!
 
       # Clean up old drafts
       survey.edits.where.not(id: edit.id).delete_all
 
       survey
     end
+  end
+
+  def apply(timestamp = Time.now)
+    apply!(timestamp)
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 end

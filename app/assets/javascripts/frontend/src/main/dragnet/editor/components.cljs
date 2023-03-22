@@ -1,18 +1,24 @@
 (ns dragnet.editor.components
+  "View components for the Editor UI"
   (:require-macros
    [cljs.core.async.macros :refer [go]])
   (:require
-   [cljs.core.async :refer [<!]]
-   [cljs-http.client :as http]
-   [dragnet.shared.utils :refer [time-ago-in-words]]
-   [dragnet.shared.components :refer
-    [icon switch text-field remove-button]]
-   [dragnet.shared.core :refer
-    [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
-   [dragnet.editor.core :refer
-    [survey survey-edited? question-type-slug question-types question-type-list question-type-uid]]))
+    [clojure.string :as s]
+    [cljs.core.async :refer [<!]]
+    [cljs-http.client :as http]
+    [dragnet.shared.utils :refer [time-ago-in-words ->int pp pp-str http-request] :include-macros true]
+    [dragnet.shared.components :refer
+      [icon switch text-field remove-button]]
+    [dragnet.shared.core :refer
+      [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
+    [dragnet.editor.core :as editor :refer
+      [survey survey-edited? question-type-slug question-types question-type-list question-type-uid apply-survey-edits-url errors?]]))
 
-;; Editor Components
+(defn error-handler
+  [state]
+  (fn [res]
+    (println "handling error" (pp-str res))
+    (swap! state assoc :errors (res :body))))
 
 (defn- option-updater
   [field value-fn]
@@ -22,7 +28,7 @@
         (swap! state assoc-in [:survey :questions (question :id) :question_options (option :id) field] value)))))
 
 (def ^:private option-text-updater (option-updater :text identity))
-(def ^:private option-weight-updater (option-updater :weight #(js/parseInt % 10)))
+(def ^:private option-weight-updater (option-updater :weight ->int))
 
 (defn- remove-option
   [state question option]
@@ -149,7 +155,7 @@
     (swap! state
            assoc-in
            [:survey :questions (question :id) :question_type_id]
-           (-> event .-target .-value (js/parseInt 10)))))
+           (-> event .-target .-value))))
 
 (defn question-type-selector
   [state question]
@@ -233,8 +239,9 @@
   [state]
   (fn []
     (go
-      (let [res (<! (http/post (str "/api/v1/editing/surveys/" (survey @state :id) "/apply")))
+      (let [res (<! (http-request :method :post :url (apply-survey-edits-url (@state :survey)) :error-fn (error-handler state)))
             t   (-> res :body :updated_at)]
+        (pp res)
         (swap! state assoc :edits nil :updated_at t)))))
 
 (defn update-survey-field!
@@ -247,10 +254,12 @@
   [:div {:class "container"}
    [:div.mb-3.d-flex.justify-content-between
     [:div
-     [:small.me-1
+     [:small.me-1.text-muted
       (if (survey-edited? @state)
        (str "Last saved " (time-ago-in-words (@state :updated_at)))
        (str "Up to date. Saved " (time-ago-in-words (@state :updated_at))))]]
+    [:small#errors.text-danger
+     (if (errors? @state) (str "Error: "(s/join ", " (@state :errors))))]
     [:div
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
