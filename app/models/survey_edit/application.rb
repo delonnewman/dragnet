@@ -42,7 +42,7 @@ class SurveyEdit::Application < Dragnet::Advice
       # Mark as published and validate without saving
       unless applied(timestamp)
         edit.errors.merge!(errors)
-        return false
+        raise ActiveRecord::RecordInvalid.new(edit)
       end
 
       # Commit changes to survey
