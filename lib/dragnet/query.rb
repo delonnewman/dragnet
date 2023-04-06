@@ -28,7 +28,6 @@ module Dragnet
     delegate :connection, to: :class
 
     def model_query(model_class, *params)
-      Rails.logger.info "SQL Query - #{query_text.inspect} #{params.inspect}"
       hash_query(*params).map do |h|
         model_class.new(h)
       end
@@ -36,6 +35,7 @@ module Dragnet
     alias q model_query
 
     def hash_query(*params)
+      Rails.logger.info "SQL Query - #{query_text.inspect} #{params.inspect}"
       connection
         .query_hash(query_text, *params)
         .lazy.map { El::DataUtils.parse_nested_hash_keys(_1) }
