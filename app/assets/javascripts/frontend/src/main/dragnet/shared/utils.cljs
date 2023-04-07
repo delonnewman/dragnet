@@ -63,6 +63,11 @@
      (name (first ks))
      (drop 1 ks))))
 
+(defn dom-id
+  [& values]
+
+  )
+
 ; A naive plural inflection, but good enough for this
 (defn pluralize
   [word n]

@@ -46,3 +46,13 @@
     (let [q (utils/question-of-type "time")]
       (is (= (str "question-" (q :id) "-type-" (-> q :question_type_id))
              (core/question-type-uid q (core/question-type @state q)))))))
+
+(deftest assoc-question-type-id-test
+  (is (= (core/assoc-question-type-id {} {:id "question-123"} "type-345")
+         {:survey {:questions {"question-123" {:question_type_id "type-345"}}}})
+      "associates the type id with the specified question"))
+
+(deftest change-type!-test
+  (let [changer (core/change-type! (atom {}) {:id "question-123"})]
+    (is (= (changer #js{:target #js{:value "type-345"}})
+           {:survey {:questions {"question-123" {:question_type_id "type-345"}}}}))))

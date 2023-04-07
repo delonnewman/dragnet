@@ -1,15 +1,14 @@
 (ns dragnet.editor.shell
   "The survey editor UI shell"
-  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require
     [cljs-http.client :as http]
-    [cljs.core.async :refer [<!]]
+    [cljs.core.async :refer [<! go]]
     [reagent.core :as r]
     [reagent.dom :as rdom]
     [dragnet.shared.utils :refer [blank? validate-presence! pp pp-str http-request] :include-macros true]
     [dragnet.editor.core :refer [survey-url]]
     [dragnet.editor.components :refer [survey-editor]]
-    [dragnet.entities.survey :refer [make-survey]]))
+    [dragnet.entities.survey :refer [make-survey survey->update]]))
 
 (defn fetch-survey-data
   [survey-id]
@@ -20,11 +19,11 @@
   [state]
   (fn [res]
     (println "handling error" (pp-str res))
-    (swap! state assoc :errors (conj (@state :errors)) (res :body))))
+    (swap! state assoc :errors (conj (state :errors)) (res :body))))
 
 (defn update-survey
   [state]
-  (let [survey (@state :survey)]
+  (let [survey (state :survey)]
     (println "update-survey" (survey-url survey))
     (go (let [res (<! (http-request :method :put :url (survey-url survey) :transit-params survey :error-fn (error-handler state)))]
           (pp res)
@@ -59,8 +58,12 @@
     (add-watch current :auto-update (auto-updater))
     (go (let [state (<! (fetch-survey-data survey-id))]
           (try
-;;            (pp (get-in state [:survey :questions]))
-;;            (pp (make-survey (select-keys (state :survey) [:id :name :author :description :questions])))
+            (let [survey-data (state :survey)
+                  survey (make-survey survey-data)
+                  update (survey->update survey)]
+              (println 'survey-data (pp-str survey-data))
+              (println 'survey (pp-str survey))
+              (println 'update (pp-str update)))
             (catch js/Object e
               ;; TODO: extract this into a macro make use of expound
               (.error js/console (ex-message e) (pp-str (ex-data e)))))

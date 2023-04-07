@@ -118,14 +118,29 @@
 (defn survey-questions
   [survey] (:survey/questions survey))
 
+(defn options->update
+  [[id option]]
+  [id
+   {:id id
+    :text (:question.option/text option)
+    :weight (:question.option/weight option)}])
+
 (defn question->update
-  [question])
+  [[id question]]
+  [(str id)
+   {:id (str id)
+    :text (:question/text question)
+    :display_order (:question/display-order question)
+    :required (:question/required question)
+    :settings (:question/settings question)
+    :question_type_id (str (get-in question [:question/type :entity/id]))
+    :question_options (->> question :question/options (map options->update) (into {}))}])
 
 (defn survey->update
   [survey]
   {:id (str (:entity/id survey))
    :name (:survey/name survey)
-   :author (:survey/author survey)
+   :author_id (get-in survey [:survey/author :entity/id])
    :updated_at (:survey/updated-at survey)
    :description (:survey/description survey)
-   :questions (->> survey :survey/questions (map question->update))})
+   :questions (->> survey :survey/questions (map question->update) (into {}))})

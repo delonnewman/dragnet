@@ -3,6 +3,7 @@
  :builds
  {:editor
   {:target     :browser
+   :devtools {:preloads [devtools.preload]}
    :output-dir "../../../../public/js/editor"
    :asset-path "../../../../js/editor"
    :modules    {:main {:entries [dragnet.editor.shell]}}}
