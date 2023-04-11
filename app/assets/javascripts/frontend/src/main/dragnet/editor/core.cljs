@@ -3,12 +3,12 @@
   (:require
     [clojure.spec.alpha :as s]
     [cljs.core.async :refer [<! go]]
-    [dragnet.shared.utils :as utils :refer [->int pp pp-str http-request] :include-macros true]))
+    [dragnet.shared.utils :as utils :refer [->int ->uuid pp pp-str ppt echo http-request] :include-macros true]))
 
-(def survey-path (utils/path-helper ["/api/v1/editing/surveys" :id]))
+(def survey-path (utils/path-helper ["/api/v1/editing/surveys" :entity/id]))
 (def survey-url (utils/url-helper survey-path))
 
-(def apply-survey-edits-path (utils/path-helper ["/api/v1/editing/surveys" :id "apply"]))
+(def apply-survey-edits-path (utils/path-helper ["/api/v1/editing/surveys" :entity/id "apply"]))
 (def apply-survey-edits-url (utils/url-helper apply-survey-edits-path))
 
 (defn survey
@@ -17,8 +17,14 @@
     (state :survey)
     (get-in state (cons :survey key-path))))
 
+(defn errors
+  [state] (state :errors))
+
 (defn errors?
-  [state] (-> (state :errors) seq))
+  [state] (-> state errors seq))
+
+(defn updated-at
+  [state] (state :updated_at))
 
 (defn survey-edited?
   "Return true if the survey state has edits otherwise return false"
@@ -27,32 +33,45 @@
 (defn question-types
   "Return the question types map from the survey state"
   [state]
-  (-> state :question_types))
+  (-> state :question-types))
 
 (defn question-type-list
   "Return the list of question types from the survey state"
   [state]
-  (-> state :question_types vals))
+  (-> state :question-types vals))
+
+(defn ex-question-type
+  "Return an ex-info exception with a message and data
+  regarding a question type look up error."
+  [type-id]
+  (ex-info (str "couldn't find a question type with id: " type-id)
+           {:ex-question-type/id type-id}))
+
+(s/fdef question-type
+        :args (s/cat :state map? :type-id uuid?)
+        :ret map?)
 
 (defn question-type
   "Return the question type of the question or nil if not present.
 
   For the editor we can't rely on pulling the slug structurally
-  (i.e. (-> q :question_type :slug)) because the question type is
-  updated by it's id."
-  [state question]
-  (let [types (question-types state)]
-    (-> question :question_type_id types)))
-
-(defn question-type-slug
-  "Return the question type slug of the question or nil if not present."
-  [state question]
-  (:slug (question-type state question)))
+  (i.e. (-> q :question/type :question.type/slug)) because the
+  question type is updated by it's id."
+  [state type-id]
+  (echo type-id)
+  (if-let [type (get-in state [:question-types type-id])]
+    type
+    (throw (ex-question-type type-id))))
 
 (defn question-type-id
   "Return the question type id of the question"
   [question]
-  (-> question :question_type_id))
+  (-> question :question/type :entity/id))
+
+(defn question-type-slug
+  "Return the question type slug of the question or nil if not present."
+  [state question]
+  (:question.type/slug (question-type state (question-type-id question))))
 
 (defn question-type-uid
   "Return a universally unique id for a question type.
@@ -63,21 +82,21 @@
   ([question]
    (question-type-uid question (question-type-id question)))
   ([question type]
-   (let [id (if (map? type) (type :id) type)]
-     (str "question-" (question :id) "-type-" id))))
+   (let [id (if (map? type) (type :entity/id) type)]
+     (str "question-" (question :entity/id) "-type-" id))))
 
 (defn assoc-question-field
   [state question field value]
-  (assoc-in state [:survey :questions (question :id) field] value))
+  (assoc-in state [:survey :survey/questions (question :entity/id) field] value))
 
 (defn update-question-text!
   [state question]
   (fn [e]
-    (swap! assoc-question-field state question :text (-> e .-target .-value))))
+    (swap! state assoc-question-field question :question/text (-> e .-target .-value))))
 
 (defn remove-question
   [state question]
-  (assoc-in state [:survey :questions (question :id) :_destroy] true))
+  (assoc-in state [:survey :survey/questions (question :entity/id) :_destroy] true))
 
 (defn update-survey-field
   [state field value]
@@ -122,18 +141,18 @@
 
 (defn assoc-option
   [state question option]
-  (assoc-in state [:survey :questions (question :id) :question_options (option :id)] option))
+  (assoc-in state [:survey :survey/questions (question :entity/id) :question/options (option :entity/id)] option))
 
 (defn assoc-question
   [state question]
-  (assoc-in state [:survey :questions (question :id)] question))
+  (assoc-in state [:survey :survey/questions (question :entity/id)] question))
 
 (let [temp-id (atom 0)]
   (defn new-option []
-    {:id (swap! temp-id dec) :text (new-option-text)})
+    {:id (swap! temp-id dec) :question.option/text (new-option-text)})
 
   (defn new-question []
-    {:id (swap! temp-id dec) :text (new-question-text)}))
+    {:id (swap! temp-id dec) :question/text (new-question-text)}))
 
 (defn add-question!
   [ref]
@@ -149,7 +168,7 @@
 
 (defn remove-option
   [state question option]
-  (assoc-in state [:survey :questions (question :id) :question_options (option :id) :_destroy] true))
+  (assoc-in state [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) :_destroy] true))
 
 (defn remove-option!
   [ref question option]
@@ -165,7 +184,7 @@
 
 (defn assoc-in-option
   [state question option field value]
-  (assoc-in state [:survey :questions (question :id) :question_options (option :id) field] value))
+  (assoc-in state [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) field] value))
 
 (defn option-updater
   [field value-fn]
@@ -174,15 +193,15 @@
       (let [value (-> event .-target .-value value-fn)]
         (swap! ref assoc-in-option question option field value)))))
 
-(def update-option-text! (option-updater :text identity))
-(def update-option-weight! (option-updater :weight ->int))
+(def update-option-text! (option-updater :question.option/text identity))
+(def update-option-weight! (option-updater :question.option/weight ->int))
 
 (defn change-setting!
   [ref question setting]
   (fn [event]
     (println "change-setting-handler" event)
     (let [checked (-> event .-target .-checked)
-          path [:survey :questions (question :id) :settings]
+          path [:survey :survey/questions (question :entity/id) :question/settings]
           settings (assoc (get-in @ref path {}) setting checked)]
       (println "path" path)
       (println "settings" settings)
@@ -193,12 +212,14 @@
   [ref question]
   (fn [event]
     (let [checked (-> event .-target .-checked)]
-      (swap! ref assoc-in [:survey :questions (question :id) :required] checked))))
+      (swap! ref assoc-in [:survey :survey/questions (question :entity/id) :question/required] checked))))
 
 (defn assoc-question-type-id
   "Associate the type-id with the question"
   [state question type-id]
-  (assoc-in state [:survey :questions (question :id) :question_type_id] type-id))
+  (ppt "assoc-question-type-id -> type-id" type-id)
+  (let [type (question-type state type-id)]
+    (assoc-in state [:survey :survey/questions (question :entity/id) :question/type] type)))
 
 (s/fdef change-type!
   :args (s/cat :ref #(instance? Atom %) :question map?)
@@ -208,4 +229,17 @@
   [ref question]
   (fn [event]
     (let [type-id (-> event .-target .-value)]
-      (swap! ref assoc-question-type-id question type-id))))
+      (swap! ref assoc-question-type-id question (->uuid type-id)))))
+
+(defn survey-questions
+  [state]
+  (->> state
+       :survey
+       :survey/questions
+       vals
+       (remove :entity/_destroy)
+       (sort-by :question/display-order)))
+
+(defn question-setting
+  [question setting & {:keys [default] :or {default false}}]
+  (get-in question [:question/settings setting] default))

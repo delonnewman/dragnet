@@ -3,12 +3,13 @@
   (:require
     [cljs-http.client :as http]
     [cljs.core.async :refer [<! go]]
+    [cljs.repl :refer [ex-triage ex-str]]
     [reagent.core :as r]
     [reagent.dom :as rdom]
     [dragnet.shared.utils :refer [blank? validate-presence! pp pp-str http-request] :include-macros true]
     [dragnet.editor.core :refer [survey-url]]
     [dragnet.editor.components :refer [survey-editor]]
-    [dragnet.entities.survey :refer [make-survey survey->update]]))
+    [dragnet.entities.survey :refer [make-survey survey->update make-question-types]]))
 
 (defn fetch-survey-data
   [survey-id]
@@ -23,9 +24,10 @@
 
 (defn update-survey
   [state]
-  (let [survey (state :survey)]
+  (let [survey (state :survey)
+        update (survey->update survey)]
     (println "update-survey" (survey-url survey))
-    (go (let [res (<! (http-request :method :put :url (survey-url survey) :transit-params survey :error-fn (error-handler state)))]
+    (go (let [res (<! (http-request :method :put :url (survey-url survey) :transit-params update :error-fn (error-handler state)))]
           (pp res)
           (res :body)))))
 
@@ -35,7 +37,7 @@
   [root-elem]
   (fn [_ ref old new]
     (when (or (:errors new) (not= (:survey old) (:survey new)))
-          (println "Last update" (-> new :updated_at))
+          (println "Last update" (-> new :survey/updated-at))
           (rdom/render [survey-editor ref] root-elem))))
 
 (defn auto-updater
@@ -52,19 +54,21 @@
   survey-id both arguments should be present."
   [root-elem survey-id]
   (validate-presence! root-elem survey-id)
-  (println "initializing editor for " survey-id)
+  (js/console.warn "initializing editor for " survey-id)
   (let [current (r/atom nil)]
     (add-watch current :render-ui (ui-renderer root-elem))
     (add-watch current :auto-update (auto-updater))
-    (go (let [state (<! (fetch-survey-data survey-id))]
-          (try
-            (let [survey-data (state :survey)
-                  survey (make-survey survey-data)
-                  update (survey->update survey)]
-              (println 'survey-data (pp-str survey-data))
-              (println 'survey (pp-str survey))
-              (println 'update (pp-str update)))
-            (catch js/Object e
-              ;; TODO: extract this into a macro make use of expound
-              (.error js/console (ex-message e) (pp-str (ex-data e)))))
-          (reset! current state)))))
+    (go
+     (let [state (<! (fetch-survey-data survey-id))]
+      (try
+        (let [state
+              (assoc state
+                     :survey (make-survey (state :survey))
+                     :question-types (make-question-types (state :question_types)))]
+          (reset! current state))
+        (catch js/Object e
+          (js/console.error (ex-message e))
+          (js/console.log (.split (.-stack e) "\n"))
+          (pp state)
+          )))
+        )))

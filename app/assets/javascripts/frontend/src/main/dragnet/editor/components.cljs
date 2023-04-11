@@ -4,7 +4,7 @@
     [clojure.string :as s]
     [cljs.core.async :refer [<! go]]
     [cljs-http.client :as http]
-    [dragnet.shared.utils :refer [time-ago-in-words pp pp-str http-request] :include-macros true]
+    [dragnet.shared.utils :as utils :refer [time-ago-in-words pp pp-str echo http-request] :include-macros true]
     [dragnet.shared.components :refer
       [icon switch text-field remove-button]]
     [dragnet.shared.core :refer
@@ -14,7 +14,7 @@
 
 (defn choice-option
   [state question option]
-  (let [dom-id (str "question-option-" (question :id) "-" (option :id))]
+  (let [dom-id (str "question-option-" (question :entity/id) "-" (option :entity/id))]
     [:div.question-option.mb-2.d-flex.align-items-center
      [:div.me-1
       (if (multiple-answers? question)
@@ -24,13 +24,13 @@
       [:input.form-control
        {:type "text"
         :placeholder "Option Text"
-        :default-value (option :text)
+        :default-value (option :question.option/text)
         :on-change (editor/update-option-text! state question option)}]]
      [:div
       [:input.form-control
        {:type "number"
         :placeholder "Numerical Weight"
-        :default-value (option :weight)
+        :default-value (option :question.option/weight)
         :on-change (editor/update-option-weight! state question option)}]]
      [:div.ms-1
       [remove-button {:on-click (editor/remove-option! state question option)}]]]))
@@ -39,22 +39,19 @@
   [ref question]
   [:div
    [:div.question-options
-    (for [option (->> (:question_options question) vals (remove :_destroy))]
-      (let [dom-id (str "question-" (:id question) "-options-" (option :id))]
-        ^{:key dom-id} [choice-option ref question option]))]
+    (for [option (->> (:question/options question) vals (remove :entity/_destroy))]
+      ^{:key (utils/dom-id question option)} [choice-option ref question option])]
    [:a.btn.btn-link {:href "#" :on-click (editor/add-option! ref question)} "Add Option"]])
 
 (defn text-body
   [_ question]
-  (let [form-id (str "question-" (question :id))]
-    (if (long-answer? question)
-      [:textarea.form-control {:id form-id :rows 3}]
-      [:input.form-control {:id form-id :type "text"}])))
+  (if (long-answer? question)
+    [:textarea.form-control {:rows 3}]
+    [:input.form-control {:type "text"}]))
 
 (defn number-body
   [_ question]
-  (let [form-id (str "question" (question :id))]
-    [:input.form-control {:id form-id :type "number"}]))
+  [:input.form-control {:type "number"}])
 
 (defn time-body
   [_ question]
@@ -80,25 +77,25 @@
   [:div.card-footer
    [:div.d-flex.justify-content-end
     (when-let [type ((question-types @ref) (question :question_type_id))]
-      (for [[ident {text :text type :type default :default}] (type :settings)]
+      (for [[ident {text :text type :type default :default}] (type :question.type/settings)]
         (let [form-id (str "option-" (question :id) "-" (name ident))]
           ^{:key form-id} [switch
                            {:id form-id
-                            :checked (get-in question [:settings ident] default)
+                            :checked (editor/question-setting question ident :default default)
                             :on-change (editor/change-setting! ref question ident)
                             :style {:margin-right "20px"}
                             :label text}])))
     (let [form-id (str "option-" (question :id) "-required")]
         ^{:key form-id} [switch
                          {:id form-id
-                          :checked (question :required)
+                          :checked (question :question/required)
                           :on-change (editor/change-required! ref question)
                           :style {:margin-right "20px"}
                           :label "Required"}])]])
    
 (defn select-question-type
   [ref question]
-  (let [type-id (question :question_type_id)
+  (let [type-id (editor/question-type-id question)
         attrs {:aria-label "Select Question Type"
                :on-change (editor/change-type! ref question)}]
     [:select.form-select.w-25
@@ -108,22 +105,22 @@
      (for [type (question-type-list @ref)]
        [:option
         {:key (question-type-uid question type)
-         :value (:id type)}
-        (type :name)])]))
+         :value (type :entity/id)}
+        (type :question.type/name)])]))
 
 (defn question-card
   [ref question]
-  [:div.card.question.mb-4
+  [:div.card.question.mb-4 {:id (utils/dom-id question)}
    [:div.card-body
     [:div.card-title.d-flex.justify-content-between
      [:div.question-title.w-100.d-flex.me-3
       [text-field
-       {:id (question :id)
+       {:id (question :entity/id)
         :title "Enter question text"
         :class "h5"
-        :default-value (question :text)
+        :default-value (question :question/text)
         :on-change (editor/update-question-text! ref question)}]
-      (when (question :required) [:span {:title "Required"} "*"])]
+      (when (question :question/required) [:span {:title "Required"} "*"])]
      [select-question-type ref question]
      [remove-button {:on-click (editor/remove-question! ref question)}]]
     [question-card-body ref question]]
@@ -132,10 +129,8 @@
 (defn survey-questions
   [ref]
   [:div.questions
-   (let [qs (->> (survey @ref :questions) vals (remove :_destroy) (sort-by :display_order))]
-     (for [q qs]
-       (let [key (str "question-card-" (:id q))]
-         ^{:key key} [question-card ref q])))])
+   (for [q (editor/survey-questions @ref)]
+     ^{:key (utils/dom-id q)} [question-card ref q])])
 
 (defn survey-details
   [& {:keys [id name description on-change-description on-change-name]}]
@@ -154,6 +149,20 @@
       :on-blur on-change-description
       :default-value description}]]])
 
+(defn map-table
+  [map]
+  [:table.table.table-sm
+   [:tbody
+    (for [key (keys map)]
+      (let [val (map key)]
+        [:tr
+         [:th key]
+         [:td (if (map? val) [map-table val] (pp-str val))]]))]])
+
+(defn dev-info
+  [state]
+  [map-table state])
+
 (defn survey-editor
   [ref]
   [:div {:class "container"}
@@ -161,10 +170,10 @@
     [:div
      [:small.me-1.text-muted
       (if (survey-edited? @ref)
-       (str "Last saved " (time-ago-in-words (@ref :updated_at)))
-       (str "Up to date. Saved " (time-ago-in-words (@ref :updated_at))))]]
+       (str "Last saved " (time-ago-in-words (editor/updated-at @ref)))
+       (str "Up to date. Saved " (time-ago-in-words (editor/updated-at @ref))))]]
     [:small#errors.text-danger
-     (if (errors? @ref) (str "Error: " (s/join ", " (@ref :errors))))]
+     (if (errors? @ref) (str "Error: " (s/join ", " (editor/errors @ref))))]
     [:div
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
@@ -172,14 +181,15 @@
        :on-click (editor/save-survey! ref)}
       "Save"]]]
    [survey-details
-    {:id (survey @ref :id)
-     :name (survey @ref :name)
-     :description (survey @ref :description)
-     :on-change-description (editor/update-survey-field! ref :description)
-     :on-change-name (editor/update-survey-field! ref :name)}]
+    {:id (survey @ref :entity/id)
+     :name (survey @ref :survey/name)
+     :description (survey @ref :survey/description)
+     :on-change-description (editor/update-survey-field! ref :survey/description)
+     :on-change-name (editor/update-survey-field! ref :survey/name)}]
    [:div.mb-3.d-flex.justify-content-end
     [:button.btn.btn-sm.btn-secondary
      {:type "button"
       :on-click (editor/add-question! ref)}
      (icon "fa-solid" "plus" "Add Question")]]
-   [survey-questions ref]])
+   [survey-questions ref]
+   [dev-info @ref]])

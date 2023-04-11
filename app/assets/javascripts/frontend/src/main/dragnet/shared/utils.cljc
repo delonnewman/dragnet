@@ -10,14 +10,18 @@
                  (into {}))]
         (throw (ex-blank :missing-variables missing#))))))
 
-(defmacro echo
-  [sym]
-  `(do (println ~(name sym) (pr-str ~sym)) ~sym))
-
 (defmacro pp
   [val]
-  `(cljs.pprint/pprint ~val))
+  `(let [val# ~val] (cljs.pprint/pprint val#) val#))
 
 (defmacro pp-str
   [val]
   `(with-out-str (cljs.pprint/pprint ~val)))
+
+(defmacro ppt
+  [tag val]
+  `(let [val# ~val] (println ~tag (pp-str val#)) val#))
+
+(defmacro echo
+  [sym]
+  `(ppt ~(name sym) ~sym))

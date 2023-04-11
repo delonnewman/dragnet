@@ -63,10 +63,25 @@
      (name (first ks))
      (drop 1 ks))))
 
-(defn dom-id
-  [& values]
+(defn entity?
+  [x] (and (map? x) (contains? x :entity/type)))
 
-  )
+; TODO: Add keyword argument support
+(defn extract-options
+  [args]
+  (let [lst (last args)]
+    (if (and (map? lst) (not (entity? lst)))
+      [lst (drop-last args)]
+      [{} args])))
+
+(defn dom-id
+  [entity & args]
+  (let [[{prefix :prefix} rest] (extract-options args)
+        prefix (if prefix prefix (-> entity :entity/type name))
+        s (if-let [id (entity :entity/id)] (str prefix "-" id) prefix)]
+    (if (empty? rest)
+      s
+      (str s "-" (s/join "-" (map dom-id rest))))))
 
 ; A naive plural inflection, but good enough for this
 (defn pluralize
@@ -132,6 +147,9 @@
   ([f] (fblank f nil))
   ([f alt]
    (fn [x] (if (blank? x) alt x))))
+
+(defn tap
+  [f] (fn [x] (f x) x))
 
 ;; TODO: add locale support
 ;; (see https://api.rubyonrails.org/classes/Array.html#method-i-to_sentence)
