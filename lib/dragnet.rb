@@ -27,5 +27,7 @@ require_relative 'dragnet/active_record_generator'
 require_relative 'dragnet/generation'
 
 # View Layer
+require_relative 'dragnet/dom'
+require_relative 'dragnet/component'
 require_relative 'dragnet/view/presenter'
 require_relative 'dragnet/view/paged_presenter'
