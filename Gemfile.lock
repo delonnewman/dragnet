@@ -375,6 +375,9 @@ GEM
       rubocop-capybara (~> 2.17)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    ruby2js (4.0.0)
+      parser
+      regexp_parser
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -448,6 +451,7 @@ DEPENDENCIES
   dry-schema
   dry-types
   el-core!
+  erubi
   faker
   fast_blank
   font-awesome-sass
@@ -478,6 +482,7 @@ DEPENDENCIES
   rubocop
   rubocop-rails
   rubocop-rspec
+  ruby2js
   sassc-rails
   shortuuid
   sprockets-rails

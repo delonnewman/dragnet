@@ -19,6 +19,26 @@ module Dragnet
         freeze
       end
 
+      def deconstruct
+        [tag, attributes.transform_values(&:value), children]
+      end
+
+      def deconstruct_keys(*) = to_h.merge(tag: tag)
+
+      def to_h
+        {
+          name: name,
+          attributes: attributes.transform_values(&:value),
+          children: children.map do |child|
+            child.respond_to?(:to_h) ? child.to_h : child
+          end
+        }
+      end
+
+      def tag
+        name.to_sym
+      end
+
       def attributes?
         !attributes.empty?
       end

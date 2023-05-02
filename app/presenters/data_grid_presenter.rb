@@ -60,7 +60,7 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   def sort_by_question? = uuid?(params[:sort_by])
   alias sorted_by_question? sort_by_question?
 
-  # @param [Symbol, Question]
+  # @param [Symbol, Question] column
   def sorted_by_column?(column)
     if sorted_by_question? && column.is_a?(Question)
       params[:sort_by] == column&.id

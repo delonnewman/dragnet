@@ -14,11 +14,12 @@ module Dragnet
         define_method method_name do |**attributes, &block|
           HTMLElement.new(name: tag) do |node|
             node.attributes = attributes.reduce({}) do |h, (k, v)|
-              h.merge!(k.name => Attribute.new(element: node, name: k.name, value: v))
+              h.merge!(k.name => Attribute.new(element: node, name: k.name.tr('_', '-'), value: v))
             end
-            children = block.call || EMPTY_ARRAY
-            children = [children] unless children.is_a?(Array)
-            node.children = children
+            builder = HTMLListBuilder.new(self)
+            content = builder.instance_exec(&block)
+            builder.list << content unless content.is_a?(Node)
+            node.children = builder.list.to_a
           end
         end
 
@@ -33,7 +34,7 @@ module Dragnet
         define_method method_name do |**attributes|
           HTMLVoidElement.new(name: tag) do |node|
             node.attributes = attributes.reduce({}) do |h, (k, v)|
-              h.merge!(k.name => Attribute.new(element: node, name: k.name, value: v))
+              h.merge!(k.name => Attribute.new(element: node, name: k.name.tr('_', '-'), value: v))
             end
           end
         end

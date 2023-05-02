@@ -43,6 +43,9 @@ gem 'omniauth-apple'
 # Performance
 gem 'oj'
 gem 'fast_blank'
+gem 'erubi'
+
+gem 'ruby2js'
 
 # Language Extentions
 gem 'invokable'

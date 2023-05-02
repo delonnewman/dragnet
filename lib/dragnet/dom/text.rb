@@ -17,10 +17,6 @@ module Dragnet
       def name
         '#text'
       end
-
-      def to_s
-        CGI.escapeHTML(content)
-      end
     end
   end
 end

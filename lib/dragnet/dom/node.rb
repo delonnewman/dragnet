@@ -4,11 +4,10 @@ module Dragnet
   module DOM
     # @see https://developer.mozilla.org/en-US/docs/Web/API/Node
     class Node
-      include Enumerable
       include Memoizable
 
       def self.empty
-        @empty ||= new(nil)
+        @empty ||= new
       end
 
       # @return [Node, nil]
@@ -16,8 +15,6 @@ module Dragnet
 
       # @return [Array<Node>]
       attr_accessor :children
-
-      delegate :each, to: :children
 
       def initialize(parent: nil, children: nil, freeze: true)
         yield self if block_given?
@@ -43,7 +40,7 @@ module Dragnet
       end
       memoize :parents
 
-      # @param [Node]
+      # @param [Node] old_child
       # @return [Node]
       def without_child(old_child)
         new do |node|
@@ -56,7 +53,7 @@ module Dragnet
         end
       end
 
-      # @param [Node]
+      # @param [Node] new_child
       # @return [Node]
       def with_child(new_child)
         new do |node|
@@ -68,7 +65,7 @@ module Dragnet
       end
 
       # This only changes the parent of this node the rest of the tree will need to be updated
-      # @param [Node]
+      # @param [Node] new_parent
       # @return [Node]
       def with_parent(new_parent)
         new(new_parent, children)
