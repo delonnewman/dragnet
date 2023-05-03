@@ -7,9 +7,9 @@ class SurveyShareDropdownComponent < Dragnet::Component
   template do
     div(class: 'dropdown me-1') do
       a(class: 'btn btn-sm btn-secondary dropdown-toggle', href: '#', role: 'button', data: { bs_toggle: 'dropdown' }) do
-        icon(type: 'fas', name: 'share')
-        nbsp
-        text { 'Share' }
+        list << icon(type: 'fas', name: 'share')
+        list << nbsp
+        list << text { 'Share' }
       end
       ul(class: menu_class_name) do
         li(class: 'dropdown-item') { 'Copy Link' }

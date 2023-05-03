@@ -2,15 +2,21 @@
 
 module Dragnet
   module DOM
-    class HTMLBuilder
+    class HTMLProxy
       include HTMLVoidTags
       include HTMLStandardTags
 
       attr_reader :component
 
       def initialize(component)
+        Rails.logger.debug "Initializing HTMLProxy for #{component}"
         @component = component
       end
+
+      def to_s
+        "#<#{self.class}(#{component})>"
+      end
+      alias inspect to_s
 
       def attributes
         @attributes ||= Hash.new do |_, key|

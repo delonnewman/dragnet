@@ -5,9 +5,9 @@ class SurveyPublicIndicatorComponent < Dragnet::Component
 
   template do
     span do
-      icon(type: 'fas', name: icon_name)
-      space(non_breaking: true)
-      indicator_text
+      list << icon(type: 'fas', name: icon_name)
+      list << space(non_breaking: true)
+      list << indicator_text
     end
   end
 

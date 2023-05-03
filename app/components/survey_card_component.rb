@@ -1,34 +1,27 @@
 # frozen_string_literal: true
 
 class SurveyCardComponent < Dragnet::Component
-  include Rails.application.routes.url_helpers
-  include WorkspaceHelper
   include ActionView::Helpers::TextHelper
-  include ActionView::Helpers::UrlHelper
 
   attribute :survey, Survey
 
   template do
-    div(id: survey_id, class: 'survey-card card d-inline-block', style: 'width: 360px; margin: 7px') do
-      div(class: 'card-body') do
-        div(class: 'card-title d-flex justify-content-between align-items-center') do
-          div do
-            survey_link
-            copy_of_link
-          end
-          status_indicator
+    div(id: survey_id, class: %w[survey-card card d-inline-block], style: { width: 360, margin: 7 }) do
+      list << div(class: 'card-body') do
+        list << div(class: 'card-title d-flex justify-content-between align-items-center') do
+          list << div { survey_link + copy_of_link }
+          list << status_indicator
         end
-        div(class: 'mb-2') do
-          badge(color: 'secondary') { public_indicator }
-          badge(color: 'info') { records_count }
+        list << div(class: 'mb-2') do
+          badge(color: 'secondary') { public_indicator } +
+            badge(color: 'info') { records_count }
         end
       end
-      div(class: 'card-footer d-flex justify-content-between align-items-center') do
-        div(class: 'd-flex align-items-center') do
-          edit_link
-          share_dropdown
+      list << div(class: 'card-footer d-flex justify-content-between align-items-center') do
+        list << div(class: 'd-flex align-items-center') do
+          edit_link + share_dropdown
         end
-        element :survey_open_indicator, survey: survey
+        list << element(:survey_open_indicator, survey: survey)
       end
     end
   end
@@ -39,10 +32,6 @@ class SurveyCardComponent < Dragnet::Component
 
   def survey_id
     survey.id
-  end
-
-  def copy_of_link
-    survey_copy_of_link(survey)
   end
 
   def survey_link

@@ -79,17 +79,17 @@ module WorkspaceHelper
     icon_link('Statistics', survey_stats_path(survey.short_id), icon: 'chart-column')
   end
 
-  def survey_status_indicator(survey, size: 7, include_label: false)
-    desc = survey_status_description(survey)
-    bgcolor = survey_status_bg_color(survey)
-
-    tag.div(class: 'd-flex justify-content-between align-items-center') do
-      tag.div(class: "#{bgcolor} d-inline-block me-1",
-              title: desc,
-              style: "width: #{size}px; height: #{size}px; border-radius: 50%;") +
-        (include_label ? tag.small(class: 'text-muted') { desc } : '')
-    end
-  end
+  # def survey_status_indicator(survey, size: 7, include_label: false)
+  #   desc = survey_status_description(survey)
+  #   bgcolor = survey_status_bg_color(survey)
+  #
+  #   tag.div(class: 'd-flex justify-content-between align-items-center') do
+  #     tag.div(class: "#{bgcolor} d-inline-block me-1",
+  #             title: desc,
+  #             style: "width: #{size}px; height: #{size}px; border-radius: 50%;") +
+  #       (include_label ? tag.small(class: 'text-muted') { desc } : '')
+  #   end
+  # end
 
   def survey_status_bg_color(survey)
     return 'bg-success' if survey.edits_saved?

@@ -3,7 +3,7 @@
 module Dragnet
   module DOM
     class ElementBuilder
-      attr_reader :component, :builder
+      attr_reader :component, :proxy
       attr_accessor :content_in_attributes
 
       def self.of(component)
@@ -14,14 +14,27 @@ module Dragnet
       def initialize(component)
         Rails.logger.debug "Initializing ElementBuilder for #{component}"
         @component = component
-        @builder = HTMLListBuilder.new(component)
+        @proxy = NodeListProxy.new(HTMLProxy.new(component))
       end
 
       def build_element(tag, attributes, block)
         HTMLElement.new(name: tag) do |node|
+          node.attributes = build_attributes(node, attributes)
           content = evaluate_body(block)
-          node.attributes = build_attributes(node, attributes, content)
-          node.children = build_children(content)
+          node.children = build_children(content) if content
+        end
+      end
+
+      def evaluate_body(block)
+        block ? proxy.instance_exec(component, &block) : nil
+      end
+
+      def build_children(content)
+        case content
+        when NodeList
+          content.to_a
+        else
+          [content]
         end
       end
 
@@ -31,14 +44,8 @@ module Dragnet
         end
       end
 
-      def evaluate_body(block)
-        block ? builder.instance_exec(component, &block) : NodeList.empty
-      end
-
-      def build_attributes(node, attributes, content = nil)
-        self.content_in_attributes = false
+      def build_attributes(node, attributes)
         attributes.reduce({}) do |attrs, pair|
-          self.content_in_attributes = content_attribute_value?(content, pair[1])
           process_attribute(node, attrs, pair)
         end
       end
@@ -49,6 +56,10 @@ module Dragnet
           process_data_attributes(node, attrs, values)
         in [:style | 'style', {**values}]
           process_style_attributes(node, attrs, values)
+        in [:class | 'class', [*values]]
+          process_class_list_attribute(node, attrs, values)
+        in [*, nil]
+          attrs
         else
           (name, value) = pair
           attrs.merge!(name.name => Attribute.new(element: node, name: name.name.tr('_', '-'), value: value))
@@ -72,15 +83,10 @@ module Dragnet
         attrs
       end
 
-      def content_attribute_value?(content, value)
-        return false unless content
-
-        value == content || (value.is_a?(NodeList) && value.include?(content))
-      end
-
-      def build_children(content)
-        builder.list << content unless content.present? && (content.is_a?(Node) || content_in_attributes)
-        builder.list.to_a
+      def process_class_list_attribute(node, attrs, values)
+        value = values.join(' ')
+        attrs['class'] = Attribute.new(element: node, name: 'class', value: value)
+        attrs
       end
     end
   end

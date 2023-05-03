@@ -13,7 +13,7 @@ module Dragnet
 
         define_method method_name do |**attributes, &block|
           Rails.logger.debug "Generate element #{tag} #{attributes.inspect}"
-          ElementBuilder.of(self).build_element(tag, attributes, block)
+          ElementBuilder.of(component).build_element(tag, attributes, block)
         end
 
         registered_tags[method_name] = tag
@@ -26,7 +26,7 @@ module Dragnet
 
         define_method method_name do |**attributes|
           Rails.logger.debug "Generate void element #{tag} #{attributes.inspect}"
-          ElementBuilder.of(self).build_void_element(tag, attributes)
+          ElementBuilder.of(component).build_void_element(tag, attributes)
         end
 
         registered_tags[method_name] = tag

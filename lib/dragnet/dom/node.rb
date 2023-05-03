@@ -23,6 +23,16 @@ module Dragnet
         self.freeze if freeze
       end
 
+      def concat(node)
+        case node
+        when NodeList
+          node.dup.prepend(self)
+        else
+          NodeList[self, node]
+        end
+      end
+      alias + concat
+
       # Return all of the parents of this node
       # @return [Array<Node>]
       def parents

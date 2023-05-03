@@ -59,7 +59,7 @@ module Dragnet
       end
 
       def builder
-        @builder ||= DOM::HTMLBuilder.new(self)
+        @builder ||= DOM::HTMLProxy.new(self)
       end
 
       def compiled_template
@@ -96,5 +96,11 @@ module Dragnet
       self.class.html_compiler.compile(self)
     end
     alias to_s compile
+
+    protected
+
+    def tag
+      @tag ||= HTMLProxy.new(self)
+    end
   end
 end

@@ -6,10 +6,10 @@ class FormSwitchComponent < Dragnet::Component
 
   template do
     div(class: 'form-check form-switch') do
-      input(class: 'form-check-input', type: 'checkbox', role: 'switch', id: id)
-      label(class: 'form-check-label', for: id) do
-        content
-      end
+      list << input(class: 'form-check-input', type: 'checkbox', role: 'switch', id: id)
+      list << label(class: 'form-check-label', for: id) do
+                content
+              end
     end
   end
 end
