@@ -12,15 +12,8 @@ module Dragnet
         tag ||= method_name.name.tr('_', '-')
 
         define_method method_name do |**attributes, &block|
-          HTMLElement.new(name: tag) do |node|
-            node.attributes = attributes.reduce({}) do |h, (k, v)|
-              h.merge!(k.name => Attribute.new(element: node, name: k.name.tr('_', '-'), value: v))
-            end
-            builder = HTMLListBuilder.new(self)
-            content = builder.instance_exec(&block)
-            builder.list << content unless content.is_a?(Node)
-            node.children = builder.list.to_a
-          end
+          Rails.logger.debug "Generate element #{tag} #{attributes.inspect}"
+          ElementBuilder.of(self).build_element(tag, attributes, block)
         end
 
         registered_tags[method_name] = tag
@@ -32,11 +25,8 @@ module Dragnet
         tag ||= method_name.name.tr('_', '-')
 
         define_method method_name do |**attributes|
-          HTMLVoidElement.new(name: tag) do |node|
-            node.attributes = attributes.reduce({}) do |h, (k, v)|
-              h.merge!(k.name => Attribute.new(element: node, name: k.name.tr('_', '-'), value: v))
-            end
-          end
+          Rails.logger.debug "Generate void element #{tag} #{attributes.inspect}"
+          ElementBuilder.of(self).build_void_element(tag, attributes)
         end
 
         registered_tags[method_name] = tag

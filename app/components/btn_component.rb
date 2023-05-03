@@ -7,9 +7,9 @@ class BtnComponent < Dragnet::Component
   attribute :content
 
   template do
-    button(class: class_name, disabled: disabled, onclick: onclick) {
+    button(class: class_name, disabled: disabled, onclick: onclick) do
       content
-    }
+    end
   end
 
   def class_name

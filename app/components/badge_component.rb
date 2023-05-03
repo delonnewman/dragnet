@@ -5,9 +5,9 @@ class BadgeComponent < Dragnet::Component
   attribute :content
 
   template do
-    span(class: class_name) {
+    span(class: class_name) do
       content
-    }
+    end
   end
 
   def class_name

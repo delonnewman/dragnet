@@ -9,28 +9,28 @@ class SurveyCardComponent < Dragnet::Component
   attribute :survey, Survey
 
   template do
-    div(id: survey_id, class: 'survey-card card d-inline-block', style: 'width: 360px; margin: 7px') {
-      div(class: 'card-body') {
-        div(class: 'card-title d-flex justify-content-between align-items-center') {
-          div {
+    div(id: survey_id, class: 'survey-card card d-inline-block', style: 'width: 360px; margin: 7px') do
+      div(class: 'card-body') do
+        div(class: 'card-title d-flex justify-content-between align-items-center') do
+          div do
             survey_link
             copy_of_link
-          }
+          end
           status_indicator
-        }
-        div(class: 'mb-2') {
+        end
+        div(class: 'mb-2') do
           badge(color: 'secondary') { public_indicator }
           badge(color: 'info') { records_count }
-        }
-      }
-      div(class: 'card-footer d-flex justify-content-between align-items-center') {
-        div(class: 'd-flex align-items-center') {
+        end
+      end
+      div(class: 'card-footer d-flex justify-content-between align-items-center') do
+        div(class: 'd-flex align-items-center') do
           edit_link
           share_dropdown
-        }
-        open_indicator
-      }
-    }
+        end
+        element :survey_open_indicator, survey: survey
+      end
+    end
   end
 
   def survey_name
@@ -67,9 +67,5 @@ class SurveyCardComponent < Dragnet::Component
 
   def share_dropdown
     survey_share_dropdown(survey)
-  end
-
-  def open_indicator
-    survey_open_indicator(survey) unless survey.public?
   end
 end

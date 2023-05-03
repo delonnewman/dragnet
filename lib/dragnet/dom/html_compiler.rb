@@ -19,6 +19,8 @@ module Dragnet
           compile_comment(dom)
         when RubyCode
           compile_ruby_code(dom)
+        when SafeText
+          compile_safe_text(dom)
         when Text
           compile_text(dom)
         when NodeList
@@ -44,7 +46,13 @@ module Dragnet
       # @param [Text] node
       # @return [String]
       def compile_text(node)
+        return EMPTY_STRING unless node.content
+
         CGI.escapeHTML(node.content)
+      end
+
+      def compile_safe_text(node)
+        node.content
       end
 
       # @param [RubyCode] node

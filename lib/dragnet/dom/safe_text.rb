@@ -2,13 +2,9 @@
 
 module Dragnet
   module DOM
-    class RubyCode < Text
+    class SafeText < Text
       def name
-        '#ruby'
-      end
-
-      def to_s
-        "<%= #{content} %>"
+        '#safe-text'
       end
     end
   end

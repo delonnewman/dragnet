@@ -5,7 +5,12 @@ module Dragnet
     class NodeList < Node
       attr_reader :nodes
 
-      delegate :each, to: :nodes
+      delegate :each, :include?, :empty?, to: :nodes
+
+      def self.empty
+        @empty ||= new
+      end
+
 
       def initialize(nodes = nil)
         @nodes = nodes || []

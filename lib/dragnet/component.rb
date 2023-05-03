@@ -71,7 +71,7 @@ module Dragnet
       end
 
       def html_compiler
-        @html_compiler ||= DOM::HTMLCompiler.new
+        @@html_compiler ||= DOM::HTMLCompiler.new
       end
 
       private
@@ -91,5 +91,10 @@ module Dragnet
 
       super(attributes: attributes, name: tag_name)
     end
+
+    def compile
+      self.class.html_compiler.compile(self)
+    end
+    alias to_s compile
   end
 end

@@ -19,26 +19,23 @@ module Dragnet
       end
 
       def ruby(content = nil, &block)
-        if content
-          RubyCode.new(content: content)
-        else
-          RubyCode.new(content: block.call)
-        end
+        element(RubyCode, content, &block)
       end
 
       def comment(content = nil, &block)
-        if content
-          Comment.new(content: content)
-        else
-          Comment.new(content: block.call)
-        end
+        element(Comment, content, &block)
       end
 
       def text(content = nil, &block)
-        if content
-          Text.new(content: content)
+        element(Text, content, &block)
+      end
+
+      def element(klass, content = nil, **attributes, &block)
+        klass = klass.is_a?(Symbol) ? Component.find!(klass) : klass
+        if block
+          klass.new(**attributes.merge!(content: block.call))
         else
-          Text.new(content: block.call)
+          klass.new(**attributes.merge!(content: content))
         end
       end
 
@@ -51,8 +48,9 @@ module Dragnet
       def space(count = nil, non_breaking: false)
         count ||= 1
         spc = non_breaking ? '&nbsp;' : ' '
+        Rails.logger.debug "Insert space #{spc.inspect} (#{count})"
 
-        Text.new(content: spc * count)
+        SafeText.new(content: spc * count)
       end
 
       private
@@ -67,15 +65,18 @@ module Dragnet
         if comp
           attrs = kwargs
           attrs.merge!(content: block.call) if block_given?
+          Rails.logger.debug "Construct component instance #{comp} #{attrs.inspect}"
           return comp.new(**kwargs)
         end
 
+        Rails.logger.debug "Construct method invocation #{method} #{args.inspect} #{kwargs.inspect}"
+
         if args.present? && kwargs.present?
-          ruby("#{method}(*#{args.inspect}, **#{kwargs.inspect})")
+          ruby("#{method}(*#{eval_args(args).inspect}, **#{eval_kwargs(kwargs).inspect})")
         elsif args.present?
-          ruby("#{method}(*#{args.inspect})")
+          ruby("#{method}(*#{eval_args(args).inspect})")
         elsif kwargs.present?
-          ruby("#{method}(**#{kwargs.inspect})")
+          ruby("#{method}(**#{eval_kwargs(kwargs).inspect})")
         else
           ruby("#{method}")
         end
@@ -83,6 +84,18 @@ module Dragnet
 
       def respond_to_missing?(method, include_all)
         component.method_defined?(method, include_all) || Dragnet::Component.find(method)
+      end
+
+      def eval_kwargs(kwargs)
+        kwargs.transform_values do |v|
+          v.respond_to?(:content) ? v.content : v
+        end
+      end
+
+      def eval_args(args)
+        args.map do |v|
+          v.respond_to?(:content) ? v.content : v
+        end
       end
     end
   end
