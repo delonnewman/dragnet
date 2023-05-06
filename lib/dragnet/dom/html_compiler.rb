@@ -32,15 +32,16 @@ module Dragnet
         end
       end
 
+      # @param node
       # @return [String]
       def compile_any(node)
-        node.to_s
+        CGI.escapeHTML(node.to_s)
       end
 
       # @param [Component] node
       # @return [String]
       def compile_component(node)
-        node.instance_eval(node.compiled_template)
+        node.instance_eval(node.compiled_template, __FILE__, __LINE__)
       end
 
       # @param [Text] node
@@ -51,6 +52,8 @@ module Dragnet
         CGI.escapeHTML(node.content)
       end
 
+      # @param [SafeText] node
+      # @return [String]
       def compile_safe_text(node)
         node.content
       end
@@ -72,10 +75,8 @@ module Dragnet
       def compile_element(node)
         content = node.children.map { |child| compile(child) }.join('')
         if node.attributes?
-          attr_list = node.attributes.map do |(_, a)|
-            compile(a)
-          end
-          "<#{node.name} #{attr_list.join(' ')}>#{content}</#{node.name}>"
+          attr_list = node.attributes.map { |(_, a)| compile(a) }.join(' ')
+          "<#{node.name} #{attr_list}>#{content}</#{node.name}>"
         else
           "<#{node.name}>#{content}</#{node.name}>"
         end
@@ -95,19 +96,61 @@ module Dragnet
       # @param [NodeList] node
       # @return [String]
       def compile_node_list(node)
-        node.nodes.map { compile(_1) }.join('')
+        node.children.map { compile(_1) }.join('')
       end
 
       # @param [Attribute] node
       # @return [String]
       def compile_attribute(node)
-        if node.type == :boolean && node.value.is_a?(RubyCode)
-          compile(RubyCode.new(content: "#{node.value.content} ? '#{node.name}' : ''"))
-        elsif node.type == :code && node.value.is_a?(RubyCode)
-          "#{node.name}=\"#{compile(RubyCode.new(content: "Ruby2JS.convert(#{node.value.content}, preset: true)"))}\""
-        else
-          "#{node.name}=\"#{compile(node.value)}\""
+        unless node.value.is_a?(RubyCode)
+          return "#{node.name}=\"#{compile(node.value)}\""
         end
+
+        if node.type == :boolean
+          compile_boolean_template(node)
+        elsif node.name == 'class'
+          compile_class_list_value(node)
+        elsif node.name == 'style'
+          compile_style_value(node)
+        elsif node.name == 'data'
+          compile_data_attributes(node, :data)
+        elsif node.name == 'aria'
+          compile_data_attributes(node, :aria)
+        else
+          compile_template_value(node)
+        end
+      end
+
+      def compile_data_attributes(node, prefix)
+        template = "Dragnet::DOM::Utils.format_data_attributes(#{node.value.content}, #{prefix.inspect})"
+        compile(RubyCode.new(content: template))
+      end
+
+
+      # @param [Attribute] node
+      # @return [String]
+      def compile_boolean_template(node)
+        compile(RubyCode.new(content: "#{node.name.inspect} if #{node.value.content}.present?"))
+      end
+
+      # @param [Attribute] node
+      # @return [String]
+      def compile_template_value(node)
+        compile_ruby(node.name, node.value, node.value)
+      end
+
+      def compile_class_list_value(node)
+        template = "#{node.value.content}.is_a?(Array) ? Dragnet::DOM::Utils.format_class_list(#{node.value.content}) : #{node.value.content}"
+        compile_ruby(node.name, node.value, RubyCode.new(content: template))
+      end
+
+      def compile_style_value(node)
+        template = "#{node.value.content}.is_a?(Hash) ? Dragnet::DOM::Utils.format_style_map(#{node.value.content}) : #{node.value.content}"
+        compile_ruby(node.name, node.value, RubyCode.new(content: template))
+      end
+
+      def compile_ruby(name, predicate, consequent)
+        "<% if #{predicate.content}.present? %>#{name}=\"#{compile(consequent)}\"<% end %>"
       end
     end
   end

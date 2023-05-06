@@ -10,24 +10,62 @@ module Dragnet
         @empty ||= new
       end
 
+      def self.coerce(obj)
+        case obj
+        when Node
+          obj
+        when Enumerable
+          NodeList.coerce(obj)
+        when String
+          Text.new(content: obj)
+        when Symbol, Class
+          Text.new(content: obj.name)
+        when Numeric, TrueClass, FalseClass, NilClass
+          Text.new(content: obj.to_s)
+        when ActiveSupport::SafeBuffer
+          SafeText.new(content: obj)
+        else
+          raise TypeError, "#{obj.class} can't be coerced into a #{self}"
+        end
+      end
+
+      def self.html_compiler
+        @@html_compiler ||= HTMLCompiler.new
+      end
+
+      delegate :html_compiler, to: :class
+
       # @return [Node, nil]
       attr_accessor :parent
 
-      # @return [Array<Node>]
+      # @return [NodeList]
       attr_accessor :children
 
+      # @param [Node] parent
+      # @param [NodeList, nil] children
       def initialize(parent: nil, children: nil, freeze: true)
         yield self if block_given?
         @parent   ||= parent
-        @children ||= children || EMPTY_ARRAY
+        @children ||= children
         self.freeze if freeze
       end
 
-      def concat(node)
+      def children
+        @children || NodeList.empty
+      end
+
+      def compile
+        html_compiler.compile(self)
+      end
+      alias to_s compile
+
+      def concat(obj)
+        node = self.class.coerce(obj)
+
         case node
         when NodeList
           node.dup.prepend(self)
-        else
+        when Node
           NodeList[self, node]
         end
       end

@@ -6,6 +6,11 @@ module Dragnet
     class HTMLElement < Element
       # TODO: add style_map
 
+      def to_s
+        compile rescue super
+      end
+      alias inspect to_s
+
       def styles
         attribute('styles')
       end

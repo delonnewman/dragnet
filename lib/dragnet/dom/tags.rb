@@ -8,12 +8,16 @@ module Dragnet
         @registered_tags ||= Concurrent::Map.new
       end
 
+      def builder
+        raise NotImplementedError
+      end
+
       def register_tag(method_name, tag: nil)
         tag ||= method_name.name.tr('_', '-')
 
-        define_method method_name do |**attributes, &block|
+        define_method method_name do |content = nil, **attributes, &block|
           Rails.logger.debug "Generate element #{tag} #{attributes.inspect}"
-          ElementBuilder.of(component).build_element(tag, attributes, block)
+          builder.build_element(tag, attributes, content, block)
         end
 
         registered_tags[method_name] = tag
@@ -26,7 +30,7 @@ module Dragnet
 
         define_method method_name do |**attributes|
           Rails.logger.debug "Generate void element #{tag} #{attributes.inspect}"
-          ElementBuilder.of(component).build_void_element(tag, attributes)
+          builder.build_void_element(tag, attributes)
         end
 
         registered_tags[method_name] = tag

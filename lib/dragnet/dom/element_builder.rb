@@ -3,39 +3,24 @@
 module Dragnet
   module DOM
     class ElementBuilder
-      attr_reader :component, :proxy
-      attr_accessor :content_in_attributes
+      attr_reader :context
 
-      def self.of(component)
-        @builders ||= {}
-        @builders[component] = new(component)
+      # @param [Context, nil] context
+      def initialize(context)
+        Rails.logger.debug "Initializing ElementBuilder for #{context}"
+        @context = LexicalContext.new(context)
       end
 
-      def initialize(component)
-        Rails.logger.debug "Initializing ElementBuilder for #{component}"
-        @component = component
-        @proxy = NodeListProxy.new(HTMLProxy.new(component))
-      end
-
-      def build_element(tag, attributes, block)
+      def build_element(tag, attributes, content, block)
         HTMLElement.new(name: tag) do |node|
           node.attributes = build_attributes(node, attributes)
-          content = evaluate_body(block)
-          node.children = build_children(content) if content
+          content = evaluate_body(block) unless content
+          node.children = NodeList.coerce(content) if content
         end
       end
 
       def evaluate_body(block)
-        block ? proxy.instance_exec(component, &block) : nil
-      end
-
-      def build_children(content)
-        case content
-        when NodeList
-          content.to_a
-        else
-          [content]
-        end
+        block ? context.instance_exec(&block) : nil
       end
 
       def build_void_element(tag, attributes)
@@ -53,12 +38,14 @@ module Dragnet
       def process_attribute(node, attrs, pair)
         case pair
         in [:data | 'data', {**values}]
-          process_data_attributes(node, attrs, values)
+          process_data_attributes(node, attrs, :data, values)
+        in [:aria | 'aria', {**values}]
+          process_data_attributes(node, attrs, :aria, values)
         in [:style | 'style', {**values}]
           process_style_attributes(node, attrs, values)
         in [:class | 'class', [*values]]
           process_class_list_attribute(node, attrs, values)
-        in [*, nil]
+        in [*, nil | false]
           attrs
         else
           (name, value) = pair
@@ -66,25 +53,21 @@ module Dragnet
         end
       end
 
-      def process_data_attributes(node, attrs, values)
-        values.each_pair do |key, value|
-          name = "data-#{key.name.tr('_', '-')}"
+      def process_data_attributes(node, attrs, prefix, values)
+        Utils.collect_data_attributes(values, prefix).each do |(name, value)|
           attrs[name] = Attribute.new(element: node, name: name, value: value)
         end
         attrs
       end
 
       def process_style_attributes(node, attrs, values)
-        value = values.map do |(k, v)|
-          v = v.is_a?(Numeric) ? "#{v}px" : v
-          "#{k}: #{v}"
-        end.join('; ')
+        value = Utils.format_style_map(values)
         attrs['style'] = Attribute.new(element: node, name: 'style', value: value)
         attrs
       end
 
       def process_class_list_attribute(node, attrs, values)
-        value = values.join(' ')
+        value = Utils.format_class_list(values)
         attrs['class'] = Attribute.new(element: node, name: 'class', value: value)
         attrs
       end

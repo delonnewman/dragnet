@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-class SurveyPreviewButtonComponent < Dragnet::Component
+class PreviewButtonComponent < ApplicationComponent
   attribute :title,  required: true
   attribute :icon,   required: true
   attribute :width,  required: true
   attribute :height, required: true
 
   template do
-    button(class: 'btn btn-secondary', data: data, script: hyperscript, title: title) do
-      icon(type: 'fas', name: icon)
+    tag.button(class: 'btn btn-secondary', data: data, script: hyperscript, title: title) do
+      tag.icon(type: 'fas', name: icon)
     end
   end
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'dom/utils'
 require_relative 'dom/node'
 require_relative 'dom/node_list'
 require_relative 'dom/character_data'
@@ -20,4 +21,7 @@ require_relative 'dom/html_void_tags'
 require_relative 'dom/html_proxy'
 require_relative 'dom/node_list_proxy'
 require_relative 'dom/html_compiler'
+require_relative 'dom/context'
+require_relative 'dom/template_context'
+require_relative 'dom/lexical_context'
 require_relative 'dom/element_builder'

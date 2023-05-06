@@ -2,14 +2,13 @@
 
 class FormSwitchComponent < Dragnet::Component
   attribute :id
-  attribute :content
 
   template do
-    div(class: 'form-check form-switch') do
-      list << input(class: 'form-check-input', type: 'checkbox', role: 'switch', id: id)
-      list << label(class: 'form-check-label', for: id) do
-                content
-              end
+    tag.div(class: 'form-check form-switch') do
+      list.input(class: 'form-check-input', type: 'checkbox', role: 'switch', id: id)
+      list.label(class: 'form-check-label', for: id) do
+        children
+      end
     end
   end
 end

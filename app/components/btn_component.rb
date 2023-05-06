@@ -3,12 +3,11 @@
 class BtnComponent < Dragnet::Component
   attribute :disabled, :boolean
   attribute :kind, default: 'primary'
-  attribute :onclick, default: ""
-  attribute :content
+  attribute :onclick
 
   template do
-    button(class: class_name, disabled: disabled, onclick: onclick) do
-      content
+    tag.button(class: class_name, disabled: disabled, onclick: onclick) do
+      children
     end
   end
 

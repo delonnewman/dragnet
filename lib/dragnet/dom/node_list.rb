@@ -3,10 +3,31 @@
 module Dragnet
   module DOM
     class NodeList < Node
-      delegate :each, :include?, :empty?, to: :children
+      include Enumerable
+
+      delegate :each, :include?, :empty?, to: :nodes
 
       def self.empty
         @empty ||= new
+      end
+
+      def self.coerce(obj)
+        case obj
+        when self
+          obj
+        when Array
+          new(obj)
+        when Hash
+          new do |node|
+            node.children = obj.map do |(k, v)|
+              Attribute.new(element: node, name: k.to_s, value: v)
+            end
+          end
+        when Enumerable
+          new(obj.to_a)
+        else
+          new([obj])
+        end
       end
 
       def self.[](*nodes)
@@ -14,12 +35,22 @@ module Dragnet
       end
 
       def initialize(nodes = nil)
-        super(children: nodes || [])
+        @nodes = nodes || []
+        super()
+      end
+
+      def children
+        NodeList.new(nodes)
+      end
+
+      def children=(nodes)
+        list = NodeList.coerce(nodes)
+        self.nodes = list.to_a
       end
 
       def concat(node)
         case node
-        when NodeList
+        when Enumerable
           self.class.new(to_a + node.to_a)
         else
           dup.append(node)
@@ -29,12 +60,12 @@ module Dragnet
 
       def prepend(node)
         case node
-        when NodeList
+        when Enumerable
           node.each do |n|
-            children.unshift(n)
+            nodes.unshift(n)
           end
         else
-          children.unshift(n)
+          nodes.unshift(node)
         end
 
         self
@@ -43,12 +74,12 @@ module Dragnet
 
       def append(node)
         case node
-        when NodeList
+        when Enumerable
           node.each do |n|
-            children << n
+            nodes << n
           end
         else
-          children << node
+          nodes << node
         end
 
         self
@@ -56,12 +87,26 @@ module Dragnet
       alias << append
 
       def to_a
-        children.dup
+        nodes.dup
+      end
+
+      def to_h
+        nodes.reduce({}) do |h, child|
+          if child.is_a?(Attribute)
+            h.merge!(child.name => child.value)
+          else
+            raise TypeError, "#{child.class} can't be coerced into a Hash pair"
+          end
+        end
       end
 
       def dup
-        new(to_a)
+        self.class.new(to_a)
       end
+
+      private
+
+      attr_accessor :nodes
     end
   end
 end

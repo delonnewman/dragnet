@@ -1,60 +1,44 @@
 # frozen_string_literal: true
 
-class SurveyCardComponent < Dragnet::Component
-  include ActionView::Helpers::TextHelper
+class SurveyCardComponent < ApplicationComponent
+  attribute :survey, required: true
+  attribute :user, required: true
 
-  attribute :survey, Survey
+  let(:survey_id) { survey.id }
+  let(:survey_name) { survey.name }
 
-  template do
-    div(id: survey_id, class: %w[survey-card card d-inline-block], style: { width: 360, margin: 7 }) do
-      list << div(class: 'card-body') do
-        list << div(class: 'card-title d-flex justify-content-between align-items-center') do
-          list << div { survey_link + copy_of_link }
-          list << status_indicator
-        end
-        list << div(class: 'mb-2') do
-          badge(color: 'secondary') { public_indicator } +
-            badge(color: 'info') { records_count }
-        end
-      end
-      list << div(class: 'card-footer d-flex justify-content-between align-items-center') do
-        list << div(class: 'd-flex align-items-center') do
-          edit_link + share_dropdown
-        end
-        list << element(:survey_open_indicator, survey: survey)
-      end
+  let(:records_count) do
+    n     = survey.replies.count
+    label = n == 1 ? 'record' : 'records'
+    "#{n} #{label}"
+  end
+
+  let(:label_content) do
+    tag.div do
+      list.a(survey.name, href: survey_path(survey))
+      list.copy_of_link(survey: survey, user: user) if survey.copy?
     end
   end
 
-  def survey_name
-    survey.name
-  end
-
-  def survey_id
-    survey.id
-  end
-
-  def survey_link
-    link_to survey.name, survey_path(survey)
-  end
-
-  def status_indicator
-    survey_status_indicator(survey)
-  end
-
-  def public_indicator
-    survey_public_indicator(survey)
-  end
-
-  def records_count
-    pluralize survey.replies.count, 'record'
-  end
-
-  def edit_link
-    edit_survey_link(survey, include_label: true)
-  end
-
-  def share_dropdown
-    survey_share_dropdown(survey)
+  template do
+    tag.div(id: survey_id, class: %w[survey-card card d-inline-block], style: { width: 360, margin: 7 }) do
+      list.div(class: 'card-body') do
+        list.div(class: 'card-title d-flex justify-content-between align-items-center') do
+          label_content +
+            tag.status_indicator(survey: survey)
+        end
+        list.div(class: 'mb-2') do
+          list.badge(color: 'secondary') { tag.public_indicator(survey: survey) }
+          list.badge(color: 'info') { records_count }
+        end
+      end
+      list.div(class: 'card-footer d-flex justify-content-between align-items-center') do
+        list.div(class: 'd-flex align-items-center') do
+          list.edit_survey_link(survey: survey, include_label: true)
+          list.share_dropdown(survey: survey)
+        end
+        list.open_indicator(survey: survey)
+      end
+    end
   end
 end

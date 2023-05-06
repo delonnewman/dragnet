@@ -3,13 +3,12 @@
 class IconComponent < Dragnet::Component
   attribute :name, required: true
   attribute :type, default: 'far'
-  attribute :class_name
 
-  template do
-    i(class: class_names)
+  let(:class_list) do
+    %W[#{type} fa-#{name} #{attributes[:class]}]
   end
 
-  def class_names
-    "#{type} fa-#{name} #{class_name}"
+  template do
+    tag.i(class: class_list)
   end
 end

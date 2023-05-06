@@ -2,11 +2,10 @@
 
 class BadgeComponent < Dragnet::Component
   attribute :color, default: "info"
-  attribute :content
 
   template do
-    span(class: class_name) do
-      content
+    tag.span(class: class_name) do
+      children
     end
   end
 

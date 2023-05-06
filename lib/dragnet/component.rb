@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class Component < DOM::Element
+  class Component < DOM::HTMLElement
     class << self
       def tag_name(klass = self)
-        klass.name.split('::').last.underscore.sub("_component", '').to_sym
+        (klass.name || superclass.name).split('::').last.underscore.sub("_component", '').to_sym
       end
 
-      def component_name(tag_name)
-        "#{(tag_name.is_a?(Symbol) ? tag_name.name : tag_name)}_component".classify
+      def component_name(tag = tag_name)
+        "#{(tag_name.is_a?(Symbol) ? tag.name : tag)}_component".classify
       end
 
       def find(tag_name)
@@ -19,22 +19,88 @@ module Dragnet
         component_name(tag_name).constantize
       end
 
+      def exists?(tag_name)
+        find(tag_name).present?
+      end
+      alias exist? exists?
+
       def inspect
-        "#{self}(#{attributes.map { |(name, opt)| "#{name}:#{opt[:type]}" }.join(', ')})"
+        "#{component_name}(#{attributes.map { |(name, opt)| "#{name}:#{opt[:type]}" }.join(', ')})"
       end
 
-      def attributes
-        @attributes ||= {}
-      end
-
-      def attribute(name, type = :string, **options)
-        attributes[name] = options.merge!(type: type)
-
-        builder.define_singleton_method name do
-          attributes[name]
+      def bind(attributes)
+        klass = Class.new(self)
+        klass.class_eval do
+          attributes.each do |name, value|
+            bind_value(name, value)
+          end
         end
+        klass.template_proc = template_proc
+        klass
+      end
+
+      def binding_name(name)
+        :"@#{name}"
+      end
+
+      def bindings
+        @bindings ||= {}
+      end
+
+      def bound?(name)
+        bindings.include?(name)
+      end
+
+      def bind_value(name, value)
+        bindings[name] = value
+      end
+
+      def bound_value!(name)
+        bindings.fetch(name) do
+          raise "`#{name}` is not bound in #{self}"
+        end
+      end
+
+      def bound_value(name)
+        bindings[name]
+      end
+
+      def definitions
+        @definitions ||= []
+      end
+
+      def define(name, &block)
+        definitions << name
+
+        template_context.define_singleton_method(name, &block)
 
         define_method name do
+          if self.class.bound?(name)
+            self.class.bound_value!(name)
+          else
+            instance_eval(&block)
+          end
+        end
+
+        name
+      end
+      alias let define
+
+      def attributes
+        attrs = @attributes || {}
+
+        if superclass.respond_to?(:attributes)
+          superclass.attributes.merge(attrs)
+        else
+          attrs
+        end
+      end
+
+      def attribute(name, type = :object, **options)
+        @attributes ||= {}
+        @attributes[name] = options.merge!(type: type)
+
+        define name do
           attributes[name]
         end
 
@@ -51,33 +117,29 @@ module Dragnet
         return @html if defined?(@html)
 
         if template_proc?
-          @html = builder.instance_exec(&template_proc)
+          @html = template_context.instance_exec(&template_proc)
         else
           raise ArgumentError, 'a block is required' unless block_given?
           self.template_proc = block
         end
       end
 
-      def builder
-        @builder ||= DOM::HTMLProxy.new(self)
+      def template_context
+        @template_context ||= DOM::TemplateContext.new(self)
       end
 
       def compiled_template
         @compiled_template ||= erubi.src
       end
 
-      def template_string
+      def compile
         html_compiler.compile(self)
-      end
-
-      def html_compiler
-        @@html_compiler ||= DOM::HTMLCompiler.new
       end
 
       private
 
       def erubi
-        Erubi::Engine.new(template_string)
+        Erubi::Engine.new(compile)
       end
     end
 
@@ -85,22 +147,20 @@ module Dragnet
 
     def initialize(**attributes)
       self.class.attributes.each do |name, options|
+        attributes[name] = self.class.bound_value(name) if attributes[name].blank? && self.class.bound?(name)
         attributes[name] = options[:default] if attributes[name].blank? && options[:default]
-        raise ArgumentError, "#{name} is required" if attributes[name].blank? && options[:required]
+        if attributes[name].blank? && options[:required]
+          raise ArgumentError, "#{name} is required for #{self.class}"
+        end
       end
 
       super(attributes: attributes, name: tag_name)
     end
 
-    def compile
-      self.class.html_compiler.compile(self)
-    end
-    alias to_s compile
-
     protected
 
     def tag
-      @tag ||= HTMLProxy.new(self)
+      @tag ||= DOM::HTMLProxy.new(self)
     end
   end
 end

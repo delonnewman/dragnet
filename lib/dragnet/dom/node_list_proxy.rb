@@ -5,7 +5,8 @@ module Dragnet
     class NodeListProxy
       attr_reader :tag_proxy, :list
 
-      def initialize(tag_proxy)
+      # @param [HTMLProxy] tag_proxy
+      def initialize(tag_proxy = HTMLProxy.new)
         @tag_proxy = tag_proxy
         @list = NodeList.new
       end
@@ -18,7 +19,7 @@ module Dragnet
         super unless tag_proxy.respond_to?(method)
 
         Rails.logger.debug "Forward method to HTMLBuilder #{method} #{args.inspect} #{kwargs.inspect}"
-        tag_proxy.__send__(method, *args, **kwargs, &block)
+        list << tag_proxy.__send__(method, *args, **kwargs, &block)
       end
     end
   end
