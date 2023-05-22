@@ -6,9 +6,6 @@ labels: ''
 assignees: ''
 
 ---
-
-# [TITLE]
-
 # [DESCRIPTION]
 
 # [PROBLEM STATEMENT]
