@@ -5,6 +5,8 @@ module DataGridHelper
   #
   # @param [DataGridPresenter] grid
   # @param [Symbol, Question] column
+  #
+  # @return [String] the corresponding HTML
   def column_sort_link(grid, column)
     sorted = grid.sorted_by_column?(column)
     direction = sorted ? grid.opposite_sort_direction : grid.default_sort_direction
@@ -18,6 +20,8 @@ module DataGridHelper
   #
   # @param [DataGridPresenter] grid
   # @param [Symbol, Question] column
+  #
+  # @return [String] the corresponding HTML
   def column_sort_icon(grid, column)
     if (sorted = grid.sorted_by_column?(column)) && grid.sorted_ascending?
       icon 'fas', 'arrow-up'
