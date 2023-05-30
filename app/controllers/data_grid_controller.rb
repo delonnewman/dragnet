@@ -34,6 +34,6 @@ class DataGridController < ApplicationController
   end
 
   def data_grid_params
-    params.permit(:page, :items, :sort_by, :sort_direction, :created_at, :user_id, filters: {})
+    params.permit(:page, :items, :sort_by, :sort_direction, :created_at, :user_id, filter_by: {})
   end
 end

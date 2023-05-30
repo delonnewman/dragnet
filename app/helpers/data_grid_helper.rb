@@ -11,7 +11,7 @@ module DataGridHelper
     sorted = grid.sorted_by_column?(column)
     direction = sorted ? grid.opposite_sort_direction : grid.default_sort_direction
 
-    htmx :button, { get: survey_table_path(grid.survey_id, sort_by: column, sort_direction: direction), target: '#data-grid-table', swap: 'outerHTML' }, { class: 'btn btn-outline-primary' } do
+    htmx :button, { get: survey_data_table_path(grid.survey_id, sort_by: column, sort_direction: direction), target: '#data-grid-table', swap: 'outerHTML' }, { class: 'btn btn-outline-primary' } do
       label.html_safe + ' ' + column_sort_icon(grid, column).html_safe
     end
   end
@@ -37,8 +37,8 @@ module DataGridHelper
   # @param [Question] question
   #
   # @return [String] the corresponding HTML
-  def question_filter(question)
-    question.renderer(DataGridFilterPerspective.new(self)).render(question)
+  def question_filter(question, default_value)
+    question.renderer(DataGridFilterInputPerspective.new(self)).render(question, default_value)
   end
 
   # Render the answers to the question as readonly HTML according to their question type.

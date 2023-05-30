@@ -3,14 +3,14 @@
   <th>
     <div class="d-flex justify-content-start align-items-center">
       <%= column_sort_link(survey, :created_at, label: 'Created') %>
-      <%= date_field_tag :created_at %>
+      <%= date_field_tag :created_at, params[:created_at] %>
     </div>
   </th>
   <% survey.questions.each do |question| %>
     <th data-question-id="<%= question.id %>">
       <div class="d-flex justify-content-start align-items-center">
         <%= column_sort_link(survey, question, label: truncate(question.text)) %>
-        <%= question_filter(question) %>
+        <%= question_filter(question, params.dig(:filter_by, question.id)) %>
       </div>
     </th>
   <% end %>
