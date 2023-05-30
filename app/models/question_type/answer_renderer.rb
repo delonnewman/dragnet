@@ -15,7 +15,7 @@ class QuestionType::AnswerRenderer
     r
   end
 
-  def render(answers, **options)
-    perspective.render(question_type, answers, **options)
+  def render(*args, **options)
+    perspective.render(question_type, *args, **options)
   end
 end

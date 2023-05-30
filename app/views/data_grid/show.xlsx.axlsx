@@ -1,0 +1,8 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: survey.name) do |sheet|
+  sheet.add_row(survey.questions.map(&:text))
+
+  survey.records.find_each do |reply|
+    sheet.add_row(survey.questions.map { |q| reply.answers_to(q).join(', ') })
+  end
+end

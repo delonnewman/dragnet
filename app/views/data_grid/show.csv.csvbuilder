@@ -1,0 +1,5 @@
+csv << survey.questions.map(&:text)
+
+survey.records.find_each do |reply|
+  csv << survey.questions.map { |q| reply.answers_to(q).join(', ') }
+end

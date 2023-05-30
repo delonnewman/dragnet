@@ -8,10 +8,13 @@
     <% end %>
   </tr>
 <% end %>
-<tr id="the-end">
-  <td colspan="<%= survey.questions.count + 1 %>">
-    <%= htmx :button, { get: survey_rows_path(survey, page: survey.pager.next), target: '#the-end', swap: 'outerHTML' }, { class: 'btn btn-outline-secondary' } do %>
-      Load more...
-    <% end %>
-  </td>
-</tr>
+
+<% if survey.pager.next %>
+  <tr id="the-end">
+    <td colspan="<%= survey.questions.count + 1 %>">
+      <%= htmx :button, { get: survey_rows_path(survey, page: survey.pager.next), target: '#the-end', swap: 'outerHTML' }, { class: 'btn btn-sm btn-light' } do %>
+        Load more...
+      <% end %>
+    </td>
+  </tr>
+<% end %>

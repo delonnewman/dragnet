@@ -33,7 +33,6 @@ module Dragnet
         raise NotImplementedError
       end
 
-
       # @return [Integer]
       def items
         params.fetch(:items, default_items)

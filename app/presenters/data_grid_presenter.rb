@@ -3,6 +3,7 @@
 # Presents surveys for the data grid
 class DataGridPresenter < Dragnet::View::PagedPresenter
   presents Survey, as: :survey
+  default_items 20
 
   delegate :id, to: :survey, prefix: :survey
 
@@ -10,9 +11,13 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   #
   # @return [ActiveRecord::Relation<Reply>]
   def paginated_records
-    ordered_records(filtered_records(survey.replies)).offset(pager.offset).limit(pager.items)
+    records.offset(pager.offset).limit(pager.items)
   end
   memoize :paginated_records
+
+  def records
+    ordered_records(filtered_records(survey.replies))
+  end
 
   def ordered_records(scope)
     if not sort_by_question?

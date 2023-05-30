@@ -40,14 +40,14 @@ class ApplicationPerspective
   # @param [Array<Answer>] answers
   #
   # @return [String] html to render the display
-  def render(question_type, answers, alt: '-')
+  def render(question_type, *args, **options)
     self.question_type = question_type
     method_name = :"render_#{question_type.ident}"
 
     if respond_to?(method_name)
-      public_send(method_name, answers, alt: alt)
+      public_send(method_name, *args, **options)
     else
-      render_default(answers, alt: alt)
+      render_default(*args, **options)
     end
   end
 end

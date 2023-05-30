@@ -11,8 +11,9 @@ Rails.application.routes.draw do
     get 'preview'
     get 'settings'
     get 'stats', to: 'stats#show'
-    get 'data', to: 'data_grid#show'
-    get 'rows', to: 'data_grid#rows'
+    get 'data',  to: 'data_grid#show'
+    get 'rows',  to: 'data_grid#rows'
+    get 'table', to: 'data_grid#table'
   end
 
   resources :reply, only: %i[edit update] do

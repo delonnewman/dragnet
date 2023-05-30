@@ -7,12 +7,12 @@ module DataGridHelper
   # @param [Symbol, Question] column
   #
   # @return [String] the corresponding HTML
-  def column_sort_link(grid, column)
+  def column_sort_link(grid, column, label:)
     sorted = grid.sorted_by_column?(column)
     direction = sorted ? grid.opposite_sort_direction : grid.default_sort_direction
 
-    link_to survey_data_path(grid.survey_id, sort_by: column, sort_direction: direction), class: 'btn btn-outline-secondary btn-sm' do
-      column_sort_icon(grid, column)
+    htmx :button, { get: survey_table_path(grid.survey_id, sort_by: column, sort_direction: direction), target: '#data-grid-table', swap: 'outerHTML' }, { class: 'btn btn-outline-primary' } do
+      label.html_safe + ' ' + column_sort_icon(grid, column).html_safe
     end
   end
 
@@ -32,6 +32,15 @@ module DataGridHelper
     end
   end
 
+  # Render a filter control as HTML according to the question type.
+  #
+  # @param [Question] question
+  #
+  # @return [String] the corresponding HTML
+  def question_filter(question)
+    question.renderer(DataGridFilterPerspective.new(self)).render(question)
+  end
+
   # Render the answers to the question as readonly HTML according to their question type.
   #
   # @param [Reply] reply
@@ -40,7 +49,7 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
-    question.renderer(DataGridDisplayPerspective.new(self)).render(reply.answers_to(question), alt: alt)
+    question.renderer(DataGridDisplayPerspective.new(self)).render(reply.answers_to(question), question, alt: alt)
   end
 
   # Render the answers to the question as editable HTML inputs according to their question type.

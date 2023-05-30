@@ -34,7 +34,7 @@ class Answer::Evaluation < Dragnet::Advice
   end
   alias value= assign_value!
 
-  def text_value
+  def value
     case question_type.ident
     when :text
       return long_text_value if question.long_answer?
@@ -53,7 +53,10 @@ class Answer::Evaluation < Dragnet::Advice
       raise Error, "can't convert #{question_type} to text"
     end
   end
-  alias value text_value
+
+  def text_value
+    value.to_s
+  end
 
   def number_value
     case question_type.ident
@@ -75,7 +78,7 @@ class Answer::Evaluation < Dragnet::Advice
   # TODO: need to figure out how to generate a value that will sort number correctly, also should be extensible
   def sort_value
     number_value
-  rescue Error => e
+  rescue Error
     text_value
   end
 end

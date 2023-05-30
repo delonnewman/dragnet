@@ -25,7 +25,7 @@ gem 'mapkick-rb'
 gem 'pry'
 gem 'pry-rails'
 
-# Encoding / Data Formats
+# Encoding / Data Format
 gem 'murmurhash3'
 gem 'rqrcode'
 gem 'shortuuid'
@@ -33,6 +33,11 @@ gem 'transit-ruby', require: 'transit'
 gem 'transit-rails'
 
 gem 'pagy'
+
+# User data formats
+gem 'caxlsx'
+gem 'caxlsx_rails'
+gem 'csv_builder'
 
 # Authentication
 gem 'devise'

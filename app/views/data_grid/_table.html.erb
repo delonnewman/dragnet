@@ -1,0 +1,21 @@
+<table id="data-grid-table" class="table table-striped table-bordered">
+  <thead>
+  <th>
+    <div class="d-flex justify-content-start align-items-center">
+      <%= column_sort_link(survey, :created_at, label: 'Created') %>
+      <%= date_field_tag :created_at %>
+    </div>
+  </th>
+  <% survey.questions.each do |question| %>
+    <th data-question-id="<%= question.id %>">
+      <div class="d-flex justify-content-start align-items-center">
+        <%= column_sort_link(survey, question, label: truncate(question.text)) %>
+        <%= question_filter(question) %>
+      </div>
+    </th>
+  <% end %>
+  </thead>
+  <tbody>
+  <%= render 'data_grid/rows', survey: survey %>
+  </tbody>
+</table>
