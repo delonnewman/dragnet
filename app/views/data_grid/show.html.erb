@@ -1,9 +1,12 @@
 <%= render 'surveys/tabs', survey: survey, selected: :data %>
 
 <div class="container-fluid">
-  <div class="d-flex justify-content-center align-items-center">
+  <div class="d-flex justify-content-end align-items-center mb-2">
+    <div class="me-2 text-muted">
+      <%= survey.pager.count %> records
+    </div>
     <div class="dropdown">
-      <a href="#" class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <a href="#" class="btn btn-sm btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <%= icon 'fas', 'file-export' %> Export
       </a>
       <ul class="dropdown-menu">
@@ -26,10 +29,6 @@
     </div>
   </div>
 
-  <div class="report-headers d-flex justify-content-between text-muted mt-2">
-    <div>Page <%= survey.pager.page %> of <%= survey.pager.pages %></div>
-    <div><%= survey.pager.items %> of <%= survey.pager.count %> records</div>
-  </div>
   <div class="table-responsive">
     <table class="table table-striped table-bordered">
       <thead>
@@ -45,29 +44,8 @@
       <% end %>
       </thead>
       <tbody>
-      <% survey.paginated_records.each do |record| %>
-        <tr>
-          <td class="text-nowrap text-muted">
-            <small><%= fmt_datetime record.created_at %></small>
-          </td>
-          <% survey.questions.each do |question| %>
-            <td><%= answers_text record, question %></td>
-          <% end %>
-        </tr>
-      <% end %>
+        <%= render partial: 'data_grid/rows', locals: { survey: survey } %>
       </tbody>
     </table>
-  </div>
-
-  <div class="d-flex justify-content-between align-items-center">
-    <%== pagy_bootstrap_nav(survey.pager) %>
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="me-2">Show</div>
-      <select class="form-select">
-        <option selected>10</option>
-        <option>15</option>
-        <option>20</option>
-      </select>
-    </div>
   </div>
 </div>

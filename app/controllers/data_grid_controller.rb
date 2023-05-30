@@ -11,6 +11,14 @@ class DataGridController < ApplicationController
     end
   end
 
+  def rows
+    respond_to do |format|
+      format.html do
+        render partial: 'data_grid/rows', locals: { survey: DataGridPresenter.new(survey, data_grid_params) }
+      end
+    end
+  end
+
   private
 
   def survey
