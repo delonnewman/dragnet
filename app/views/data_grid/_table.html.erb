@@ -2,8 +2,8 @@
   <thead>
   <th>
     <div class="d-flex justify-content-start align-items-center">
-      <%= column_sort_link(survey, :created_at, label: 'Created') %>
-      <%= date_field_tag :created_at, params[:created_at] %>
+      <%= column_sort_link(survey, :created_at, label: icon('fas', 'clock')) %>
+      <%= date_field_tag :created_at, params[:created_at], class: 'form-control' %>
     </div>
   </th>
   <% survey.questions.each do |question| %>

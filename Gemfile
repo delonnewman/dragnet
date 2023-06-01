@@ -6,6 +6,7 @@ ruby '3.0.3'
 gem 'rails', '~> 7.0.4.3'
 
 gem 'pg', '~> 1.1'
+gem 'activerecord-like'
 gem 'activerecord-pull-alpha'
 gem 'mini_sql'
 

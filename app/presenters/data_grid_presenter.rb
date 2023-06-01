@@ -36,11 +36,10 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
     question_ids = params.keys.select(&method(:uuid?))
     questions = question_ids.empty? ? EMPTY_HASH : Question.includes(:question_type).find(question_ids).group_by(&:id)
 
-
     params.to_h.reduce(scope) do |s, (k, v)|
       if uuid?(k)
         t = questions[k].first.question_type
-        s.joins(:answers).where(answers: { question_id: k, t.answer_value_field => filter_value(t, v) })
+        filter_value(s.joins(:answers).where(answers: { :question_id => k }), t, v)
       elsif k == :created_at || k == :user_id
         s.where(k => v)
       else
@@ -49,14 +48,14 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
     end
   end
 
-  def filter_value(question_type, value)
-    value
+  def filter_value(scope, question_type, value)
+    scope.where.like(answers: { question_type.answer_value_field => "%#{value}%" })
   end
 
   def filter_params
     return EMPTY_HASH if params.empty? || params[:filter_by].blank?
 
-    params[:filter_by]
+    params[:filter_by].compact_blank
   end
 
   # Pager object populated with record and parameter data.
