@@ -49,7 +49,9 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
-    question.renderer(DataGridDisplayPerspective.new(self)).render(reply.answers_to(question), question, alt: alt)
+    question
+      .renderer(DataGridDisplayPerspective.new(self))
+      .render(reply.answers_to(question), question, alt: alt)
   end
 
   # Render the answers to the question as editable HTML inputs according to their question type.

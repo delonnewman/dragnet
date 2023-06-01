@@ -49,7 +49,7 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   end
 
   def filter_value(scope, question_type, value)
-    scope.where.like(answers: { question_type.answer_value_field => "%#{value}%" })
+    question_type.renderer(DataGridFilterQueryPerspective.new(nil)).render(scope, value)
   end
 
   def filter_params

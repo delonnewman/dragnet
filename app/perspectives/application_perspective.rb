@@ -1,3 +1,4 @@
+# TODO: move this to lib, make contexts subclasses, and support arbitrary polymorphic methods, not just "render"
 class ApplicationPerspective
   include ActionView::Helpers::TagHelper
 
@@ -25,6 +26,7 @@ class ApplicationPerspective
   attr_accessor :question_type
   private :question_type=
 
+  # TODO: make a view perspective subclass that takes a context, move "render" code there
   def initialize(context)
     @context = context
   end
@@ -37,7 +39,7 @@ class ApplicationPerspective
     end
   end
 
-  # @param [Array<Answer>] answers
+  # @param [QuestionType] question_type
   #
   # @return [String] html to render the display
   def render(question_type, *args, **options)
