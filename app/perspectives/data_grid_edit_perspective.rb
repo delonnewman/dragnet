@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class DataGridEditPerspective < ApplicationPerspective
-  question_type :text do
+class DataGridEditPerspective < ViewPerspective
+  for_type :text do
     def render(answers)
 
     end

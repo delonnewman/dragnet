@@ -38,7 +38,7 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def question_filter(question, default_value)
-    question.renderer(DataGridFilterInputPerspective.new(self)).render(question, default_value)
+    DataGridFilterInputPerspective.get(question.question_type, self).render(question, default_value)
   end
 
   # Render the answers to the question as readonly HTML according to their question type.
@@ -49,8 +49,7 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
-    question
-      .renderer(DataGridDisplayPerspective.new(self))
+    DataGridDisplayPerspective.get(question.question_type, self)
       .render(reply.answers_to(question), question, alt: alt)
   end
 
@@ -61,7 +60,7 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def answers_input(reply, question)
-    question.renderer(DataGridEditPerspective.new(self)).render(reply.answers_to(question))
+    DataGridEditPerspective.get(question.question_type, self).render(reply.answers_to(question))
   end
 
   def fmt_date(date)

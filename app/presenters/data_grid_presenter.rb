@@ -49,7 +49,7 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   end
 
   def filter_value(scope, question_type, value)
-    question_type.renderer(DataGridFilterQueryPerspective.new(nil)).render(scope, value)
+    DataGridFilterQueryPerspective.get(question_type).filter(scope, value)
   end
 
   def filter_params

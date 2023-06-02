@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class DataGridDisplayPerspective < ApplicationPerspective
-  context :default do
+class DataGridDisplayPerspective < ViewPerspective
+  default do
     def render(answers, question, alt: '-')
       classes = %w[text-nowrap]
       classes << 'text-end' if question_type.is?(:number)
@@ -16,7 +16,7 @@ class DataGridDisplayPerspective < ApplicationPerspective
     end
   end
 
-  context :time do
+  for_type :time do
     def render(answers, question, alt: '-')
       return alt unless answers.present?
 

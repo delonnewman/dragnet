@@ -8,12 +8,12 @@ class QuestionType < ApplicationRecord
 
   serialize :settings
 
+  def self.get(ident)
+    QuestionType.find_by(slug: ident)
+  end
+  memoize self: :get
+
   def setting_default(setting)
     settings&.dig(setting, :default)
   end
-
-  def renderer(perspective = ApplicationPerspective.new(nil))
-    AnswerRenderer.new(self, perspective)
-  end
-  memoize :renderer
 end
