@@ -1,3 +1,17 @@
+# @abstract
+# An abstraction for creating class systems for polymorphic evaluation of
+# various value based on question type.
+#
+# It provides a simple DSL that creates subclasses of the types where the
+# polymorphic interface can be defined.  The DSL is entirely optional, but
+# helps to abstract away and establish this pattern throughout the system.
+#
+#
+# This approach allows question types to be a principle means of extension
+# for the system.  Since defining new subclasses of the perspective allows
+# the perspectives to work for any future type.
+#
+# See subclasses for examples of usage
 class Perspective
   class << self
     # @param [QuestionType, Symbol] type

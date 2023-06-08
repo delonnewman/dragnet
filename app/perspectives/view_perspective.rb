@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# @abstract
+# An abstract class for perspectives that are a part of the view layer.
 class ViewPerspective < Perspective
   include ActionView::Helpers::TagHelper
   include Rails.application.routes.url_helpers
