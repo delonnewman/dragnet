@@ -190,26 +190,26 @@
                :received-value received
                :received-type received-type :spec spec})))
 
-(defn ex-coersion
+(defn ex-coercion
   [& {:keys [value target-type]}]
   (ex-info (str "cannot coerce " (pr-str value) ":" (type-name value) " into a " target-type)
-           #:ex-coersion{:value value :target-type target-type}))
+           #:ex-coercion{:value value :target-type target-type}))
 
 (defn ->uuid
   "Coerce the value into a UUID or fail trying"
   [x]
   (cond
-   (uuid? x) x
-   (string? x) (parse-uuid x)
-   :else (throw (ex-coersion :value x :target-type "UUID"))))
+    (uuid? x) x
+    (string? x) (parse-uuid x)
+    :else (throw (ex-coercion :value x :target-type "UUID"))))
 
 (def ->?uuid (fnil ->uuid nil))
 
 (defn ->int
   [x]
   (cond
-   (int? x) x
-   (or (float? x) (string? x)) (js/parseInt x 10)
-   :else (throw (ex-coersion :value x :target-type "int"))))
+    (int? x) x
+    (or (float? x) (string? x)) (js/parseInt x 10)
+    :else (throw (ex-coercion :value x :target-type "int"))))
 
 (def ->?int (fnil ->int 0))
