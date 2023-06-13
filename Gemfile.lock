@@ -379,10 +379,15 @@ GEM
       parser (>= 3.1.1.0)
     rubocop-capybara (2.17.0)
       rubocop (~> 1.41)
+    rubocop-performance (1.18.0)
+      rubocop (>= 1.7.0, < 2.0)
+      rubocop-ast (>= 0.4.0)
     rubocop-rails (2.17.4)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
@@ -444,6 +449,10 @@ GEM
       webrick (~> 1.7.0)
     yard-activerecord (0.0.16)
       yard (>= 0.8.3)
+    yard-rspec (0.1)
+      yard
+    yardstick (0.9.9)
+      yard (~> 0.8, >= 0.8.7.2)
     zeitwerk (2.6.7)
 
 PLATFORMS
@@ -498,7 +507,9 @@ DEPENDENCIES
   rspec
   rspec-rails
   rubocop
+  rubocop-performance
   rubocop-rails
+  rubocop-rake
   rubocop-rspec
   ruby2js
   sassc-rails
@@ -510,6 +521,8 @@ DEPENDENCIES
   web-console
   yard
   yard-activerecord
+  yard-rspec
+  yardstick
 
 RUBY VERSION
    ruby 3.0.3p157

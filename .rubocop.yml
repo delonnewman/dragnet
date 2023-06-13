@@ -1,3 +1,9 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-rails
+  - rubocop-performance
+
 AllCops:
   Exclude:
     - 'Gemfile'

@@ -97,8 +97,10 @@ group :development, :test do
   gem 'bundler-audit'
 
   gem 'rubocop'
-  gem 'rubocop-rails'
-  gem 'rubocop-rspec'
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rake', require: false
+  gem 'rubocop-performance', require: false
 
   gem 'faker'
 end
@@ -111,6 +113,8 @@ group :development do
 
   gem 'yard'
   gem 'yard-activerecord'
+  gem 'yardstick'
+  gem 'yard-rspec'
 
   gem 'dockerfile-rails'
 end
