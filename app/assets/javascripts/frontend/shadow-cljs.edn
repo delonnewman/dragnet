@@ -4,20 +4,20 @@
  {:editor
   {:target     :browser
    :devtools   {:repl-init-ns dragnet.editor.core :repl-pprint true}
-   :external-config {:devtools/config {:features-to-install [:formatters :hints :async]}}}
+   :external-config {:devtools/config {:features-to-install [:formatters :hints :async]}}
    :output-dir "../../../../public/js/editor"
    :asset-path "../../../../js/editor"
-   :modules    {:main {:entries [dragnet.editor.shell]}}}
-  :submitter
-  {:target     :browser
-   :devtools   {:repl-init-ns dragnet.submitter.core :repl-pprint true}
-   :output-dir "../../../../public/js/submitter"
-   :asset-path "../../../../js/submitter"
-   :modules    {:main {:entries [dragnet.submitter.shell]}}}
-  :test
-  {:target :browser-test
-   :test-dir "../../../../public/js/test"}
-  :ci
-  {:target :karma
-   :output-to "target/ci.js"
-   :ns-regexp "-test$"}}}
+   :modules    {:main {:entries [dragnet.editor.shell]}}}}
+ :submitter
+ {:target     :browser
+  :devtools   {:repl-init-ns dragnet.submitter.core :repl-pprint true}
+  :output-dir "../../../../public/js/submitter"
+  :asset-path "../../../../js/submitter"
+  :modules    {:main {:entries [dragnet.submitter.shell]}}}
+ :test
+ {:target :browser-test
+  :test-dir "../../../../public/js/test"}
+ :ci
+ {:target :karma
+  :output-to "target/ci.js"
+  :ns-regexp "-test$"}}
