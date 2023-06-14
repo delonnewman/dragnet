@@ -83,18 +83,34 @@ class AnswerEvaluationPerspective < Perspective
 
   for_type :time do
     def assign_value!(answer, value)
-      answer.time_value = value
+      answer.time_value = value if answer.question.include_time?
+      answer.date_value = value if answer.question.include_date?
     end
 
     def value(answer)
-      t = answer.time_value
-      return t if answer.question.include_time?
-
-      t.to_date
+      if answer.question.include_date_and_time?
+        d = answer.date_value
+        t = answer.time_value
+        DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec, t.utc_offset)
+      elsif answer.question.include_date?
+        answer.date_value
+      elsif answer.question.include_time?
+        answer.time_value
+      end
     end
 
     def number_value(answer)
-      answer.time_value.to_i
+      value(answer)&.to_i
+    end
+  end
+
+  for_type :boolean do
+    def assign_value!(answer, value)
+      answer.boolean_value = value
+    end
+
+    def value(answer)
+      answer.boolean_value
     end
   end
 end

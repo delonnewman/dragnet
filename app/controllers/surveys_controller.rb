@@ -1,13 +1,17 @@
+# frozen_string_literal: true
+
 class SurveysController < ApplicationController
   include Authenticated
 
   layout 'survey'
 
-  def index
-  end
+  def index; end
 
   def show
-    render :show, locals: { survey: Survey.find(params[:id]) }
+    survey = Survey.find(params[:id])
+    report = StatsReport.new(survey)
+
+    render :show, locals: { report: report, survey: survey }
   end
 
   def new

@@ -34,11 +34,6 @@
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to survey_stats_path(survey.short_id), class: "nav-link #{'active' if selected == :stats}" do %>
-      <%= icon 'fas', 'chart-column' %> Statistics
-    <% end %>
-  </li>
-  <li class="nav-item">
     <%= link_to survey_data_path(survey), class: "nav-link #{'active' if selected == :data}" do %>
       <%= icon 'fas', 'table' %> Records
     <% end %>

@@ -51,14 +51,9 @@ gem 'oj'
 gem 'fast_blank'
 gem 'erubi'
 
-gem 'ruby2js'
-
 # Language Extentions
 gem 'invokable'
 gem 'memo_wise'
-
-gem 'dry-types'
-gem 'dry-schema'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

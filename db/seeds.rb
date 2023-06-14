@@ -2,26 +2,32 @@ QuestionType.create(
   [
     { name:     'Text',
       icon:     'fa-regular fa-keyboard',
-      answer_value_field: 'short_text_value',
       settings: { long_answer: { type: :boolean, text: 'Long Answer' } } },
     { name:     'Choice',
       icon:     'fa-regular fa-square-check',
-      answer_value_field: 'question_option_id',
       settings: { multiple_answers: { type: :boolean, text: 'Multiple Answers' },
                   countable:        { type: :boolean, text: 'Calculate Statistics' } } },
     { name:     'Number',
       icon:     'fa-regular fa-calculator',
-      answer_value_field: 'float_value',
-      settings: { countable: { type: :boolean, text: 'Calculate Statistics', default: true } } },
+      settings: { countable: { type: :boolean, text: 'Calculate Statistics', default: true },
+                  decimal:   { type: :boolean, text: 'Allow decimal numbers' } } },
     { name:     'Time',
       icon:     'fa-regular fa-clock',
-      answer_value_field: 'time_value',
       settings: { include_date: { type: :boolean, text: 'Include Date', default: true },
-                  include_time: { type: :boolean, text: 'Include Time', default: true } } }
+                  include_time: { type: :boolean, text: 'Include Time', default: true } } },
+    { name: 'Yes/No',
+      slug: 'boolean',
+      icon: 'fa-regular fa-toggle-on' },
   ]
 )
 
-User.create!(login: 'admin', email: 'contact@delonnewman.name', name: 'Delon Newman', nickname: 'Delon', password: 'testing123').confirm
+User.create!(
+  login:    'admin',
+  email:    'contact@delonnewman.name',
+  name:     'Delon Newman',
+  nickname: 'Delon',
+  password: 'testing123'
+).confirm
 
 # Generate some sample data if in development
 if Rails.env.development?
@@ -38,7 +44,7 @@ if Rails.env.development?
 
   print 'Generating Surveys...'
   surveys = User.all.flat_map do |u|
-    5.times.map do
+    Array.new(5) do
       Survey[author: u].generate.tap do |s|
         s.save!
         print '.'

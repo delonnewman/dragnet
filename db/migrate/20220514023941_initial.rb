@@ -1,4 +1,4 @@
-class Inital < ActiveRecord::Migration[7.0]
+class Initial < ActiveRecord::Migration[7.0]
   def change
     # TODO: add groups & permissions
     create_table :users do |t|
@@ -22,6 +22,7 @@ class Inital < ActiveRecord::Migration[7.0]
 
       t.bigint :author_id, null: false, index: true
       t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
+      t.index [:name, :author_id], unique: true
 
       t.uuid :copy_of_id, null: true, index: true
       t.integer :edits_status, null: true, index: true
@@ -42,12 +43,17 @@ class Inital < ActiveRecord::Migration[7.0]
       t.timestamp :created_at, index: true
     end
 
+    create_table :trigger_registrations do |t|
+      t.uuid :survey_id, null: false, index: true
+      t.string :trigger_class_name, null: false, index: true
+
+      t.timestamps
+    end
+
     create_table :question_types, id: :uuid do |t|
       t.string :name, null: false, index: true
       t.string :slug, null: false, index: true
       t.string :icon
-
-      t.string :answer_value_field, null: false
 
       t.string :settings
 
@@ -107,6 +113,7 @@ class Inital < ActiveRecord::Migration[7.0]
       t.string     :short_text_value, null: true, index: true
       t.text       :long_text_value,  null: true, index: true
       t.integer    :integer_value,    null: true, index: true
+      t.boolean    :boolean_value,    null: true, index: true
       t.decimal    :float_value,      null: true, index: true
       t.time       :time_value,       null: true, index: true
       t.date       :date_value,       null: true, index: true

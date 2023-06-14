@@ -120,8 +120,7 @@ class StatsReport
         .answers
         .where(question: question)
         .joins(:question_option)
-        .pluck(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
-        .first
+        .pick(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
 
     project_answer_stats(data)
   end

@@ -23,11 +23,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "short_text_value"
     t.text "long_text_value"
     t.integer "integer_value"
+    t.boolean "boolean_value"
     t.decimal "float_value"
     t.time "time_value"
     t.date "date_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["boolean_value"], name: "index_answers_on_boolean_value"
     t.index ["date_value"], name: "index_answers_on_date_value"
     t.index ["float_value"], name: "index_answers_on_float_value"
     t.index ["integer_value"], name: "index_answers_on_integer_value"
@@ -69,7 +71,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.string "name", null: false
     t.string "slug", null: false
     t.string "icon"
-    t.string "answer_value_field", null: false
     t.string "settings"
     t.uuid "parent_type_id"
     t.index ["name"], name: "index_question_types_on_name"
@@ -145,12 +146,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.index ["copy_of_id"], name: "index_surveys_on_copy_of_id"
     t.index ["created_at"], name: "index_surveys_on_created_at"
     t.index ["edits_status"], name: "index_surveys_on_edits_status"
+    t.index ["name", "author_id"], name: "index_surveys_on_name_and_author_id", unique: true
     t.index ["name"], name: "index_surveys_on_name"
     t.index ["open"], name: "index_surveys_on_open"
     t.index ["public"], name: "index_surveys_on_public"
     t.index ["slug"], name: "index_surveys_on_slug"
     t.index ["type"], name: "index_surveys_on_type"
     t.index ["updated_at"], name: "index_surveys_on_updated_at"
+  end
+
+  create_table "trigger_registrations", force: :cascade do |t|
+    t.uuid "survey_id", null: false
+    t.string "trigger_class_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["survey_id"], name: "index_trigger_registrations_on_survey_id"
+    t.index ["trigger_class_name"], name: "index_trigger_registrations_on_trigger_class_name"
   end
 
   create_table "users", force: :cascade do |t|

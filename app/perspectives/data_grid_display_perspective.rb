@@ -2,7 +2,7 @@
 
 class DataGridDisplayPerspective < ViewPerspective
   default do
-    def render(answers, question, alt: '-')
+    def render(answers, _question, alt: '-')
       classes = %w[text-nowrap]
       classes << 'text-end' if question_type.is?(:number)
 
@@ -18,10 +18,10 @@ class DataGridDisplayPerspective < ViewPerspective
 
   for_type :time do
     def render(answers, question, alt: '-')
-      return alt unless answers.present?
+      return alt if answers.blank?
 
       tag.div(class: 'text-nowrap text-end') do
-        answers.filter_map do |answer|
+        answers.map do |answer|
           if question.include_date? && question.include_time?
             context.format_datetime(answer.value)
           elsif question.include_time?
@@ -31,6 +31,23 @@ class DataGridDisplayPerspective < ViewPerspective
           end
         end.join(', ')
       end
+    end
+  end
+
+  for_type :boolean do
+    def render(answers, _question, alt: '-')
+      return alt if answers.blank?
+
+      answers.map do |answer|
+        case answer.value
+        when true
+          'Yes'
+        when false
+          'No'
+        else
+          alt
+        end
+      end.join(', ')
     end
   end
 end

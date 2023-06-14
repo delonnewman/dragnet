@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# TODO: move to ReportsController, remove survey support
 class StatsController < ApplicationController
   include Authenticated
 

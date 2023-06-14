@@ -38,8 +38,8 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
 
     params.to_h.reduce(scope) do |s, (k, v)|
       if uuid?(k)
-        t = questions[k].first.question_type
-        filter_value(s.joins(:answers).where(answers: { :question_id => k }), t, v)
+        q = questions[k].first
+        filter_value(s.joins(:answers).where(answers: { :question_id => k }), q, v)
       elsif k == :created_at || k == :user_id
         s.where(k => v)
       else
@@ -48,8 +48,8 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
     end
   end
 
-  def filter_value(scope, question_type, value)
-    DataGridFilterQueryPerspective.get(question_type).filter(scope, value)
+  def filter_value(scope, question, value)
+    DataGridFilterQueryPerspective.get(question.question_type).filter(question, scope, value)
   end
 
   def filter_params

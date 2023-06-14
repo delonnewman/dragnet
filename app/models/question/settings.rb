@@ -20,6 +20,10 @@ module Question::Settings
     setting_value(:multiple_answers)
   end
 
+  def include_date_and_time?
+    include_date? && include_time?
+  end
+
   def include_date?
     setting_value(:include_date)
   end

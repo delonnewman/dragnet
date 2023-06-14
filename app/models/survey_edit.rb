@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # An individual edit to a survey
 class SurveyEdit < ApplicationRecord
   belongs_to :survey
