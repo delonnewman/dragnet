@@ -20,14 +20,19 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   end
 
   def ordered_records(scope)
-    if not sort_by_question?
+    if !sort_by_question?
       scope.order(sort_by => sort_direction)
     else
       q = Question.includes(:question_type).find(params[:sort_by])
-      t = q.question_type
-      scope.joins(:answers).where(answers: { question_id: q.id }).order(t.answer_value_field => sort_direction)
+      sort_records(q, scope.joins(:answers).where(answers: { question_id: q.id }))
     end
   end
+
+  def sort_records(question, scope)
+    DataGridSortQueryPerspective.get(question.question_type).sort(question, scope, sort_direction)
+  end
+
+  SIMPLE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
 
   def filtered_records(scope)
     params = filter_params
@@ -39,8 +44,8 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
     params.to_h.reduce(scope) do |s, (k, v)|
       if uuid?(k)
         q = questions[k].first
-        filter_value(s.joins(:answers).where(answers: { :question_id => k }), q, v)
-      elsif k == :created_at || k == :user_id
+        filter_value(s.joins(:answers).where(answers: { question_id: k }), q, v)
+      elsif SIMPLE_FILTER_ATTRIBUTES.include?(k)
         s.where(k => v)
       else
         s
@@ -78,7 +83,7 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   # @param [Symbol, Question] column
   def sorted_by_column?(column)
     if sorted_by_question? && column.is_a?(Question)
-      params[:sort_by] == column&.id
+      params[:sort_by] == column.id
     else
       sort_by == column
     end
