@@ -16,17 +16,24 @@ class DataGridFilterQueryPerspective < Perspective
   end
 
   for_type :time do
-    # TODO: should support a date range, should test for time only and use the time_value field
-    def filter(_question, scope, value)
-      scope.where(answers: { date_value: value })
+    # TODO: should support a date/time range
+    def filter(question, scope, value)
+      if question.settings.include_date?
+        scope.where(answers: { date_value: value })
+      else
+        scope.where(answers: { time_value: value })
+      end
     end
   end
 
   for_type :number do
     # TODO: should support a number range
-    def filter(_question, scope, value)
-      # TODO: should test for whether it's a decimal or float and use the appropriate attribute
-      scope.where(answers: { number_value: value })
+    def filter(question, scope, value)
+      if question.settings.decimal?
+        scope.where(answers: { float_value: value })
+      else
+        scope.where(answers: { integer_value: value })
+      end
     end
   end
 

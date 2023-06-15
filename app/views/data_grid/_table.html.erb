@@ -2,14 +2,14 @@
   <thead>
   <th>
     <div class="d-flex justify-content-start align-items-center">
-      <%= column_sort_link(survey, :created_at, label: icon('fas', 'clock')) %>
+      <%= column_sort_link(survey, :created_at, label: icon('fas', 'clock'), alt_label: 'Time Created') %>
       <%= date_field_tag :created_at, params[:created_at], class: 'form-control' %>
     </div>
   </th>
   <% survey.questions.each do |question| %>
     <th data-question-id="<%= question.id %>">
       <div class="d-flex justify-content-start align-items-center">
-        <%= column_sort_link(survey, question, label: truncate(question.text)) %>
+        <%= column_sort_link(survey, question, label: truncate(question.text), alt_label: question.text) %>
         <%= question_filter(question, params.dig(:filter_by, question.id)) %>
       </div>
     </th>

@@ -86,7 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_233153) do
     t.boolean "required", default: false, null: false
     t.uuid "question_type_id", null: false
     t.uuid "survey_id", null: false
-    t.string "settings"
+    t.string "config"
     t.uuid "question_id"
     t.bigint "question_option_id"
     t.index ["hash_code"], name: "index_questions_on_hash_code"

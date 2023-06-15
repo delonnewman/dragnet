@@ -22,9 +22,9 @@ class DataGridDisplayPerspective < ViewPerspective
 
       tag.div(class: 'text-nowrap text-end') do
         answers.map do |answer|
-          if question.include_date? && question.include_time?
+          if question.settings.include_date_and_time?
             context.format_datetime(answer.value)
-          elsif question.include_time?
+          elsif question.settings.include_time?
             context.format_time(answer.value)
           else
             context.format_date(answer.value)

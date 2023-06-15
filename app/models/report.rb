@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class Report
+  include Dragnet::Memoizable
+
   attr_reader :question_ids, :name
 
   def initialize(attributes)
@@ -6,7 +10,12 @@ class Report
   end
 
   def questions
-    @questions ||= Question.where(id: question_ids).select(:id, :text).to_a
+    Question.where(id: question_ids)
+  end
+  memoize :questions
+
+  def countable_questions
+    questions.select { _1.settings.countable? }
   end
 
   def answers

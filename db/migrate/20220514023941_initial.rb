@@ -71,7 +71,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.uuid       :survey_id,     index: true, null: false
       t.foreign_key :surveys, column: :survey_id, primary_key: :id, on_delete: :cascade
 
-      t.string :settings
+      t.string :config # TODO: remove
 
       # Required for FollowupQuestions
       t.uuid       :question_id,     index: true

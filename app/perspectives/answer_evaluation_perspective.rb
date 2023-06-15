@@ -39,7 +39,7 @@ class AnswerEvaluationPerspective < Perspective
 
   for_type :text do
     def assign_value!(answer, value)
-      if answer.question.long_answer?
+      if answer.question.settings.long_answer?
         answer.long_text_value = value
       else
         answer.short_text_value = value
@@ -47,7 +47,7 @@ class AnswerEvaluationPerspective < Perspective
     end
 
     def value(answer)
-      return answer.long_text_value if answer.question.long_answer?
+      return answer.long_text_value if answer.question.settings.long_answer?
 
       answer.short_text_value
     end
@@ -71,11 +71,17 @@ class AnswerEvaluationPerspective < Perspective
 
   for_type :number do
     def assign_value!(answer, value)
-      answer.float_value = value
+      return answer.float_value if answer.question.settings.decimal?
+
+      answer.integer_value = value
     end
 
     def value(answer)
-      answer.float_value
+      if answer.question.settings.decimal?
+        answer.float_value
+      else
+        answer.integer_value
+      end
     end
 
     alias number_value value
@@ -83,20 +89,19 @@ class AnswerEvaluationPerspective < Perspective
 
   for_type :time do
     def assign_value!(answer, value)
-      answer.time_value = value if answer.question.include_time?
-      answer.date_value = value if answer.question.include_date?
+      answer.time_value = value if answer.question.settings.include_time?
+      answer.date_value = value if answer.question.settings.include_date?
     end
 
     def value(answer)
-      if answer.question.include_date_and_time?
-        d = answer.date_value
-        t = answer.time_value
-        DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec, t.utc_offset)
-      elsif answer.question.include_date?
-        answer.date_value
-      elsif answer.question.include_time?
-        answer.time_value
-      end
+      question  = answer.question
+      date_time = question.settings.include_date_and_time?
+      return answer.date_value if !date_time && question.settings.include_date?
+      return answer.time_value if !date_time && question.settings.include_time?
+
+      d = answer.date_value
+      t = answer.time_value
+      DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec, t.utc_offset)
     end
 
     def number_value(answer)

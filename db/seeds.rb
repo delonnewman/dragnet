@@ -10,7 +10,7 @@ QuestionType.create(
     { name:     'Number',
       icon:     'fa-regular fa-calculator',
       settings: { countable: { type: :boolean, text: 'Calculate Statistics', default: true },
-                  decimal:   { type: :boolean, text: 'Allow decimal numbers' } } },
+                  decimal:   { type: :boolean, text: 'Allow decimal numbers', default: false } } },
     { name:     'Time',
       icon:     'fa-regular fa-clock',
       settings: { include_date: { type: :boolean, text: 'Include Date', default: true },

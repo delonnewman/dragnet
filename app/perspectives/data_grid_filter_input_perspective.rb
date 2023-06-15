@@ -6,13 +6,13 @@ class DataGridFilterInputPerspective < ViewPerspective
       tag.input(
         class:        'form-control',
         type:         'search',
+        inputmode:    'search',
         name:         field_name(question),
         value:        default_value,
         autofocus:    !default_value.nil?,
-        'hx-post':    survey_data_table_path(question.survey_id),
-        'hx-trigger': 'keyup changed delay:500ms',
+        'hx-get':     survey_data_table_path(question.survey_id),
+        'hx-trigger': 'keyup changed delay:500ms,change',
         'hx-target':  '#data-grid-table',
-        'hx-vals':    { authenticity_token: context.session[:_csrf_token] }.to_json,
       )
     end
   end
@@ -23,6 +23,7 @@ class DataGridFilterInputPerspective < ViewPerspective
         class:        'form-control',
         name:         field_name(question),
         type:         'number',
+        inputmode:    'numeric',
         value:        default_value,
         autofocus:    !default_value.nil?,
         'hx-post':    survey_data_table_path(question.survey_id),
