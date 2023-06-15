@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-100">
+<html lang="en" class="h-100">
   <head>
     <title>Dragnet</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,7 +9,7 @@
     <%= stylesheet_link_tag "application" %>
   </head>
 
-  <body class="h-100">
+  <body class="d-flex flex-column h-100">
     <nav class="navbar navbar-expand-lg bg-light mb-3 shadow-sm">
       <div class="container-fluid" hx-boost="true">
         <a href="<%= root_path %>" class="navbar-brand mb-0 h1">
@@ -46,20 +46,30 @@
       </div>
     </nav>
 
-    <main class="container-fluid">
-      <% if notice %><%= alert_box(message: notice, level: :info) %><% end %>
-      <% if alert %><%= alert_box(message: alert, level: :danger) %><% end %>
+    <main class="container-fluid flex-shrink-0">
+      <% if notice %><%= alert_box message: notice, level: :info %><% end %>
+      <% if alert %><%= alert_box message: alert, level: :danger %><% end %>
       <div class="container">
         <%= yield %>
       </div>
     </main>
 
-    <footer class="bg-light mt-5 pt-5 text-muted" style="height: 200px">
-      <div class="container">
-        <% unless Rails.env.prduction? %>
-          <p><small><%= link_to 'UI Tests', '/js/test/index.html', class: 'text-muted', target: '_blank' %></small></p>
-        <% end %>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 px-4 mt-auto border-top bg-light">
+      <div class="col-md-4">
+        <small class="text-muted">&copy; 2023 <a class="text-muted" href="https://delonnewman.name">D. R. Newman &mdash; Software, Training & Design</a></small>
+        <div class="text-muted">
+          <small>
+            Version
+            <a class="text-muted" href="https://github.com/delonnewman/dragnet/tree/<%= Dragnet::Utils.current_git_sha %>"><%= Dragnet::Utils.version %></a>
+          </small>
+          <% unless Rails.env.production? %>
+            <small>&mdash; <%= link_to 'UI Tests', '/js/test/index.html', class: 'text-muted', target: '_blank' %></small>
+          <% end %>
+        </div>
       </div>
+      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+        <li class="ms-3"><%= icon_link 'https://github.com/delonnewman/dragnet', icon: 'github', icon_type: 'fab', class: 'text-muted fa-xl' %></li>
+      </ul>
     </footer>
 
     <%= javascript_include_tag "application" %>

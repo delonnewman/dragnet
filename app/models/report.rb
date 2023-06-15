@@ -10,7 +10,7 @@ class Report
   end
 
   def questions
-    Question.where(id: question_ids)
+    Question.where(id: question_ids).select(:id, :text).to_a
   end
   memoize :questions
 
