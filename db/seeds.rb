@@ -15,7 +15,7 @@ QuestionType.create(
       icon:     'fa-regular fa-clock',
       settings: { include_date: { type: :boolean, text: 'Include Date', default: true },
                   include_time: { type: :boolean, text: 'Include Time', default: true } } },
-    { name: 'Yes/No',
+    { name: 'Yes or No',
       slug: 'boolean',
       icon: 'fa-regular fa-toggle-on' },
   ]

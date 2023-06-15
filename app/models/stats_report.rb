@@ -11,6 +11,12 @@ class StatsReport
     @reportable = reportable
   end
 
+  # @return [ActiveRecord::Relation<Question>]
+  def countable_questions
+    questions.select { _1.settings.countable? }
+  end
+
+
   # @return [Hash{Date, Integer}]
   def replies_by_date
     reportable

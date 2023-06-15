@@ -14,10 +14,6 @@ class Report
   end
   memoize :questions
 
-  def countable_questions
-    questions.select { _1.settings.countable? }
-  end
-
   def answers
     Answer.includes(question: [:question_type]).where(question_id: question_ids)
   end
