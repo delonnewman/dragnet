@@ -32,3 +32,9 @@ Style/Documentation:
 
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: comma
+
+Style/MultipleComparison:
+  ComparisonsThreshold: 3
+
+Style/Alias:
+  EnforcedStyle: prefer_alias
