@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 class Question < ApplicationRecord
-  include Settings
   include SelfDescribable
 
   validates :text, presence: true
 
+  serialize :config # TODO: use meta data instead
+  with Settings, delegating: %i[setting? setting]
+
   belongs_to :survey
   belongs_to :question_type
-  delegate :renderer, to: :question_type
 
   has_many :question_options, dependent: :delete_all, inverse_of: :question
   accepts_nested_attributes_for :question_options, allow_destroy: true

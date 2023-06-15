@@ -1,23 +1,18 @@
 # frozen_string_literal: true
 
-# Behavior for question settings
-module Question::Settings
-  extend ActiveSupport::Concern
-
-  included do
-    serialize :settings
-  end
+class Question::Settings < Dragnet::Advice
+  advises Question
 
   def countable?
-    setting_value(:countable)
+    setting?(:countable)
   end
 
   def long_answer?
-    setting_value(:long_answer)
+    setting?(:long_answer)
   end
 
   def multiple_answers?
-    setting_value(:multiple_answers)
+    setting?(:multiple_answers)
   end
 
   def include_date_and_time?
@@ -25,17 +20,29 @@ module Question::Settings
   end
 
   def include_date?
-    setting_value(:include_date)
+    setting?(:include_date)
   end
 
   def include_time?
-    setting_value(:include_time)
+    setting?(:include_time)
   end
 
-  def setting_value(setting)
-    default = question_type.setting_default(setting)
-    return default unless settings
+  def integer?
+    !decimal?
+  end
 
-    settings.fetch(setting, default)
+  def decimal?
+    setting?(:decimal)
+  end
+
+  def setting?(setting)
+    !!setting(setting)
+  end
+
+  def setting(setting)
+    default = question.question_type.setting_default(setting)
+    return default unless question.config
+
+    question.config.fetch(setting, default)
   end
 end
