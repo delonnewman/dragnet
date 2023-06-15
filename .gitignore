@@ -36,3 +36,4 @@ public/js/submitter/
 public/js/editor/
 public/js/test/js/
 /.yarn/
+/coverage/

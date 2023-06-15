@@ -1,5 +1,5 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-describe SurveyEdit, type: :model do
+describe SurveyEdit do
 
 end

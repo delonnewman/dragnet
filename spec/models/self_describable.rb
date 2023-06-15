@@ -1,6 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-shared_examples :self_describable do
+shared_examples 'self describable' do
   describe '#add_meta' do
     it 'can add single meta data values' do
       self_describable.add_meta(:count, 1)

@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DataGridPresenter do
   subject(:grid) { described_class.new(survey, params) }
+
   let!(:survey) { Survey.generate! }
   let(:params) { {} }
 
-  describe '#survey_id'  do
+  describe '#survey_id' do
     it 'returns the surveys id' do
       expect(grid.survey_id).to eq(survey.id)
     end

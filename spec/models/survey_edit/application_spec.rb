@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 describe SurveyEdit::Application do
+  subject(:application) { described_class.new(edit) }
+
   let(:author) { User.generate! }
   let(:survey_data) { Survey[author: author].generate!.projection }
   let(:edit) { SurveyEdit[survey_data: survey_data].generate! }
-
-  subject(:application) { SurveyEdit::Application.new(edit) }
 
   context 'when survey data is valid' do
     describe '#applied!' do
@@ -14,7 +14,7 @@ describe SurveyEdit::Application do
       end
 
       it 'will set SurveyEdit#applied_at to the timestamp' do
-        timestamp = Time.now
+        timestamp = Time.zone.now
 
         expect(application.applied!(timestamp).applied_at).to eq(timestamp)
       end
@@ -32,7 +32,7 @@ describe SurveyEdit::Application do
       end
 
       it 'will set SurveyEdit#applied_at to the timestamp' do
-        timestamp = Time.now
+        timestamp = Time.zone.now
         application.apply!(timestamp)
 
         expect(edit.applied_at).to eq(timestamp)

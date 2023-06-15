@@ -1,4 +1,4 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
 describe Survey::Naming do
   subject(:naming) { described_class.new(survey, default_name) }
@@ -13,13 +13,13 @@ describe Survey::Naming do
     context 'when a name is given that does not start with the default name' do
       let(:name) { Dragnet::Generators::Name.generate }
 
-      it { should_not be_auto_named }
+      it { is_expected.not_to be_auto_named }
     end
 
     context 'when a name is given that starts with the default name' do
       let(:name) { "#{default_name} #{Dragnet::Generators::Name.generate}" }
 
-      it { should be_auto_named }
+      it { is_expected.to be_auto_named }
     end
   end
 
@@ -30,19 +30,19 @@ describe Survey::Naming do
       context 'when a name is not given' do
         let(:name) { nil }
 
-        it { should be_generated_name }
+        it { is_expected.to be_generated_name }
       end
 
       context 'when a name is given' do
         let(:name) { Dragnet::Generators::Name.generate }
 
-        it { should_not be_generated_name }
+        it { is_expected.not_to be_generated_name }
       end
 
       context 'when a name is given that starts with the default name' do
         let(:name) { "#{default_name} #{Dragnet::Generators::Name.generate}" }
 
-        it { should be_generated_name }
+        it { is_expected.to be_generated_name }
       end
     end
   end

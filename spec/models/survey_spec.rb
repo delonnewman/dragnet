@@ -1,8 +1,9 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
 require_relative 'self_describable'
 
-describe Survey, type: :model do
-  it_behaves_like :self_describable do
+describe Survey do
+  it_behaves_like 'self describable' do
     let(:self_describable) { described_class.create!(name: name, author: author) }
     let(:name) { Dragnet::Generators::Name.generate }
     let(:author) { User.generate! }
@@ -50,6 +51,7 @@ describe Survey, type: :model do
 
     context 'when an edit status is given' do
       subject(:survey) { described_class.create!(name: name, edits_status: edits_status, author: author) }
+
       let(:edits_status) { 'unsaved' }
 
       it 'will set the edit status to :saved' do

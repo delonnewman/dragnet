@@ -91,11 +91,16 @@ group :development, :test do
   gem 'bullet'
   gem 'bundler-audit'
 
+  # markdown lint
+  gem 'mdl', require: false
+
   gem 'rubocop'
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rake', require: false
   gem 'rubocop-performance', require: false
+
+  gem 'simplecov', require: false
 
   gem 'faker'
 end
