@@ -7,11 +7,16 @@ module DataGridHelper
   # @param [Symbol, Question] column
   #
   # @return [String] the corresponding HTML
-  def column_sort_link(grid, column, label:)
-    sorted = grid.sorted_by_column?(column)
-    direction = sorted ? grid.opposite_sort_direction : grid.default_sort_direction
+  def column_sort_link(grid, column, label:, alt_label: label)
+    sorted     = grid.sorted_by_column?(column)
+    direction  = sorted ? grid.opposite_sort_direction : grid.default_sort_direction
+    push_url   = survey_data_path(grid.survey_id, sort_by: column, sort_direction: direction)
+    table_path = survey_data_table_path(grid.survey_id, sort_by: column, sort_direction: direction)
 
-    htmx :button, { get: survey_data_table_path(grid.survey_id, sort_by: column, sort_direction: direction), target: '#data-grid-table', swap: 'outerHTML' }, { class: 'btn btn-outline-primary' } do
+    htmx_options = { push_url: push_url, get: table_path, target: '#data-grid-table', swap: 'outerHTML' }
+    html_options = { class: 'btn btn-outline-primary', title: alt_label }
+
+    htmx :button, htmx_options, html_options do
       label.html_safe + ' ' + column_sort_icon(grid, column).html_safe
     end
   end
@@ -49,7 +54,8 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
-    DataGridDisplayPerspective.get(question.question_type, self)
+    DataGridDisplayPerspective
+      .get(question.question_type, self)
       .render(reply.answers_to(question), question, alt: alt)
   end
 

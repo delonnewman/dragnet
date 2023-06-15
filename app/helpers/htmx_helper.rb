@@ -5,7 +5,7 @@ module HTMXHelper
   include ActionView::Helpers::UrlHelper
 
   # TODO: add link_to UJS API support
-  HTMX_ONLY_ATTRS = %i[get post delete put trigger swap target].freeze
+  HTMX_ONLY_ATTRS = %i[get post delete put trigger swap target push_url].freeze
   PASS_THROUGH_ATTRS = (HTMX_ONLY_ATTRS + %i[confirm]).freeze
 
   alias orig_button_to button_to
@@ -27,7 +27,7 @@ module HTMXHelper
 
     attrs = html_options.merge('hx-vals': vals.to_json)
     PASS_THROUGH_ATTRS.each_with_object(attrs) do |attr, h|
-      h[:"hx-#{attr}"] = htmx_options[attr]
+      h["hx-#{attr}".dasherize] = htmx_options[attr]
     end
 
     content_tag(element, **attrs, &block)
