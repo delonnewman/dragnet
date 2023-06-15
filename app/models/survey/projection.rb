@@ -29,13 +29,13 @@ class Survey::Projection < Dragnet::Advice
       :updated_at,
       :author_id,
       :edits_status,
-      author: %i[id name nickname],
+      author:    %i[id name nickname],
       questions: [
         :id,
         :text,
         :display_order,
         :required,
-        :settings,
+        :config,
         :question_type_id,
         {
           question_options: %i[id text weight],

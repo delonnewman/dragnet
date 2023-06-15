@@ -10,7 +10,6 @@ class QuestionType < ApplicationRecord
 
   # TODO: move these to meta data
   serialize :settings
-  serialize :answer_value_fields # TODO: remove, make the field usage explicit in perspectives
 
   def self.get(ident)
     QuestionType.find_by(slug: ident)

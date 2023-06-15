@@ -7,6 +7,6 @@ class QuestionTypeGenerator < Dragnet::ActiveRecordGenerator
     type = TYPES.sample
     return type if type
 
-    QuestionType.new(name: 'text', answer_value_fields: %w[short_text_value])
+    QuestionType.new(name: 'text')
   end
 end
