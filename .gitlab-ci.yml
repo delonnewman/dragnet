@@ -33,18 +33,20 @@ cache:
 before_script:
   - ruby -v  # Print out ruby version for debugging
   # Uncomment next line if your rails app needs a JS runtime:
-  - apt-get update -q && apt-get install nodejs -yqq
+  - apt-get update -q && apt-get install nodejs -yqq # FIXME: not sure why we need nodejs
   - gem install bundler
   - bundle config set --local deployment true  # Install dependencies into ./vendor/ruby
   - bundle install -j $(nproc)
 
 linting:
   script:
-    - rubocop
+    - bundle exec rake bundle:audit:update bundle:audit:check
+    - bundle exec brakeman -q -w2
+    # - bundle exec rubocop --parallel
 
 rails:
   variables:
-    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
+    DATABASE_URL: "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB"
   script:
     - bundle exec rails db:schema:load db:seed
     - bundle exec rake
