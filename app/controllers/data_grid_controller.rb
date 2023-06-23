@@ -11,10 +11,10 @@ class DataGridController < ApplicationController
         render :show, locals: { survey: presenter }
       end
       format.csv do
-        render :show, locals: { survey: presenter }
+        render_file :show, export_name(presenter), locals: { survey: presenter }
       end
       format.xlsx do
-        render :show, locals: { survey: presenter }
+        render_file :show, export_name(presenter), locals: { survey: presenter }
       end
     end
   end
@@ -28,6 +28,15 @@ class DataGridController < ApplicationController
   end
 
   private
+
+  def render_file(view, filename, **options)
+    render view, **options
+    response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+  end
+
+  def export_name(survey)
+    "#{Dragnet::Utils.slug(survey.name)}-#{Dragnet::Utils.slug(Time.zone.now)}.#{params[:format]}"
+  end
 
   def survey
     Survey.includes(:replies, questions: [:question_type]).find(params[:survey_id])
