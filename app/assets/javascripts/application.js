@@ -4,4 +4,4 @@
 //= require hyperscript.min
 //= require popper
 //= require bootstrap
-//= require sparkline
+//= require data_grid

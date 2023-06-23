@@ -11,10 +11,12 @@ class SurveyListingPresenter < Dragnet::View::PagedPresenter
   def pager = Pagy.new(count: user.surveys.count, page: page, items: items)
   memoize :pager
 
+  # Return reply data for the given survey
+  #
   # @param [Survey] survey
   #
-  # @return [Array<Integer>]
-  def reply_counts_for(survey) = reply_counts.fetch(survey.id, EMPTY_HASH).values
+  # @return [Hash{String => Integer}]
+  def reply_counts_for(survey) = reply_counts.fetch(survey.id, EMPTY_HASH).transform_keys { |d| "Replies on #{d}" }
 
   def reply_counts = RepliesBySurveyAndDateQuery.(user)
   memoize :reply_counts
