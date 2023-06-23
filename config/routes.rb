@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   root 'workspace#index'
 
   get 'surveys', to: 'workspace#surveys'
-  get 'report', to: 'reports#show'
-  get 'stats', to: 'stats#show'
+  get 'report',  to: 'reports#show'
+  get 'stats',   to: 'stats#show'
 
   resources :surveys, only: %i[show new edit destroy] do
     post 'copy'
@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     get 'settings'
     get 'stats', to: 'stats#show'
 
-    get  'data',  to: 'data_grid#show'
+    get  'data',       to: 'data_grid#show'
     get  'data/rows',  to: 'data_grid#rows'
     get  'data/table', to: 'data_grid#table'
     post 'data/table', to: 'data_grid#table'
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   # survey name is optional
   get '/reply/to/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
-  get '/reply/to/:survey_id', to: 'reply#new'
+  get '/reply/to/:survey_id',              to: 'reply#new'
 
   scope '/api/v1' do
     scope '/editing' do
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
 
     scope '/submission' do
       resources :reply_submission, path: '/replies', only: %i[show]
-      post '/replies/:id/submit', to: 'reply_submission#submit', as: 'submit_reply'
+      post '/replies/:id/submit',        to: 'reply_submission#submit',  as: 'submit_reply'
       get '/replies/:survey_id/preview', to: 'reply_submission#preview', as: 'preview_reply'
     end
   end

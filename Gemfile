@@ -51,20 +51,12 @@ gem 'oj'
 gem 'fast_blank'
 gem 'erubi'
 
-# Language Extentions
+# Language Extensions
 gem 'invokable'
 gem 'memo_wise'
+gem 'rails-pattern_matching'
 
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
-
-# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
-# gem 'kredis'
-
-# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Sass to process CSS
+# TODO: Move to Dart Sass
 gem 'sassc-rails'
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
@@ -110,6 +102,8 @@ group :development do
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   gem 'rack-mini-profiler'
+
+  gem "rails_live_reload"
 
   gem 'yard'
   gem 'yard-activerecord'
