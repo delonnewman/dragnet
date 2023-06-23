@@ -56,13 +56,17 @@
 
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 px-4 mt-auto border-top bg-light">
       <div class="col-md-4">
-        <small class="text-muted">&copy; 2023 <a class="text-muted" href="https://delonnewman.name">D. R. Newman &mdash; Software, Training & Design</a></small>
+        <small class="text-muted">
+          &copy; 2023 <a class="text-muted" href="https://delonnewman.name">Delon R. Newman</a>
+          &mdash; <a class="text-muted" href="https://github.com/delonnewman/dragnet/blob/main/LICENCE.txt">GPL v2</a>
+        </small>
         <div class="text-muted">
           <small>
             Version
             <a class="text-muted" href="https://github.com/delonnewman/dragnet/tree/<%= Dragnet::Utils.current_git_sha %>"><%= Dragnet::Utils.version %></a>
           </small>
           <% unless Rails.env.production? %>
+            <small>&mdash; <%= Rails.env %></small>
             <small>&mdash; <%= link_to 'UI Tests', '/js/test/index.html', class: 'text-muted', target: '_blank' %></small>
           <% end %>
         </div>
@@ -73,8 +77,5 @@
     </footer>
 
     <%= javascript_include_tag "application" %>
-    <% javascripts.each do |script| %>
-      <script><%= script %></script>
-    <% end %>
   </body>
 </html>
