@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <div class="d-flex justify-content-start align-items-center">
+    <div class="me-2 text-muted">
+      <%= survey.records.count %> records
+    </div>
+    <% unless survey.show_clear_filter? %>
+      <%= link_to survey_data_path(survey), class: 'btn btn-sm btn-outline-secondary' do %>
+        <%= icon 'far', 'times-circle' %>
+        Clear Filters
+      <% end %>
+    <% end %>
+  </div>
+  <div class="d-flex justify-content-end align-items-center">
+    <div class="dropdown">
+      <a href="#" class="btn btn-sm btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <%= icon 'fas', 'file-export' %> Export
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <%= link_to survey_data_path(survey, data_grid_params.merge(format: 'csv')), class: 'dropdown-item' do %>
+            <%= icon 'fas', 'file' %> CSV
+          <% end %>
+        </li>
+        <li>
+          <%= link_to survey_data_path(survey, data_grid_params.merge(format: 'xlsx')), class: 'dropdown-item' do %>
+            <%= icon 'fas', 'file-excel' %> Excel
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -9,11 +9,11 @@ class DataGridFilterInputPerspective < ViewPerspective
         inputmode:     'search',
         name:          field_name(question),
         value:         default_value,
-        autofocus:     !default_value.nil?,
         'hx-get':      survey_data_table_path(question.survey_id, passed_params),
         'hx-push-url': survey_data_path(question.survey_id, passed_params),
         'hx-trigger':  'keyup changed delay:500ms,change',
         'hx-target':   '#data-grid-table',
+        'hx-swap':     'morph:innerHTML',
       )
     end
   end
@@ -26,11 +26,11 @@ class DataGridFilterInputPerspective < ViewPerspective
         type:          'number',
         inputmode:     'numeric',
         value:         default_value,
-        autofocus:     !default_value.nil?,
         'hx-get':      survey_data_table_path(question.survey_id, passed_params),
         'hx-push-url': survey_data_path(question.survey_id, passed_params),
         'hx-trigger':  'keyup changed delay:500ms,change',
         'hx-target':   '#data-grid-table',
+        'hx-swap':     'morph:innerHTML',
       )
     end
   end
@@ -47,6 +47,7 @@ class DataGridFilterInputPerspective < ViewPerspective
         'hx-push-url': survey_data_path(question.survey_id, passed_params),
         'hx-trigger':  'change',
         'hx-target':   '#data-grid-table',
+        'hx-swap':     'morph:innerHTML',
       )
     end
   end
@@ -59,6 +60,7 @@ class DataGridFilterInputPerspective < ViewPerspective
         'hx-push-url': survey_data_path(question.survey_id, passed_params),
         'hx-trigger':  'change',
         'hx-target':   '#data-grid-table',
+        'hx-swap':     'morph:innerHTML',
       }
       tag.select(class: 'form-select', name: field_name(question), autofocus: !default_value.nil?, **htmx) do
         context.concat tag.option('Any')
@@ -77,6 +79,7 @@ class DataGridFilterInputPerspective < ViewPerspective
         'hx-push-url': survey_data_path(question.survey_id, passed_params),
         'hx-trigger':  'change',
         'hx-target':   '#data-grid-table',
+        'hx-swap':     'morph:innerHTML',
       }
       tag.select(class: 'form-select', name: field_name(question), autofocus: !default_value.nil?, **htmx) do
         context.concat tag.option('Any')

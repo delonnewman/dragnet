@@ -1,4 +1,10 @@
-<table id="data-grid-table" class="table table-striped table-bordered">
+<%= render 'data_grid/tools', survey: survey %>
+
+<div class="data-grid table-responsive">
+<table
+  class="table table-striped table-bordered"
+>
+<!--  _="on htmx:afterSwap fetch <%#== survey_data_tools_path(survey, data_grid_params) %> then put the result into #data-grid-tools"-->
   <thead>
   <th>
     <div class="d-flex justify-content-start align-items-center">
@@ -19,3 +25,4 @@
   <%= render 'data_grid/rows', survey: survey %>
   </tbody>
 </table>
+</div>

@@ -32,6 +32,14 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
     DataGridSortQueryPerspective.get(question.question_type).sort(question, scope, sort_direction)
   end
 
+  def show_clear_filter?
+    params[:filter_by].blank? || params[:filter_by].compact_blank.blank?
+  end
+
+  def show_load_more?
+    pager.next && records.count > pager.items
+  end
+
   # Pager object populated with record and parameter data.
   #
   # @return [Pagy]

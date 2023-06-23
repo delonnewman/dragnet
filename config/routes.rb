@@ -12,10 +12,9 @@ Rails.application.routes.draw do
     get 'settings'
     get 'stats', to: 'stats#show'
 
-    get  'data',       to: 'data_grid#show'
-    get  'data/rows',  to: 'data_grid#rows'
-    get  'data/table', to: 'data_grid#table'
-    post 'data/table', to: 'data_grid#table'
+    get 'data',       to: 'data_grid#show'
+    get 'data/rows',  to: 'data_grid#rows'
+    get 'data/table', to: 'data_grid#table'
   end
 
   resources :reply, only: %i[edit update] do

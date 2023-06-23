@@ -7,7 +7,7 @@
    :external-config {:devtools/config {:features-to-install [:formatters :hints :async]}}
    :output-dir "../../../../public/js/editor"
    :asset-path "../../../../js/editor"
-   :modules    {:main {:entries [dragnet.editor.shell]}}}}
+   :modules    {:main {:entries [dragnet.editor.shell]}}}
  :submitter
  {:target     :browser
   :devtools   {:repl-init-ns dragnet.submitter.core :repl-pprint true}
@@ -20,4 +20,4 @@
  :ci
  {:target :karma
   :output-to "target/ci.js"
-  :ns-regexp "-test$"}}
+  :ns-regexp "-test$"}}}

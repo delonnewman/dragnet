@@ -4,8 +4,6 @@ class DataGridController < ApplicationController
   layout 'survey'
 
   def show
-    presenter = DataGridPresenter.new(survey, data_grid_params)
-
     respond_to do |format|
       format.html do
         render :show, locals: { survey: presenter }
@@ -20,11 +18,11 @@ class DataGridController < ApplicationController
   end
 
   def rows
-    render partial: 'data_grid/rows', locals: { survey: DataGridPresenter.new(survey, data_grid_params) }
+    render partial: 'data_grid/rows', locals: { survey: presenter }
   end
 
   def table
-    render partial: 'data_grid/table', locals: { survey: DataGridPresenter.new(survey, data_grid_params) }
+    render partial: 'data_grid/table', locals: { survey: presenter }
   end
 
   private
@@ -36,6 +34,10 @@ class DataGridController < ApplicationController
 
   def export_name(survey)
     "#{Dragnet::Utils.slug(survey.name)}-#{Dragnet::Utils.slug(Time.zone.now)}.#{params[:format]}"
+  end
+
+  def presenter
+    DataGridPresenter.new(survey, data_grid_params)
   end
 
   def survey

@@ -9,7 +9,7 @@
   </tr>
 <% end %>
 
-<% if survey.pager.next %>
+<% if survey.show_load_more? %>
   <tr id="the-end">
     <td colspan="<%= survey.questions.count + 1 %>">
       <%= htmx :button, { get: survey_data_rows_path(survey, page: survey.pager.next), target: '#the-end', swap: 'outerHTML' }, { class: 'btn btn-sm btn-light' } do %>
