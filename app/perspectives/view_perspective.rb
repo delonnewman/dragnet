@@ -7,7 +7,7 @@ class ViewPerspective < Perspective
   include Rails.application.routes.url_helpers
 
   attr_accessor :context
-  delegate :output_buffer=, :output_buffer, to: :@context, allow_nil: true
+  delegate :output_buffer=, :output_buffer, :params, to: :@context, allow_nil: true
 
   # @param [QuestionType, Symbol] type
   # @param [ActionView::Base] context

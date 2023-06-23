@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: add edit status, i.e. saved, unsaved changes, cannot save (error state)
 class RecentlyRepliedToQuery < Dragnet::Query
   query_doc 'Your surveys that have most recently been replied to'
   query_text <<~SQL

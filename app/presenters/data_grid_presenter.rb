@@ -16,7 +16,7 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   memoize :paginated_records
 
   def records
-    ordered_records(filtered_records(survey.replies))
+    ordered_records(DataGridFilterQuery.(survey, params))
   end
 
   def ordered_records(scope)
@@ -30,37 +30,6 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
 
   def sort_records(question, scope)
     DataGridSortQueryPerspective.get(question.question_type).sort(question, scope, sort_direction)
-  end
-
-  SIMPLE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
-
-  def filtered_records(scope)
-    params = filter_params
-    return scope if params.empty?
-
-    question_ids = params.keys.select(&method(:uuid?))
-    questions = question_ids.empty? ? EMPTY_HASH : Question.includes(:question_type).find(question_ids).group_by(&:id)
-
-    params.to_h.reduce(scope) do |s, (k, v)|
-      if uuid?(k)
-        q = questions[k].first
-        filter_value(s.joins(:answers).where(answers: { question_id: k }), q, v)
-      elsif SIMPLE_FILTER_ATTRIBUTES.include?(k)
-        s.where(k => v)
-      else
-        s
-      end
-    end
-  end
-
-  def filter_value(scope, question, value)
-    DataGridFilterQueryPerspective.get(question.question_type).filter(question, scope, value)
-  end
-
-  def filter_params
-    return EMPTY_HASH if params.empty? || params[:filter_by].blank?
-
-    params[:filter_by].compact_blank
   end
 
   # Pager object populated with record and parameter data.

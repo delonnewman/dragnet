@@ -10,8 +10,8 @@ module DataGridHelper
   def column_sort_link(grid, column, label:, alt_label: label)
     sorted     = grid.sorted_by_column?(column)
     direction  = sorted ? grid.opposite_sort_direction : grid.default_sort_direction
-    push_url   = survey_data_path(grid.survey_id, sort_by: column, sort_direction: direction)
-    table_path = survey_data_table_path(grid.survey_id, sort_by: column, sort_direction: direction)
+    push_url   = survey_data_path(grid.survey_id, sort_by: column, sort_direction: direction, **data_grid_params)
+    table_path = survey_data_table_path(grid.survey_id, sort_by: column, sort_direction: direction, **data_grid_params)
 
     htmx_options = { push_url: push_url, get: table_path, target: '#data-grid-table', swap: 'outerHTML' }
     html_options = { class: 'btn btn-outline-primary', title: alt_label }
@@ -35,6 +35,10 @@ module DataGridHelper
     else
       icon 'fas', 'arrows-up-down'
     end
+  end
+
+  def data_grid_params
+    params.permit(:sort_by, :sort_direction, filter_by: {}).to_h
   end
 
   # Render a filter control as HTML according to the question type.

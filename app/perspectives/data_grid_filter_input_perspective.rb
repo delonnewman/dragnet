@@ -4,15 +4,16 @@ class DataGridFilterInputPerspective < ViewPerspective
   default do
     def render(question, default_value)
       tag.input(
-        class:        'form-control',
-        type:         'search',
-        inputmode:    'search',
-        name:         field_name(question),
-        value:        default_value,
-        autofocus:    !default_value.nil?,
-        'hx-get':     survey_data_table_path(question.survey_id),
-        'hx-trigger': 'keyup changed delay:500ms,change',
-        'hx-target':  '#data-grid-table',
+        class:         'form-control',
+        type:          'search',
+        inputmode:     'search',
+        name:          field_name(question),
+        value:         default_value,
+        autofocus:     !default_value.nil?,
+        'hx-get':      survey_data_table_path(question.survey_id, passed_params),
+        'hx-push-url': survey_data_path(question.survey_id, passed_params),
+        'hx-trigger':  'keyup changed delay:500ms,change',
+        'hx-target':   '#data-grid-table',
       )
     end
   end
@@ -20,16 +21,16 @@ class DataGridFilterInputPerspective < ViewPerspective
   for_type :number do
     def render(question, default_value)
       tag.input(
-        class:        'form-control',
-        name:         field_name(question),
-        type:         'number',
-        inputmode:    'numeric',
-        value:        default_value,
-        autofocus:    !default_value.nil?,
-        'hx-post':    survey_data_table_path(question.survey_id),
-        'hx-trigger': 'keyup changed delay:500ms,change',
-        'hx-target':  '#data-grid-table',
-        'hx-vals':    { authenticity_token: authenticity_token }.to_json,
+        class:         'form-control',
+        name:          field_name(question),
+        type:          'number',
+        inputmode:     'numeric',
+        value:         default_value,
+        autofocus:     !default_value.nil?,
+        'hx-get':      survey_data_table_path(question.survey_id, passed_params),
+        'hx-push-url': survey_data_path(question.survey_id, passed_params),
+        'hx-trigger':  'keyup changed delay:500ms,change',
+        'hx-target':   '#data-grid-table',
       )
     end
   end
@@ -38,15 +39,14 @@ class DataGridFilterInputPerspective < ViewPerspective
     # TODO: should support a date range
     def render(question, default_value)
       tag.input(
-        class:        'form-control',
-        name:         field_name(question),
-        type:         'date',
-        value:        default_value,
-        autofocus:    !default_value.nil?,
-        'hx-post':    survey_data_table_path(question.survey_id),
-        'hx-trigger': 'change',
-        'hx-target':  '#data-grid-table',
-        'hx-vals':    { authenticity_token: authenticity_token }.to_json,
+        class:         'form-control',
+        name:          field_name(question),
+        type:          'date',
+        value:         default_value,
+        'hx-get':      survey_data_table_path(question.survey_id, passed_params),
+        'hx-push-url': survey_data_path(question.survey_id, passed_params),
+        'hx-trigger':  'change',
+        'hx-target':   '#data-grid-table',
       )
     end
   end
@@ -55,10 +55,10 @@ class DataGridFilterInputPerspective < ViewPerspective
     # TODO: need a way to clear the value
     def render(question, default_value)
       htmx = {
-        'hx-post':    survey_data_table_path(question.survey_id),
-        'hx-trigger': 'change',
-        'hx-target':  '#data-grid-table',
-        'hx-vals':    { authenticity_token: authenticity_token }.to_json,
+        'hx-get':      survey_data_table_path(question.survey_id, passed_params),
+        'hx-push-url': survey_data_path(question.survey_id, passed_params),
+        'hx-trigger':  'change',
+        'hx-target':   '#data-grid-table',
       }
       tag.select(class: 'form-select', name: field_name(question), autofocus: !default_value.nil?, **htmx) do
         context.concat tag.option('Any')
@@ -73,10 +73,10 @@ class DataGridFilterInputPerspective < ViewPerspective
   for_type :boolean do
     def render(question, default_value)
       htmx = {
-        'hx-post':    survey_data_table_path(question.survey_id),
-        'hx-trigger': 'change',
-        'hx-target':  '#data-grid-table',
-        'hx-vals':    { authenticity_token: authenticity_token }.to_json,
+        'hx-get':      survey_data_table_path(question.survey_id, passed_params),
+        'hx-push-url': survey_data_path(question.survey_id, passed_params),
+        'hx-trigger':  'change',
+        'hx-target':   '#data-grid-table',
       }
       tag.select(class: 'form-select', name: field_name(question), autofocus: !default_value.nil?, **htmx) do
         context.concat tag.option('Any')
@@ -93,5 +93,9 @@ class DataGridFilterInputPerspective < ViewPerspective
 
   def field_name(question)
     "filter_by[#{question.id}]"
+  end
+
+  def passed_params
+    context.data_grid_params
   end
 end
