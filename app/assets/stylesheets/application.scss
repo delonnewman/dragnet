@@ -4,6 +4,7 @@
 @import "font-awesome";
 
 @import "data_grid";
+@import "sparklines";
 
 a {
   text-decoration: none;
@@ -15,9 +16,4 @@ a {
 
 a.btn, a.dropdown-item, a.nav-link {
   text-decoration: none !important;
-}
-
-.sparkline {
-  stroke: green;
-  fill: none;
 }
