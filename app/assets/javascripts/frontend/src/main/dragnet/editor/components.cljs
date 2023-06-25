@@ -2,15 +2,13 @@
   "View components for the Editor UI"
   (:require
     [clojure.string :as s]
-    [cljs.core.async :refer [<! go]]
-    [cljs-http.client :as http]
-    [dragnet.shared.utils :as utils :refer [time-ago-in-words pp pp-str echo http-request] :include-macros true]
+    [dragnet.shared.utils :as utils :refer [time-ago-in-words]]
     [dragnet.shared.components :refer
       [icon switch text-field remove-button]]
     [dragnet.shared.core :refer
       [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
     [dragnet.editor.core :as editor :refer
-      [survey survey-edited? question-type-slug question-types question-type-list question-type-uid apply-survey-edits-url errors?]]))
+      [survey survey-edited? question-type-slug question-types question-type-list question-type-uid errors?]]))
 
 (defn choice-option
   [state question option]
@@ -50,7 +48,7 @@
     [:input.form-control {:type "text"}]))
 
 (defn number-body
-  [_ question]
+  [_ _question]
   [:input.form-control {:type "number"}])
 
 (defn time-body
@@ -92,7 +90,7 @@
                           :on-change (editor/change-required! ref question)
                           :style {:margin-right "20px"}
                           :label "Required"}])]])
-   
+
 (defn select-question-type
   [ref question]
   (let [type-id (editor/question-type-id question)

@@ -6,7 +6,7 @@
    3 {:id 3 :slug "choice"}
    4 {:id 4 :slug "time"}})
 
-(def state (atom {:survey {:id (random-uuid)} :question_types question-types}))
+(def state (atom {:survey {:id (random-uuid)} :question-types question-types}))
 
 (defn question-of-type [type]
   (when-first [t (filter #(= type (:slug %)) (vals question-types))]

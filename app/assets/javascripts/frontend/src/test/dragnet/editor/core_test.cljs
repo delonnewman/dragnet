@@ -5,12 +5,12 @@
    [clojure.test :refer [deftest is testing]]))
 
 (deftest question-type-test
-  (testing "When the question_type_id is not present"
-    (is (nil? (core/question-type @state {}))))
-  (testing "When the question_type_id is present"
+  (testing "When the question type ID is not present"
+    (is (nil? (core/question-type @state 99))))
+  (testing "When the question type ID is present"
     (doseq [id (keys utils/question-types)]
       (is (= (-> id utils/question-types)
-             (core/question-type @state {:question_type_id id}))))))
+             (core/question-type @state id))))))
 
 (deftest question-type-slug-test
   (testing "When the question_type_id is not present"
@@ -18,7 +18,7 @@
   (testing "When the question_type_id is present"
     (doseq [id (keys utils/question-types)]
       (is (= (-> id utils/question-types :slug)
-             (core/question-type-slug @state {:question_type_id id}))))))
+             (core/question-type-slug @state {:question/type {:entity/id id}}))))))
 
 (deftest question-types-test
   (is (= utils/question-types (core/question-types @state))))
