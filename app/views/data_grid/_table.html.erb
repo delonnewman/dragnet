@@ -1,28 +1,33 @@
-<%= render 'data_grid/tools', survey: survey %>
+<% if survey.questions.empty? %>
+  <p class="text-center mt-5 mx-auto">
+    <%= icon 'fas', 'hard-hat', class: 'h1 text-muted' %><br>
+    Sorry, nothing to see here.
+    If you're ready to get started <%= link_to 'click here', edit_survey_path(survey) %>.
+  </p>
+<% else %>
+  <%= render 'data_grid/tools', survey: survey %>
 
-<div class="data-grid table-responsive">
-<table
-  class="table table-striped table-bordered"
->
-<!--  _="on htmx:afterSwap fetch <%#== survey_data_tools_path(survey, data_grid_params) %> then put the result into #data-grid-tools"-->
-  <thead>
-  <th>
-    <div class="d-flex justify-content-start align-items-center">
-      <%= column_sort_link(survey, :created_at, label: icon('fas', 'clock'), alt_label: 'Time Created') %>
-      <%= date_field_tag :created_at, params[:created_at], class: 'form-control' %>
-    </div>
-  </th>
-  <% survey.questions.each do |question| %>
-    <th data-question-id="<%= question.id %>">
-      <div class="d-flex justify-content-start align-items-center">
-        <%= column_sort_link(survey, question, label: truncate(question.text), alt_label: question.text) %>
-        <%= question_filter(question, params.dig(:filter_by, question.id)) %>
-      </div>
-    </th>
-  <% end %>
-  </thead>
-  <tbody>
-  <%= render 'data_grid/rows', survey: survey %>
-  </tbody>
-</table>
-</div>
+  <div class="data-grid table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead>
+      <th>
+        <div class="d-flex justify-content-start align-items-center">
+          <%= column_sort_link(survey, :created_at, label: icon('fas', 'clock'), alt_label: 'Time Created') %>
+          <%= date_field_tag :created_at, params[:created_at], class: 'form-control' %>
+        </div>
+      </th>
+      <% survey.questions.each do |question| %>
+        <th data-question-id="<%= question.id %>">
+          <div class="d-flex justify-content-start align-items-center">
+            <%= column_sort_link(survey, question, label: truncate(question.text), alt_label: question.text) %>
+            <%= question_filter(question, params.dig(:filter_by, question.id)) %>
+          </div>
+        </th>
+      <% end %>
+      </thead>
+      <tbody>
+      <%= render 'data_grid/rows', survey: survey %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
