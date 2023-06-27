@@ -90,10 +90,6 @@ class DataGridFilterInputPerspective < ViewPerspective
     end
   end
 
-  def authenticity_token
-    context.session[:_csrf_token]
-  end
-
   def field_name(question)
     "filter_by[#{question.id}]"
   end

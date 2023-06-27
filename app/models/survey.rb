@@ -30,4 +30,6 @@ class Survey < ApplicationRecord
   with Copying, delegating: %i[copy! copy copy?]
 
   has_many :trigger_registrations, dependent: :delete_all, inverse_of: :survey
+
+  with Opening, delegating: %i[open! close! toggle_openness!]
 end

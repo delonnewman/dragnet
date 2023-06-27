@@ -32,4 +32,11 @@ module ApplicationHelper
         tag.span { msg } + tag.button(type: 'button', class: 'btn-close', 'data-bs-dismiss': 'alert', 'aria-label': 'Close')
     end
   end
+
+  # Return the session's authenticity token
+  #
+  # @return [String]
+  def authenticity_token
+    session[:_csrf_token]
+  end
 end

@@ -8,6 +8,9 @@ Rails.application.routes.draw do
 
   resources :surveys, only: %i[show new edit destroy] do
     post 'copy'
+    post 'open',  to: 'workspace#open_survey'
+    post 'close', to: 'workspace#close_survey'
+
     get 'preview'
     get 'settings'
     get 'stats', to: 'stats#show'

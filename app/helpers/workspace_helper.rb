@@ -7,8 +7,16 @@ module WorkspaceHelper
 
   # TODO: make the switch work
   def survey_open_indicator(survey)
+    htmx = {
+      'hx-post'    => survey.open? ? survey_close_path(survey) : survey_open_path(survey),
+      'hx-vals'    => { authenticity_token: authenticity_token }.to_json,
+      'hx-target'  => "#survey-card-#{survey.id}",
+      'hx-swap'    => 'outerHTML',
+      'hx-trigger' => 'change',
+    }
+
     tag.div(class: 'd-flex align-items-center') do
-      form_switch(id: "survey-#{survey.id}-open") do
+      form_switch(id: "survey-#{survey.id}-open", checked: survey.open?, **htmx) do
         icon('fas', survey.open? ? 'lock-open' : 'lock', class: 'text-muted')
       end
     end
