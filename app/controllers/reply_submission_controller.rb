@@ -17,13 +17,13 @@ class ReplySubmissionController < EndpointController
   end
 
   def submit
-    Reply.create!(submission_params)
+    Reply.find(params[:id]).update(submission_params)
   end
 
   private
 
   def submission_params
-    params.require(:reply)
+    params.require(:reply).permit!
   end
 
   def reply_submission(r = reply)
@@ -32,7 +32,7 @@ class ReplySubmissionController < EndpointController
 
   def reply
     Reply
-      .includes(:survey, questions: [:question_type, :question_options, :followup_questions])
+      .includes(:survey, questions: %i[question_type question_options followup_questions])
       .find(params[:id])
   end
 end

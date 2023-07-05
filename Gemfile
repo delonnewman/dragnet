@@ -46,6 +46,9 @@ gem 'omniauth', '~> 2.1.1'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-apple'
 
+# Analytics
+gem 'ahoy_matey'
+
 # Performance
 gem 'oj'
 gem 'fast_blank'

@@ -57,7 +57,7 @@ class AnswerEvaluationPerspective < Perspective
 
   for_type :choice do
     def assign_value!(answer, value)
-      answer.question_option = value
+      answer.question_option_id = value
     end
 
     def value(answer)

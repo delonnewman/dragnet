@@ -2,7 +2,7 @@
   "View components for the Editor UI"
   (:require
     [clojure.string :as s]
-    [dragnet.shared.utils :as utils :refer [time-ago-in-words]]
+    [dragnet.shared.utils :as utils :refer [time-ago-in-words pp-str] :include-macros true]
     [dragnet.shared.components :refer
       [icon switch text-field remove-button]]
     [dragnet.shared.core :refer

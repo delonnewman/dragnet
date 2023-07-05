@@ -5,3 +5,4 @@
 //= require idiomorph-ext.min
 //= require popper
 //= require bootstrap
+//= require ahoy

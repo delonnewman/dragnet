@@ -7,7 +7,7 @@
     const rootElement = document.getElementById("survey-editor");
 
     const script = document.createElement("script");
-    script.src = "http://dragnet.test/js/editor/main.js?ts=" + Date.now();
+    script.src = "https://dragnet.test/js/editor/main.js?ts=" + Date.now();
     script.onload = function() {
       dragnet.editor.shell.init(rootElement, surveyID);
     };

@@ -16,7 +16,7 @@ module WorkspaceHelper
     }
 
     tag.div(class: 'd-flex align-items-center') do
-      form_switch(id: "survey-#{survey.id}-open", checked: survey.open?, **htmx) do
+      form_switch(id: "survey-#{survey.id}-open", input_attributes: { checked: survey.open?, **htmx }, label_attributes: { style: "width:18px" }) do
         icon('fas', survey.open? ? 'lock-open' : 'lock', class: 'text-muted')
       end
     end
@@ -40,12 +40,16 @@ module WorkspaceHelper
       '&nbsp;'.html_safe + label
   end
 
-  def survey_share_dropdown(_survey, align_menu_end: false)
+  def survey_share_dropdown(survey, align_menu_end: false)
+    reply_url = reply_to_url(survey.short_id, survey.name)
+
     tag.div(class: 'dropdown me-1') do
-      tag.a(class: 'btn btn-sm btn-secondary dropdown-toggle', href: '#', role: 'button', data: { bs_toggle: 'dropdown' }) {
+      concat tag.a(class: 'btn btn-sm btn-secondary dropdown-toggle', href: '#', role: 'button', data: { bs_toggle: 'dropdown' }) {
         icon('fas', 'share') + '&nbsp;Share'.html_safe
-      } + tag.ul(class: "dropdown-menu #{'dropdown-menu-end' if align_menu_end}") {
-        tag.li(class: 'dropdown-item') { 'Copy Link' }
+      }
+
+      concat tag.ul(class: "dropdown-menu #{'dropdown-menu-end' if align_menu_end}") {
+        tag.li(class: 'dropdown-item', _: "on click navigator.clipboard.writeText('#{reply_url}')") { 'Copy Link' }
       }
     end
   end

@@ -1,5 +1,6 @@
 (ns dragnet.submitter.components
   (:require
+   [dragnet.shared.utils :refer [form-name]]
    [dragnet.shared.components :refer [prompt-body]]
    [dragnet.submitter.core :refer [submission-path answer-form-name]]))
 
@@ -21,11 +22,14 @@
     [:div.reply-submitter
      [:h1 (survey :name)]
      [:form {:action (submission-path reply-id) :method "post"}
+      [:input {:type "hidden" :name (form-name [:reply :id]) :value reply-id}]
+      [:input {:type "hidden" :name (form-name [:reply :survey_id]) :value (survey :id)}]
       (for [question (->> survey :questions vals)]
         ^{:key (question :id)} [answer-prompt
                                 :question-id (question :id)
                                 :survey-id (survey :id)
                                 :reply-id reply-id
+                                :question-type-id (question :question_type_id)
                                 :label (question :text)
                                 :children (prompt-body question :form-name-prefix [:reply :answers_attributes])])
       (when-not preview
