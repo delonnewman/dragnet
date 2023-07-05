@@ -49,7 +49,10 @@ module WorkspaceHelper
       }
 
       concat tag.ul(class: "dropdown-menu #{'dropdown-menu-end' if align_menu_end}") {
-        tag.li(class: 'dropdown-item', _: "on click navigator.clipboard.writeText('#{reply_url}')") { 'Copy Link' }
+        concat tag.li(class: 'dropdown-item', onclick: "dragnet.copyToClipboard('#{reply_url}', '#survey-card-#{survey.id}')") { 'Copy Link' }
+        concat tag.li {
+          tag.a(class: 'dropdown-item', href: "mailto:?body=#{reply_url}") { 'Email' }
+        }
       }
     end
   end

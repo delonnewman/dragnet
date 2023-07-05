@@ -6,3 +6,5 @@
 //= require popper
 //= require bootstrap
 //= require ahoy
+
+//= require workspace

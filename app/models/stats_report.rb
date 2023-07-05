@@ -6,7 +6,7 @@ class StatsReport
 
   delegate :questions, :name, to: :reportable
 
-  # @param reportable [#replies, #answers]
+  # @param reportable [#replies, #answers, #events]
   def initialize(reportable)
     @reportable = reportable
   end
@@ -16,6 +16,21 @@ class StatsReport
     questions.select { _1.settings.countable? }
   end
 
+  def reply_count
+    reportable.replies.count
+  end
+
+  def views
+    reportable.events.where(name: 'view-submission-form')
+  end
+
+  def view_count
+    views.count
+  end
+
+  def conversion_rate
+    (reply_count.to_f / view_count) * 100
+  end
 
   # @return [Hash{Date, Integer}]
   def replies_by_date

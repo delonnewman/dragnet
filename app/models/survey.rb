@@ -32,4 +32,8 @@ class Survey < ApplicationRecord
   has_many :trigger_registrations, dependent: :delete_all, inverse_of: :survey
 
   with Opening, delegating: %i[open! close! toggle_openness!]
+
+  def events
+    Ahoy::Event.where('properties @> ?', { survey_id: id }.to_json)
+  end
 end

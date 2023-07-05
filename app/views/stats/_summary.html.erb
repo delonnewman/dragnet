@@ -1,4 +1,8 @@
 <div class="container">
+  <div>Replies <%= report.reply_count %></div>
+  <div>Views <%= report.view_count %></div>
+  <div>Conversion Rate <%= number_to_percentage report.conversion_rate, precision: 0 %></div>
+
   <div class="mt-5 pb-5 border-bottom">
     <h2>Replies By Day</h2>
     <%= line_chart report.replies_by_date %>

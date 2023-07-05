@@ -17,7 +17,14 @@ class ReplySubmissionController < EndpointController
   end
 
   def submit
-    Reply.find(params[:id]).update(submission_params)
+    reply = Reply.find(params[:id])
+
+    # TODO: should move this logic into the MFE
+    if reply.update(submission_params)
+      redirect_to reply_success_path(reply.id)
+    else
+      render :'reply/edit', locals: { reply: reply }
+    end
   end
 
   private

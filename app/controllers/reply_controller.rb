@@ -41,9 +41,10 @@ class ReplyController < ApplicationController
   end
 
   def success
-    ahoy.track 'complete-submission-form', reply_id: reply.id, survey_id: survey.id
+    reply = replies.find(params[:reply_id])
 
-    render :success, locals: { reply: replies.find(params[:reply_id]) }
+    ahoy.track 'complete-submission-form', reply_id: reply.id, survey_id: reply.survey_id
+    render :success, locals: { reply: reply }
   end
 
   private
