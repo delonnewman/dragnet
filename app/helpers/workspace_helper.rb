@@ -50,9 +50,7 @@ module WorkspaceHelper
 
       concat tag.ul(class: "dropdown-menu #{'dropdown-menu-end' if align_menu_end}") {
         concat tag.li(class: 'dropdown-item', onclick: "dragnet.copyToClipboard('#{reply_url}', '#survey-card-#{survey.id}')") { 'Copy Link' }
-        concat tag.li {
-          tag.a(class: 'dropdown-item', href: "mailto:?body=#{reply_url}") { 'Email' }
-        }
+        concat tag.li { tag.a(class: 'dropdown-item', href: "mailto:?body=#{reply_url}") { 'Email' } }
       }
     end
   end
@@ -99,6 +97,7 @@ module WorkspaceHelper
 
     tag.div(class: 'd-flex justify-content-between align-items-center') do
       tag.div(class: "#{bgcolor} d-inline-block me-1",
+              data:  { bs_toggle: 'tooltip', bs_title: desc, bs_placement: 'top' },
               title: desc,
               style: "width: #{size}px; height: #{size}px; border-radius: 50%;") +
         (include_label ? tag.small(class: 'text-muted') { desc } : '')
