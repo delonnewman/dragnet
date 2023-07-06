@@ -25,7 +25,7 @@ class Survey < ApplicationRecord
   with Projection, calling: :project
 
   belongs_to :copy_of, class_name: 'Survey', optional: true
-  accepts_nested_attributes_for :copy_of
+  accepts_nested_attributes_for :copy_of, update_only: true, reject_if: ->(attrs) { attrs.compact_blank!.empty? }
   has_many :copies, foreign_key: 'copy_of_id', class_name: 'Survey', dependent: :nullify, inverse_of: :copy_of
   with Copying, delegating: %i[copy! copy copy?]
 

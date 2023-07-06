@@ -1,3 +1,9 @@
 <%= render 'tabs', survey: survey, selected: :summary %>
 
-<%= render 'stats/summary', report: report %>
+<% if survey.not_ready_for_replies? %>
+  <%= render 'shared/survey_no_questions', survey: survey %>
+<% elsif survey.no_data? %>
+  <%= render 'shared/survey_no_replies', survey: survey %>
+<% else %>
+  <%= render 'stats/summary', report: report %>
+<% end %>

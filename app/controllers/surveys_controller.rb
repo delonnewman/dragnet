@@ -8,10 +8,9 @@ class SurveysController < ApplicationController
   def index; end
 
   def show
-    survey = Survey.find(params[:id])
-    report = StatsReport.new(survey)
+    survey = SurveyPresenter.new(Survey.find(params[:id]))
 
-    render :show, locals: { report: report, survey: survey }
+    render :show, locals: { report: survey.stats_report, survey: survey }
   end
 
   def new
@@ -37,7 +36,7 @@ class SurveysController < ApplicationController
   end
 
   def preview
-    survey = Survey.find(params[:survey_id])
+    survey = SurveyPresenter.new(Survey.find(params[:survey_id]))
 
     render :preview, locals: { survey: survey }
   end

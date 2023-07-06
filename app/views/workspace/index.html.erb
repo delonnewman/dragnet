@@ -1,7 +1,7 @@
 <%= render 'workspace/tabs', selected: :overview, survey_count: overview.survey_count %>
 
 <div class="text-muted text-center"><small><%= overview.query_desc %></small></div>
-<div id="survey-listing" class="d-flex flex-wrap">
+<div id="survey-listing" class="d-flex flex-wrap justify-content-center align-items-top">
   <% overview.surveys.each do |survey| %>
     <%= render partial: 'workspace/survey_card', locals: { survey: survey } %>
   <% end %>

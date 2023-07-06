@@ -1,9 +1,7 @@
-<% if survey.questions.empty? %>
-  <p class="text-center mt-5 mx-auto">
-    <%= icon 'fas', 'hard-hat', class: 'h1 text-muted' %><br>
-    Sorry, nothing to see here.
-    If you're ready to get started <%= link_to 'click here', edit_survey_path(survey) %>.
-  </p>
+<% if survey.not_ready_for_replies? %>
+  <%= render 'shared/survey_no_questions', survey: survey %>
+<% elsif survey.no_data? %>
+  <%= render 'shared/survey_no_replies', survey: survey %>
 <% else %>
   <%= render 'data_grid/tools', survey: survey %>
 

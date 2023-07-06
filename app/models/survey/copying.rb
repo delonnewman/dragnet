@@ -4,7 +4,7 @@ class Survey::Copying < Dragnet::Advice
   advises Survey
 
   def copy?
-    survey.copy_of_id.present?
+    !survey.copy_of_id.nil?
   end
 
   # @return [Survey, false]

@@ -1,54 +1,50 @@
 <%= render 'workspace/tabs', selected: :surveys, survey_count: listing.pager.count %>
 
-<div class="d-flex justify-content-end">
-  <%= link_to new_survey_path, class: 'btn btn-primary' do %>
-    <%= icon 'fas', 'plus' %> New
-  <% end %>
-</div>
-
-<% listing.surveys.each do |survey| %>
-  <div class="survey border-bottom mt-3 mb-5 pb-3" hx-boost="true">
-    <div class="d-flex justify-content-between">
-      <div>
-        <div class="h6">
-          <%= link_to survey.name, survey_path(survey) %>
-          <%= survey_copy_of_link(survey) %>
-        </div>
+<div class="mt-4">
+  <% listing.surveys.each do |survey| %>
+    <div class="survey border-bottom mt-3 mb-4 pb-3">
+      <div class="d-flex justify-content-between">
         <div>
+          <div class="h6">
+            <%= link_to survey.name, survey_path(survey) %>
+            <%= survey_copy_of_link(survey) %>
+          </div>
+          <div>
           <span class="badge bg-secondary">
             <%= survey_public_indicator(survey) %>
           </span>
-          <span class="badge bg-info">
+            <span class="badge bg-info">
             <%= pluralize survey.replies.count, "records" %>
           </span>
-        </div>
-        <div>
-          <div class="survey-description"><%= survey.description %></div>
-          <div class="mt-2">
-            <div><small><%= survey_preview_link(survey) %></small></div>
-            <div class="mt-1">
-              <%= survey_data_link(survey) %>&nbsp;
-              <%= survey_summary_link(survey) %>
+          </div>
+          <div>
+            <div class="survey-description"><%= survey.description %></div>
+            <div class="mt-2">
+              <div><small><%= survey_preview_link(survey) %></small></div>
+              <div class="mt-1">
+                <%= survey_data_link(survey) %>&nbsp;
+                <%= survey_summary_link(survey) %>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mt-2">
+              <%= survey_status_indicator(survey, include_label: true) %>
+              <small class="text-muted ms-3">Updated <%= time_ago_in_words survey.updated_at %> ago</small>
             </div>
           </div>
-          <div class="d-flex align-items-center mt-2">
-            <%= survey_status_indicator(survey, include_label: true) %>
-            <small class="text-muted ms-3">Updated <%= time_ago_in_words survey.updated_at %> ago</small>
+        </div>
+        <div>
+          <div class="d-flex justify-content-end align-items-center">
+            <%= edit_survey_link(survey, include_label: true) %>
+            <%= survey_share_dropdown(survey) %>
           </div>
-        </div>
-      </div>
-      <div>
-        <div class="d-flex justify-content-end align-items-center">
-          <%= edit_survey_link(survey, include_label: true) %>
-          <%= survey_share_dropdown(survey) %>
-        </div>
-        <div class="mt-2 d-flex justify-content-end align-items-center">
-          <%= sparklines listing.reply_counts_for(survey) %>
+          <div class="mt-2 d-flex justify-content-end align-items-center">
+            <%= sparklines listing.reply_counts_for(survey) %>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
 
 <% if listing.show_pagination? %>
   <div class="d-flex justify-content-center align-items-center">

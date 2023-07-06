@@ -3,9 +3,9 @@
 class OverviewPresenter < Dragnet::View::Presenter
   presents User, as: :user
 
-  def surveys = RecentlyRepliedToQuery.(user, limit: 6)
+  def surveys = RecentActiveWorkspaceQuery.(user, Time.zone.now.end_of_day, limit: 6)
 
-  def query_desc = RecentlyRepliedToQuery.query_doc
+  def query_desc = RecentActiveWorkspaceQuery.query_doc
 
   def replies_by_date = RepliesByDateQuery.(user.survey_ids)
 

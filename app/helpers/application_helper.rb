@@ -33,6 +33,11 @@ module ApplicationHelper
     end
   end
 
+  # @param [String] path
+  def echo_link_to(path, **html_options, &block)
+    link_to(path, path, html_options, &block)
+  end
+
   # Return the session's authenticity token
   #
   # @return [String]

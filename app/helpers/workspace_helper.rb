@@ -40,7 +40,7 @@ module WorkspaceHelper
       '&nbsp;'.html_safe + label
   end
 
-  def survey_share_dropdown(survey, align_menu_end: false)
+  def survey_share_dropdown(survey, align_menu_end: false, tooltip_target: "#survey-card-#{survey.id}")
     reply_url = reply_to_url(survey.short_id, survey.name)
 
     tag.div(class: 'dropdown me-1') do
@@ -49,7 +49,7 @@ module WorkspaceHelper
       }
 
       concat tag.ul(class: "dropdown-menu #{'dropdown-menu-end' if align_menu_end}") {
-        concat tag.li(class: 'dropdown-item', onclick: "dragnet.copyToClipboard('#{reply_url}', '#survey-card-#{survey.id}')") { 'Copy Link' }
+        concat tag.li(class: 'dropdown-item', onclick: "dragnet.copyToClipboard('#{reply_url}', '#{tooltip_target}')") { 'Copy Link' }
         concat tag.li { tag.a(class: 'dropdown-item', href: "mailto:?body=#{reply_url}") { 'Email' } }
       }
     end

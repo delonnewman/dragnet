@@ -6,6 +6,13 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   default_items 20
 
   delegate :id, to: :survey, prefix: :survey
+  delegate :not_ready_for_replies?, :no_data?, to: :survey_presenter
+
+  # @return [SurveyPresenter]
+  def survey_presenter
+    SurveyPresenter.new(survey)
+  end
+  memoize :survey_presenter
 
   # Replies sorted, filtered and paginated based on params
   #
