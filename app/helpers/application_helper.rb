@@ -20,16 +20,30 @@ module ApplicationHelper
   end
 
   LEVEL_ICONS = {
-    info:   'circle-info',
-    warn:   'triangle-exclamation',
-    danger: 'circle-exclamation',
+    info:    'circle-info',
+    warning: 'triangle-exclamation',
+    danger:  'circle-exclamation',
   }.freeze
 
   def alert_box(message: nil, level: :info)
     msg = (block_given? ? yield : message).to_s
+
     tag.div(class: "alert alert-#{level} alert-dismissible fade show", role: 'alert') do
       icon('fas', LEVEL_ICONS.fetch(level.to_sym)) + '&nbsp;'.html_safe +
         tag.span { msg } + tag.button(type: 'button', class: 'btn-close', 'data-bs-dismiss': 'alert', 'aria-label': 'Close')
+    end
+  end
+
+  def toast(message: nil, level: :info)
+    msg = (block_given? ? yield : message).to_s
+
+    tag.div(class: "toast text-bg-#{level} border-0 fade show", role: 'alert', aria: { live: 'assertive', atomic: 'true' }) do
+      tag.div(class: 'd-flex justify-content-between align-items-center me-2') do
+        concat tag.div(class: 'toast-body') {
+          icon('fas', LEVEL_ICONS.fetch(level.to_sym)) + '&nbsp;'.html_safe + tag.span { msg }
+        }
+        concat tag.button(type: 'button', class: 'btn-close', 'data-bs-dismiss': 'toast', 'aria-label': 'Close')
+      end
     end
   end
 

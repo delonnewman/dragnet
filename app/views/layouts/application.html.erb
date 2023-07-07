@@ -47,8 +47,10 @@
     </nav>
 
     <main class="container-fluid flex-shrink-0">
-      <% if notice %><%= alert_box message: notice, level: :info %><% end %>
-      <% if alert %><%= alert_box message: alert, level: :danger %><% end %>
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <% if notice %><%= toast message: notice, level: :info %><% end %>
+        <% if alert %><%= toast message: alert, level: :danger %><% end %>
+      </div>
       <div class="container">
         <%= yield %>
       </div>

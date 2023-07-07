@@ -25,8 +25,8 @@ Rails.application.routes.draw do
   end
 
   # survey name is optional
-  get '/reply/to/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
-  get '/reply/to/:survey_id',              to: 'reply#new'
+  get '/r/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
+  get '/r/:survey_id',              to: 'reply#new'
 
   scope '/api/v1' do
     scope '/editing' do

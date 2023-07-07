@@ -41,7 +41,7 @@ module WorkspaceHelper
   end
 
   def survey_share_dropdown(survey, align_menu_end: false, tooltip_target: "#survey-card-#{survey.id}")
-    reply_url = reply_to_url(survey.short_id, survey.name)
+    reply_url = reply_to_url(survey.short_id, survey.slug)
 
     tag.div(class: 'dropdown me-1') do
       concat tag.a(class: 'btn btn-sm btn-secondary dropdown-toggle', href: '#', role: 'button', data: { bs_toggle: 'dropdown' }) {
@@ -56,27 +56,36 @@ module WorkspaceHelper
   end
 
   def copy_survey_button(survey, include_label: false)
-    icon_button(include_label ? 'Copy' : nil, survey_copy_path(survey),
-                icon:  'clone',
-                title: 'Copy survey',
-                class: 'btn btn-sm btn-outline-secondary me-1')
+    icon_button(
+      include_label ? 'Duplicate' : nil, survey_copy_path(survey),
+      icon:  'clone',
+      title: 'Duplicate this survey',
+      data:  { bs_toggle: 'tooltip' },
+      class: 'btn btn-sm btn-outline-secondary me-1'
+    )
   end
 
   def delete_survey_button(survey)
-    icon_button(survey_path(survey),
-                icon:    'trash-can',
-                method:  :delete,
-                target:  "#survey-#{survey.id}",
-                confirm: 'Are you sure you want to delete your survey?',
-                title:   'Delete survey',
-                class:   'btn btn-sm btn-outline-danger')
+    icon_button(
+      survey_path(survey),
+      icon:    'trash-can',
+      method:  :delete,
+      target:  "#survey-#{survey.id}",
+      confirm: 'Are you sure you want to delete your survey?',
+      title:   'Delete this survey',
+      data:    { bs_toggle: 'tooltip' },
+      class:   'btn btn-sm btn-outline-danger'
+    )
   end
 
   def edit_survey_link(survey, include_label: false)
-    icon_link(include_label ? 'Edit' : nil, edit_survey_path(survey),
-              icon:  'hammer',
-              class: 'btn btn-sm btn-outline-secondary me-1',
-              title: 'Edit survey')
+    icon_link(
+      include_label ? 'Edit' : nil, edit_survey_path(survey),
+      icon:  'hammer',
+      class: 'btn btn-sm btn-outline-secondary me-1',
+      data:  { bs_toggle: 'tooltip' },
+      title: 'Edit survey'
+    )
   end
 
   def survey_preview_link(survey)

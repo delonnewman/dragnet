@@ -26,6 +26,7 @@
   <div class="card-footer d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center">
       <%= edit_survey_link(survey, include_label: true) %>
+      <%= copy_survey_button(survey) %>
       <%= survey_share_dropdown(survey) %>
     </div>
     <% unless survey.public? %>
