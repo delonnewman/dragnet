@@ -5,6 +5,9 @@ class OverviewPresenter < Dragnet::View::Presenter
 
   def surveys = RecentActiveWorkspaceQuery.(user, Time.zone.now.end_of_day, limit: 6)
 
+  def user_stats = StatsReport.new(user)
+  memoize :user_stats
+
   def query_desc = RecentActiveWorkspaceQuery.query_doc
 
   def replies_by_date = RepliesByDateQuery.(user.survey_ids)

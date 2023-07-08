@@ -6,7 +6,7 @@ class StatsReport
 
   delegate :questions, :name, to: :reportable
 
-  # @param reportable [#replies, #answers, #events]
+  # @param reportable [#records, #answers, #events]
   def initialize(reportable)
     @reportable = reportable
   end
@@ -17,7 +17,7 @@ class StatsReport
   end
 
   def reply_count
-    reportable.replies.count
+    reportable.records.count
   end
 
   def views
@@ -35,7 +35,7 @@ class StatsReport
   # @return [Hash{Date, Integer}]
   def replies_by_date
     reportable
-      .replies
+      .records
       .group('replies.created_at::date')
       .count
   end
@@ -57,7 +57,7 @@ class StatsReport
 
   # @return [Hash{String, Integer}]
   def replies_by_month
-    data = reportable.replies.group('extract(month from replies.created_at)').count
+    data = reportable.records.group('extract(month from replies.created_at)').count
 
     MONTH_DEFAULT.merge(data).transform_keys do |key|
       Date::MONTHNAMES[key.to_i]
@@ -93,7 +93,7 @@ class StatsReport
 
   # @return [Hash{String, Integer}]
   def replies_by_time_of_day
-    data = reportable.replies.group('extract(hour from replies.created_at)').count
+    data = reportable.records.group('extract(hour from replies.created_at)').count
 
     TIME_OF_DAY_DEFAULT.merge(data).transform_keys do |key|
       Dragnet::TimeUtils.fmt_hour(key.to_i)
@@ -113,7 +113,7 @@ class StatsReport
 
   # @return [Hash{String, Integer}]
   def replies_by_weekday
-    data = reportable.replies.group('extract(dow from replies.created_at)').count
+    data = reportable.records.group('extract(dow from replies.created_at)').count
 
     WEEKDAY_DEFAULT.merge(data).transform_keys do |key|
       WEEKDAYS[key.to_i]

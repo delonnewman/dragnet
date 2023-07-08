@@ -3,19 +3,25 @@
 class ReplyController < ApplicationController
   layout 'external'
 
+  # rubocop: disable Rails/DynamicFindBy
   def new
-    survey = Survey.find_by_short_id!(params.require(:survey_id))
+    result = DispatchSubmissionRequest.call(
+      survey: Survey.find_by_short_id!(params.require(:survey_id)),
+      policy: submission_policy,
+      visit:  Ahoy.instance.visit_or_create,
+      ahoy:   ahoy,
+      params: params
+    )
 
-    if submission_policy.can_preview_survey?(survey, params)
-      render :edit, locals: { reply: survey.replies.build }
-    elsif submission_policy.can_create_reply?(survey)
-      reply = Reply.create!(survey: survey)
-      ahoy.track 'view-submission-form', reply_id: reply.id, survey_id: survey.id
-      redirect_to edit_reply_path(reply)
+    if result.failure?
+      redirect_to root_path, alert: result.error
+    elsif result.preview
+      render :edit, locals: { reply: result.reply }
     else
-      redirect_to root_path, alert: "You don't have permission to reply to this survey"
+      redirect_to edit_reply_path(result.reply)
     end
   end
+  # rubocop: enable Rails/DynamicFindBy
 
   def edit
     reply = replies.find(params[:id])

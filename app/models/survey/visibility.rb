@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Survey::Opening < Dragnet::Advice
+class Survey::Visibility < Dragnet::Advice
   advises Survey
 
   def opened!
@@ -21,7 +21,7 @@ class Survey::Opening < Dragnet::Advice
     closed!.tap(&:save!)
   end
 
-  def toggle_openness!
+  def toggle_visibility!
     if survey.open?
       close!
     else

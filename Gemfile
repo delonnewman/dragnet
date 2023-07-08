@@ -58,6 +58,7 @@ gem 'erubi'
 gem 'invokable'
 gem 'memo_wise'
 gem 'rails-pattern_matching'
+gem 'interactor'
 
 # TODO: Move to Dart Sass
 gem 'sassc-rails'

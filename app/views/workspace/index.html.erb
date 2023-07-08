@@ -1,5 +1,9 @@
 <%= render 'workspace/tabs', selected: :overview, survey_count: overview.survey_count %>
 
+<div>
+
+</div>
+
 <div class="text-muted text-center"><small><%= overview.query_desc %></small></div>
 <div id="survey-listing" class="d-flex flex-wrap justify-content-center align-items-top">
   <% overview.surveys.each do |survey| %>

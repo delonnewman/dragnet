@@ -5,7 +5,7 @@ class Reply::Submission < Dragnet::Advice
   # Mark the reply as submitted
   #
   # @return [Reply]
-  def submitted(timestamp = Time.now)
+  def submitted(timestamp = Time.zone.now)
     reply.submitted = true
     reply.submitted_at = timestamp
     reply
@@ -14,7 +14,7 @@ class Reply::Submission < Dragnet::Advice
   # Apply changes to attributes, validate, and mark the reply as submitted
   #
   # @return [Reply]
-  def submitted!(attributes, timestamp = Time.now)
+  def submitted!(attributes, timestamp = Time.zone.now)
     reply.attributes = attributes
     reply.validate!(:submission)
     submitted(timestamp)
@@ -23,7 +23,7 @@ class Reply::Submission < Dragnet::Advice
   # Apply changes to attributes, validate, mark as submitted and save the reply
   #
   # @return [Boolean]
-  def submit!(attributes, timestamp = Time.now)
+  def submit!(attributes, timestamp = Time.zone.now)
     submitted!(attributes, timestamp).save!
   end
 end

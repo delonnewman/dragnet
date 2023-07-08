@@ -11,17 +11,10 @@ class RecentActiveWorkspaceQuery < Dragnet::Query
                         s.open,
                         s.created_at,
                         s.updated_at,
-                        s.edits_status,
-                        s.copy_of_id,
-                        copy.id        AS "copy_of_attributes[id]",
-                        copy.name      AS "copy_of_attributes[name]",
-                        copy.slug      AS "copy_of_attributes[slug]",
-                        copy.author_id AS "copy_of_attributes[author_id]"
+                        s.edits_status
                    FROM users   AS u
-             INNER JOIN surveys AS s    ON u.id         = s.author_id
-        LEFT OUTER JOIN surveys AS copy ON s.copy_of_id = copy.id
-                  WHERE s.created_at < ? AND u.id = ?
-               ORDER BY s.created_at DESC)
+             INNER JOIN surveys AS s ON u.id = s.author_id
+                  WHERE s.created_at < ? AND u.id = ?)
     UNION
     /* recently replied to surveys */
               (SELECT s.id,
@@ -31,19 +24,13 @@ class RecentActiveWorkspaceQuery < Dragnet::Query
                       s.open,
                       s.created_at,
                       s.updated_at,
-                      s.edits_status,
-                      s.copy_of_id,
-                      copy.id        AS "copy_of_attributes[id]",
-                      copy.name      AS "copy_of_attributes[name]",
-                      copy.slug      AS "copy_of_attributes[slug]",
-                      copy.author_id AS "copy_of_attributes[author_id]"
+                      s.edits_status
                  FROM users   AS u
            INNER JOIN surveys AS s    ON u.id         = s.author_id
            INNER JOIN replies AS r    ON s.id         = r.survey_id
-      LEFT OUTER JOIN surveys AS copy ON s.copy_of_id = copy.id
                 WHERE r.submitted = true AND u.id = ?
-             GROUP BY s.id, s.name, s.slug, s.public, s.open, s.created_at, s.updated_at, copy.id, copy.name, copy.slug
-             ORDER BY max(r.submitted_at))
+             GROUP BY s.id, s.name, s.slug, s.public, s.open, s.created_at, s.updated_at)
+    ORDER BY created_at DESC
     LIMIT ?
   SQL
 

@@ -10,7 +10,7 @@ class Report
   end
 
   def questions
-    Question.where(id: question_ids).select(:id, :text).to_a
+    Question.where(id: question_ids).select(:id, :text).load
   end
   memoize :questions
 
@@ -18,7 +18,7 @@ class Report
     Answer.includes(question: [:question_type]).where(question_id: question_ids)
   end
 
-  def replies
+  def records
     Reply
       .includes(:answers)
       .joins(:answers)

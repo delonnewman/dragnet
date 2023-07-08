@@ -11,6 +11,9 @@ class Reply < ApplicationRecord
   with Submission, delegating: %i[submit! submitted submitted!]
   scope :incomplete, -> { where(submitted: false) }
 
+  # Analytics
+  visitable :ahoy_visit
+
   # @!attribute answer_records
   #   @return [Array<Answer>]
   serialize :answer_records
