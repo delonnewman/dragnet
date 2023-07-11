@@ -1,6 +1,14 @@
-<table>
+<table class="stats-table">
   <thead>
     <th>Views</th>
     <th>Replies</th>
+    <th>Completion Rate</th>
   </thead>
+  <tbody>
+    <tr>
+      <td><%= report.view_count %></td>
+      <td><%= report.reply_count %></td>
+      <td><%= number_to_percentage report.completion_rate, precision: 0 %></td>
+    </tr>
+  </tbody>
 </table>

@@ -28,7 +28,8 @@ class StatsReport
     views.count
   end
 
-  def conversion_rate
+  # TODO: Add average time to complete
+  def completion_rate
     (reply_count.to_f / view_count) * 100
   end
 
