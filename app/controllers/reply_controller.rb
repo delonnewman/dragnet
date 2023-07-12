@@ -3,15 +3,8 @@
 class ReplyController < ApplicationController
   layout 'external'
 
-  # rubocop: disable Rails/DynamicFindBy
   def new
-    result = DispatchSubmissionRequest.call(
-      survey: Survey.find_by_short_id!(params.require(:survey_id)),
-      policy: submission_policy,
-      visit:  Ahoy.instance.visit_or_create,
-      ahoy:   ahoy,
-      params: params
-    )
+    result = DispatchSubmissionRequest.call(submission_context)
 
     if result.failure?
       redirect_to root_path, alert: result.error
@@ -21,7 +14,6 @@ class ReplyController < ApplicationController
       redirect_to edit_reply_path(result.reply)
     end
   end
-  # rubocop: enable Rails/DynamicFindBy
 
   def edit
     reply = replies.find(params[:id])
@@ -39,7 +31,7 @@ class ReplyController < ApplicationController
     if !submission_policy.can_update_reply?(reply)
       redirect_to root_path, alert: "You don't have permission to reply to this survey"
     elsif reply.submit!(reply_params)
-      ahoy.track 'update-submission-form', reply_id: reply.id, survey_id: survey.id
+      tracker.update_submission_form(reply)
       redirect_to reply_success_path(reply)
     else
       render :edit, locals: { reply: reply }
@@ -49,14 +41,30 @@ class ReplyController < ApplicationController
   def success
     reply = replies.find(params[:reply_id])
 
-    ahoy.track 'complete-submission-form', reply_id: reply.id, survey_id: reply.survey_id
+    tracker.complete_submission_form(reply)
     render :success, locals: { reply: reply }
   end
 
   private
 
+  # rubocop: disable Rails/DynamicFindBy
+  def submission_context
+    {
+      survey:  Survey.find_by_short_id!(params.require(:survey_id)),
+      policy:  submission_policy,
+      visit:   Ahoy.instance.visit_or_create,
+      tracker: tracker,
+      params:  params
+    }
+  end
+  # rubocop: enable Rails/DynamicFindBy
+
   def submission_policy
     @submission_policy ||= ReplySubmissionPolicy.for(current_user)
+  end
+
+  def tracker
+    @tracker ||= ReplyTracker.new(ahoy)
   end
 
   def replies

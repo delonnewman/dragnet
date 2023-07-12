@@ -29,6 +29,7 @@ class ReplySubmissionController < EndpointController
 
   private
 
+  # TODO: generate strong params path from survey
   def submission_params
     params.require(:reply).permit!
   end

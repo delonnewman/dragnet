@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DispatchSubmissionRequest < ApplicationInteractor
-  delegate :survey, :policy, :visit, :ahoy, :params, :reply, to: :context
+  delegate :survey, :policy, :visit, :tracker, :params, :reply, to: :context
 
   PERMISSION_ERROR = "You don't have permission to reply to this survey"
   SUBMITTED_ERROR  = "It seems you've already submitted a reply to survey %s"
@@ -15,10 +15,10 @@ class DispatchSubmissionRequest < ApplicationInteractor
       context.preview = true
     elsif policy.visitor_reply_created?(survey, visit)
       context.reply = survey.ahoy_visits.of_visitor(visit.visitor_token).first.reply
-      ahoy.track 'view-submission-form', reply_id: reply.id, survey_id: survey.id
+      tracker.view_submission_form(reply)
     else
       context.reply = Reply.create!(survey: survey)
-      ahoy.track 'view-submission-form', reply_id: reply.id, survey_id: survey.id
+      tracker.view_submission_form(reply)
     end
   end
 end
