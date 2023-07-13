@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class Query
+  class Query < Composed
     include Invokable
     include Dragnet
     extend ClassMetaData

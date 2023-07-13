@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'stats_report/constants'
+
 # Report stats for a reportable object
 class StatsReport
   attr_reader :reportable
@@ -16,20 +18,26 @@ class StatsReport
     questions.select { _1.settings.countable? }
   end
 
+  # @return [Integer]
   def reply_count
     reportable.records.count
   end
 
+  # @return [ActiveRecord::Relation<Ahoy::View>]
   def views
-    reportable.events.where(name: 'view-submission-form')
+    reportable.events.where(name: ReplyTracker::EVENT_TAGS[:view])
   end
 
+  # @return [Integer]
   def view_count
     views.count
   end
 
   # TODO: Add average time to complete
+  # @return [Float, nil]
   def completion_rate
+    return if view_count.zero?
+
     (reply_count.to_f / view_count) * 100
   end
 
@@ -41,21 +49,6 @@ class StatsReport
       .count
   end
 
-  MONTH_DEFAULT = {
-    1  => 0,
-    2  => 0,
-    3  => 0,
-    4  => 0,
-    5  => 0,
-    6  => 0,
-    7  => 0,
-    8  => 0,
-    9  => 0,
-    10 => 0,
-    11 => 0,
-    12 => 0,
-  }.freeze
-
   # @return [Hash{String, Integer}]
   def replies_by_month
     data = reportable.records.group('extract(month from replies.created_at)').count
@@ -65,33 +58,6 @@ class StatsReport
     end
   end
 
-  TIME_OF_DAY_DEFAULT = {
-    0  => 0,
-    1  => 0,
-    2  => 0,
-    3  => 0,
-    4  => 0,
-    5  => 0,
-    6  => 0,
-    7  => 0,
-    8  => 0,
-    9  => 0,
-    10 => 0,
-    11 => 0,
-    12 => 0,
-    13 => 0,
-    14 => 0,
-    15 => 0,
-    16 => 0,
-    17 => 0,
-    18 => 0,
-    19 => 0,
-    20 => 0,
-    21 => 0,
-    22 => 0,
-    23 => 0
-  }.freeze
-
   # @return [Hash{String, Integer}]
   def replies_by_time_of_day
     data = reportable.records.group('extract(hour from replies.created_at)').count
@@ -100,17 +66,6 @@ class StatsReport
       Dragnet::TimeUtils.fmt_hour(key.to_i)
     end
   end
-
-  WEEKDAYS = %w[Sun Mon Tue Wed Thu Fri Sat].freeze
-  WEEKDAY_DEFAULT = {
-    0 => 0,
-    1 => 0,
-    2 => 0,
-    3 => 0,
-    4 => 0,
-    5 => 0,
-    6 => 0
-  }.freeze
 
   # @return [Hash{String, Integer}]
   def replies_by_weekday

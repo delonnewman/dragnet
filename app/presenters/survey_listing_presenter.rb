@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class SurveyListingPresenter < Dragnet::View::PagedPresenter
-  presents User, as: :user
+  presents Workspace, as: :space
   default_items 7
+
+  delegate :user, to: :space
 
   def surveys = user.surveys.order(updated_at: :desc).offset(pager.offset).limit(pager.items)
   memoize :surveys
@@ -18,7 +20,7 @@ class SurveyListingPresenter < Dragnet::View::PagedPresenter
   # @return [Hash{String => Integer}]
   def reply_counts_for(survey) = reply_counts.fetch(survey.id, EMPTY_HASH).transform_keys { |d| "Replies on #{d}" }
 
-  def reply_counts = RepliesBySurveyAndDateQuery.(user)
+  def reply_counts = space.replies_by_survey_and_date
   memoize :reply_counts
 
   def show_pagination?

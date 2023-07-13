@@ -6,9 +6,9 @@
   </thead>
   <tbody>
     <tr>
-      <td><%= report.view_count %></td>
-      <td><%= report.reply_count %></td>
-      <td><%= number_to_percentage report.completion_rate, precision: 0 %></td>
+      <td><%= stats_value report.view_count %></td>
+      <td><%= stats_value report.reply_count %></td>
+      <td><%= stats_percentage report.completion_rate, precision: 0 %></td>
     </tr>
   </tbody>
 </table>

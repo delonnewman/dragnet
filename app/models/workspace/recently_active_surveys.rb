@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RecentActiveWorkspaceQuery < Dragnet::Query
+class Workspace::RecentlyActiveSurveys < Dragnet::Query
   query_doc 'Your surveys that have recently been created or most recently been replied to'
   query_text <<~SQL
     /* created surveys */
@@ -34,10 +34,11 @@ class RecentActiveWorkspaceQuery < Dragnet::Query
     LIMIT ?
   SQL
 
-  # @param [User] user
+  alias user subject
+
   # @param [Time] last_created
   # @param [Integer] limit
-  def call(user, last_created, limit: 6)
+  def call(last_created:, limit: 6)
     q Survey, last_created, user.id, user.id, limit
   end
 end

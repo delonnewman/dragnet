@@ -4,7 +4,7 @@ class WorkspaceController < ApplicationController
   include Authenticated
 
   def index
-    overview = OverviewPresenter.new(current_user)
+    overview = OverviewPresenter.new(current_user.workspace)
 
     render :index, locals: { overview: overview }
   end

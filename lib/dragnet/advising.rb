@@ -61,14 +61,16 @@ module Dragnet
     # @param calling [Symbol, nil] (optionally) a named method that will be called after the object is instantiated
     # @param memoize [Boolean] memoize the composed object, defaults to true
     def define_advising_method(method_name, klass, args = EMPTY_ARRAY, calling: nil, memoize: true)
-      define_method(method_name) do
+      define_method(method_name) do |*method_args, **kwargs|
         obj = advising_object_memos.fetch(method_name) do
           klass.new(self, *args).tap do |obj|
             advising_object_memos[method_name] = obj if memoize
           end
         end
 
-        calling ? obj.public_send(calling) : obj
+        return obj unless calling
+
+        obj.public_send(calling, *method_args, **kwargs)
       end
 
       define_advising_object_memos if memoize

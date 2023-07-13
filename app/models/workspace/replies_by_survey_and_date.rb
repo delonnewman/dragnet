@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepliesBySurveyAndDateQuery < Dragnet::Query
+class Workspace::RepliesBySurveyAndDate < Dragnet::Query
   query_text <<~SQL
     select
       r.survey_id,
@@ -16,10 +16,13 @@ class RepliesBySurveyAndDateQuery < Dragnet::Query
     order by reply_date desc
   SQL
 
-  # @param [User] user
+  alias space subject
+  delegate :user, to: :space
+
+  # @param [Date] after
   #
   # @return [Hash{Date, Integer}]
-  def call(user, after: Date.today - 180)
+  def call(after: Date.today - 180)
     hash_query(user.id, after)
       .group_by { |r| r[:survey_id] }
       .transform_values { |rs|

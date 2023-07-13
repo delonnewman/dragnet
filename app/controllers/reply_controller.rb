@@ -4,7 +4,7 @@ class ReplyController < ApplicationController
   layout 'external'
 
   def new
-    result = DispatchSubmissionRequest.call(submission_context)
+    result = dispatch_submission_request
 
     if result.failure?
       redirect_to root_path, alert: result.error
@@ -18,7 +18,7 @@ class ReplyController < ApplicationController
   def edit
     reply = replies.find(params[:id])
 
-    if submission_policy.can_edit_reply?(reply)
+    if current_user.can_edit_reply?(reply)
       render :edit, locals: { reply: reply }
     else
       redirect_to root_path, alert: "You don't have permission to reply to this survey"
@@ -28,7 +28,7 @@ class ReplyController < ApplicationController
   def update
     reply = replies.find(params[:id])
 
-    if !submission_policy.can_update_reply?(reply)
+    if !current_user.can_update_reply?(reply)
       redirect_to root_path, alert: "You don't have permission to reply to this survey"
     elsif reply.submit!(reply_params)
       tracker.update_submission_form(reply)
@@ -48,20 +48,15 @@ class ReplyController < ApplicationController
   private
 
   # rubocop: disable Rails/DynamicFindBy
-  def submission_context
-    {
-      survey:  Survey.find_by_short_id!(params.require(:survey_id)),
-      policy:  submission_policy,
-      visit:   Ahoy.instance.visit_or_create,
-      tracker: tracker,
-      params:  params
-    }
+  def dispatch_submission_request
+    Survey.find_by_short_id!(params.require(:survey_id)).dispatch_submission_request(
+      wants_preview: params[:preview].present?,
+      user:          current_user,
+      visit:         current_visit,
+      tracker:       tracker
+    )
   end
   # rubocop: enable Rails/DynamicFindBy
-
-  def submission_policy
-    @submission_policy ||= ReplySubmissionPolicy.for(current_user)
-  end
 
   def tracker
     @tracker ||= ReplyTracker.new(ahoy)

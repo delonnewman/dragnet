@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
-class DataGridFilterQuery < Dragnet::Query
+class DataGrid::FilterRecords < Dragnet::Query
   SIMPLE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
 
-  # @param [Survey] survey
+  alias grid subject
+  delegate :survey, to: :grid
+
   # @param [ActionController::Parameters, Hash] params
   #
   # @return [ActiveRecord::Relation]
-  def call(survey, params)
+  def call(params)
     scope = survey.replies
     return scope if params.empty? || params[:filter_by].blank?
 
     params = params[:filter_by].compact_blank
     filtered_records(scope, params)
   end
+
+  private
 
   def filtered_records(scope, params)
     return scope if params.empty?

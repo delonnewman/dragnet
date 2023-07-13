@@ -22,6 +22,8 @@ class Survey < ApplicationRecord
 
   # Analytics
   has_many :ahoy_visits, through: :replies
+  with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created?]
+  with DispatchSubmissionRequest, calling: :run
 
   # To satisfy the Reportable protocol, along with #questions above
   has_many :records, -> { where(submitted: true) }, dependent: :restrict_with_error, inverse_of: :survey, class_name: 'Reply'
@@ -45,4 +47,6 @@ class Survey < ApplicationRecord
   has_many :trigger_registrations, dependent: :delete_all, inverse_of: :survey
 
   with Visibility, delegating: %i[open! close! toggle_visibility!]
+
+  with DataGrid
 end
