@@ -91,6 +91,7 @@ module Dragnet
     # @param args optionally pass arguments to the constructor
     # @param as [Symbol, nil] the name of the generated method, if nil will use the default name
     # @param delegating [Symbol, Array<Symbol>] a list of methods to delegate to the generated method
+    # TODO: warn if a conflict exists between delegates and existing methods
     def with(klass, *args, as: nil, delegating: EMPTY_ARRAY, **options)
       delegating = [delegating] unless delegating.is_a?(Array)
       pc = PointCut.new(advice: klass, args: args, name: as, delegate_methods: delegating, options: options)

@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Workspace
+  extend Dragnet::Advising
+
   attr_reader :user
 
-  with RecentlyActiveSurveys
-  with RepliesByDate
-  with RepliesBySurveyAndDate
+  with RecentlyActiveSurveys, calling: :call
+  with RepliesByDate, calling: :call
+  with RepliesBySurveyAndDate, calling: :call
 
   def initialize(user)
     @user = user

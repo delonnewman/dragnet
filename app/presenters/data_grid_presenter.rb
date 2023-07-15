@@ -22,10 +22,12 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   end
   memoize :paginated_records
 
+  # TODO: Move to DataGrid
   def records
     ordered_records(FilterRecords.(survey, params))
   end
 
+  # TODO: Move to DataGrid
   def ordered_records(scope)
     if !sort_by_question?
       scope.order(sort_by => sort_direction)

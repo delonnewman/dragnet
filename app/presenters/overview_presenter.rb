@@ -5,7 +5,7 @@ class OverviewPresenter < Dragnet::View::Presenter
 
   delegate :replies_by_date, to: :space
 
-  def surveys = space.recently_active_surveys(last_created: Time.zone.now.end_of_day, limit: 6)
+  def surveys = space.recently_active_surveys(last_created: Time.zone.now.end_of_day, limit: 8)
 
   def user_stats = StatsReport.new(user)
   memoize :user_stats

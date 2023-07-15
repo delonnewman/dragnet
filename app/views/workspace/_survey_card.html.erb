@@ -1,4 +1,4 @@
-<div id="survey-card-<%= survey.id %>" class="survey-card card d-inline-block mb-3 me-3" style="width: 360px">
+<div id="survey-card-<%= survey.id %>" class="survey-card card d-inline-block mb-3 me-3" style="width: 280px">
   <div class="card-body">
     <div class="card-title d-flex justify-content-between align-items-center">
       <div>
@@ -15,7 +15,6 @@
       </span>
     </div>
     <div class="mt-2">
-      <div><small><%= survey_preview_link(survey) %></small></div>
       <div class="mt-1">
         <%= survey_data_link(survey) %>&nbsp;
         <%= survey_summary_link(survey) %>
@@ -24,7 +23,7 @@
   </div>
   <div class="card-footer d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center">
-      <%= edit_survey_link(survey, include_label: true) %>
+      <%= edit_survey_link(survey) %>
       <%= copy_survey_button(survey) %>
       <%= survey_share_dropdown(survey) %>
     </div>

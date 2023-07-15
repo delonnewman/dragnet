@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'command/result'
-
 module Dragnet
   class Command < Composed
+    require_relative 'command/result'
+
     include Invokable::Core
 
     delegate :fail, to: :@result
@@ -23,5 +23,9 @@ module Dragnet
     def call(*args, **kwargs)
       raise NotImplementedError
     end
+
+    private
+
+    attr_reader :result
   end
 end

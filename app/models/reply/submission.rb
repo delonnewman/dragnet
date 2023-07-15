@@ -4,26 +4,25 @@ class Reply::Submission < Dragnet::Advice
 
   # Mark the reply as submitted
   #
+  # @param [Time] timestamp
+  #
   # @return [Reply]
-  def submitted(timestamp = Time.zone.now)
+  def submitted!(timestamp)
     reply.submitted = true
     reply.submitted_at = timestamp
     reply
   end
 
-  # Apply changes to attributes, validate, and mark the reply as submitted
-  #
-  # @return [Reply]
-  def submitted!(attributes, timestamp = Time.zone.now)
-    reply.attributes = attributes
-    reply.validate!(:submission)
-    submitted(timestamp)
-  end
-
   # Apply changes to attributes, validate, mark as submitted and save the reply
   #
+  # @param [Hash{Symbol, String => Object}, ActionController::Parameters] attributes
+  # @param [Time] timestamp
+  #
   # @return [Boolean]
-  def submit!(attributes, timestamp = Time.zone.now)
-    submitted!(attributes, timestamp).save!
+  def submit!(attributes, timestamp: Time.zone.now)
+    reply.attributes = attributes
+    reply.validate!(:submission)
+    submitted!(timestamp)
+    reply.save!
   end
 end

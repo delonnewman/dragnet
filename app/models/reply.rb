@@ -8,7 +8,7 @@ class Reply < ApplicationRecord
   has_many :answers, dependent: :delete_all, inverse_of: :reply
   accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
-  with Submission, delegating: %i[submit! submitted submitted!]
+  with Submission, delegating: %i[submit! submitted!]
   scope :incomplete, -> { where(submitted: false) }
 
   # Analytics

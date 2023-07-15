@@ -15,7 +15,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :validatable, :trackable, :confirmable, :omniauthable
 
-  with ReplySubmissionPolicy, delegating: %i[can_preview_survey? can_update_reply? can_edit_reply?]
+  with ReplySubmissionPolicy, delegating: %i[can_preview_survey? can_update_reply? can_edit_reply? can_create_reply?]
 
   with Workspace
 end

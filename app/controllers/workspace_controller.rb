@@ -10,7 +10,7 @@ class WorkspaceController < ApplicationController
   end
 
   def surveys
-    listing = SurveyListingPresenter.new(current_user, params)
+    listing = SurveyListingPresenter.new(current_user.workspace, params)
 
     render :surveys, locals: { listing: listing }
   end

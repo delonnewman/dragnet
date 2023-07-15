@@ -34,7 +34,8 @@ class Workspace::RecentlyActiveSurveys < Dragnet::Query
     LIMIT ?
   SQL
 
-  alias user subject
+  alias space subject
+  delegate :user, to: :space
 
   # @param [Time] last_created
   # @param [Integer] limit
