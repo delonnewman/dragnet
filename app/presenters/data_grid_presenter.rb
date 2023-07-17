@@ -24,7 +24,7 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
 
   # TODO: Move to DataGrid
   def records
-    ordered_records(FilterRecords.(survey, params))
+    ordered_records(survey.data_grid.filtered_records(params))
   end
 
   # TODO: Move to DataGrid

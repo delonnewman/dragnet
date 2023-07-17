@@ -5,7 +5,7 @@ class DataGrid
 
   attr_reader :survey
 
-  with FilterRecords, calling: :call
+  with FilteredRecords, calling: :call
 
   def initialize(survey)
     @survey = survey

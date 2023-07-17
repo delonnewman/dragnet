@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DataGrid::FilterRecords < Dragnet::Query
+class DataGrid::FilteredRecords < Dragnet::Query
   SIMPLE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
 
   alias grid subject
