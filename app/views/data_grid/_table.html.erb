@@ -1,30 +1,30 @@
-<% if survey.not_ready_for_replies? %>
-  <%= render 'shared/survey_no_questions', survey: survey %>
-<% elsif survey.no_data? %>
-  <%= render 'shared/survey_no_replies', survey: survey %>
+<% if grid.not_ready_for_replies? %>
+  <%= render 'shared/survey_no_questions', survey: grid.survey %>
+<% elsif grid.no_data? %>
+  <%= render 'shared/survey_no_replies', survey: grid.survey %>
 <% else %>
-  <%= render 'data_grid/tools', survey: survey %>
+  <%= render 'data_grid/tools', grid: grid %>
 
   <div class="data-grid table-responsive">
     <table class="table table-striped table-bordered">
       <thead>
       <th>
         <div class="d-flex justify-content-start align-items-center">
-          <%= column_sort_link(survey, :created_at, label: icon('fas', 'clock'), alt_label: 'Time Created') %>
+          <%= column_sort_link(grid, :created_at, label: icon('fas', 'clock'), alt_label: 'Time Created') %>
           <%= date_field_tag :created_at, params[:created_at], class: 'form-control' %>
         </div>
       </th>
-      <% survey.questions.each do |question| %>
+      <% grid.questions.each do |question| %>
         <th data-question-id="<%= question.id %>">
           <div class="d-flex justify-content-start align-items-center">
-            <%= column_sort_link(survey, question, label: truncate(question.text), alt_label: question.text) %>
+            <%= column_sort_link(grid, question, label: truncate(question.text), alt_label: question.text) %>
             <%= question_filter(question, params.dig(:filter_by, question.id)) %>
           </div>
         </th>
       <% end %>
       </thead>
       <tbody>
-      <%= render 'data_grid/rows', survey: survey %>
+      <%= render 'data_grid/rows', grid: grid %>
       </tbody>
     </table>
   </div>

@@ -6,13 +6,13 @@ class DataGridController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        render :show, locals: { survey: presenter }
+        render :show, locals: { grid: presenter }
       end
       format.csv do
-        render_file :show, export_name(presenter), locals: { survey: presenter }
+        render_file :show, export_name(presenter.survey), locals: { grid: presenter }
       end
       format.xlsx do
-        render_file :show, export_name(presenter), locals: { survey: presenter }
+        render_file :show, export_name(presenter.survey), locals: { grid: presenter }
       end
     end
   end
@@ -37,7 +37,7 @@ class DataGridController < ApplicationController
   end
 
   def presenter
-    DataGridPresenter.new(survey, data_grid_params)
+    DataGridPresenter.new(survey.data_grid, data_grid_params)
   end
 
   def survey

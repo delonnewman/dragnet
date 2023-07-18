@@ -17,7 +17,7 @@ class Answer < ApplicationRecord
   end
 
   def evaluation
-    AnswerEvaluationPerspective.get(question_type)
+    Perspectives::AnswerEvaluation.get(question_type)
   end
 
   def assign_value!(value)

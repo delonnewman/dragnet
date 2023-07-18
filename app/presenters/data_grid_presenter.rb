@@ -2,10 +2,11 @@
 
 # Presents surveys for the data grid
 class DataGridPresenter < Dragnet::View::PagedPresenter
-  presents Survey, as: :survey
+  presents DataGrid, as: :grid
   default_items 20
 
-  delegate :id, to: :survey, prefix: :survey
+  delegate :survey, to: :grid
+  delegate :id, :name, to: :survey, prefix: :survey
   delegate :not_ready_for_replies?, :no_data?, to: :survey_presenter
 
   # @return [SurveyPresenter]
@@ -22,24 +23,13 @@ class DataGridPresenter < Dragnet::View::PagedPresenter
   end
   memoize :paginated_records
 
-  # TODO: Move to DataGrid
   def records
-    ordered_records(survey.data_grid.filtered_records(params))
-  end
-
-  # TODO: Move to DataGrid
-  def ordered_records(scope)
-    if !sort_by_question?
-      scope.order(sort_by => sort_direction)
-    else
-      q = Question.includes(:question_type).find(params[:sort_by])
-      sort_records(q, scope.joins(:answers).where(answers: { question_id: q.id }))
-    end
-  end
-
-  # TODO: Move to DataGrid
-  def sort_records(question, scope)
-    DataGridSortQueryPerspective.get(question.question_type).sort(question, scope, sort_direction)
+    grid.records(
+      sort_by:          sort_by,
+      sort_direction:   sort_direction,
+      sort_by_question: sort_by_question?,
+      **params.to_h
+    )
   end
 
   def show_clear_filter?

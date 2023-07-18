@@ -44,6 +44,6 @@ class DataGrid::FilteredRecords < Dragnet::Query
   end
 
   def filter_value(scope, question, table, value)
-    DataGridFilterQueryPerspective.get(question.question_type).filter(question, scope, table, value)
+    Perspectives::DataGridFilterQuery.get(question.question_type).filter(question, scope, table, value)
   end
 end

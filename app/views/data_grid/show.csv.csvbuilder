@@ -1,5 +1,7 @@
-csv << survey.questions.map(&:text)
+# frozen_string_literal: true
 
-survey.records.find_each do |reply|
-  csv << survey.questions.map { |q| reply.answers_to(q).join(', ') }
+csv << grid.questions.map(&:text)
+
+grid.records.find_each do |reply|
+  csv << grid.questions.map { |q| reply.answers_to(q).join(', ') }
 end

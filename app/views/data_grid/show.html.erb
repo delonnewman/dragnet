@@ -1,7 +1,7 @@
-<%= render 'surveys/tabs', survey: survey, selected: :data %>
+<%= render 'surveys/tabs', survey: grid.survey, selected: :data %>
 
 <div class="container-fluid" hx-ext="morph">
   <div id="data-grid-table">
-    <%= render 'data_grid/table', survey: survey %>
+    <%= render 'data_grid/table', grid: grid %>
   </div>
 </div>
