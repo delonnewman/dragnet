@@ -60,16 +60,16 @@ module ApplicationHelper
   end
 
   def release_link
-    release = Dragnet::Utils.release
-    url     = Dragnet::Utils.github_url.join("/releases/tag/#{Dragnet::Utils.release}")
+    release = Dragnet.release
+    url     = Dragnet.github_url.join("/releases/tag/#{release}")
 
     link_to release, url, class: 'text-muted'
   end
 
   def version_link
-    version = Dragnet::Utils.version
-    git_sha = Dragnet::Utils.current_git_sha
-    url     = Dragnet::Utils.github_url.join("tree/#{git_sha}").to_s
+    version = Dragnet.version
+    git_sha = Dragnet.current_git_sha
+    url     = Dragnet.github_url.join("tree/#{git_sha}").to_s
 
     link_to version, url, class: 'text-muted'
   end
@@ -79,11 +79,11 @@ module ApplicationHelper
   end
 
   def github_link
-    icon_link Dragnet::Utils.github_url.to_s, icon: 'github', icon_type: 'fab', class: 'text-muted fa-xl'
+    icon_link Dragnet.github_url.to_s, icon: 'github', icon_type: 'fab', class: 'text-muted fa-xl'
   end
 
   def licence_link(label:)
-    url = Dragnet::Utils.github_url.join('blob/main/LICENCE.txt').to_s
+    url = Dragnet.github_url.join('blob/main/LICENCE.txt').to_s
 
     link_to label, url, class: 'text-muted'
   end

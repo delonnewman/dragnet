@@ -5,29 +5,6 @@ module Dragnet
   module Utils
     module_function
 
-    GITHUB_URL = 'https://github.com/delonnewman/dragnet/'
-    private_constant :GITHUB_URL
-
-    def github_url
-      @github_url ||= Addressable::URI.parse(GITHUB_URL)
-    end
-
-    # Return the current version of the system (based on git SHA).
-    #
-    # @return [String]
-    def version
-      current_git_sha[0, 8]
-    end
-
-    # TODO: pass as an env variable to docker builds
-    def current_git_sha
-      @current_git_sha ||= `git log -n 1 --format="%H"` # use latest git hash as version
-    end
-
-    def release
-      Rails.root.join('RELEASE.txt').read
-    end
-
     # Generate a slug from string with all non safe and space characters replaced by the delimiter
     # @api public
     #
