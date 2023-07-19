@@ -1,3 +1,9 @@
+<div class="workspace-tools mb-3 py-3">
+  <%= button_to new_survey_path, class: 'btn btn-sm btn-primary' do %>
+    <%= icon 'fas', 'plus' %> Create Survey
+  <% end %>
+</div>
+
 <ul class="nav nav-tabs mb-3">
   <li class="nav-item">
     <%= link_to root_path, class: "nav-link #{'active' if selected == :overview}" do %>

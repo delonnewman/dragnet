@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between align-items-center mb-2">
   <div class="d-flex justify-content-start align-items-center">
     <div class="me-2 text-muted">
-      <%= grid.records.count %> records
+      <%= number_with_delimiter grid.records.count %> records
     </div>
     <% unless grid.show_clear_filter? %>
       <%= link_to survey_data_path(grid.survey), class: 'btn btn-sm btn-outline-secondary' do %>

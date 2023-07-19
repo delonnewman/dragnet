@@ -13,6 +13,26 @@ class SurveyPresenter < Dragnet::View::Presenter
     survey.replies.empty? && survey.events.empty?
   end
 
+  def share_email?
+    share_by?('email')
+  end
+
+  def share_qrcode?
+    share_by?('qrcode')
+  end
+
+  def share_link?
+    share_by?('link')
+  end
+
+  def share_by?(method)
+    share_method == method
+  end
+
+  def share_method
+    (params && params[:method]) || 'email'
+  end
+
   def stats_report
     StatsReport.new(survey)
   end

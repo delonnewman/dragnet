@@ -18,4 +18,14 @@ class User < ApplicationRecord
   with ReplySubmissionPolicy, delegating: %i[can_preview_survey? can_update_reply? can_edit_reply? can_create_reply?]
 
   with Workspace
+
+  def gravatar_url
+    hash = Digest::MD5.hexdigest(email)
+
+    "https://www.gravatar.com/avatar/#{hash}"
+  end
+
+  def valid_email?
+    email.present? && !email.end_with?('@example.com')
+  end
 end

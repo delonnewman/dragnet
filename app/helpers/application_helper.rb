@@ -9,11 +9,15 @@ module ApplicationHelper
   # @param [Integer] height
   #
   # @return [String] HTML
-  def sparklines(data, width: 100, height: 50, max_value: 10)
+  def sparklines(data, width: 100, height: 50)
+    titles     = data.keys
+    values     = data.values
+    normalized = Dragnet::StatsUtils.normalize_values(data.values)
+
     tag.figure(class: 'sparkline', style: "height: #{height}px") do
-      data.map do |key, value|
-        tag.span(class: 'index', title: key) do
-          tag.span(class: 'count', style: "height: #{(value.to_f / max_value) * 100}%") { "#{value}," }
+      values.each_with_index.map do |value, i|
+        tag.span(class: 'index', title: titles[i]) do
+          tag.span(class: 'count', style: "height: #{normalized[i] * 100}%") { "#{value}," }
         end
       end.join.html_safe
     end

@@ -55,10 +55,12 @@ if Rails.env.development?
 
   print 'Generating Replies...'
   surveys.each do |s|
-    (50..100).to_a.sample.times do
-      Reply[survey: s].generate.tap do |r|
-        r.save!
-        print '.'
+    Dragnet::StatsUtils.time_series((Time.zone.today - 120)..(Time.zone.today)).each_pair do |created_at, count|
+      count.times do
+        Reply[survey: s, created_at: created_at].generate.tap do |r|
+          r.save!
+          print '.'
+        end
       end
     end
   end

@@ -9,26 +9,36 @@ module StatsHelper
     end
   end
 
-  def data_table(data)
+  # @param [Hash{Object => Numeric}]
+  #
+  # @return [String] html string
+  def data_table(data, **options)
     tag.table(class: 'table') do
       tag.tbody do
         data.map do |key, value|
-          tag.th(key) + tag.td(value)
+          tag.th(key) + tag.td(number_with_delimiter(value, **options))
         end.join(' ').html_safe
       end
     end
   end
 
   # @param [Numeric, nil] value
+  # @param [Hash] options
+  #
+  # @see NumberHelper#number_with_delimiter for options
+  #
   # @return [Numeric, String]
-  def stats_value(value)
+  def stats_value(value, **options)
     return '&mdash;'.html_safe unless value
 
-    value
+    number_with_delimiter(value, **options)
   end
 
   # @param [Numeric, nil] value
   # @param [Hash] options
+  #
+  # @see NumberHelper#number_to_percentage for options
+  #
   # @return [Numeric, String]
   def stats_percentage(value, **options)
     return '&mdash;'.html_safe unless value

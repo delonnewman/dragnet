@@ -15,15 +15,4 @@ class WorkspaceController < ApplicationController
     render :surveys, locals: { listing: listing }
   end
 
-  def open_survey
-    survey = Survey.find(params[:survey_id]).open!
-
-    render partial: 'workspace/survey_card', locals: { survey: survey }
-  end
-
-  def close_survey
-    survey = Survey.find(params[:survey_id]).close!
-
-    render partial: 'workspace/survey_card', locals: { survey: survey }
-  end
 end

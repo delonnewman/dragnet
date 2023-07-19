@@ -9,7 +9,7 @@ class ReplyGenerator < Dragnet::ActiveRecordGenerator
       r.submitted_at = r.created_at if r.submitted?
 
       s.questions.each do |q|
-        next unless q.required? || Faker::Boolean.boolean(true_ratio: 0.6)
+        next unless q.required? || Faker::Boolean.boolean(true_ratio: 0.3)
 
         r.answers << Answer[survey: s, reply: r, question: q, question_type_id: q.question_type_id].generate
       end

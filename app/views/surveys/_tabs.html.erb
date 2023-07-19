@@ -7,8 +7,10 @@
       </span>
     </span>
     <div class="d-flex justify-content-end align-items-center">
+      <% unless survey.public? %>
+        <%= survey_open_indicator(survey) %>
+      <% end %>
       <%= copy_survey_button(survey, include_label: true) %>
-      <%= survey_share_dropdown(survey, align_menu_end: true) %>
     </div>
   </div>
 </div>
@@ -24,6 +26,11 @@
     <% end %>
   </li>
   <li class="nav-item">
+    <%= link_to survey_data_path(survey), class: "nav-link #{'active' if selected == :data}" do %>
+      <%= icon 'fas', 'table' %> Records
+    <% end %>
+  </li>
+  <li class="nav-item">
     <%= link_to edit_survey_path(survey), class: "nav-link #{'active' if selected == :edit}" do %>
       <%= icon 'fas', 'hammer' %> Create
     <% end %>
@@ -34,8 +41,8 @@
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to survey_data_path(survey), class: "nav-link #{'active' if selected == :data}" do %>
-      <%= icon 'fas', 'table' %> Records
+    <%= link_to survey_share_path(survey), class: "nav-link #{'active' if selected == :share}" do %>
+      <%= icon 'fas', 'paper-plane' %> Share
     <% end %>
   </li>
   <li class="nav-item">

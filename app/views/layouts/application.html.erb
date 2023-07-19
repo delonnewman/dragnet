@@ -2,7 +2,7 @@
 <html lang="en" class="h-100">
   <head>
     <title>Dragnet</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -10,7 +10,7 @@
   </head>
 
   <body class="d-flex flex-column h-100">
-    <nav class="navbar navbar-expand-lg bg-light mb-3 shadow-sm">
+    <nav class="navbar navbar-expand-lg bg-light mb-3 border-bottom">
       <div class="container-fluid">
         <a href="<%= root_path %>" class="navbar-brand mb-0 h1">
           Dragnet
@@ -19,19 +19,11 @@
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <%= icon 'fas', 'plus' %>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <%= link_to new_survey_path, class: 'dropdown-item' do %>
-                    New Survey
-                  <% end %>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <%= icon 'fas', 'user' %>
+                <% if current_user.valid_email? %>
+                  <%= image_tag current_user.gravatar_url, size: 30, class: 'rounded-circle' %>
+                <% else %>
+                  <%= icon 'fas', 'user' %>
+                <% end %>
               </a>
               <div class="dropdown-menu dropdown-menu-end">
                 <p class="fs-6 mb-1 px-3">Signed in as <strong><%= current_user.login %></strong></p>

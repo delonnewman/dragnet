@@ -17,6 +17,15 @@ module Dragnet
 
         attr_writer :presentable_classes
       end
+
+      attr_reader :params
+
+      # @param [Object] obj
+      # @param [ActionController::Parameters, Hash] params
+      def initialize(obj, params = nil)
+        super(obj)
+        @params = params
+      end
     end
   end
 end

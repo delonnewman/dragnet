@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DataGridController < ApplicationController
+  include Authenticated
+
   layout 'survey'
 
   def show

@@ -8,9 +8,9 @@ class SurveysController < ApplicationController
   def index; end
 
   def show
-    survey = SurveyPresenter.new(Survey.find(params[:id]))
+    presenter = SurveyPresenter.new(survey, params)
 
-    render :show, locals: { report: survey.stats_report, survey: survey }
+    render :show, locals: { report: presenter.stats_report, survey: presenter }
   end
 
   def new
@@ -20,28 +20,56 @@ class SurveysController < ApplicationController
   end
 
   def edit
-    render :edit, locals: { survey: Survey.find(params[:id]) }
+    render :edit, locals: { survey: survey }
   end
 
   def destroy
-    survey = Survey.find(params[:id]).tap(&:delete)
+    survey.tap(&:delete)
 
     redirect_to root_path, notice: "You've deleted #{survey.name.inspect}"
   end
 
   def copy
-    copy = Survey.find(params[:survey_id]).copy!
+    copy = survey.copy!
 
     redirect_to edit_survey_path(copy)
   end
 
   def preview
-    survey = SurveyPresenter.new(Survey.find(params[:survey_id]))
-
-    render :preview, locals: { survey: survey }
+    render :preview, locals: { survey: SurveyPresenter.new(survey, params) }
   end
 
   def settings
-    render :settings, locals: { survey: Survey.find(params[:survey_id]) }
+    render :settings, locals: { survey: survey }
+  end
+
+  def open
+    survey.open!
+
+    render partial: 'workspace/survey_card', locals: { survey: survey }
+  end
+
+  def close
+    survey.close!
+
+    render partial: 'workspace/survey_card', locals: { survey: survey }
+  end
+
+  def share
+    render :share, locals: { survey: SurveyPresenter.new(survey, params) }
+  end
+
+  private
+
+  def survey
+    @survey ||= Survey.find(survey_id)
+  end
+
+  def survey_id
+    params.fetch(:id) do
+      params.fetch(:survey_id) do
+        raise 'id or survey_id are required'
+      end
+    end
   end
 end

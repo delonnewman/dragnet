@@ -1,3 +1,6 @@
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+
 table.stats-table {
   th {
     font-weight: normal;
@@ -9,4 +12,10 @@ table.stats-table {
   th, td {
     padding-right: 2rem;
   }
+}
+
+$box-shadow-sm: 0 .125rem .25rem rgba($black, .075);
+
+.survey-card:hover {
+  box-shadow: $box-shadow-sm;
 }

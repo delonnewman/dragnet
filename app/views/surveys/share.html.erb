@@ -1,0 +1,48 @@
+<%= render 'tabs', survey: survey, selected: :share %>
+
+<div class="container">
+  <% if survey.not_ready_for_replies? %>
+    <%= render 'shared/survey_no_questions', survey: survey %>
+  <% else %>
+    <ul class="nav nav-pills mb-3">
+      <li class="nav-item">
+        <%= nav_link survey_share_path(survey, method: 'email'), active: survey.share_email? do %>
+          <%= icon 'far', 'envelope' %>
+          <% if survey.share_email? %>Email<% end %>
+        <% end %>
+      </li>
+      <li class="nav-item">
+        <%= nav_link survey_share_path(survey, method: 'qrcode'), active: survey.share_qrcode? do %>
+          <%= icon 'fas', 'qrcode' %>
+          <% if survey.share_qrcode? %>QRCode<% end %>
+        <% end %>
+      </li>
+      <li class="nav-item">
+        <%= nav_link survey_share_path(survey, method: 'link'), active: survey.share_link? do %>
+          <%= icon 'fas', 'link' %>
+          <% if survey.share_link? %>Link<% end %>
+        <% end %>
+      </li>
+    </ul>
+
+    <% if survey.share_link? %>
+      <div class="input-group input-group-sm mb-3">
+        <input type="text" class="form-control" aria-label="Survey's public url" aria-describedby="copy-survey-url-<%= survey.id %>" value="<%= reply_to_url(survey.short_id, survey.slug) %>">
+        <button class="btn btn-sm btn-dark" type="button" id="copy-survey-url-<%= survey.id %>">Copy</button>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">
+          Shorten Link
+        </label>
+      </div>
+    <% end %>
+
+    <% if survey.share_qrcode? %>
+      <%== survey_qrcode(survey) %>
+    <% end %>
+
+    <% if survey.share_email? %>
+    <% end %>
+  <% end %>
+</div>

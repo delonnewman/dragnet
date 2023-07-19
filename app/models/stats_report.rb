@@ -80,59 +80,13 @@ class StatsReport
   #
   # @return [Hash{String, Integer}]
   def answer_occurrence(question)
-    opts = question.question_options.inject({}) { |map, opt| map.merge!(opt.id => opt.text) }
-    data = reportable.answers.where(question: question).group(:question_option_id).count
-
-    data.transform_keys(&opts)
+    Perspectives::AnswerOccurrence.get(question.question_type).collect(reportable, question)
   end
 
   # @param question [Question]
   #
   # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
   def answer_stats(question)
-    weight = question_options[:weight]
-
-    data =
-      reportable
-        .answers
-        .where(question: question)
-        .joins(:question_option)
-        .pick(min(weight), max(weight), sum(weight), avg(weight), stddev(weight))
-
-    project_answer_stats(data)
-  end
-
-  private
-
-  def project_answer_stats(data)
-    { 'Min'       => data[0].if_nil(0),
-      'Max'       => data[1].if_nil(0),
-      'Sum'       => data[2].if_nil(0),
-      'Average'   => data[3].if_nil(0).round(1),
-      'Std. Dev.' => data[4].if_nil(0).round(1) }
-  end
-
-  def question_options
-    Arel::Table.new(:question_options)
-  end
-
-  def min(column)
-    Arel::Nodes::NamedFunction.new('min', [column])
-  end
-
-  def max(column)
-    Arel::Nodes::NamedFunction.new('max', [column])
-  end
-
-  def avg(column)
-    Arel::Nodes::NamedFunction.new('avg', [column])
-  end
-
-  def sum(column)
-    Arel::Nodes::NamedFunction.new('sum', [column])
-  end
-
-  def stddev(column)
-    Arel::Nodes::NamedFunction.new('stddev', [column])
+    Perspectives::AnswerStats.get(question.question_type).collect(reportable, question)
   end
 end

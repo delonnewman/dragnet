@@ -3,8 +3,6 @@
 module Dragnet
   module View
     class PagedPresenter < Presenter
-      attr_reader :params
-
       DEFAULT_ITEMS = 10
 
       class << self
@@ -16,13 +14,6 @@ module Dragnet
       end
 
       delegate :default_items, to: :class
-
-      # @param [Object] obj
-      # @param [ActionController::Parameters, Hash] params
-      def initialize(obj, params)
-        super(obj)
-        @params = params
-      end
 
       # @return [Pagy]
       def pager

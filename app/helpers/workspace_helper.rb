@@ -15,7 +15,7 @@ module WorkspaceHelper
       'hx-trigger' => 'change',
     }
 
-    tag.div(class: 'd-flex align-items-center') do
+    tag.div(class: 'd-flex align-items-center ms-2 me-2') do
       form_switch(id: "survey-#{survey.id}-open", input_attributes: { checked: survey.open?, **htmx }, label_attributes: { style: "width:18px" }) do
         icon('fas', survey.open? ? 'lock-open' : 'lock', class: 'text-muted')
       end
@@ -25,7 +25,7 @@ module WorkspaceHelper
   def survey_preview_button(title:, width:, height:, icon: title.downcase)
     tag.button(
       script: 'on click set #preview-frame.width to @data-width then set #preview.height to @data-height',
-      class:  'btn btn-secondary',
+      class:  'btn btn-primary',
       title:  "#{title} #{width}x#{height}",
       data:   { width: width, height: width }
     ) { icon('fas', icon) }
@@ -53,6 +53,9 @@ module WorkspaceHelper
         concat tag.li { tag.a(class: 'dropdown-item', href: "mailto:?body=#{reply_url}") { 'Email' } }
       }
     end
+  end
+
+  def survey_share_modal_button(survey)
   end
 
   def copy_survey_button(survey, include_label: false)
@@ -121,10 +124,10 @@ module WorkspaceHelper
   end
 
   def survey_status_description(survey)
-    return 'All changes saved' if survey.edits_saved?
-    return 'Cannot save changes' if survey.edits_cannot_save?
+    return 'All changes published' if survey.edits_saved?
+    return 'Cannot publish changes' if survey.edits_cannot_save?
 
-    'Unsaved changes'
+    'Unpublished changes'
   end
 
   def survey_copy_of_link(survey)
