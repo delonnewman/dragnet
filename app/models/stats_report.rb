@@ -4,6 +4,8 @@ require_relative 'stats_report/constants'
 
 # Report stats for a reportable object
 class StatsReport
+  include Constants
+
   attr_reader :reportable
 
   delegate :questions, :name, to: :reportable

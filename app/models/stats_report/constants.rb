@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class StatsReport
+module StatsReport::Constants
   MONTH_DEFAULT = {
     1  => 0,
     2  => 0,
