@@ -20,11 +20,12 @@ class Survey < ApplicationRecord
   has_many :replies, dependent: :delete_all, inverse_of: :survey
   has_many :answers, dependent: :delete_all, inverse_of: :survey
 
-  # Analytics
+  # Analytics / Submission
   has_many :ahoy_visits, through: :replies
   has_many :events, through: :replies # Used by StatsReport
   with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created?]
   with DispatchSubmissionRequest, calling: :run
+  with SubmissionParameters, calling: :call
 
   # To satisfy the Reportable protocol, along with #questions above
   has_many :records, -> { where(submitted: true) }, dependent: :restrict_with_error, inverse_of: :survey, class_name: 'Reply'

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   resources :reply, only: %i[edit update] do
     get 'success'
+    post 'submit', to: 'reply#submit'
   end
 
   # survey name is optional
@@ -41,7 +42,7 @@ Rails.application.routes.draw do
 
     scope '/submission' do
       resources :reply_submission, path: '/replies', only: %i[show]
-      post '/replies/:id/submit',        to: 'reply_submission#submit',  as: 'submit_reply'
+      post '/replies/:id/submit',        to: 'reply#submit',  as: 'submit_reply' # FIXME: remove from MFE and then delete
       get '/replies/:survey_id/preview', to: 'reply_submission#preview', as: 'preview_reply'
     end
   end

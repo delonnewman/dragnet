@@ -38,6 +38,16 @@ class ReplyController < ApplicationController
     end
   end
 
+  def submit
+    reply = Reply.find(params[:id])
+
+    if reply.update(submission_params(reply))
+      redirect_to reply_success_path(reply.id)
+    else
+      render :edit, locals: { reply: reply }
+    end
+  end
+
   def success
     reply = replies.find(params[:reply_id])
 

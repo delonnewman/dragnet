@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'stats_report/constants'
-
 # Report stats for a reportable object
 class StatsReport
   include Constants
