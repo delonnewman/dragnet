@@ -8,7 +8,7 @@ class ReplyController < ApplicationController
 
     if result.failure?
       redirect_to root_path, alert: result.error
-    elsif result.preview
+    elsif result.preview?
       render :edit, locals: { reply: result.reply }
     else
       redirect_to edit_reply_path(result.reply)
@@ -57,6 +57,10 @@ class ReplyController < ApplicationController
     )
   end
   # rubocop: enable Rails/DynamicFindBy
+
+  def current_visit
+    Ahoy.instance.visit_or_create
+  end
 
   def tracker
     @tracker ||= ReplyTracker.new(ahoy)

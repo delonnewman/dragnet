@@ -35,7 +35,7 @@ class DataGridController < ApplicationController
   end
 
   def export_name(survey)
-    "#{Dragnet::Utils.slug(survey.name)}-#{Dragnet::Utils.slug(Time.zone.now)}.#{params[:format]}"
+    "#{survey.slug}-#{Dragnet::Utils.slug(Time.zone.now)}.#{params[:format]}"
   end
 
   def presenter

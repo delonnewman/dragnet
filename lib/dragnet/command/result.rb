@@ -25,14 +25,8 @@ module Dragnet
       @failure
     end
 
-    def success?
+    def successful?
       !failure?
-    end
-
-    def fail!(error:)
-      failure!(error)
-      finalize!
-      throw :dragnet_command_failure
     end
 
     private
@@ -48,7 +42,7 @@ module Dragnet
       raise ArgumentError, "wrong number of arguments expected 0, got #{args.length}" unless args.empty?
 
       if method_name.name.end_with?('?')
-        !!@stash[method_name]
+        !!@stash[method_name.name.chop.to_sym]
       else
         super unless @stash.key?(method_name)
 
@@ -56,11 +50,11 @@ module Dragnet
       end
     end
 
-    def respond_to_missing?(method_name)
+    def respond_to_missing?(method_name, include_all)
       name = method_name.name
       return true if name.end_with?('=', '?')
 
-      @stash.key?(method_name)
+      @stash.key?(method_name) || super
     end
   end
 end

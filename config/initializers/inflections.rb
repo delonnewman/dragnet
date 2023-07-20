@@ -18,4 +18,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "HTMX"
   inflect.acronym "DOM"
   inflect.acronym "BS5"
+  inflect.acronym "QR"
 end

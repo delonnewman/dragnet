@@ -7,10 +7,8 @@ class OverviewPresenter < Dragnet::View::Presenter
 
   def surveys = space.recently_active_surveys(last_created: Time.zone.now.end_of_day, limit: 8)
 
-  def user_stats = StatsReport.new(user)
-  memoize :user_stats
-
-  def query_desc = Workspace::RecentlyActiveSurveys.query_doc
+  def stats = StatsReport.new(space)
+  memoize :stats
 
   def survey_count = user.surveys.count
   memoize :survey_count

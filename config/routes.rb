@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
     get 'share'
     get 'share/:method', to: 'surveys#share'
+    get 'qrcode'
 
     get 'stats', to: 'stats#show'
 

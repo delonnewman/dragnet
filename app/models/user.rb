@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :events, through: :surveys
 
   has_many :visits, class_name: 'Ahoy::Visit', dependent: :nullify, inverse_of: :user
-  has_many :events, class_name: 'Ahoy::Event', dependent: :nullify, inverse_of: :user
+  # has_many :events, class_name: 'Ahoy::Event', dependent: :nullify, inverse_of: :user
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :validatable, :trackable, :confirmable, :omniauthable

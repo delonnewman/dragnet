@@ -26,23 +26,56 @@
     </ul>
 
     <% if survey.share_link? %>
-      <div class="input-group input-group-sm mb-3">
-        <input type="text" class="form-control" aria-label="Survey's public url" aria-describedby="copy-survey-url-<%= survey.id %>" value="<%= reply_to_url(survey.short_id, survey.slug) %>">
-        <button class="btn btn-sm btn-dark" type="button" id="copy-survey-url-<%= survey.id %>">Copy</button>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">
-          Shorten Link
-        </label>
+      <div class="input-group input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          aria-label="Survey's public url"
+          id="copy-survey-url-<%= survey.id %>"
+          aria-describedby="btn-copy-survey-url-<%= survey.id %>"
+          value="<%= reply_to_url(survey.short_id, survey.slug) %>">
+        <button
+          class="btn btn btn-dark"
+          type="button"
+          id="btn-copy-survey-url-<%= survey.id %>"
+          onclick="dragnet.copyToClipboardFromElement(document.querySelector('#copy-survey-url-<%= survey.id %>'))">
+          Copy
+        </button>
       </div>
     <% end %>
 
     <% if survey.share_qrcode? %>
-      <%== survey_qrcode(survey) %>
+      <div>
+        <div class="mb-3">
+          <%== survey_qrcode(survey, format: :svg, module_size: 15) %>
+        </div>
+        <%= link_to survey_qrcode_path(survey, format: :png), class: 'btn btn-dark' do %>
+          <%= icon 'fas', 'download' %> Download
+        <% end %>
+      </div>
     <% end %>
 
     <% if survey.share_email? %>
+      <form action="mailto:" method="get" enctype="text/plain">
+        <div class="mb-3">
+          <label for="share-email-to" class="form-label">To</label>
+          <input type="email" name="to" class="form-control" id="share-email-to" placeholder="Enter an email address like 'name@example.com'">
+        </div>
+        <div class="mb-3">
+          <label for="share-email-from" class="form-label">From</label>
+          <input type="email" name="to" class="form-control" id="share-email-from" placeholder="Enter an email address like 'name@example.com'" value=<%= current_user.email %>>
+        </div>
+        <div class="mb-3">
+          <label for="share-email-subject" class="form-label">Subject</label>
+          <input type="text" name="subject" class="form-control" id="share-email-subject">
+        </div>
+        <div class="mb-3">
+          <label for="share-email-message" class="form-label">Message</label>
+          <textarea name="body" class="form-control" id="share-email-message" rows="3">Please fill out this survey for me! <%= reply_to_url(survey.short_id, survey.slug) %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-dark">Send</button>
+      </form>
     <% end %>
   <% end %>
 </div>

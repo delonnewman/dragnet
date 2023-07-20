@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dragnet
   module TimeUtils
     module_function
@@ -6,8 +8,8 @@ module Dragnet
     #
     # @return [String]
     def fmt_hour(value)
-      hour = value.respond_to?(:hour) ? value.hour : value
-      ampm = hour >= 12 ? 'PM' : 'AM'
+      hour = value.is_a?(Integer) ? value : value.hour
+      ampm = hour >= 12 && hour != 24 ? 'PM' : 'AM'
       hr   = hour > 12 ? hour % 12 : hour
       hr   = hr.zero? ? 12 : hr
 

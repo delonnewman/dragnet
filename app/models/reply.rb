@@ -12,7 +12,11 @@ class Reply < ApplicationRecord
   scope :incomplete, -> { where(submitted: false) }
 
   # Analytics
-  visitable :ahoy_visit
+  belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
+  has_many :events, through: :ahoy_visit
+  before_create do
+    self.ahoy_visit_id = Ahoy.instance.try(:visit_or_create)&.id unless ahoy_visit_id?
+  end
 
   # @!attribute answer_records
   #   @return [Array<Answer>]

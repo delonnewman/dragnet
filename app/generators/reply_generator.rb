@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReplyGenerator < Dragnet::ActiveRecordGenerator
   def call(*)
     s = attributes.fetch(:survey) { raise 'A survey attribute is required' }
@@ -8,11 +10,17 @@ class ReplyGenerator < Dragnet::ActiveRecordGenerator
       r.submitted    = Faker::Boolean.boolean(true_ratio: 0.8)
       r.submitted_at = r.created_at if r.submitted?
 
-      s.questions.each do |q|
-        next unless q.required? || Faker::Boolean.boolean(true_ratio: 0.3)
+      generate_questions(s, r)
+    end
+  end
 
-        r.answers << Answer[survey: s, reply: r, question: q, question_type_id: q.question_type_id].generate
-      end
+  private
+
+  def generate_questions(survey, reply)
+    survey.questions.each do |q|
+      next unless q.required? || Faker::Boolean.boolean(true_ratio: 0.3)
+
+      reply.answers << Answer[survey: survey, reply: reply, question: q, question_type_id: q.question_type_id].generate
     end
   end
 end

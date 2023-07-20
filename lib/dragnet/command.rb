@@ -6,8 +6,6 @@ module Dragnet
 
     include Invokable::Core
 
-    delegate :fail, to: :@result
-
     def initialize(subject)
       super(subject)
       @result = Result.new
@@ -18,6 +16,12 @@ module Dragnet
         call(*args, **kwargs)
         @result
       end
+    end
+
+    def fail!(error:)
+      @result.failure!(error)
+      @result.finalize!
+      throw :dragnet_command_failure
     end
 
     def call(*args, **kwargs)

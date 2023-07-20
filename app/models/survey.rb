@@ -22,12 +22,12 @@ class Survey < ApplicationRecord
 
   # Analytics
   has_many :ahoy_visits, through: :replies
+  has_many :events, through: :replies # Used by StatsReport
   with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created?]
   with DispatchSubmissionRequest, calling: :run
 
   # To satisfy the Reportable protocol, along with #questions above
   has_many :records, -> { where(submitted: true) }, dependent: :restrict_with_error, inverse_of: :survey, class_name: 'Reply'
-  has_many :events, through: :ahoy_visits
 
   # Editing
   enum :edits_status, { saved: 0, unsaved: 1, cannot_save: -1 }, prefix: :edits

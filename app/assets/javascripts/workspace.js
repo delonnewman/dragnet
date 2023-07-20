@@ -22,6 +22,17 @@ window.dragnet = {};
     });
   };
 
+  /**
+   * Copy the value of the given element to the clipboard, display a tooltip over the element once the copy is complete.
+   *
+   * @param {HTMLInputElement} element
+   *
+   * @param element
+   */
+  this.copyToClipboardFromElement = function(element) {
+    dragnet.copyToClipboard(element.value, element)
+  };
+
   const TOAST_OPTIONS = Object.freeze({ autohide: true, animation: true, delay: 2000 });
 
   /**

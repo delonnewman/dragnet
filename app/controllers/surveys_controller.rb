@@ -2,6 +2,7 @@
 
 class SurveysController < ApplicationController
   include Authenticated
+  include QRCodeHelper
 
   layout 'survey'
 
@@ -57,6 +58,14 @@ class SurveysController < ApplicationController
 
   def share
     render :share, locals: { survey: SurveyPresenter.new(survey, params) }
+  end
+
+  def qrcode
+    respond_to do |format|
+      format.html { render :qrcode, locals: { survey: survey } }
+      format.png { send_qrcode_data survey, format: :png }
+      format.svg { send_qrcode_data survey, format: :svg }
+    end
   end
 
   private

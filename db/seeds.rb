@@ -55,9 +55,15 @@ if Rails.env.development?
 
   print 'Generating Replies...'
   surveys.each do |s|
-    Dragnet::StatsUtils.time_series((Time.zone.today - 120)..(Time.zone.today)).each_pair do |created_at, count|
+    Dragnet::StatsUtils.time_series((Time.zone.today - 60)..(Time.zone.today)).each_pair do |created_at, count|
       count.times do
         Reply[survey: s, created_at: created_at].generate.tap do |r|
+          r.save!
+          visit = Ahoy::Visit.generate!
+          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:view], visit: visit, survey_id: s.id, reply_id: r.id].generate!
+          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:update], visit: visit, survey_id: s.id, reply_id: r.id].generate!
+          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:complete], visit: visit, survey_id: s.id, reply_id: r.id].generate! if r.submitted?
+          r.ahoy_visit = visit
           r.save!
           print '.'
         end

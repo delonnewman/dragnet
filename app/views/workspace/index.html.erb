@@ -1,7 +1,7 @@
 <%= render 'workspace/tabs', selected: :overview, survey_count: overview.survey_count %>
 
 <div>
-  <%= render 'shared/reportable_stats_table', report: overview.user_stats %>
+  <%= render 'shared/reportable_stats_table', report: overview.stats %>
   <div class="mt-4">
     <div id="survey-listing" class="d-flex flex-wrap justify-content-start align-items-top">
       <% overview.surveys.each do |survey| %>
