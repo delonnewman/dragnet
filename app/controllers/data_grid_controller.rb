@@ -20,11 +20,11 @@ class DataGridController < ApplicationController
   end
 
   def rows
-    render partial: 'data_grid/rows', locals: { survey: presenter }
+    render partial: 'data_grid/rows', locals: { grid: presenter }
   end
 
   def table
-    render partial: 'data_grid/table', locals: { survey: presenter }
+    render partial: 'data_grid/table', locals: { grid: presenter }
   end
 
   private
