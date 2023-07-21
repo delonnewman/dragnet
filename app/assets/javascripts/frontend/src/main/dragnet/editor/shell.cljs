@@ -49,7 +49,7 @@
       (go (let [edit (<! (update-survey new))]
             (swap! ref assoc :edits (conj (@ref :edits) edit)))))))
 
-(defn init
+(defn ^:export init
   "Initialize survey editor UI with the root element and
   survey-id both arguments should be present."
   [root-elem survey-id]

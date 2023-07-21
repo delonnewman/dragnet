@@ -25,6 +25,10 @@ class SurveyPresenter < Dragnet::View::Presenter
     share_by?('link')
   end
 
+  def share_code?
+    share_by?('code')
+  end
+
   def share_by?(method)
     share_method == method
   end

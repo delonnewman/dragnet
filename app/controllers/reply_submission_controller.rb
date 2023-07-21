@@ -1,17 +1,28 @@
 # frozen_string_literal: true
 
 class ReplySubmissionController < EndpointController
+  skip_before_action :verify_authenticity_token, only: %i[show new]
+
+  def new
+    respond_to do |format|
+      format.js do
+        new_reply.save!
+        render 'reply/form', locals: { reply: new_reply }
+      end
+    end
+  end
+
   def show
     respond_to do |format|
       format.transit { render body: transit(reply_submission.submission_data) }
+      format.js { render 'reply/form', locals: { reply: reply } }
     end
   end
 
   def preview
     respond_to do |format|
       format.transit do
-        reply = Reply.new(survey: Survey.find(params[:survey_id]))
-        render body: transit(reply_submission(reply).submission_data)
+        render body: transit(reply_submission(new_reply).submission_data)
       end
     end
   end
@@ -24,6 +35,10 @@ class ReplySubmissionController < EndpointController
 
   def reply_submission(reply = self.reply)
     ReplySubmissionPresenter.new(reply)
+  end
+
+  def new_reply
+    @new_reply ||= Reply.new(survey: Survey.find(params[:survey_id]))
   end
 
   def reply

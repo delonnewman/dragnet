@@ -21,7 +21,7 @@
   (go (let [res (<! (http/get (reply-url id :preview preview)))]
         (:body res))))
 
-(defn init
+(defn ^:export init
   "Initialize reply submission UI with the root element,
   survey-id and reply-id, the third argument (normally a Reply ID)
   can also be a flag currently only a 'preview' flag is supported.
