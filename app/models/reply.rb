@@ -8,6 +8,7 @@ class Reply < ApplicationRecord
   has_many :answers, dependent: :delete_all, inverse_of: :reply
   accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
+  # Submission
   delegate :submission_parameters, to: :survey
   with Submission, delegating: %i[submit! submitted!]
   scope :incomplete, -> { where(submitted: false) }
@@ -16,9 +17,16 @@ class Reply < ApplicationRecord
   belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
   has_many :events, through: :ahoy_visit
   before_create do
-    self.ahoy_visit_id = Ahoy.instance.try(:visit_or_create)&.id unless ahoy_visit_id?
+    self.ahoy_visit = Ahoy.instance.try(:visit_or_create) unless ahoy_visit_id?
   end
 
+  # Cache submission date in survey to improve query performance for workspaces
+  after_save do
+    survey.update(latest_submission_at: submitted_at) if submitted? # TODO: probably should be a delayed job
+  end
+
+  # Cached data values to improve performance in Data Grid
+  #
   # @!attribute answer_records
   #   @return [Array<Answer>]
   serialize :answer_records

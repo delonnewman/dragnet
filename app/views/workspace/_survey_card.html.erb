@@ -1,4 +1,4 @@
-<div id="survey-card-<%= survey.id %>" class="survey-card card d-inline-block mb-3 me-3" style="width: 280px; display: flex !important; align-content: flex-end">
+<div id="survey-card-<%= survey.id %>" class="survey-card card d-inline-block mb-3 me-3" style="width: 260px; display: flex !important; align-content: flex-end">
   <div class="card-body position-relative">
     <div class="card-title d-flex justify-content-between align-items-start">
       <div>
@@ -13,6 +13,9 @@
       <span class="badge bg-info">
         <%= number_with_delimiter survey.replies.count %>&nbsp;<%= survey.replies.count == 1 ? 'record' : 'records' %>
       </span>
+    </div>
+    <div>
+      <small class="text-muted"><%= survey_activity_time_ago(survey) %></small>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between align-items-center">

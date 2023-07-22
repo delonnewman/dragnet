@@ -44,7 +44,6 @@ window.dragnet = {};
     // initialize tooltips
     const tooltipTriggers = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     tooltipTriggers.forEach((el) => new bootstrap.Tooltip(el));
-    console.debug('Tooltips initialized', tooltipTriggers);
 
     // initialize toasts
     const toastElements = document.querySelectorAll('.toast');
@@ -54,7 +53,6 @@ window.dragnet = {};
         toast.hide();
       }, TOAST_OPTIONS.delay);
     });
-    console.debug('Toasts initialized', toastElements);
   };
 
 }.call(window.dragnet));

@@ -30,6 +30,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :open, index: true, null: false, default: false
       t.boolean :public, index: true, null: false, default: false
 
+      t.timestamp :latest_submission_at, index: true
       t.timestamps null: false, index: true
     end
 

@@ -184,12 +184,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.integer "edits_status"
     t.boolean "open", default: false, null: false
     t.boolean "public", default: false, null: false
+    t.datetime "latest_submission_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_surveys_on_author_id"
     t.index ["copy_of_id"], name: "index_surveys_on_copy_of_id"
     t.index ["created_at"], name: "index_surveys_on_created_at"
     t.index ["edits_status"], name: "index_surveys_on_edits_status"
+    t.index ["latest_submission_at"], name: "index_surveys_on_latest_submission_at"
     t.index ["name", "author_id"], name: "index_surveys_on_name_and_author_id", unique: true
     t.index ["name"], name: "index_surveys_on_name"
     t.index ["open"], name: "index_surveys_on_open"

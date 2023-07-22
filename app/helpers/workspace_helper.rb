@@ -138,4 +138,25 @@ module WorkspaceHelper
         end
     end
   end
+
+  METHODS = {
+    created_at:           'Created',
+    updated_at:           'Updated',
+    latest_submission_at: 'Replied to'
+  }.freeze
+  private_constant :METHODS
+
+  def survey_activity_time_ago(survey)
+    times       = survey_activity_times(survey)
+    most_recent = times.max_by(&:second).first
+
+    "#{METHODS[most_recent]} #{time_ago_in_words(times[most_recent])} ago"
+  end
+
+  def survey_activity_times(survey)
+    METHODS.keys.each_with_object({}) do |m, h|
+      value = survey.public_send(m)
+      h[m]  = value if value
+    end
+  end
 end

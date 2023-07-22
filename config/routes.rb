@@ -43,7 +43,7 @@ Rails.application.routes.draw do
     scope '/submission' do
       resources :reply_submission, path: '/replies', only: %i[show]
 
-      get '/replies/:survey_id/new',     to: 'reply_submission#new', as: 'new_reply'
+      post '/replies/:survey_id',        to: 'reply_submission#new', as: 'new_reply' # for generating a reply through the API
       post '/replies/:id/submit',        to: 'reply#submit',  as: 'submit_reply' # FIXME: remove from MFE and then delete
       get '/replies/:survey_id/preview', to: 'reply_submission#preview', as: 'preview_reply'
     end

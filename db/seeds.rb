@@ -56,6 +56,8 @@ if Rails.env.development?
   print 'Generating Replies...'
   surveys.each do |s|
     Dragnet::StatsUtils.time_series((Time.zone.today - 60)..(Time.zone.today)).each_pair do |created_at, count|
+      next if Faker::Boolean.boolean(true_ratio: 0.6)
+
       count.times do
         Reply[survey: s, created_at: created_at].generate.tap do |r|
           r.save!

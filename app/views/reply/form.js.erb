@@ -1,6 +1,6 @@
 (function() {
-  const surveyID = <%== reply.survey_id.to_json %>
-  const replyID = <%== reply.id.to_json %>;
+  const surveyID = <%= reply.survey_id.to_json %>
+  const replyID = <%= reply.id.to_json %>;
   const rootElement = document.getElementById("survey-form");
 
   const script = document.createElement("script");
