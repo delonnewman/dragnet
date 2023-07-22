@@ -21,13 +21,25 @@ QuestionType.create(
   ]
 )
 
-User.create!(
+user = User.create!(
   login:    'admin',
   email:    'contact@delonnewman.name',
   name:     'Delon Newman',
   nickname: 'Delon',
   password: 'testing123'
-).confirm
+).tap(&:confirm)
+
+Survey.create!(
+  name:                 'Contact Information',
+  author:               user,
+  questions_attributes: [
+    { text: 'Name',     question_type_ident: 'text' },
+    { text: 'Email',    question_type_ident: 'text' },
+    { text: 'Address',  question_type_ident: 'text', config: { long_answer: true } },
+    { text: 'Phone',    question_type_ident: 'text' },
+    { text: 'Comments', question_type_ident: 'text', config: { long_answer: true } },
+  ]
+)
 
 # Generate some sample data if in development
 if Rails.env.development?

@@ -1,5 +1,5 @@
 (ns dragnet.submitter.core
-  (:require [dragnet.shared.utils :refer [root-url form-name]]))
+  (:require [dragnet.shared.utils :as utils]))
 
 (defn reply-path
   [reply-id]
@@ -8,13 +8,13 @@
 (defn reply-url
   [id & {:keys [preview]}]
   (if preview
-    (str (root-url) (reply-path id) "/preview")
-    (str (root-url) (reply-path id))))
+    (str (utils/root-url) (reply-path id) "/preview")
+    (str (utils/root-url) (reply-path id))))
 
-(defn submission-path
+(defn submission-url
   [reply-id]
-  (str (reply-path reply-id) "/submit"))
+  (str (reply-url reply-id) "/submit"))
 
 (defn answer-form-name
   [& keys]
-  (form-name (concat [:reply :answers_attributes] keys)))
+  (utils/form-name (concat [:reply :answers_attributes] keys)))

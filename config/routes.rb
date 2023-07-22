@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   get '/r/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
   get '/r/:survey_id',              to: 'reply#new'
 
-  scope '/api/v1' do
+  scope '/api/v1', defaults: { format: :transit } do
     scope '/editing' do
       resources :survey_editor, path: '/surveys', only: %i[show update]
       post '/surveys/:id/apply', to: 'survey_editor#apply', as: 'survey_editor_apply'

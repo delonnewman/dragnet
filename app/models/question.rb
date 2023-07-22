@@ -20,4 +20,8 @@ class Question < ApplicationRecord
   after_initialize do
     self.hash_code = Dragnet::Utils.hash_code(text) if text
   end
+
+  def question_type_ident=(ident)
+    self.question_type = QuestionType.get(ident)
+  end
 end

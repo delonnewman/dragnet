@@ -30,7 +30,7 @@ window.dragnet = {};
    * @param element
    */
   this.copyToClipboardFromElement = function(element) {
-    dragnet.copyToClipboard(element.value, element)
+    this.copyToClipboard(element.value, element);
   };
 
   const TOAST_OPTIONS = Object.freeze({ autohide: true, animation: true, delay: 2000 });
