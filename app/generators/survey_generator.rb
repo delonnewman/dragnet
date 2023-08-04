@@ -30,7 +30,7 @@ class SurveyGenerator < Dragnet::ActiveRecordGenerator
 
   def default_attributes
     {
-      name: Faker::Movie.title,
+      name:   Faker::Movie.title,
       author: User.generate,
       public: Faker::Boolean.boolean
     }
