@@ -19,7 +19,7 @@ describe Dragnet::Command::Result do
 
   describe '.new' do
     it 'takes no arguments' do
-      expect { described_class.new }.not_to raise_exception ArgumentError
+      expect { described_class.new }.not_to raise_exception
     end
 
     it 'initializes failure? to false' do

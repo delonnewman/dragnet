@@ -23,10 +23,10 @@ describe Reply::Submission do
   end
 
   describe '#submit' do
-    let(:attributes) {  }
+    let(:attributes) { {} }
 
     before do
-      reply_submission.submit!({})
+      reply_submission.submit!(attributes)
     end
 
     it 'updates the reply with the given attributes'
