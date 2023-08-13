@@ -60,6 +60,9 @@ gem 'memo_wise'
 gem 'rails-pattern_matching'
 gem 'interactor'
 
+# NLP
+gem 'sentimental'
+
 # TODO: Move to Dart Sass
 gem 'sassc-rails'
 

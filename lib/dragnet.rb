@@ -22,6 +22,8 @@ require_relative 'dragnet/advice'
 require_relative 'dragnet/policy'
 require_relative 'dragnet/query'
 
+require_relative 'dragnet/text_sentiment'
+
 # Generators
 require_relative 'dragnet/generator'
 require_relative 'dragnet/parameterized_generator'

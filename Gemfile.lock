@@ -411,6 +411,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    sentimental (1.5.0)
     shellany (0.0.1)
     shortuuid (0.6.0)
     simplecov (0.22.0)
@@ -528,6 +529,7 @@ DEPENDENCIES
   rubocop-rake
   rubocop-rspec
   sassc-rails
+  sentimental
   shortuuid
   simplecov
   sprockets-rails
