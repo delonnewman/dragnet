@@ -56,8 +56,6 @@ class Initial < ActiveRecord::Migration[7.0]
       t.string :slug, null: false, index: true
       t.string :icon
 
-      t.string :settings
-
       t.uuid :parent_type_id, index: true
     end
 
@@ -71,8 +69,6 @@ class Initial < ActiveRecord::Migration[7.0]
       t.belongs_to :question_type, index: true, null: false, type: :uuid
       t.uuid       :survey_id,     index: true, null: false
       t.foreign_key :surveys, column: :survey_id, primary_key: :id, on_delete: :cascade
-
-      t.string :config # TODO: remove
 
       # Required for FollowupQuestions
       t.uuid       :question_id,     index: true

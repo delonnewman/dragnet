@@ -13,6 +13,8 @@ class QuestionGenerator < Dragnet::ActiveRecordGenerator
         count.times do |i|
           q.question_options << QuestionOption[question: q, weight: i - (count / 2)].generate
         end
+      when :text
+        q.settings = { long_answer: true, countable: true } if Faker::Boolean.boolean(true_ratio: 0.3)
       end
     end
   end

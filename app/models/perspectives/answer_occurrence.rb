@@ -20,5 +20,11 @@ module Perspectives
         end
       end
     end
+
+    class Text < self
+      def collect(reportable, question)
+        reportable.answers.where(question: question).group(:float_value).count
+      end
+    end
   end
 end

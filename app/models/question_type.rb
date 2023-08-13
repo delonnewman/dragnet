@@ -8,9 +8,6 @@ class QuestionType < ApplicationRecord
 
   delegate :to_s, to: :name
 
-  # TODO: move these to meta data
-  serialize :settings
-
   def self.get(ident)
     QuestionType.find_by(slug: ident)
   end

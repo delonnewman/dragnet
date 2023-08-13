@@ -40,9 +40,9 @@ class Question::Settings < Dragnet::Advice
   end
 
   def setting(setting)
-    default = question.question_type.setting_default(setting)
-    return default unless question.config
+    default = question.question_type.get_meta(setting)
+    return default unless question.meta_data?
 
-    question.config.fetch(setting, default)
+    question.get_meta(setting, default)
   end
 end

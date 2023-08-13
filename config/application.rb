@@ -17,7 +17,7 @@ module Dragnet
   class Application < Rails::Application
     config.load_defaults 7.0
 
-    config.time_zone = 'Central Time (US & Canada)'
+    config.time_zone = 'Mountain Time (US & Canada)'
 
     # Don't generate system test files.
     config.generators.system_tests = nil

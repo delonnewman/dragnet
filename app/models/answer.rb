@@ -16,6 +16,13 @@ class Answer < ApplicationRecord
     self.question_type = question.question_type if question
   end
 
+  before_save do
+    # TODO: this should be another perspective to it can be extensible
+    if question.settings.long_answer? && question.settings.countable?
+      self.float_value = Dragnet::TextSentiment.new(long_text_value).score
+    end
+  end
+
   def evaluation
     Perspectives::AnswerEvaluation.get(question_type)
   end

@@ -32,6 +32,20 @@ module Perspectives
       end
     end
 
+    class Text < self
+      def collect(reportable, question)
+        column = Answer.arel_table[:float_value]
+
+        data =
+          reportable
+            .answers
+            .where(question: question)
+            .pick(min(column), max(column), sum(column), avg(column), stddev(column))
+
+        project_answer_stats(data)
+      end
+    end
+
     private
 
     def project_answer_stats(data)

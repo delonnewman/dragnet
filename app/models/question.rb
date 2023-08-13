@@ -5,7 +5,6 @@ class Question < ApplicationRecord
 
   validates :text, presence: true
 
-  serialize :config # TODO: use meta data instead
   with Settings, delegating: %i[setting? setting]
 
   belongs_to :survey

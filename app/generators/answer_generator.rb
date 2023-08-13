@@ -16,7 +16,7 @@ class AnswerGenerator < Dragnet::ActiveRecordGenerator
   def value(question)
     case question.question_type.ident
     when :text
-      ShortAnswer.generate
+      question.settings.long_answer? ? LongAnswer.generate : ShortAnswer.generate
     when :choice
       QuestionOptionAnswer[question].generate
     when :number
