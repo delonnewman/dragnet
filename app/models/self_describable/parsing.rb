@@ -5,7 +5,7 @@ module SelfDescribable
     advises SelfDescribable
 
     def parse_meta(records, grouped = nil)
-      return if records.empty?
+      return if records.nil? || records.empty?
 
       if records.count == 1
         parse_single_meta(records.first)
