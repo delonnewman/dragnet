@@ -32,13 +32,9 @@ RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
-# Install packages needed to build gems and node modules
+# Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev node-gyp pkg-config python-is-python3
-
-# Install yarn
-ARG YARN_VERSION=1.22.19
-RUN npm install -g yarn@$YARN_VERSION
+    apt-get install --no-install-recommends -y build-essential git libpq-dev
 
 # Build options
 ENV PATH="/usr/local/node/bin:$PATH"
@@ -46,10 +42,6 @@ ENV PATH="/usr/local/node/bin:$PATH"
 # Install application gems
 COPY Gemfile Gemfile.lock .
 RUN bundle install
-
-# Install node modules
-COPY package.json yarn.lock .
-RUN yarn install --frozen-lockfile
 
 # Copy application code
 COPY . .
@@ -67,7 +59,10 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Run and own the application files as a non-root user for security
-RUN useradd rails
+ARG UID=1000 \
+    GID=1000
+RUN groupadd -f -g $GID rails && \
+    useradd -u $UID -g $GID rails
 USER rails:rails
 
 # Copy built artifacts: gems, application

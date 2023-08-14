@@ -81,6 +81,4 @@ test:
 #
 production:
   <<: *default
-  database: dragnet_production
-  username: dragnet
-  password: <%= ENV["DRAGNET_DATABASE_PASSWORD"] %>
+  url: <%= ENV["DRAGNET_DATABASE_URL"] %>

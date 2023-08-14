@@ -60,7 +60,8 @@ gem 'memo_wise'
 gem 'rails-pattern_matching'
 gem 'interactor'
 
-# NLP
+# Data
+gem 'faker'
 gem 'sentimental'
 
 # TODO: Move to Dart Sass
@@ -100,8 +101,6 @@ group :development, :test do
   gem 'rubocop-performance', require: false
 
   gem 'simplecov', require: false
-
-  gem 'faker'
 end
 
 group :development do

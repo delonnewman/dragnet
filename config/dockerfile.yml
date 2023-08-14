@@ -5,9 +5,9 @@ options:
   bin-cd: false
   cache: false
   ci: false
-  compose: false
+  compose: true
   fullstaq: false
-  jemalloc: true
+  jemalloc: false
   label: {}
   mysql: false
   nginx: false

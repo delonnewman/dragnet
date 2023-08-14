@@ -2,7 +2,10 @@
 # for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
 require_relative "config/application"
-require 'bundler/audit/task'
 
-Bundler::Audit::Task.new
+if Rails.env.development?
+  require 'bundler/audit/task'
+  Bundler::Audit::Task.new
+end
+
 Rails.application.load_tasks
