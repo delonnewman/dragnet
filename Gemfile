@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.3'
+ruby '3.2.2'
 
 gem 'rails', '~> 7.0.5'
 
@@ -11,9 +11,8 @@ gem 'activerecord-pull-alpha'
 gem 'mini_sql'
 
 # HTTP
-gem 'puma', group: :development
+gem 'puma'
 gem 'rack-cors'
-gem 'unicorn', require: false
 
 # UI / Assets
 gem 'bootstrap', '~> 5.2.3'
@@ -21,7 +20,7 @@ gem 'font-awesome-sass'
 gem 'sprockets-rails'
 
 gem 'chartkick'
-gem 'mapkick-rb'
+# gem 'mapkick-rb' TODO: add location type
 
 gem 'pry'
 gem 'pry-rails'
@@ -58,7 +57,6 @@ gem 'erubi'
 gem 'invokable'
 gem 'memo_wise'
 gem 'rails-pattern_matching'
-gem 'interactor'
 
 # Data
 gem 'faker'
