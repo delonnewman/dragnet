@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples 'self describable' do
+shared_examples SelfDescribable do
   describe '#build_meta_datum' do
     it 'will add single meta data values' do
       self_describable.build_meta_datum(:count, 1)

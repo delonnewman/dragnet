@@ -2,6 +2,7 @@
 
 class Question < ApplicationRecord
   include SelfDescribable
+  include Retractable
 
   validates :text, presence: true
 

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Reply < ApplicationRecord
+  include Retractable
+
+  retract_associated :answers
+
   belongs_to :survey
 
   has_many :questions, through: :survey

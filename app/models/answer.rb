@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Answer < ApplicationRecord
+  include Retractable
+
   belongs_to :survey
   belongs_to :reply
   belongs_to :question

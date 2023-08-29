@@ -1,22 +1,25 @@
 # frozen_string_literal: true
 
 require_relative 'self_describable'
+require_relative 'retractable'
 
 describe Survey do
-  it_behaves_like 'self describable' do
-    let(:self_describable) { described_class.create!(name: name, author: author) }
-    let(:name) { Dragnet::Generators::Name.generate }
-    let(:author) { User.generate! }
+  subject(:survey) { described_class.create!(name: name, author: author) }
+
+  let(:name) { Dragnet::Generators::Name.generate }
+  let(:author) { User.generate! }
+
+  it_behaves_like SelfDescribable do
+    let(:self_describable) { survey }
+  end
+
+  it_behaves_like Retractable do
+    let(:retractable) { survey }
   end
 
   describe '#save' do
-    subject(:survey) { described_class.create!(name: name, author: author) }
-
-    let(:name) { Dragnet::Generators::Name.generate }
-    let(:author) { User.generate! }
-
     context 'when no slug is given' do
-      it 'will generate a slug' do
+      it 'will generate a slug when no slug is given' do
         expect(survey.slug).to eq Dragnet::Utils.slug(survey.name)
       end
     end

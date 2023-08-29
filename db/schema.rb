@@ -69,6 +69,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.decimal "float_value"
     t.time "time_value"
     t.date "date_value"
+    t.boolean "retracted", default: false, null: false
+    t.datetime "retracted_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["boolean_value"], name: "index_answers_on_boolean_value"
@@ -80,9 +82,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["question_option_id"], name: "index_answers_on_question_option_id"
     t.index ["question_type_id"], name: "index_answers_on_question_type_id"
     t.index ["reply_id"], name: "index_answers_on_reply_id"
+    t.index ["retracted"], name: "index_answers_on_retracted"
+    t.index ["retracted_at"], name: "index_answers_on_retracted_at"
     t.index ["short_text_value"], name: "index_answers_on_short_text_value"
     t.index ["survey_id"], name: "index_answers_on_survey_id"
     t.index ["time_value"], name: "index_answers_on_time_value"
+  end
+
+  create_table "data_grid_edits", force: :cascade do |t|
+    t.binary "data_grid_data"
+    t.boolean "applied", default: false, null: false
+    t.datetime "applied_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.index ["applied"], name: "index_data_grid_edits_on_applied"
+    t.index ["applied_at"], name: "index_data_grid_edits_on_applied_at"
+    t.index ["created_at"], name: "index_data_grid_edits_on_created_at"
+  end
+
+  create_table "data_grids", force: :cascade do |t|
+    t.uuid "survey_id", null: false
+    t.index ["survey_id"], name: "index_data_grids_on_survey_id"
   end
 
   create_table "meta_data", force: :cascade do |t|
@@ -127,12 +146,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.boolean "required", default: false, null: false
     t.uuid "question_type_id", null: false
     t.uuid "survey_id", null: false
+    t.boolean "retracted", default: false, null: false
+    t.datetime "retracted_at", precision: nil
     t.uuid "question_id"
     t.bigint "question_option_id"
     t.index ["hash_code"], name: "index_questions_on_hash_code"
     t.index ["question_id"], name: "index_questions_on_question_id"
     t.index ["question_option_id"], name: "index_questions_on_question_option_id"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
+    t.index ["retracted"], name: "index_questions_on_retracted"
+    t.index ["retracted_at"], name: "index_questions_on_retracted_at"
     t.index ["survey_id"], name: "index_questions_on_survey_id"
     t.index ["type"], name: "index_questions_on_type"
   end
@@ -142,10 +165,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "answer_records"
     t.boolean "submitted", default: false, null: false
     t.datetime "submitted_at", precision: nil
+    t.boolean "retracted", default: false, null: false
+    t.datetime "retracted_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "ahoy_visit_id"
     t.index ["ahoy_visit_id"], name: "index_replies_on_ahoy_visit_id"
+    t.index ["retracted"], name: "index_replies_on_retracted"
+    t.index ["retracted_at"], name: "index_replies_on_retracted_at"
     t.index ["submitted"], name: "index_replies_on_submitted"
     t.index ["survey_id"], name: "index_replies_on_survey_id"
   end
@@ -182,6 +209,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.integer "edits_status"
     t.boolean "open", default: false, null: false
     t.boolean "public", default: false, null: false
+    t.boolean "retracted", default: false, null: false
+    t.datetime "retracted_at", precision: nil
     t.datetime "latest_submission_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -194,6 +223,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["name"], name: "index_surveys_on_name"
     t.index ["open"], name: "index_surveys_on_open"
     t.index ["public"], name: "index_surveys_on_public"
+    t.index ["retracted"], name: "index_surveys_on_retracted"
+    t.index ["retracted_at"], name: "index_surveys_on_retracted_at"
     t.index ["slug"], name: "index_surveys_on_slug"
     t.index ["type"], name: "index_surveys_on_type"
     t.index ["updated_at"], name: "index_surveys_on_updated_at"

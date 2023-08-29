@@ -30,6 +30,9 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :open, index: true, null: false, default: false
       t.boolean :public, index: true, null: false, default: false
 
+      t.boolean :retracted, default: false, null: false, index: true
+      t.timestamp :retracted_at, index: true
+
       t.timestamp :latest_submission_at, index: true
       t.timestamps null: false, index: true
     end
@@ -70,6 +73,9 @@ class Initial < ActiveRecord::Migration[7.0]
       t.uuid       :survey_id,     index: true, null: false
       t.foreign_key :surveys, column: :survey_id, primary_key: :id, on_delete: :cascade
 
+      t.boolean :retracted, default: false, null: false, index: true
+      t.timestamp :retracted_at, index: true
+
       # Required for FollowupQuestions
       t.uuid       :question_id,     index: true
       t.belongs_to :question_option, index: true
@@ -95,6 +101,9 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :submitted, null: false, index: true, default: false
       t.timestamp :submitted_at
 
+      t.boolean :retracted, default: false, null: false, index: true
+      t.timestamp :retracted_at, index: true
+
       t.timestamps
     end
 
@@ -115,7 +124,23 @@ class Initial < ActiveRecord::Migration[7.0]
       t.time       :time_value,       null: true, index: true
       t.date       :date_value,       null: true, index: true
 
+      t.boolean :retracted, default: false, null: false, index: true
+      t.timestamp :retracted_at, index: true
+
       t.timestamps
+    end
+
+    create_table :data_grids do |t|
+      t.belongs_to :survey, type: :uuid, null: false, index: true
+    end
+
+    create_table :data_grid_edits do |t|
+      t.blob :data_grid_data
+
+      t.boolean :applied, index: true, null: false, default: false
+      t.timestamp :applied_at, index: true
+
+      t.timestamp :created_at, index: true
     end
 
     create_table :meta_data do |t|

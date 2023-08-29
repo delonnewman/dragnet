@@ -1,19 +1,12 @@
 # frozen_string_literal: true
 
 # Provides data access and business rules for survey data grids
-class DataGrid
-  extend Dragnet::Advising
-
-  attr_reader :survey
+class DataGrid < ApplicationRecord
+  belongs_to :survey, inverse_of: :data_grid
 
   delegate :questions, :replies, to: :survey
 
   with FilteredRecords, calling: :call
-
-  # @param [Survey] survey
-  def initialize(survey)
-    @survey = survey
-  end
 
   # @param [Hash] params
   # @param [Symbol, String] sort_by

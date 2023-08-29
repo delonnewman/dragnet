@@ -3,7 +3,7 @@
 describe DataGridPresenter do
   subject(:presenter) { described_class.new(grid, params) }
 
-  let(:grid) { DataGrid.new(survey) }
+  let(:grid) { DataGrid.new(survey: survey) }
   let(:survey) { Survey.generate! }
   let(:params) { {} }
 

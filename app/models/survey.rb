@@ -49,5 +49,12 @@ class Survey < ApplicationRecord
 
   with Visibility, delegating: %i[open! close! toggle_visibility!]
 
-  with DataGrid
+  # Data grids
+  has_one :data_grid, dependent: :destroy, required: true
+  with DataGridManagement, delegating: %i[ensure_data_grid ensure_data_grid]
+  before_validation :ensure_data_grid
+
+  # Retraction
+  include Retractable
+  retract_associated :questions, :replies
 end
