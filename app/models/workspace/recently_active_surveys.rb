@@ -14,7 +14,7 @@ class Workspace::RecentlyActiveSurveys < Dragnet::Query
                         s.edits_status
                    FROM users   AS u
              INNER JOIN surveys AS s ON u.id = s.author_id
-                  WHERE s.created_at < ? AND u.id = ?)
+                  WHERE s.created_at < ? AND u.id = ? AND s.retracted = false)
     UNION
     /* recently replied to surveys */
               (SELECT s.id,
@@ -28,7 +28,7 @@ class Workspace::RecentlyActiveSurveys < Dragnet::Query
                  FROM users   AS u
            INNER JOIN surveys AS s    ON u.id         = s.author_id
            INNER JOIN replies AS r    ON s.id         = r.survey_id
-                WHERE r.submitted = true AND u.id = ?
+                WHERE r.submitted = true AND u.id = ? and s.retracted = false
              GROUP BY s.id, s.name, s.slug, s.public, s.open, s.created_at, s.updated_at)
     ORDER BY created_at DESC
     LIMIT ?

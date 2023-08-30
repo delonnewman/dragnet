@@ -6,7 +6,6 @@ class Reply < ApplicationRecord
   retract_associated :answers
 
   belongs_to :survey
-
   has_many :questions, through: :survey
 
   has_many :answers, dependent: :delete_all, inverse_of: :reply
@@ -26,7 +25,7 @@ class Reply < ApplicationRecord
 
   # Cache submission date in survey to improve query performance for workspaces
   after_save do
-    survey.update(latest_submission_at: submitted_at) if submitted? # TODO: probably should be a delayed job
+    survey.update(latest_submission_at: submitted_at) if submitted?
   end
 
   # Cached data values to improve performance in Data Grid

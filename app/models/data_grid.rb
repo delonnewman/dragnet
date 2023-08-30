@@ -2,10 +2,18 @@
 
 # Provides data access and business rules for survey data grids
 class DataGrid < ApplicationRecord
-  belongs_to :survey, inverse_of: :data_grid
+  # Surveys & Questions
+  belongs_to :survey, inverse_of: :data_grids
+  has_many :questions, through: :survey, inverse_of: :survey
+  has_many :replies,   through: :survey, inverse_of: :survey
 
-  delegate :questions, :replies, to: :survey
+  belongs_to :user, inverse_of: :data_grids
 
+  # RecordChanges
+  has_many :record_changes, through: :survey, inverse_of: :survey
+  delegate :record_changes?, to: :survey
+
+  # Records, filtering & sorting
   with FilteredRecords, calling: :call
 
   # @param [Hash] params
@@ -39,6 +47,6 @@ class DataGrid < ApplicationRecord
   #
   # @return [ActiveRecord::Relation]
   def sorted_records(question, scope)
-    Perspectives::DataGridSortQuery.get(question.question_type).sort(question, scope, sort_direction)
+    Dragnet::Perspectives::DataGridSortQuery.get(question.question_type).sort(question, scope, sort_direction)
   end
 end

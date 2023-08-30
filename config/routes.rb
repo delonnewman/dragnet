@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     get 'data',       to: 'data_grid#show'
     get 'data/rows',  to: 'data_grid#rows'
     get 'data/table', to: 'data_grid#table'
+
+    get 'changes',    to: 'record_changes#index'
   end
 
   resources :reply, only: %i[edit update] do

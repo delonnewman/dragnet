@@ -3,6 +3,9 @@
 class Survey < ApplicationRecord
   include SelfDescribable
   include UniquelyIdentifiable
+  include Retractable
+
+  retract_associated :questions, :replies
 
   belongs_to :author, class_name: 'User'
 
@@ -45,16 +48,19 @@ class Survey < ApplicationRecord
   has_many :copies, foreign_key: 'copy_of_id', class_name: 'Survey', dependent: :nullify, inverse_of: :copy_of
   with Copying, delegating: %i[copy! copy copy?]
 
+  # Execute code on record changes
   has_many :trigger_registrations, dependent: :delete_all, inverse_of: :survey
 
+  # Change the visibility of the survey
   with Visibility, delegating: %i[open! close! toggle_visibility!]
 
-  # Data grids
-  has_one :data_grid, dependent: :destroy, required: true
-  with DataGridManagement, delegating: %i[ensure_data_grid ensure_data_grid]
-  before_validation :ensure_data_grid
+  # DataGrids
+  has_many :data_grids, dependent: :delete_all, inverse_of: :survey
+  with DataGridManagement, delegating: %i[ensure_data_grid ensure_data_grid!]
 
-  # Retraction
-  include Retractable
-  retract_associated :questions, :replies
+  # Record Changes
+  has_many :record_changes, dependent: :nullify
+  enum :record_changes_status, { applied: 0, unapplied: 1, cannot_apply: -1 }
+  with RecordChangeManagement, delegating: %i[record_changes? new_record_change set_default_changes_status apply_record_changes apply_record_changes!]
+  before_validation :set_default_changes_status
 end

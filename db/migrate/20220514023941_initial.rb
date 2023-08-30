@@ -1,7 +1,7 @@
 class Initial < ActiveRecord::Migration[7.0]
   def change
     # TODO: add groups & permissions
-    create_table :users do |t|
+    create_table :users, id: :uuid do |t|
       t.string :login, null: false, index: true
       t.string :email, null: false, index: true
 
@@ -20,12 +20,13 @@ class Initial < ActiveRecord::Migration[7.0]
 
       t.string :type, null: true, index: true
 
-      t.bigint :author_id, null: false, index: true
+      t.uuid :author_id, null: false, index: true
       t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
       t.index [:name, :author_id], unique: true
 
       t.uuid :copy_of_id, null: true, index: true
       t.integer :edits_status, null: true, index: true
+      t.integer :record_changes_status, null: true, index: true
 
       t.boolean :open, index: true, null: false, default: false
       t.boolean :public, index: true, null: false, default: false
@@ -48,10 +49,22 @@ class Initial < ActiveRecord::Migration[7.0]
     end
 
     create_table :trigger_registrations do |t|
-      t.uuid :survey_id, null: false, index: true
-      t.string :trigger_class_name, null: false, index: true
+      t.uuid    :survey_id,          null: false, index: true
+      t.string  :trigger_class_name, null: false, index: true, default: 'Dragnet::Triggers::UserDefinedTrigger'
+      t.boolean :user_defined,       null: false, index: true, default: true
+      t.blob    :logic
 
-      t.timestamps
+      t.timestamps index: true
+    end
+
+    create_table :trigger_executions do |t|
+      t.belongs_to :trigger_registration, type: :uuid, null: false, index: true
+      t.integer    :status,                            null: true, index: true
+      t.blob       :output
+      t.boolean    :completed,                         null: false, index: true, default: false
+      t.timestamp  :completed_at,                                   index: true
+
+      t.timestamps index: true
     end
 
     create_table :question_types, id: :uuid do |t|
@@ -107,7 +120,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    create_table :answers do |t|
+    create_table :answers, id: :uuid do |t|
       t.uuid :survey_id,   null: false, index: true
       t.uuid :reply_id,    null: false, index: true
       t.uuid :question_id, null: false, index: true
@@ -130,31 +143,37 @@ class Initial < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    create_table :data_grids do |t|
-      t.belongs_to :survey, type: :uuid, null: false, index: true
+    create_table :record_changes do |t|
+      t.belongs_to :survey,            type: :uuid, null: false, index: true
+      t.boolean    :retraction,                     null: false, index: true, default: false
+      t.string     :record_class_name,              null: false, index: true
+      t.uuid       :record_id,                      null: false, index: true
+      t.blob       :changes
+      t.blob       :diff
+      t.boolean    :applied,                        null: false, index: true, default: false
+      t.timestamp  :applied_at,                                  index: true
+      t.timestamp  :created_at,                     null: false, index: true
+      t.uuid       :created_by,                                  index: true
     end
 
-    create_table :data_grid_edits do |t|
-      t.blob :data_grid_data
-
-      t.boolean :applied, index: true, null: false, default: false
-      t.timestamp :applied_at, index: true
-
-      t.timestamp :created_at, index: true
+    create_table :data_grids do |t|
+      t.belongs_to :survey, type: :uuid, null: false, index: true
+      t.belongs_to :user,   type: :uuid, null: false, index: true
+      t.index [:survey_id, :user_id], unique: true
     end
 
     create_table :meta_data do |t|
-      t.references :self_describable, polymorphic: true, type: :uuid
-      t.string :key, null: false, index: true
-      t.string :key_type, null: false, index: true, default: 'String'
-      t.string :value, null: false, index: true
+      t.references :self_describable, null: false, index: true, polymorphic: true, type: :uuid
+      t.string     :key,              null: false, index: true
+      t.string     :key_type,         null: false, index: true, default: 'String'
+      t.string     :value,            null: false, index: true
     end
 
     create_table :saved_reports, id: :uuid do |t|
-      t.bigint :author_id, null: false, index: true
-      t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
+      t.uuid        :author_id, null: false, index: true
+      t.foreign_key :users,     column: :author_id, primary_key: :id, on_delete: :cascade
 
-      t.string :name, null: false
+      t.string :name,         null: false
       t.string :question_ids, null: false
       t.string :filters
       t.string :sort_by

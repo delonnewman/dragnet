@@ -39,7 +39,7 @@ class DataGridController < ApplicationController
   end
 
   def presenter
-    DataGridPresenter.new(survey.data_grid, data_grid_params)
+    DataGridPresenter.new(survey.ensure_data_grid!(current_user), data_grid_params)
   end
 
   def survey

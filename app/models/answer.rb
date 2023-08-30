@@ -10,8 +10,8 @@ class Answer < ApplicationRecord
   # for question_option values
   belongs_to :question_option, optional: true
 
-  delegate :to_s, :blank?, to: :value
-  delegate :to_i, :to_f, to: :number_value
+  delegate :to_s, :blank?, to: :value, allow_nil: true
+  delegate :to_i, :to_f, to: :number_value, allow_nil: true
 
   belongs_to :question_type
   after_initialize do
@@ -19,14 +19,7 @@ class Answer < ApplicationRecord
   end
 
   before_save do
-    # TODO: this should be another perspective to it can be extensible
-    if question.settings.long_answer? && question.settings.countable?
-      self.float_value = Dragnet::TextSentiment.new(long_text_value).score
-    end
-  end
-
-  def evaluation
-    Perspectives::AnswerEvaluation.get(question_type)
+    Dragnet::Perspectives::BeforeSavingAnswer.get(question_type).update(answer, question)
   end
 
   def assign_value!(value)
@@ -52,5 +45,11 @@ class Answer < ApplicationRecord
 
   def sort_value
     evaluation.sort_value(self)
+  end
+
+  private
+
+  def evaluation
+    Dragnet::Perspectives::AnswerEvaluation.get(question_type)
   end
 end

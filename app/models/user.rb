@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  has_many :surveys, dependent: :delete_all, foreign_key: :author_id, inverse_of: :author
+  has_many :surveys, -> { where(retracted: false) }, dependent: :delete_all, foreign_key: :author_id, inverse_of: :author
   has_many :saved_reports, dependent: :delete_all, foreign_key: :author_id, inverse_of: :author
+  has_many :data_grids, inverse_of: :user, dependent: :delete_all
 
   # To satisfy the Reportable protocol
   has_many :questions, through: :surveys
@@ -16,7 +17,6 @@ class User < ApplicationRecord
          :rememberable, :validatable, :trackable, :confirmable, :omniauthable
 
   with ReplySubmissionPolicy, delegating: %i[can_preview_survey? can_update_reply? can_edit_reply? can_create_reply?]
-
   with Workspace
 
   def gravatar_url

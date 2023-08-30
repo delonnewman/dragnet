@@ -2,18 +2,18 @@
 
 class Workspace::RepliesBySurveyAndDate < Dragnet::Query
   query_text <<~SQL
-    select
+    SELECT
       r.survey_id,
-      extract(year from r.updated_at) || '-' ||
-      extract(month from r.updated_at) || '-' ||
-      extract(day from r.updated_at) as reply_date,
-      count(r.id) as reply_count
-    from replies r
-      inner join surveys s on s.id = r.survey_id
-      inner join users u on u.id = s.author_id
-    where s.author_id = ? and r.updated_at >= ?
-    group by r.survey_id, reply_date
-    order by reply_date desc
+      EXTRACT(YEAR FROM r.updated_at) || '-' ||
+      EXTRACT(MONTH FROM r.updated_at) || '-' ||
+      EXTRACT(DAY FROM r.updated_at) AS reply_date,
+      COUNT(r.id) AS reply_count
+    FROM replies r
+      INNER JOIN surveys s ON s.id = r.survey_id
+      INNER JOIN users u ON u.id = s.author_id
+    WHERE s.author_id = ? AND r.updated_at >= ? AND s.retracted = false
+    GROUP BY r.survey_id, reply_date
+    ORDER BY reply_date DESC
   SQL
 
   alias space subject

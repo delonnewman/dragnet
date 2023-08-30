@@ -80,13 +80,13 @@ class StatsReport
   #
   # @return [Hash{String, Integer}]
   def answer_occurrence(question)
-    Perspectives::AnswerOccurrence.get(question.question_type).collect(reportable, question)
+    Dragnet::Perspectives::AnswerOccurrence.get(question.question_type).collect(reportable, question)
   end
 
   # @param question [Question]
   #
   # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
   def answer_stats(question)
-    Perspectives::AnswerStats.get(question.question_type).collect(reportable, question)
+    Dragnet::Perspectives::AnswerStats.get(question.question_type).collect(reportable, question)
   end
 end

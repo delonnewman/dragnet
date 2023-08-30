@@ -56,7 +56,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
   end
 
-  create_table "answers", force: :cascade do |t|
+  create_table "answers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "survey_id", null: false
     t.uuid "reply_id", null: false
     t.uuid "question_id", null: false
@@ -89,24 +89,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["time_value"], name: "index_answers_on_time_value"
   end
 
-  create_table "data_grid_edits", force: :cascade do |t|
-    t.binary "data_grid_data"
-    t.boolean "applied", default: false, null: false
-    t.datetime "applied_at", precision: nil
-    t.datetime "created_at", precision: nil
-    t.index ["applied"], name: "index_data_grid_edits_on_applied"
-    t.index ["applied_at"], name: "index_data_grid_edits_on_applied_at"
-    t.index ["created_at"], name: "index_data_grid_edits_on_created_at"
-  end
-
   create_table "data_grids", force: :cascade do |t|
     t.uuid "survey_id", null: false
+    t.uuid "user_id", null: false
+    t.index ["survey_id", "user_id"], name: "index_data_grids_on_survey_id_and_user_id", unique: true
     t.index ["survey_id"], name: "index_data_grids_on_survey_id"
+    t.index ["user_id"], name: "index_data_grids_on_user_id"
   end
 
   create_table "meta_data", force: :cascade do |t|
-    t.string "self_describable_type"
-    t.uuid "self_describable_id"
+    t.string "self_describable_type", null: false
+    t.uuid "self_describable_id", null: false
     t.string "key", null: false
     t.string "key_type", default: "String", null: false
     t.string "value", null: false
@@ -160,6 +153,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["type"], name: "index_questions_on_type"
   end
 
+  create_table "record_changes", force: :cascade do |t|
+    t.uuid "survey_id", null: false
+    t.boolean "retraction", default: false, null: false
+    t.string "record_class_name", null: false
+    t.uuid "record_id", null: false
+    t.binary "changes"
+    t.binary "diff"
+    t.boolean "applied", default: false, null: false
+    t.datetime "applied_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.uuid "created_by"
+    t.index ["applied"], name: "index_record_changes_on_applied"
+    t.index ["applied_at"], name: "index_record_changes_on_applied_at"
+    t.index ["created_at"], name: "index_record_changes_on_created_at"
+    t.index ["created_by"], name: "index_record_changes_on_created_by"
+    t.index ["record_class_name"], name: "index_record_changes_on_record_class_name"
+    t.index ["record_id"], name: "index_record_changes_on_record_id"
+    t.index ["retraction"], name: "index_record_changes_on_retraction"
+    t.index ["survey_id"], name: "index_record_changes_on_survey_id"
+  end
+
   create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "survey_id", null: false
     t.string "answer_records"
@@ -178,7 +192,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
   end
 
   create_table "saved_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "author_id", null: false
+    t.uuid "author_id", null: false
     t.string "name", null: false
     t.string "question_ids", null: false
     t.string "filters"
@@ -204,9 +218,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "slug", null: false
     t.string "description"
     t.string "type"
-    t.bigint "author_id", null: false
+    t.uuid "author_id", null: false
     t.uuid "copy_of_id"
     t.integer "edits_status"
+    t.integer "record_changes_status"
     t.boolean "open", default: false, null: false
     t.boolean "public", default: false, null: false
     t.boolean "retracted", default: false, null: false
@@ -223,6 +238,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["name"], name: "index_surveys_on_name"
     t.index ["open"], name: "index_surveys_on_open"
     t.index ["public"], name: "index_surveys_on_public"
+    t.index ["record_changes_status"], name: "index_surveys_on_record_changes_status"
     t.index ["retracted"], name: "index_surveys_on_retracted"
     t.index ["retracted_at"], name: "index_surveys_on_retracted_at"
     t.index ["slug"], name: "index_surveys_on_slug"
@@ -230,16 +246,37 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["updated_at"], name: "index_surveys_on_updated_at"
   end
 
-  create_table "trigger_registrations", force: :cascade do |t|
-    t.uuid "survey_id", null: false
-    t.string "trigger_class_name", null: false
+  create_table "trigger_executions", force: :cascade do |t|
+    t.uuid "trigger_registration_id", null: false
+    t.integer "status"
+    t.binary "output"
+    t.boolean "completed", default: false, null: false
+    t.datetime "completed_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["survey_id"], name: "index_trigger_registrations_on_survey_id"
-    t.index ["trigger_class_name"], name: "index_trigger_registrations_on_trigger_class_name"
+    t.index ["completed"], name: "index_trigger_executions_on_completed"
+    t.index ["completed_at"], name: "index_trigger_executions_on_completed_at"
+    t.index ["created_at"], name: "index_trigger_executions_on_created_at"
+    t.index ["status"], name: "index_trigger_executions_on_status"
+    t.index ["trigger_registration_id"], name: "index_trigger_executions_on_trigger_registration_id"
+    t.index ["updated_at"], name: "index_trigger_executions_on_updated_at"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "trigger_registrations", force: :cascade do |t|
+    t.uuid "survey_id", null: false
+    t.string "trigger_class_name", default: "UserDefinedTrigger", null: false
+    t.boolean "user_defined", default: true, null: false
+    t.binary "logic"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_trigger_registrations_on_created_at"
+    t.index ["survey_id"], name: "index_trigger_registrations_on_survey_id"
+    t.index ["trigger_class_name"], name: "index_trigger_registrations_on_trigger_class_name"
+    t.index ["updated_at"], name: "index_trigger_registrations_on_updated_at"
+    t.index ["user_defined"], name: "index_trigger_registrations_on_user_defined"
+  end
+
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "login", null: false
     t.string "email", null: false
     t.string "name", null: false
