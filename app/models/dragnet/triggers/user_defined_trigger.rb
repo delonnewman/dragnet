@@ -2,7 +2,7 @@
 
 module Dragnet
   module Triggers
-    class UserDefinedTrigger < Dragnet::AsynchronousTrigger
+    class UserDefinedTrigger < AsynchronousTrigger
       def execute
         # TODO: evaluate logic
       end
