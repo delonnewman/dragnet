@@ -264,7 +264,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
 
   create_table "trigger_registrations", force: :cascade do |t|
     t.uuid "survey_id", null: false
-    t.string "trigger_class_name", default: "UserDefinedTrigger", null: false
+    t.string "trigger_class_name", default: "Dragnet::Triggers::UserDefinedTrigger", null: false
     t.boolean "user_defined", default: true, null: false
     t.binary "logic"
     t.datetime "created_at", null: false

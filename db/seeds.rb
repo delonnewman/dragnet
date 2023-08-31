@@ -1,3 +1,5 @@
+include Dragnet
+
 QuestionType.create(
   [
     { name:     'Text',
