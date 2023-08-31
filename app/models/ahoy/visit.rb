@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ahoy::Visit < ApplicationRecord
+class Ahoy::Visit < ActiveRecord::Base
   self.table_name = 'ahoy_visits'
 
   has_many :events, class_name: 'Ahoy::Event', inverse_of: :visit, dependent: :delete_all

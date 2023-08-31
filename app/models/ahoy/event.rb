@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ahoy::Event < ApplicationRecord
+class Ahoy::Event < ActiveRecord::Base
   include Ahoy::QueryMethods
 
   self.table_name = 'ahoy_events'
