@@ -18,24 +18,22 @@ class Initial < ActiveRecord::Migration[7.0]
       t.string :slug, null: false, index: true
       t.string :description
 
-      t.string :type, null: true, index: true
-
       t.uuid :author_id, null: false, index: true
       t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
       t.index [:name, :author_id], unique: true
 
-      t.uuid :copy_of_id, null: true, index: true
-      t.integer :edits_status, null: true, index: true
+      t.uuid    :copy_of_id,            null: true, index: true
+      t.integer :edits_status,          null: true, index: true
       t.integer :record_changes_status, null: true, index: true
 
-      t.boolean :open, index: true, null: false, default: false
+      t.boolean :open,   index: true, null: false, default: false
       t.boolean :public, index: true, null: false, default: false
 
-      t.boolean :retracted, default: false, null: false, index: true
-      t.timestamp :retracted_at, index: true
+      t.boolean   :retracted,    null: false, index: true, default: false
+      t.timestamp :retracted_at,              index: true
 
-      t.timestamp :latest_submission_at, index: true
-      t.timestamps null: false, index: true
+      t.timestamp :latest_submission_at,              index: true
+      t.timestamps                       null: false, index: true
     end
 
     create_table :survey_edits do |t|
@@ -99,16 +97,14 @@ class Initial < ActiveRecord::Migration[7.0]
       t.foreign_key :questions, column: :question_id, primary_key: :id, on_delete: :cascade
 
       t.string  :text,   null: false, index: true
-      t.integer :weight, index: true # used for numerical weight in generated reports
+      t.integer :weight,              index: true # used for numerical weight in generated reports
 
       t.integer :display_order, null: false, default: 0
-
-      t.uuid :followup_question_id, index: true
-      t.foreign_key :questions, column: :followup_question_id, primary_key: :id
     end
 
     create_table :replies, id: :uuid do |t|
       t.uuid :survey_id, index: true, null: false
+      t.uuid :user_id,   index: true, null: true # for records added via data grid
       t.string :answer_records # cached records
 
       t.boolean :submitted, null: false, index: true, default: false
@@ -165,7 +161,7 @@ class Initial < ActiveRecord::Migration[7.0]
     create_table :meta_data do |t|
       t.references :self_describable, null: false, index: true, polymorphic: true, type: :uuid
       t.string     :key,              null: false, index: true
-      t.string     :key_type,         null: false, index: true, default: 'String'
+      t.string     :value_type,       null: false, index: true, default: 'String'
       t.string     :value,            null: false, index: true
     end
 

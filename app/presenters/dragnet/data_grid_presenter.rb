@@ -21,14 +21,14 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   def paginated_records
     records.offset(pager.offset).limit(pager.items)
   end
+
   memoize :paginated_records
 
   def records
     grid.records(
-      sort_by:          sort_by,
-      sort_direction:   sort_direction,
-      sort_by_question: sort_by_question?,
-      **params.to_h
+      sort_by:        sort_by,
+      sort_direction: sort_direction,
+      **params.to_h.symbolize_keys
     )
   end
 
@@ -52,9 +52,11 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   def sort_by
     params.fetch(:sort_by, :created_at).to_sym
   end
+
   alias sorted_by sort_by
 
   def sort_by_question? = uuid?(params[:sort_by])
+
   alias sorted_by_question? sort_by_question?
 
   # @param [Symbol, Question] column

@@ -9,7 +9,7 @@ module Dragnet
 
       if records.count == 1
         parse_single_meta(records.first)
-      elsif records.first.key_type != 'ref'
+      elsif records.first.value_type != 'ref'
         parse_multi_meta(records)
       else
         parse_ref_meta(records, grouped)
@@ -34,7 +34,7 @@ module Dragnet
     class Error < RuntimeError; end
 
     def parse_single_meta(datum)
-      case datum.key_type
+      case datum.value_type
       when 'String'
         datum.value
       when 'Symbol'
@@ -44,13 +44,13 @@ module Dragnet
       when 'FalseClass'
         false
       when 'Integer', 'Float', 'Rational'
-        Kernel.public_send(datum.key_type, datum.value)
+        Kernel.public_send(datum.value_type, datum.value)
       when 'Date'
         Date.parse(datum.value)
       when 'Time'
         Time.zone.parse(datum.value)
       else
-        raise Error, "unable to parse values of type #{datum.key_type}"
+        raise Error, "unable to parse values of type #{datum.value_type}"
       end
     end
   end

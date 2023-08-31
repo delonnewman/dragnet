@@ -45,6 +45,7 @@ module Dragnet
       if retraction?
         record.retract(timestamp)
       else
+        # FIXME: this should create only not update
         record.update(changes.merge(updated_at: timestamp))
       end
     end
@@ -58,6 +59,7 @@ module Dragnet
       if retraction?
         record.retract!(timestamp)
       else
+        # FIXME: this should create only not update
         record.update!(changes.merge(updated_at: timestamp))
       end
     end

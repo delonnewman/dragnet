@@ -37,7 +37,7 @@ module Dragnet
     end
 
     def single_meta_attributes(key, value, type: value.class)
-      { key: key, value: String(value), key_type: type.name }
+      { key: key, value: String(value), value_type: type.name }
     end
   end
 end

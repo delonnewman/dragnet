@@ -3,15 +3,17 @@
 module Dragnet
   module Perspectives
     class DataGridFilterQuery < Base
-      # TODO: Remove usage of QuestionType#answer_value_fields
       def filter(_question, _scope, _table, _value)
         raise "can't filter questions of type: #{question_type}"
       end
 
       class Text < self
-        def filter(_question, scope, table, value)
-          # TODO: should test for short or long text
-          scope.where.like(table => { short_text_value: "%#{value}%" })
+        def filter(question, scope, table, value)
+          if question.settings.long_answer?
+            scope.where.like(table => { long_text_value: "%#{value}%" })
+          else
+            scope.where.like(table => { short_text_value: "%#{value}%" })
+          end
         end
       end
 

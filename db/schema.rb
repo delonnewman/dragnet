@@ -101,12 +101,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "self_describable_type", null: false
     t.uuid "self_describable_id", null: false
     t.string "key", null: false
-    t.string "key_type", default: "String", null: false
+    t.string "value_type", default: "String", null: false
     t.string "value", null: false
     t.index ["key"], name: "index_meta_data_on_key"
-    t.index ["key_type"], name: "index_meta_data_on_key_type"
     t.index ["self_describable_type", "self_describable_id"], name: "index_meta_data_on_self_describable"
     t.index ["value"], name: "index_meta_data_on_value"
+    t.index ["value_type"], name: "index_meta_data_on_value_type"
   end
 
   create_table "question_options", force: :cascade do |t|
@@ -114,8 +114,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "text", null: false
     t.integer "weight"
     t.integer "display_order", default: 0, null: false
-    t.uuid "followup_question_id"
-    t.index ["followup_question_id"], name: "index_question_options_on_followup_question_id"
     t.index ["question_id"], name: "index_question_options_on_question_id"
     t.index ["text"], name: "index_question_options_on_text"
     t.index ["weight"], name: "index_question_options_on_weight"
@@ -176,6 +174,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
 
   create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "survey_id", null: false
+    t.uuid "user_id"
     t.string "answer_records"
     t.boolean "submitted", default: false, null: false
     t.datetime "submitted_at", precision: nil
@@ -189,6 +188,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["retracted_at"], name: "index_replies_on_retracted_at"
     t.index ["submitted"], name: "index_replies_on_submitted"
     t.index ["survey_id"], name: "index_replies_on_survey_id"
+    t.index ["user_id"], name: "index_replies_on_user_id"
   end
 
   create_table "saved_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -217,7 +217,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "name", null: false
     t.string "slug", null: false
     t.string "description"
-    t.string "type"
     t.uuid "author_id", null: false
     t.uuid "copy_of_id"
     t.integer "edits_status"
@@ -242,7 +241,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["retracted"], name: "index_surveys_on_retracted"
     t.index ["retracted_at"], name: "index_surveys_on_retracted_at"
     t.index ["slug"], name: "index_surveys_on_slug"
-    t.index ["type"], name: "index_surveys_on_type"
     t.index ["updated_at"], name: "index_surveys_on_updated_at"
   end
 
@@ -305,7 +303,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["updated_at"], name: "index_users_on_updated_at"
   end
 
-  add_foreign_key "question_options", "questions", column: "followup_question_id"
   add_foreign_key "question_options", "questions", on_delete: :cascade
   add_foreign_key "questions", "surveys", on_delete: :cascade
   add_foreign_key "saved_reports", "users", column: "author_id", on_delete: :cascade

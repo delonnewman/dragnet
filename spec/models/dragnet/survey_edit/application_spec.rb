@@ -3,9 +3,9 @@ require 'rails_helper'
 describe Dragnet::SurveyEdit::Application do
   subject(:application) { described_class.new(edit) }
 
-  let(:author) { Dragnet::User.generate! }
-  let(:survey_data) { Dragnet::Survey[author: author].generate!.projection }
   let(:edit) { Dragnet::SurveyEdit[survey_data: survey_data].generate! }
+  let(:survey_data) { Dragnet::Survey[author: author].generate!.projection }
+  let(:author) { Dragnet::User.generate! }
 
   context 'when survey data is valid' do
     describe '#applied!' do
@@ -20,22 +20,10 @@ describe Dragnet::SurveyEdit::Application do
       end
     end
 
+    # TODO: need to generate good test data for various edit scenarios
     xdescribe '#apply!' do
       it 'will apply the edit to the survey' do
         expect(application.apply!).to eq(Survey.new(edit.survey_attributes))
-      end
-
-      it 'will set SurveyEdit#applied to true' do
-        application.apply!
-
-        expect(edit).to be_applied
-      end
-
-      it 'will set SurveyEdit#applied_at to the timestamp' do
-        timestamp = Time.zone.now
-        application.apply!(timestamp)
-
-        expect(edit.applied_at).to eq(timestamp)
       end
 
       it 'will change the survey update timestamp' do

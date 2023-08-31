@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ahoy::Visit < ActiveRecord::Base
+class Ahoy::Visit < Dragnet::ApplicationRecord
   self.table_name = 'ahoy_visits'
 
   has_many :events, class_name: 'Ahoy::Event', inverse_of: :visit, dependent: :delete_all

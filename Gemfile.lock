@@ -70,7 +70,7 @@ GEM
       activesupport (= 7.0.7.2)
     activerecord-like (7.0.0)
       activerecord (~> 7.0, >= 7.0.0)
-    activerecord-pull-alpha (0.1.1)
+    activerecord-pull-alpha (0.1.2)
     activestorage (7.0.7.2)
       actionpack (= 7.0.7.2)
       activejob (= 7.0.7.2)

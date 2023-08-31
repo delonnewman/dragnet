@@ -39,5 +39,10 @@ module Dragnet
     #   ActiveRecord::Base,
     #   ActiveSupport::HashWithIndifferentAccess,
     # ]
+
+    console do
+      require_relative '../lib/dragnet/console_methods'
+      Rails::ConsoleMethods.include(Dragnet::ConsoleMethods)
+    end
   end
 end
