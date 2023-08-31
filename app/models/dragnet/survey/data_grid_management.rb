@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-class Dragnet::Survey::DataGridManagement < Dragnet::Advice
-  advises Survey
+module Dragnet
+  class Survey::DataGridManagement < Advice
+    advises Survey
 
-  def ensure_data_grid!(user)
-    survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create!(user: user)
-  end
+    def ensure_data_grid!(user)
+      survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create!(user: user)
+    end
 
-  def ensure_data_grid(user)
-    survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create(user: user)
+    def ensure_data_grid(user)
+      survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create(user: user)
+    end
   end
 end

@@ -1,31 +1,33 @@
 # frozen_string_literal: true
 
-class Dragnet::Survey::Visibility < Dragnet::Advice
-  advises Survey
+module Dragnet
+  class Survey::Visibility < Advice
+    advises Survey
 
-  def opened!
-    survey.open = true
-    survey
-  end
+    def opened!
+      survey.open = true
+      survey
+    end
 
-  def open!
-    opened!.tap(&:save!)
-  end
+    def open!
+      opened!.tap(&:save!)
+    end
 
-  def closed!
-    survey.open = false
-    survey
-  end
+    def closed!
+      survey.open = false
+      survey
+    end
 
-  def close!
-    closed!.tap(&:save!)
-  end
+    def close!
+      closed!.tap(&:save!)
+    end
 
-  def toggle_visibility!
-    if survey.open?
-      close!
-    else
-      open!
+    def toggle_visibility!
+      if survey.open?
+        close!
+      else
+        open!
+      end
     end
   end
 end
