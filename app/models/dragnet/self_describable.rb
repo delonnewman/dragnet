@@ -5,8 +5,7 @@ module Dragnet
     extend ActiveSupport::Concern
 
     included do
-      has_many :meta_data_records, class_name: 'Dragnet::MetaDatum', as: :self_describable
-      with Parsing
+      has_many :meta_data_records, class_name: 'Dragnet::MetaDatum', as: :self_describable, inverse_of: :self_describable
     end
 
     # @param [String, Symbol] key
@@ -15,7 +14,7 @@ module Dragnet
       records = meta_data_records.where(key: key)
       return alt if records.empty?
 
-      parsing.parse_meta(records)
+      Parsing.parse_meta(records)
     end
 
     alias get_setting get_meta

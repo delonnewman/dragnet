@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class SelfDescribable::Parsing < Advice
-    advises SelfDescribable
+  # @api private
+  module SelfDescribable::Parsing
+    module_function
 
     def parse_meta(records, grouped = nil)
       return if records.nil? || records.empty?
