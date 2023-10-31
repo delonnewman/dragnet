@@ -5,7 +5,7 @@ module Dragnet
     extend ActiveSupport::Concern
 
     included do
-      has_many :meta_data_records, class_name: 'Dragnet::MetaDatum', as: :self_describable, inverse_of: :self_describable
+      has_many :meta_data_records, class_name: 'Dragnet::MetaDatum', as: :self_describable, dependent: :delete_all
     end
 
     # @param [String, Symbol] key
