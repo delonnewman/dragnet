@@ -17,7 +17,7 @@ describe Dragnet::Survey::Copying do
       end
     end
 
-    it 'wll remove question option ids' do
+    it 'will remove question option ids' do
       copying.copy_data[:questions_attributes].each do |question|
         question[:question_options_attributes].each do |question_option|
           expect(question_option).not_to have_key(:id)
