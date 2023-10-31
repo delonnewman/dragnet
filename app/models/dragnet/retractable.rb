@@ -6,8 +6,8 @@ module Dragnet
 
     class_methods do
       def retract_associated(*associations)
-        associations.each do |associations|
-          self.retractable_associations << associations
+        associations.each do |association|
+          retractable_associations << association
         end
       end
 
