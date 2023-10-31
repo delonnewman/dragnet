@@ -50,10 +50,10 @@ module Dragnet
       private
 
       def project_answer_stats(data)
-        { 'Min' => data[0].if_nil(0),
-          'Max' => data[1].if_nil(0),
-          'Sum' => data[2].if_nil(0),
-          'Average' => data[3].if_nil(0).round(1),
+        { 'Min'       => data[0].if_nil(0),
+          'Max'       => data[1].if_nil(0),
+          'Sum'       => data[2].if_nil(0),
+          'Average'   => data[3].if_nil(0).round(1),
           'Std. Dev.' => data[4].if_nil(0).round(1) }
       end
 
