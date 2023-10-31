@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  # Logic record changes in the data grid
+  # Logic for record changes in the data grid
   class Survey::RecordChangeManagement < Advice
     advises Survey
 
