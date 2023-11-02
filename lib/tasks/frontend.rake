@@ -4,12 +4,12 @@ FRONTEND_SOURCE_PATH = 'app/assets/javascripts/frontend'
 
 namespace :frontend do
   desc 'start dev server for frontend'
-  task :server do
+  task server: :environment do
     sh "cd #{FRONTEND_SOURCE_PATH} && npm run watch"
   end
 
   desc 'install frontend dependencies'
-  task :deps do
+  task deps: :environment do
     sh "npm install #{FRONTEND_SOURCE_PATH}"
   end
 
@@ -19,7 +19,7 @@ namespace :frontend do
   end
 
   desc 'remove frontend code'
-  task :clean do
-    sh "rm -rf public/js/editor && rm -rf public/js/submitter"
+  task clean: :environment do
+    sh 'rm -rf public/js/editor && rm -rf public/js/submitter'
   end
 end
