@@ -24,7 +24,6 @@ module Dragnet
       end
     end
 
-
     delegate :connection, to: :class
 
     def model_query(model_class, *params)

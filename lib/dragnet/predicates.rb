@@ -11,4 +11,3 @@ module Dragnet
     !!(string =~ UUID_PATTERN)
   end
 end
-
