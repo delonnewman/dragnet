@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 require 'faker'
 require 'active_support'
 require 'active_record'
