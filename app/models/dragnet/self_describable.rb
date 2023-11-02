@@ -24,7 +24,7 @@ module Dragnet
       return @meta_data if @meta_data
 
       grouped = meta_data_records.group_by { _1.key.to_sym }
-      @meta_data = grouped.transform_values! { parsing.parse_meta(_1, grouped) }
+      @meta_data = grouped.transform_values! { Parsing.parse_meta(_1, grouped) }
     end
     alias settings meta_data
 
