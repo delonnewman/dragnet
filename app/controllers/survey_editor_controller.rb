@@ -37,7 +37,7 @@ class SurveyEditorController < EndpointController
 
   def survey
     Dragnet::Survey
-      .includes(questions: %i[question_type question_options followup_questions])
+      .includes(questions: %i[question_type question_options])
       .find(params[:id])
   end
 
