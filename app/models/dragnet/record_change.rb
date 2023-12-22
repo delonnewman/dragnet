@@ -19,7 +19,6 @@ module Dragnet
     def record
       record_class.find(record_id)
     end
-
     memoize :record
 
     def generated_diff
