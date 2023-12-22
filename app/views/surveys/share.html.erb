@@ -86,11 +86,7 @@
 
     <% if survey.share_code? %>
       <div class="input-group input-group mb-3">
-        <input
-          class="form-control"
-          row="5"
-          id="copy-survey-code-<%= survey.id %>"
-          value="<%= survey_form_code(survey.id) %>"/>
+        <textarea class="form-control source-code" row="5" id="copy-survey-code-<%= survey.id %>"><%= survey_form_code(survey.id) %></textarea>
         <button
           type="button"
           class="btn btn-dark"

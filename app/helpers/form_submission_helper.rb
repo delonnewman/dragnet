@@ -2,13 +2,13 @@
 
 module FormSubmissionHelper
   FORM_TEMPLATE = <<~ERB.strip_heredoc.squish
-    <div id="survey-form"></div>
+    <div id="dragnet-survey-form"></div>
     <script>
       (function () {
         const script = document.createElement("script");
         script.src = "<%= base_url %>/js/submitter/main.js";
         script.onload = function () {
-          dragnet.submitter.shell.initWithNewReply("survey-form", <%= survey_id.to_json %>);
+          dragnet.submitter.shell.initWithNewReply("dragnet-survey-form", <%= survey_id.to_json %>);
         };
         document.head.append(script);
       }.call(window))
