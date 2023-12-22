@@ -15,7 +15,7 @@ class SurveysController < ApplicationController
   end
 
   def new
-    survey = Dragnet::Survey.create!(author: User.first)
+    survey = Dragnet::Survey.create!(author: current_user)
 
     redirect_to edit_survey_path(survey)
   end
