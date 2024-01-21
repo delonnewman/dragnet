@@ -16,7 +16,7 @@ module Dragnet
     accepts_nested_attributes_for :question_options, allow_destroy: true
 
     after_initialize do
-      self.hash_code = Utils.hash_code(text) if text
+      self.hash_code = Utils.hash_code(text) if text && !hash_code
     end
 
     def question_type_ident=(ident)

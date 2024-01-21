@@ -54,7 +54,6 @@ module Dragnet
     end
 
     # @return [Integer]
-    # TODO: memoize this method
     def auto_named_survey_count(name = default_name)
       return 0 unless author_id?
 

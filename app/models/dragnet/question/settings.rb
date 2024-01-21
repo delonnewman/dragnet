@@ -41,10 +41,10 @@ module Dragnet
     end
 
     def setting(setting)
-      default = question.question_type.get_meta(setting)
-      return default unless question.meta_data?
+      default = question.question_type.meta[setting]
+      return default if question.meta.blank?
 
-      question.get_meta(setting, default)
+      question.meta.fetch(setting, default)
     end
   end
 end

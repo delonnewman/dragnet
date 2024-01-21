@@ -21,7 +21,6 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   def paginated_records
     records.offset(pager.offset).limit(pager.items)
   end
-
   memoize :paginated_records
 
   def records

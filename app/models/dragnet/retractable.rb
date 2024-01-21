@@ -26,7 +26,7 @@ module Dragnet
       self.retracted_at = timestamp
 
       self.class.retractable_associations.each do |association|
-        self.public_send(association).each do |record|
+        public_send(association).each do |record|
           record.retracted!(timestamp)
         end
       end

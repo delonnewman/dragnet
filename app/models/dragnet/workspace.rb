@@ -20,19 +20,16 @@ module Dragnet
     def questions
       Question.where(survey_id: survey_ids)
     end
-
     memoize :questions
 
     def records
       Reply.where(survey_id: survey_ids, submitted: true)
     end
-
     memoize :records
 
     def events
       Ahoy::Event.with_survey_id(survey_ids)
     end
-
     memoize :events
   end
 end

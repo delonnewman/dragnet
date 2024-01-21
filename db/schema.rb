@@ -71,6 +71,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.date "date_value"
     t.boolean "retracted", default: false, null: false
     t.datetime "retracted_at", precision: nil
+    t.json "meta_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["boolean_value"], name: "index_answers_on_boolean_value"
@@ -97,18 +98,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.index ["user_id"], name: "index_data_grids_on_user_id"
   end
 
-  create_table "meta_data", force: :cascade do |t|
-    t.string "self_describable_type", null: false
-    t.uuid "self_describable_id", null: false
-    t.string "key", null: false
-    t.string "value_type", default: "String", null: false
-    t.string "value", null: false
-    t.index ["key"], name: "index_meta_data_on_key"
-    t.index ["self_describable_type", "self_describable_id"], name: "index_meta_data_on_self_describable"
-    t.index ["value"], name: "index_meta_data_on_value"
-    t.index ["value_type"], name: "index_meta_data_on_value_type"
-  end
-
   create_table "question_options", force: :cascade do |t|
     t.uuid "question_id", null: false
     t.string "text", null: false
@@ -124,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "slug", null: false
     t.string "icon"
     t.uuid "parent_type_id"
+    t.json "meta_data"
     t.index ["name"], name: "index_question_types_on_name"
     t.index ["parent_type_id"], name: "index_question_types_on_parent_type_id"
     t.index ["slug"], name: "index_question_types_on_slug"
@@ -139,11 +129,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.uuid "survey_id", null: false
     t.boolean "retracted", default: false, null: false
     t.datetime "retracted_at", precision: nil
-    t.uuid "question_id"
-    t.bigint "question_option_id"
+    t.json "meta_data"
     t.index ["hash_code"], name: "index_questions_on_hash_code"
-    t.index ["question_id"], name: "index_questions_on_question_id"
-    t.index ["question_option_id"], name: "index_questions_on_question_option_id"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
     t.index ["retracted"], name: "index_questions_on_retracted"
     t.index ["retracted_at"], name: "index_questions_on_retracted_at"
@@ -180,6 +167,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.datetime "submitted_at", precision: nil
     t.boolean "retracted", default: false, null: false
     t.datetime "retracted_at", precision: nil
+    t.json "meta_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "ahoy_visit_id"
@@ -198,6 +186,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "filters"
     t.string "sort_by"
     t.string "sort_direction"
+    t.json "meta_data"
     t.index ["author_id"], name: "index_saved_reports_on_author_id"
   end
 
@@ -226,6 +215,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.boolean "retracted", default: false, null: false
     t.datetime "retracted_at", precision: nil
     t.datetime "latest_submission_at", precision: nil
+    t.json "meta_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_surveys_on_author_id"
@@ -280,6 +270,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "name", null: false
     t.string "nickname"
     t.boolean "admin", default: false, null: false
+    t.json "meta_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: "", null: false

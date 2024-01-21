@@ -10,6 +10,7 @@ class Initial < ActiveRecord::Migration[7.0]
 
       t.boolean :admin, null: false, default: false
 
+      t.json :meta_data
       t.timestamps null: false, index: true
     end
 
@@ -31,9 +32,10 @@ class Initial < ActiveRecord::Migration[7.0]
 
       t.boolean   :retracted,    null: false, index: true, default: false
       t.timestamp :retracted_at,              index: true
+      t.timestamp :latest_submission_at,      index: true
 
-      t.timestamp :latest_submission_at,              index: true
-      t.timestamps                       null: false, index: true
+      t.json :meta_data
+      t.timestamps null: false, index: true
     end
 
     create_table :survey_edits do |t|
@@ -71,6 +73,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.string :icon
 
       t.uuid :parent_type_id, index: true
+      t.json :meta_data
     end
 
     create_table :questions, id: :uuid do |t|
@@ -87,9 +90,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :retracted, default: false, null: false, index: true
       t.timestamp :retracted_at, index: true
 
-      # Required for FollowupQuestions
-      t.uuid       :question_id,     index: true
-      t.belongs_to :question_option, index: true
+      t.json :meta_data
     end
 
     create_table :question_options do |t|
@@ -113,6 +114,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :retracted, default: false, null: false, index: true
       t.timestamp :retracted_at, index: true
 
+      t.json :meta_data
       t.timestamps
     end
 
@@ -136,6 +138,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :retracted, default: false, null: false, index: true
       t.timestamp :retracted_at, index: true
 
+      t.json :meta_data
       t.timestamps
     end
 
@@ -158,13 +161,6 @@ class Initial < ActiveRecord::Migration[7.0]
       t.index [:survey_id, :user_id], unique: true
     end
 
-    create_table :meta_data do |t|
-      t.references :self_describable, null: false, index: true, polymorphic: true, type: :uuid
-      t.string     :key,              null: false, index: true
-      t.string     :value_type,       null: false, index: true, default: 'String'
-      t.string     :value,            null: false, index: true
-    end
-
     create_table :saved_reports, id: :uuid do |t|
       t.uuid        :author_id, null: false, index: true
       t.foreign_key :users,     column: :author_id, primary_key: :id, on_delete: :cascade
@@ -174,6 +170,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.string :filters
       t.string :sort_by
       t.string :sort_direction
+      t.json :meta_data
     end
   end
 end

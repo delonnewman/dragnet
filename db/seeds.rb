@@ -4,23 +4,24 @@ QuestionType.create(
   [
     { name:     'Text',
       icon:     'fa-regular fa-keyboard',
-      settings: { long_answer: { type: :boolean, text: 'Long Answer' },
-                  countable:   { type: :boolean, text: 'Calculate sentiment analysis score for text' } } },
+      meta: { long_answer: { type: :boolean, text: 'Long Answer' },
+              countable:   { type: :boolean, text: 'Calculate sentiment analysis score for text' } } },
     { name:     'Choice',
       icon:     'fa-regular fa-square-check',
-      settings: { multiple_answers: { type: :boolean, text: 'Allow multiple answers' },
+      meta: { multiple_answers: { type: :boolean, text: 'Allow multiple answers' },
                   countable:        { type: :boolean, text: 'Calculate statistics' } } },
     { name:     'Number',
       icon:     'fa-regular fa-calculator',
-      settings: { countable: { type: :boolean, text: 'Calculate statistics', default: true },
-                  decimal:   { type: :boolean, text: 'Allow decimal numbers', default: false } } },
+      meta: { countable: { type: :boolean, text: 'Calculate statistics', default: true },
+              decimal:   { type: :boolean, text: 'Allow decimal numbers', default: false } } },
     { name:     'Time',
       icon:     'fa-regular fa-clock',
-      settings: { include_date: { type: :boolean, text: 'Include Date', default: true },
-                  include_time: { type: :boolean, text: 'Include Time', default: true } } },
+      meta: { include_date: { type: :boolean, text: 'Include Date', default: true },
+              include_time: { type: :boolean, text: 'Include Time', default: true } } },
     { name: 'Yes or No',
       slug: 'boolean',
-      icon: 'fa-regular fa-toggle-on' },
+      icon: 'fa-regular fa-toggle-on'
+    },
   ]
 )
 
@@ -38,9 +39,9 @@ Survey.create!(
   questions_attributes: [
     { text: 'Name',     question_type_ident: 'text' },
     { text: 'Email',    question_type_ident: 'text' },
-    { text: 'Address',  question_type_ident: 'text', settings: { long_answer: true } },
+    { text: 'Address',  question_type_ident: 'text', meta: { long_answer: true } },
     { text: 'Phone',    question_type_ident: 'text' },
-    { text: 'Comments', question_type_ident: 'text', settings: { long_answer: true } },
+    { text: 'Comments', question_type_ident: 'text', meta: { long_answer: true } },
   ]
 )
 

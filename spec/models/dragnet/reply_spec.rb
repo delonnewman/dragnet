@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'retractable'
-
 describe Dragnet::Reply do
   subject(:reply) { described_class[survey: survey].generate }
   let(:survey) { Dragnet::Survey.generate }

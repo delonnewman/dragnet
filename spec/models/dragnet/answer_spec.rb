@@ -1,9 +1,5 @@
-require 'rails_helper'
-
-require_relative 'retractable'
-
 describe Dragnet::Answer do
-  subject(:answer) { described_class.create!(survey: survey, reply: reply, question: question) }
+  subject(:answer) { described_class.create!(survey:, reply:, question:) }
 
   let(:survey) { Dragnet::Survey.generate! }
   let(:question) { survey.questions.to_a.sample }
