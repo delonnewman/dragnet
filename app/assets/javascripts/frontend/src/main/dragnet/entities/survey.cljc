@@ -44,30 +44,21 @@
 (s/def :survey/entity (s/keys :req [:entity/id :entity/type :survey/name :survey/updated-at :survey/author]
                               :opt [:survey/description :survey/questions]))
 
+(defn- entity-validator
+  [spec]
+  (fn [data]
+    (if-let [ex-data (s/explain-data spec data)]
+      (throw (ex-info (expound-str spec data) ex-data))
+      data)))
+
+(def validate-author! (entity-validator :survey/author))
+(def validate-survey! (entity-validator :survey/entity))
+(def validate-question! (entity-validator :question/entity))
+(def validate-question-type! (entity-validator :question.type/entity))
+(def validate-question-option! (entity-validator :question.option/entity))
+
 (defn valid-survey?
   [data] (s/valid? :survey/entity data))
-
-(defn validate-entity!
-  [spec data & {:keys [error-message]}]
-  (if-let [ex-data (s/explain-data spec data)]
-    (throw (ex-info (or error-message (s/explain-str spec data)) ex-data))
-    data))
-
-(defn validate-author!
-  [data]
-  (validate-entity! :survey/author data :error-message (expound-str :survey/author data)))
-
-(defn validate-survey!
-  [data] (validate-entity! :survey/entity data :error-message "invalid survey"))
-
-(defn validate-question!
-  [data] (validate-entity! :question/entity data :error-message "invalid question"))
-
-(defn validate-question-type!
-  [data] (validate-entity! :question.type/entity data :error-message "invalid question type"))
-
-(defn validate-question-option!
-  [data] (validate-entity! :question.option/entity data :error-message "invalid question option"))
 
 (defn valid-question?
   [data] (s/valid? :question/entity data))
