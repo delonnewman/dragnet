@@ -19,3 +19,9 @@ $box-shadow-sm: 0 .125rem .25rem rgba($black, .075);
 .survey-card:hover {
   box-shadow: $box-shadow-sm;
 }
+
+.text-overflow-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
