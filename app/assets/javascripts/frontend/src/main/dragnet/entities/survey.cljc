@@ -1,6 +1,7 @@
 (ns dragnet.entities.survey
   (:require
     [clojure.spec.alpha :as s]
+    [expound.alpha :refer [expound-str]]
     [dragnet.shared.utils :as utils :refer [->uuid echo] :include-macros true]))
 
 (s/def :number/natural (s/or :positive pos? :zero zero?))
@@ -53,7 +54,8 @@
     data))
 
 (defn validate-author!
-  [data] (validate-entity! :survey/author data :error-message "invalid author"))
+  [data]
+  (validate-entity! :survey/author data :error-message (expound-str :survey/author data)))
 
 (defn validate-survey!
   [data] (validate-entity! :survey/entity data :error-message "invalid survey"))
@@ -112,9 +114,10 @@
 (defn make-author
   [& {:keys [id name nickname]}]
   (let [user {:entity/type :user}
-        user (if id (assoc user :entity/id id) user)
+        user (if id (assoc user :entity/id (->uuid id)) user)
         user (if name (assoc user :user/name name) user)
         user (if nickname (assoc user :user/nickname nickname) user)]
+    (println user)
     (validate-author! user)))
 
 (defn make-survey
