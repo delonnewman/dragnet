@@ -4,7 +4,7 @@ module Dragnet
   module Perspectives
     # @abstract
     # An abstraction for creating class systems for polymorphic evaluation of
-    # various value based on question type.
+    # various values based on question type.
     #
     # This approach allows question types to be a principle means of extension
     # for the system.  Since defining new subclasses of the perspective allows
