@@ -13,7 +13,7 @@ module Dragnet
     end
 
     def meta=(data_hash)
-      self.meta_data = data_hash
+      meta.update_data!(data_hash)
     end
   end
 end

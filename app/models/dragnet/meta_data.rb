@@ -70,7 +70,7 @@ module Dragnet
     private
 
     def reload_data
-      @self_describable.reload.meta_data.freeze
+      @self_describable.reload.meta_data.deep_transform_keys!(&:to_sym).freeze
     end
 
     def normalize_key(key)

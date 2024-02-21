@@ -15,8 +15,8 @@ module Dragnet
     has_many :question_options, class_name: 'Dragnet::QuestionOption', dependent: :delete_all, inverse_of: :question
     accepts_nested_attributes_for :question_options, allow_destroy: true
 
-    after_initialize do
-      self.hash_code = Utils.hash_code(text) if text && !hash_code
+    before_save do
+      self.hash_code = Utils.hash_code(text) if text.present? && !hash_code
     end
 
     def question_type_ident=(ident)
