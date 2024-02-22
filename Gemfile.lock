@@ -83,8 +83,6 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.1)
-      public_suffix (>= 2.0.2, < 6.0)
     aes_key_wrap (1.1.0)
     ahoy_matey (4.2.1)
       activesupport (>= 5.2)
@@ -194,6 +192,7 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
+    language_server-protocol (3.17.0.3)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -223,7 +222,6 @@ GEM
       tomlrb
     mixlib-shellout (3.2.7)
       chef-utils
-    msgpack (1.1.0)
     multi_xml (0.6.0)
     murmurhash3 (0.1.7)
     nenv (0.3.0)
@@ -274,6 +272,7 @@ GEM
       ast (~> 2.4.1)
     pg (1.4.5)
     popper_js (2.11.6)
+    prism (0.24.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -282,7 +281,6 @@ GEM
     pry-stack_explorer (0.6.1)
       binding_of_caller (~> 1.0)
       pry (~> 0.13)
-    public_suffix (5.0.1)
     puma (6.3.1)
       nio4r (~> 2.0)
     racc (1.7.1)
@@ -395,6 +393,18 @@ GEM
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
+    ruby-lsp (0.14.2)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 0.22.0, < 0.25)
+      sorbet-runtime (>= 0.5.10782)
+    ruby-lsp-rails (0.3.0)
+      actionpack (>= 6.0)
+      activerecord (>= 6.0)
+      railties (>= 6.0)
+      ruby-lsp (>= 0.14.0, < 0.15.0)
+      sorbet-runtime (>= 0.5.9897)
+    ruby-lsp-rspec (0.1.10)
+      ruby-lsp (~> 0.14.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -419,6 +429,7 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    sorbet-runtime (0.5.11264)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -430,12 +441,6 @@ GEM
     tilt (2.0.11)
     timeout (0.4.0)
     tomlrb (2.0.3)
-    transit-rails (0.8.6)
-      transit-ruby (~> 0.8, >= 0.8.602)
-    transit-ruby (0.8.606)
-      addressable (~> 2.3)
-      msgpack (~> 1.1.0)
-      oj (~> 2.18)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
@@ -519,13 +524,13 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rake
   rubocop-rspec
+  ruby-lsp-rails
+  ruby-lsp-rspec
   sassc-rails
   sentimental
   shortuuid
   simplecov
   sprockets-rails
-  transit-rails
-  transit-ruby
   web-console
   yard
   yard-activerecord

@@ -12,7 +12,6 @@ module Dragnet
 
       user == survey.author || survey.public? || survey.open?
     end
-
     alias can_create_reply? can_submit_reply?
 
     # @param  [Reply] reply
@@ -21,7 +20,6 @@ module Dragnet
     def can_edit_reply?(reply)
       can_submit_reply?(reply) && !reply.submitted?
     end
-
     alias can_update_reply? can_submit_reply?
 
     # @param [Survey] survey

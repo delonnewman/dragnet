@@ -24,7 +24,7 @@ module Dragnet
     end
 
     def new_edit
-      SurveyEdit.new(survey: survey, survey_data: survey.projection)
+      SurveyEdit.new(survey:, survey_data: survey.projection)
     end
   end
 end

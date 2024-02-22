@@ -15,9 +15,7 @@ window.dragnet = {};
       if (tooltipElement) {
         const tooltip = bootstrap.Tooltip.getOrCreateInstance(tooltipElement, { title: 'Copied!', trigger: 'manual' })
         tooltip.show()
-        setTimeout(() => {
-          tooltip.hide();
-        }, 2000);
+        setTimeout(tooltip.hide.bind(tooltip), 2000);
       }
     });
   };
@@ -26,8 +24,8 @@ window.dragnet = {};
    * Copy the value of the given element to the clipboard, display a tooltip over the element once the copy is complete.
    *
    * @param {HTMLInputElement} element
-   *
-   * @param element
+   * 
+   * @return {void}
    */
   this.copyToClipboardFromElement = function(element) {
     this.copyToClipboard(element.value, element);
@@ -49,9 +47,7 @@ window.dragnet = {};
     const toastElements = document.querySelectorAll('.toast');
     toastElements.forEach((el) => {
       const toast = new bootstrap.Toast(el, TOAST_OPTIONS);
-      setTimeout(() => {
-        toast.hide();
-      }, TOAST_OPTIONS.delay);
+      setTimeout(toast.hide.bind(toast), TOAST_OPTIONS.delay);
     });
   };
 

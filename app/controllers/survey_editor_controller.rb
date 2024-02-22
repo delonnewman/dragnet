@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-class SurveyEditorController < EndpointController
-  # GET - /api/v1/editing/surveys/:id
+class SurveyEditorController < ApplicationController
+  # GET - /editing/surveys/:id
   def show
     respond_to do |format|
       format.transit { render transit: survey_editing.editing_data }
     end
   end
 
-  # PUT / PATCH - /api/v1/editing/surveys/:id
+  # PUT / PATCH - /editing/surveys/:id
   def update
     edit = survey.edits.create!(survey_data: read_transit(request.body))
 

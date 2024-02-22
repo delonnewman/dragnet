@@ -14,17 +14,17 @@ module Dragnet
     has_many :record_changes, class_name: 'Dragnet::RecordChange', through: :survey, inverse_of: :survey
     delegate :record_changes?, to: :survey
 
-    def query(params)
-      Query.new(survey, params)
-    end
-    memoize :query
-
     # @param [Hash] params
     #
     # @return [ActiveRecord::Relation<Reply>]
     def records(**params)
       query(params).records
     end
+
+    def query(params)
+      Query.new(survey, params)
+    end
+    memoize :query
 
     def present(*args, **kwargs)
       DataGridPresenter.new(self, *args, **kwargs)

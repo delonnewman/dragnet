@@ -1,16 +1,1 @@
 <%= render 'tabs', survey: survey, selected: :edit %>
-
-<main id="survey-editor"></main>
-<script>
-  (function() {
-    const surveyID = <%== survey.id.to_json %>;
-    const rootElement = document.getElementById("survey-editor");
-
-    const script = document.createElement("script");
-    script.src = "<%= request.base_url %>/js/editor/main.js";
-    script.onload = function() {
-      dragnet.editor.shell.init(rootElement, surveyID);
-    };
-    document.head.append(script);
-  }())
-</script>

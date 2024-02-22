@@ -5,14 +5,19 @@ module WorkspaceHelper
   def survey_open_indicator(survey)
     htmx = {
       'hx-post'    => survey.open? ? survey_close_path(survey) : survey_open_path(survey),
-      'hx-vals'    => { authenticity_token: authenticity_token }.to_json,
+      'hx-vals'    => { authenticity_token: }.to_json,
       'hx-target'  => "#survey-card-#{survey.id}",
       'hx-swap'    => 'outerHTML',
       'hx-trigger' => 'change',
     }
 
+    form_options = {
+      id: "survey-#{survey.id}-open",
+      input_attributes: { checked: survey.open?, **htmx }, label_attributes: { style: 'width:18px' }
+    }
+
     tag.div(class: 'd-flex align-items-center ms-2 me-2') do
-      form_switch(id: "survey-#{survey.id}-open", input_attributes: { checked: survey.open?, **htmx }, label_attributes: { style: "width:18px" }) do
+      form_switch(**form_options) do
         icon('fas', survey.open? ? 'lock-open' : 'lock', class: 'text-muted')
       end
     end
@@ -32,8 +37,7 @@ module WorkspaceHelper
   def survey_public_indicator(survey)
     label = survey.public? ? 'Public' : 'Private'
 
-    icon('fas', survey.public? ? "earth-#{EARTH_REGIONS.sample}" : 'key') +
-      '&nbsp;'.html_safe + label
+    icon('fas', survey.public? ? "earth-#{EARTH_REGIONS.sample}" : 'key') + '&nbsp;'.html_safe + label
   end
 
   def survey_share_dropdown(survey, align_menu_end: false, tooltip_target: "#survey-card-#{survey.id}")

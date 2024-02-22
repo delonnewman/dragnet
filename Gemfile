@@ -29,8 +29,6 @@ gem 'pry-rails'
 gem 'murmurhash3'
 gem 'rqrcode'
 gem 'shortuuid'
-gem 'transit-ruby', require: 'transit'
-gem 'transit-rails'
 
 gem 'pagy'
 
@@ -64,9 +62,6 @@ gem 'sentimental'
 
 # TODO: Move to Dart Sass
 gem 'sassc-rails'
-
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem 'image_processing', '~> 1.2'
 
 git 'https://github.com/delonnewman/el-toolkit.git' do
   gem 'el-core', require: 'el/data_utils'
@@ -115,4 +110,7 @@ group :development do
   gem 'yard-rspec'
 
   gem 'dockerfile-rails'
+
+  gem 'ruby-lsp-rails'
+  gem 'ruby-lsp-rspec', require: false
 end

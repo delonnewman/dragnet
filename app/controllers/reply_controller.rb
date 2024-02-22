@@ -57,7 +57,6 @@ class ReplyController < ApplicationController
 
   private
 
-  # rubocop: disable Rails/DynamicFindBy
   def dispatch_submission_request
     Dragnet::Survey.find_by_short_id!(params.require(:survey_id)).dispatch_submission_request(
       wants_preview: params[:preview].present?,
@@ -66,8 +65,6 @@ class ReplyController < ApplicationController
       tracker:       tracker
     )
   end
-
-  # rubocop: enable Rails/DynamicFindBy
 
   def current_visit
     Ahoy.instance.visit_or_create

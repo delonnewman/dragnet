@@ -3,28 +3,24 @@
 class ReplySubmissionController < EndpointController
   include FormSubmissionHelper
 
-  # TODO: Add server-side check based on visit-token to avoid creating duplicate replies
   def new
     respond_to do |format|
-      format.html    { render plain: form_code(newly_saved_reply) }
-      format.json    { render json: newly_saved_reply_data }
-      format.transit { render body: transit(newly_saved_reply_data) }
+      format.html { render plain: form_code(newly_saved_reply) }
+      format.json { render json: newly_saved_reply_data }
     end
   end
 
   def show
     respond_to do |format|
-      format.html    { render plain: form_code(reply) }
-      format.json    { render json: reply_submission.submission_data }
-      format.transit { render body: transit(reply_submission.submission_data) }
+      format.html { render plain: form_code(reply) }
+      format.json { render json: reply_submission.submission_data }
     end
   end
 
   def preview
     respond_to do |format|
-      format.html    { render plain: form_code(new_reply) }
-      format.json    { render json: reply_submission(new_reply).submission_data }
-      format.transit { render body: transit(reply_submission(new_reply).submission_data) }
+      format.html { render plain: form_code(new_reply) }
+      format.json { render json: reply_submission(new_reply).submission_data }
     end
   end
 
@@ -60,7 +56,7 @@ class ReplySubmissionController < EndpointController
 
   def reply
     Dragnet::Reply
-      .includes(:survey, questions: %i[question_type question_options followup_questions])
+      .includes(:survey, questions: %i[question_type question_options])
       .find(params[:id])
   end
 end
