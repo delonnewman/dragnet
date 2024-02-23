@@ -113,7 +113,7 @@
 
 (defn make-question
   [& {:keys [id text display_order required settings question_options question_type :as all]
-      :or {id (random-uuid) display-order 0 required false}}]
+      :or {id (random-uuid) display_order 0 required false}}]
   (-> {:entity/id (->uuid id)
        :entity/type :question
        :question/text text

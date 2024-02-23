@@ -4,6 +4,8 @@
 ARG RUBY_VERSION=3.2.2
 FROM ruby:$RUBY_VERSION-slim as base
 
+LABEL org.opencontainers.image.source = "https://ghcr.io/delonnewman/dragnet"
+
 # Rails app lives here
 WORKDIR /rails
 

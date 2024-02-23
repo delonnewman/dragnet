@@ -10,7 +10,7 @@ namespace :frontend do
 
   desc 'install frontend dependencies'
   task deps: :environment do
-    sh "npm install #{FRONTEND_SOURCE_PATH}"
+    sh "cd #{FRONTEND_SOURCE_PATH} && npm install"
   end
 
   desc 'build frontend for production'
