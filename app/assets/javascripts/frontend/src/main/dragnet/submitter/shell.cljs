@@ -1,26 +1,28 @@
 (ns dragnet.submitter.shell
   "The reply submitter UI shell"
   (:require
-    [cljs.core.async :refer [go <!]]
     [cljs-http.client :as http]
-    [reagent.core :as r]
-    [reagent.dom :as rdom]
+    [cljs.core.async :refer [go <!]]
     [dragnet.shared.utils :as utils :refer [blank? ex-blank] :include-macros true]
-    [dragnet.submitter.local-storage :as storage]
     [dragnet.submitter.components :refer [reply-submitter]]
-    [dragnet.submitter.core :refer [reply-url]]))
+    [dragnet.submitter.core :refer [reply-url]]
+    [dragnet.submitter.local-storage :as storage]
+    [reagent.core :as r]
+    [reagent.dom :as rdom]))
+
 
 (defn ui-renderer
   [elem reply-id & {:keys [preview]}]
-  (fn
-    [_ _ old new]
+  (fn [_ _ old new]
     (when (not= old new)
       (rdom/render [reply-submitter reply-id new :preview preview] elem))))
+
 
 (defn fetch-reply-data
   [id & {:keys [preview]}]
   (go (let [res (<! (http/get (reply-url id :preview preview)))]
         (:body res))))
+
 
 (defn ^:export init
   "Initialize reply submission UI with the root element, survey-id and reply-id,
@@ -34,6 +36,7 @@
     (add-watch current :render-ui (ui-renderer root-elem reply-id :preview preview))
     (go (let [state (<! (fetch-reply-data id :preview preview))]
           (reset! current state)))))
+
 
 (defn ^:export initWithNewReply
   "Initialize a new reply and reply submission UI with the root element and survey-id."

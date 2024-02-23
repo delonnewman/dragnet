@@ -2,13 +2,14 @@
   "View components for the Editor UI"
   (:require
     [clojure.string :as s]
-    [dragnet.shared.utils :as utils :refer [time-ago-in-words pp-str] :include-macros true]
-    [dragnet.shared.components :refer
-      [icon switch text-field remove-button]]
-    [dragnet.shared.core :refer
-      [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
     [dragnet.editor.core :as editor :refer
-      [survey survey-edited? question-type-slug question-types question-type-list question-type-uid errors?]]))
+     [survey survey-edited? question-type-slug question-types question-type-list question-type-uid errors?]]
+    [dragnet.shared.components :refer
+     [icon switch text-field remove-button]]
+    [dragnet.shared.core :refer
+     [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
+    [dragnet.shared.utils :as utils :refer [time-ago-in-words pp-str] :include-macros true]))
+
 
 (defn choice-option
   [state question option]
@@ -33,6 +34,7 @@
      [:div.ms-1
       [remove-button {:on-click (editor/remove-option! state question option)}]]]))
 
+
 (defn choice-body
   [ref question]
   [:div
@@ -41,15 +43,18 @@
       ^{:key (utils/dom-id question option)} [choice-option ref question option])]
    [:a.btn.btn-link {:href "#" :on-click (editor/add-option! ref question)} "Add Option"]])
 
+
 (defn text-body
   [_ question]
   (if (long-answer? question)
     [:textarea.form-control {:rows 3}]
     [:input.form-control {:type "text"}]))
 
+
 (defn number-body
   [_ _question]
   [:input.form-control {:type "number"}])
+
 
 (defn time-body
   [_ question]
@@ -59,16 +64,19 @@
     (include-time? question) [:input.form-control {:type "time"}]
     :else [:input.form-control {:type "datetime-local"}]))
 
+
 (def question-card-bodies
   {"text"   text-body
    "choice" choice-body
    "number" number-body
    "time"   time-body})
 
+
 (defn question-card-body
   [ref question]
   (when-let [body (question-card-bodies (question-type-slug @ref question))]
     [body ref question]))
+
 
 (defn question-card-footer
   [ref question]
@@ -84,12 +92,13 @@
                             :style {:margin-right "20px"}
                             :label text}])))
     (let [form-id (str "option-" (question :id) "-required")]
-        ^{:key form-id} [switch
-                         {:id form-id
-                          :checked (question :question/required)
-                          :on-change (editor/change-required! ref question)
-                          :style {:margin-right "20px"}
-                          :label "Required"}])]])
+      ^{:key form-id} [switch
+                       {:id form-id
+                        :checked (question :question/required)
+                        :on-change (editor/change-required! ref question)
+                        :style {:margin-right "20px"}
+                        :label "Required"}])]])
+
 
 (defn select-question-type
   [ref question]
@@ -105,6 +114,7 @@
         {:key (question-type-uid question type)
          :value (type :entity/id)}
         (type :question.type/name)])]))
+
 
 (defn question-card
   [ref question]
@@ -124,28 +134,31 @@
     [question-card-body ref question]]
    [question-card-footer ref question]])
 
+
 (defn survey-questions
   [ref]
   [:div.questions
    (for [q (editor/survey-questions @ref)]
      ^{:key (utils/dom-id q)} [question-card ref q])])
 
+
 (defn survey-details
   [& {:keys [id name description on-change-description on-change-name]}]
   [:div.card.survey-details.mb-5
    [:div.card-body
     [:div.card-title.pb-3
-      [text-field
-       {:id id
-        :title "Enter form name"
-        :class "h3"
-        :default-value name
-        :on-change on-change-name}]]
+     [text-field
+      {:id id
+       :title "Enter form name"
+       :class "h3"
+       :default-value name
+       :on-change on-change-name}]]
     [:textarea.form-control
      {:rows 1
       :placeholder "Description"
       :on-blur on-change-description
       :default-value description}]]])
+
 
 (defn map-table
   [map]
@@ -157,9 +170,11 @@
          [:th key]
          [:td (if (map? val) [map-table val] (pp-str val))]]))]])
 
+
 (defn dev-info
   [state]
   [map-table state])
+
 
 (defn survey-editor
   [ref]
@@ -168,8 +183,8 @@
     [:div
      [:small.me-1.text-muted
       (if (survey-edited? @ref)
-       (str "Last saved " (time-ago-in-words (editor/updated-at @ref)))
-       (str "Up to date. Saved " (time-ago-in-words (editor/updated-at @ref))))]]
+        (str "Last saved " (time-ago-in-words (editor/updated-at @ref)))
+        (str "Up to date. Saved " (time-ago-in-words (editor/updated-at @ref))))]]
     [:small#errors.text-danger
      (if (errors? @ref) (str "Error: " (s/join ", " (editor/errors @ref))))]
     [:div

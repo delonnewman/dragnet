@@ -1,8 +1,9 @@
 (ns dragnet.entities.survey
   (:require
     [clojure.spec.alpha :as s]
-    [expound.alpha :refer [expound-str]]
-    [dragnet.shared.utils :as utils :refer [->uuid echo] :include-macros true]))
+    [dragnet.shared.utils :as utils :refer [->uuid echo] :include-macros true]
+    [expound.alpha :refer [expound-str]]))
+
 
 (s/def :number/natural (s/or :positive pos? :zero zero?))
 
@@ -20,9 +21,12 @@
 
 (s/def :question.option/text string?)
 (s/def :question.option/weight integer?)
+
+
 (s/def :question.option/entity
   (s/keys :req [:entity/type :question.option/text :question.option/weight]
           :opt [:entity/id :entity/_destroy]))
+
 
 (s/def :question/id uuid?)
 (s/def :question/text string?)
@@ -31,9 +35,12 @@
 (s/def :question/settings (s/nilable map?))
 (s/def :question/options (s/map-of :entity/id :question.option/entity))
 (s/def :question/type :question.type/entity)
+
+
 (s/def :question/entity
   (s/keys :req [:entity/type :question/text :question/type]
           :opt [:entity/id :question/display-order :question/required :question/settings :question/options :entity/_destroy]))
+
 
 (s/def :survey/id uuid?)
 (s/def :survey/name string?)
@@ -41,8 +48,12 @@
 (s/def :survey/updated-at inst?)
 (s/def :survey/author (s/keys :req [:entity/id :entity/type :user/name :user/nickname]))
 (s/def :survey/questions (s/map-of :entity/id :question/entity))
-(s/def :survey/entity (s/keys :req [:entity/id :entity/type :survey/name :survey/updated-at :survey/author]
-                              :opt [:survey/description :survey/questions]))
+
+
+(s/def :survey/entity
+  (s/keys :req [:entity/id :entity/type :survey/name :survey/updated-at :survey/author]
+          :opt [:survey/description :survey/questions]))
+
 
 (defn- entity-validator
   [spec]
@@ -51,20 +62,28 @@
       (throw (ex-info (expound-str spec data) ex-data))
       data)))
 
+
 (def validate-author! (entity-validator :survey/author))
 (def validate-survey! (entity-validator :survey/entity))
 (def validate-question! (entity-validator :question/entity))
 (def validate-question-type! (entity-validator :question.type/entity))
 (def validate-question-option! (entity-validator :question.option/entity))
 
+
 (defn valid-survey?
-  [data] (s/valid? :survey/entity data))
+  [data]
+  (s/valid? :survey/entity data))
+
 
 (defn valid-question?
-  [data] (s/valid? :question/entity data))
+  [data]
+  (s/valid? :question/entity data))
+
 
 (defn valid-question-option?
-  [data] (s/valid? :question.option/entity data))
+  [data]
+  (s/valid? :question.option/entity data))
+
 
 (defn make-question-type
   [& {:keys [id name slug settings :as all]}]
@@ -76,10 +95,12 @@
       ((fn [x] (prn x) x))
       validate-question-type!))
 
+
 (defn make-question-types
   [types]
   (reduce (fn [m [id type]]
             (assoc m (->uuid id) (make-question-type type))) {} types))
+
 
 (defn make-question-option
   [& {:keys [id text weight] :or {weight 0}}]
@@ -88,6 +109,7 @@
        :question.option/text text
        :question.option/weight weight}
       validate-question-option!))
+
 
 (defn make-question
   [& {:keys [id text display_order required settings question_options question_type :as all]
@@ -102,6 +124,7 @@
        :question/type (make-question-type question_type)}
       validate-question!))
 
+
 (defn make-author
   [& {:keys [id name nickname]}]
   (let [user {:entity/type :user}
@@ -110,6 +133,7 @@
         user (if nickname (assoc user :user/nickname nickname) user)]
     (println user)
     (validate-author! user)))
+
 
 (defn make-survey
   [& {:keys [id name description author questions updated_at]
@@ -125,8 +149,11 @@
         survey (if description (assoc survey :survey/description description) survey)]
     (validate-survey! survey)))
 
+
 (defn survey-questions
-  [survey] (:survey/questions survey))
+  [survey]
+  (:survey/questions survey))
+
 
 (defn options->update
   [[id option]]
@@ -136,12 +163,14 @@
     :weight (:question.option/weight option)
     :_destroy (:entity/_destroy option)}])
 
+
 (defn question-type->update
   [type]
   {:id (str (type :entity/id))
    :name (type :question.type/name)
    :slug (type :question.type/slug)
    :settings (type :question.type/settings)})
+
 
 (defn question->update
   [[id question]]
@@ -155,11 +184,13 @@
     :question_options (->> question :question/options (map options->update) (into {}))
     :_destroy (:entity/_destroy question)}])
 
+
 (defn user->update
   [user]
   {:id (:entity/id user)
    :name (:user/name user)
    :nickname (:user/nickname user)})
+
 
 (defn survey->update
   [survey]

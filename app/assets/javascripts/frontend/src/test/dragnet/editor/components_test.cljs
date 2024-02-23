@@ -1,9 +1,10 @@
 (ns dragnet.editor.components-test
   (:require
-   [clojure.test :refer [deftest is]]
-   [reagent.dom.server :refer [render-to-string]]
-   [dragnet.editor.testing-utils :as utils :refer [state question-of-type]]
-   [dragnet.editor.components :as comp]))
+    [clojure.test :refer [deftest is]]
+    [dragnet.editor.components :as comp]
+    [dragnet.editor.testing-utils :as utils :refer [state question-of-type]]
+    [reagent.dom.server :refer [render-to-string]]))
+
 
 (deftest question-card-body-test
   (let [input-types {"text" #(re-seq #"type=.text." %),

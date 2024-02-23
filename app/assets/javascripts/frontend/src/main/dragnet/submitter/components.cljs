@@ -1,9 +1,10 @@
 (ns dragnet.submitter.components
   (:require
-   [dragnet.shared.utils :refer [form-name]]
-   [dragnet.submitter.local-storage :refer [remove-stored-id-code]]
-   [dragnet.shared.components :refer [prompt-body]]
-   [dragnet.submitter.core :refer [submission-url answer-form-name]]))
+    [dragnet.shared.components :refer [prompt-body]]
+    [dragnet.shared.utils :refer [form-name]]
+    [dragnet.submitter.core :refer [submission-url answer-form-name]]
+    [dragnet.submitter.local-storage :refer [remove-stored-id-code]]))
+
 
 ;; TODO: use original survey layout for surveys use this layout for forms
 (defn answer-prompt
@@ -16,6 +17,7 @@
     [:input {:type "hidden" :name (answer-form-name question-id :survey_id) :value survey-id}]
     [:input {:type "hidden" :name (answer-form-name question-id :question_type_id) :value question-type-id}]
     children]])
+
 
 (defn reply-submitter
   [reply-id state & {:keys [preview]}]

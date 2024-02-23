@@ -1,13 +1,15 @@
 (ns dragnet.shared.utils-test
   (:require
-   [dragnet.shared.utils :refer [form-name pluralize root-url *window* ->sentence url-helper path-helper]]
-   [clojure.test :refer [deftest testing is]]))
+    [clojure.test :refer [deftest testing is]]
+    [dragnet.shared.utils :refer [form-name pluralize root-url *window* ->sentence url-helper path-helper]]))
+
 
 (deftest form-name-test
   (is (= "form[field][option]" (form-name :form :field :option))
       "generates Rails style form names from args")
   (is (= "form[field][option]" (form-name [:form :field :option]))
       "generates Rails style form names from a collection"))
+
 
 (deftest pluralize-test
   (testing "When n is 1"
@@ -21,10 +23,12 @@
       (is (= "2 joneses" (pluralize "jones" 2))
           "the word is return with an 'es' appended"))))
 
+
 (deftest root-url-test
   (binding [*window* #js{:location #js{:origin "https://example.com"}}]
     (is (= "https://example.com" (root-url))
         "returns the browsers current origin location")))
+
 
 (deftest sentence-test
   (is (= "1" (->sentence [1])) "a single value should just be coerced into a string")
@@ -34,11 +38,13 @@
   (is (= "1, 2, or 3" (->sentence [1 2 3] :last-delimiter ", or ")) "last delimiter is configurable")
   (is (= "1 or 2" (->sentence [1 2] :two-word-delimiter " or ")) "two-word-delimiter is configurable"))
 
+
 (deftest url-helper-test
   (binding [*window* #js{:location #js{:origin "https://example.com"}}]
     (let [hey (url-helper (fn [x] (str "/hey/" x)))]
       (is (= "https://example.com/hey/you" (hey "you"))
           "returns a helper function that generates a full url"))))
+
 
 (deftest path-helper-test
   (let [hey (path-helper ["/hey" :name])]
