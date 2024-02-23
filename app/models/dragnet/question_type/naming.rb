@@ -13,7 +13,7 @@ module Dragnet
     end
 
     included do
-      after_initialize do
+      before_save do
         self.slug = Dragnet::Utils.slug(name) if name && !slug
       end
 
