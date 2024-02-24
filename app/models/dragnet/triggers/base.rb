@@ -3,9 +3,7 @@
 module Dragnet
   module Triggers
     class Base
-      attr_reader :registration
-      attr_reader :record_change
-      attr_reader :execution
+      attr_reader :registration, :record_change, :execution
 
       # @param [TriggerRegistration] registration
       # @param [RecordChange] record_change

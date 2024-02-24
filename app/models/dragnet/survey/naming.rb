@@ -14,7 +14,6 @@ module Dragnet
     def generate_name?
       name.blank? || auto_named? || duplicated_name? and survey.new_record? || survey.will_save_change_to_author_id?
     end
-
     alias generated_name? generate_name?
 
     def generate_slug?

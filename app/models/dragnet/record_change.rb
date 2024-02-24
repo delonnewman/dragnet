@@ -7,7 +7,7 @@ module Dragnet
     serialize :changes
     serialize :diff
 
-    with TriggerExecutionManagement
+    with TriggerExecution
     after_create { trigger_execution.async.execute_triggers }
 
     # @return [Class<ActiveRecord::Base>]

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class RecordChange::TriggerExecutionManagement < Advice
+  class RecordChange::TriggerExecution < Advice
     advises RecordChange, as: :change
     include Concurrent::Async
 
