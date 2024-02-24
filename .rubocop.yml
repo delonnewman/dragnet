@@ -24,7 +24,10 @@ Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented_relative_to_receiver
 
 Metrics/MethodLength:
-  Max: 15
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
 
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -38,8 +41,14 @@ Style/Documentation:
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: comma
 
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
 Style/MultipleComparison:
   ComparisonsThreshold: 3
 
 Style/Alias:
   EnforcedStyle: prefer_alias
+
+Rails/DynamicFindBy:
+  Enabled: false

@@ -1,12 +1,12 @@
 namespace :docker do
   namespace :image do
-    desc 'Build docker image'
+    desc 'Build Docker image'
     task build: :environment do
       sh "docker build -t ghcr.io/delonnewman/dragnet:#{Dragnet.release}" \
-         " -t ghcr.io/delonnewman/dragnet:#{Dragnet.version} -t docker.io/delonnewman/dragnet:latest ."
+         " -t ghcr.io/delonnewman/dragnet:#{Dragnet.version} -t ghcr.io/delonnewman/dragnet:latest ."
     end
 
-    desc 'Push docker image'
+    desc 'Push Docker image'
     task push: :environment do
       sh 'docker push -a ghcr.io/delonnewman/dragnet'
     end
@@ -27,12 +27,12 @@ namespace :docker do
       sh 'docker container start dragnet'
     end
 
-    desc 'Start an already created container'
+    desc 'Stop created container'
     task stop: :environment do
       sh 'docker container stop dragnet'
     end
 
-    desc 'Start an already created container'
+    desc 'Remove created container'
     task remove: :environment do
       sh 'docker container rm dragnet'
     end
