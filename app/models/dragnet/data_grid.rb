@@ -14,11 +14,11 @@ module Dragnet
     has_many :record_changes, class_name: 'Dragnet::RecordChange', through: :survey, inverse_of: :survey
     delegate :record_changes?, to: :survey
 
-    def ensure!(survey, user)
+    def self.ensure!(survey, user)
       survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create!(user:)
     end
 
-    def ensure(survey, user)
+    def self.ensure(survey, user)
       survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create(user:)
     end
 
