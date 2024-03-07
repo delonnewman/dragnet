@@ -1,7 +1,7 @@
 (ns dragnet.entities.core
   (:require
     [clojure.spec.alpha :as s]
-    [dragnet.shared.utils :as utils :refer [->uuid echo] :include-macros true]
+    [dragnet.shared.utils :as utils :refer [->uuid echo map-values] :include-macros true]
     [expound.alpha :refer [expound-str]]))
 
 
@@ -16,13 +16,10 @@
 
 (s/def :question.type/name string?)
 (s/def :question.type/slug string?)
-(s/def :question.type/entity (s/keys :req [:entity/id :entity/type :question.type/name :question.type/slug]))
 (s/def :question.type/settings (s/nilable map?))
 
 (s/def :question.option/text string?)
 (s/def :question.option/weight integer?)
-
-
 (s/def :question.option/entity
   (s/keys :req [:entity/type :question.option/text :question.option/weight]
           :opt [:entity/id :entity/_destroy]))
@@ -37,22 +34,11 @@
 (s/def :question/type :question.type/entity)
 
 
-(s/def :question/entity
-  (s/keys :req [:entity/type :question/text :question/type]
-          :opt [:entity/id :question/display-order :question/required :question/settings :question/options :entity/_destroy]))
-
-
 (s/def :survey/id uuid?)
 (s/def :survey/name string?)
 (s/def :survey/description string?)
 (s/def :survey/updated-at inst?)
-(s/def :survey/author (s/keys :req [:entity/id :entity/type :user/name :user/nickname]))
 (s/def :survey/questions (s/map-of :entity/id :question/entity))
-
-
-(s/def :survey/entity
-  (s/keys :req [:entity/id :entity/type :survey/name :survey/updated-at :survey/author]
-          :opt [:survey/description :survey/questions]))
 
 
 (defn- entity-validator
@@ -63,44 +49,39 @@
       data)))
 
 
-(def validate-author! (entity-validator :survey/author))
-(def validate-survey! (entity-validator :survey/entity))
-(def validate-question! (entity-validator :question/entity))
-(def validate-question-type! (entity-validator :question.type/entity))
-(def validate-question-option! (entity-validator :question.option/entity))
+(s/def :question.type/entity (s/keys :req [:entity/id :entity/type :question.type/name :question.type/slug]))
 
-
-(defn valid-survey?
-  [data]
-  (s/valid? :survey/entity data))
-
-
-(defn valid-question?
-  [data]
-  (s/valid? :question/entity data))
-
-
-(defn valid-question-option?
-  [data]
-  (s/valid? :question.option/entity data))
-
+(def ^{:doc "Validate a type map. Throw an exception if the map is invalid otherwise return the map."}
+  validate-question-type! (entity-validator :question.type/entity))
 
 (defn make-question-type
-  [& {:keys [id name slug settings :as all]}]
+  "Constuct a valid type map or throw an exception.
+
+  Valid keys are: :id, :name, :slug and :settings.
+
+  Only :name and :slug are required."
+  [& {:keys [id name slug settings]}]
   (-> {:entity/id (->uuid id)
        :entity/type :question-type
        :question.type/name name
        :question.type/slug slug
        :question.type/settings settings}
-      ((fn [x] (prn x) x))
       validate-question-type!))
 
 
 (defn make-question-types
+  "Construct a map of type maps with their reified UUIDs as keys."
   [types]
   (reduce (fn [m [id type]]
             (assoc m (->uuid id) (make-question-type type))) {} types))
 
+
+(defn valid-question-option?
+  "Return true if the data is a valid option. Otherwise return false."
+  [data] (s/valid? :question.option/entity data))
+
+(def ^{:doc "Validate an option map. Thow an exception if the map is invalid otherwise return the map."}
+  validate-question-option! (entity-validator :question.option/entity))
 
 (defn make-question-option
   [& {:keys [id text weight] :or {weight 0}}]
@@ -111,33 +92,78 @@
       validate-question-option!))
 
 
+(s/def :question/entity
+  (s/keys :req [:entity/type :question/text :question/type]
+          :opt [:entity/id :question/display-order :question/required :question/settings :question/options :entity/_destroy]))
+
+(def ^{:doc "Validate a question map. Throw an exception if the map is invalid otherwise return the map."}
+  validate-question! (entity-validator :question/entity))
+
+(defn valid-question?
+  "Return true if the data is a valid question. Otherwise return false."
+  [data] (s/valid? :question/entity data))
+
+(s/valid? :question/entity nil)
+
 (defn make-question
-  [& {:keys [id text display_order required settings question_options question_type :as all]
-      :or {id (random-uuid) display_order 0 required false}}]
+  "Constuct a valid question map or throw an exception.
+
+  Valid keys are: :id, :text, :order (also :display_order), :required,
+  :settings, :options (also :question_options), :type (also :question_type).
+
+  Only :text and :type are required."
+  [& {:keys [id text order display_order required settings options question_options type question_type]
+      :or {id (random-uuid)
+           options question_options
+           order (or display_order 0)
+           type question_type
+           required false}}]
   (-> {:entity/id (->uuid id)
        :entity/type :question
        :question/text text
-       :question/display-order display_order
+       :question/display-order order
        :question/required required
        :question/settings settings
-       :question/options (->> question_options (map #(vector (% 0) (make-question-option (% 1)))) (into {}))
-       :question/type (make-question-type question_type)}
+       :question/options (map-values make-question-option options)
+       :question/type (make-question-type type)}
       validate-question!))
 
 
+(s/def :survey/author (s/keys :req [:entity/id :entity/type :user/name :user/nickname]))
+
+(def validate-author! (entity-validator :survey/author))
+
 (defn make-author
+  "Construct a valid author map or throw an exception.
+
+  Valid keys are: :id, :name, :nickname. Only :name, and :nickname are required."
   [& {:keys [id name nickname]}]
   (let [user {:entity/type :user}
         user (if id (assoc user :entity/id (->uuid id)) user)
         user (if name (assoc user :user/name name) user)
         user (if nickname (assoc user :user/nickname nickname) user)]
-    (println user)
     (validate-author! user)))
 
 
+(s/def :survey/entity
+  (s/keys :req [:entity/id :entity/type :survey/name :survey/updated-at :survey/author]
+          :opt [:survey/description :survey/questions]))
+
+(defn valid-survey?
+  "Return true if data is survey map. Otherwise return false."
+  [data] (s/valid? :survey/entity data))
+
+(def ^{:doc "Validate a survey map. Throw an exception if the map is invalid otherwise return the map."}
+  validate-survey! (entity-validator :survey/entity))
+
 (defn make-survey
-  [& {:keys [id name description author questions updated_at]
-      :or {id (random-uuid) updated_at (js/Date.)}}]
+  "Constuct a valid survey map or throw an exception.
+
+  Valid keys are: :id, :name, :description, :author, :questions, :updated-at (also :update_at).
+
+  Only :name and :author are required."
+  [& {:keys [id name description author questions updated-at updated_at]
+      :or {id (random-uuid) updated-at (or updated_at (js/Date.))}}]
   (echo questions)
   (let [survey
         {:entity/id (->uuid id)
@@ -145,7 +171,7 @@
          :survey/name name
          :survey/author (make-author author)
          :survey/questions (->> questions (map #(vector (->uuid (% 0)) (make-question (% 1)))) (into {}))
-         :survey/updated-at updated_at}
+         :survey/updated-at updated-at}
         survey (if description (assoc survey :survey/description description) survey)]
     (validate-survey! survey)))
 

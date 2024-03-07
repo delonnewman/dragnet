@@ -6,7 +6,7 @@
     [reagent.dom.server :refer [render-to-string]]))
 
 
-(deftest question-card-body-test
+(deftest test-question-card-body
   (let [input-types {"text" #(re-seq #"type=.text." %),
                      "time" #(re-seq #"type=.datetime-local." %),
                      "number" #(re-seq #"type=.number." %)

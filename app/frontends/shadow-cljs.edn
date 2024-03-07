@@ -6,20 +6,20 @@
    :devtools   {:repl-init-ns dragnet.editor.core :repl-pprint true}
    :external-config {:devtools/config {:features-to-install [:formatters :hints :async]}}
    :compiler-options {:output-wrapper false :optimizations :advanced}
-   :output-dir "../../../../public/js/editor"
-   :asset-path "../../../../js/editor"
+   :output-dir "../../public/js/editor"
+   :asset-path "../../js/editor"
    :modules    {:main {:entries [dragnet.editor.shell]}}}
  :submitter
  {:target     :browser
   :devtools   {:repl-init-ns dragnet.submitter.core :repl-pprint true}
-  :output-dir "../../../../public/js/submitter"
-  :asset-path "../../../../js/submitter"
+  :output-dir "../../public/js/submitter"
+  :asset-path "../../js/submitter"
   :external-config {:devtools/config {:features-to-install [:formatters :hints :async]}}
   :compiler-options {:output-wrapper false :optimizations :advanced}
   :modules    {:main {:entries [dragnet.submitter.shell]}}}
  :test
  {:target :browser-test
-  :test-dir "../../../../public/js/test"}
+  :test-dir "../../public/js/test"}
  :ci
  {:target :karma
   :output-to "target/ci.js"

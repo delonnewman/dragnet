@@ -9,8 +9,7 @@
 
 
 (defn root-url
-  []
-  (.-origin (.-location *window*)))
+  [] (.-origin (.-location *window*)))
 
 
 (defn ex-arguments
@@ -210,13 +209,11 @@
 
 
 (defn name-of-type
-  [t]
-  (if (fn? t) (.-name t) t))
+  [t] (if (fn? t) (.-name t) t))
 
 
 (defn type-name
-  [x]
-  (-> x type name-of-type))
+  [x] (-> x type name-of-type))
 
 
 (defn ex-type
@@ -257,3 +254,8 @@
 
 
 (def ->?int (fnil ->int 0))
+
+
+(defn map-values
+  "Return a new map with the same keys and values computed by the given function."
+  [f map] (reduce (fn [m [k v]] (assoc m k (f v))) {} map))
