@@ -22,4 +22,9 @@ namespace :frontend do
   task clean: :environment do
     sh 'rm -rf public/js/editor && rm -rf public/js/submitter'
   end
+
+  desc 'Generate frontend API documentation'
+  task docs: :environment do
+    sh "cd #{FRONTEND_SOURCE_PATH} && clojure -X:dev:docs"
+  end
 end
