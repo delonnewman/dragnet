@@ -84,17 +84,31 @@ module Dragnet
     # Execute code on record changes
     has_many :trigger_registrations, class_name: 'Dragnet::TriggerRegistration', dependent: :delete_all, inverse_of: :survey
 
-    # Change the visibility of the survey
-    with Visibility, delegating: %i[open! close! toggle_visibility!]
-
     # DataGrids
     has_many :data_grids, class_name: 'Dragnet::DataGrid', dependent: :delete_all, inverse_of: :survey
-    with DataGridManagement, delegating: %i[ensure_data_grid ensure_data_grid!]
 
     # Record Changes
     has_many :record_changes, class_name: 'Dragnet::RecordChange', dependent: :nullify, inverse_of: :survey
     enum :record_changes_status, { applied: 0, unapplied: 1, cannot_apply: -1 }
     with RecordChangeManagement, delegating: %i[record_changes? new_record_change set_default_changes_status apply_record_changes apply_record_changes!]
     before_validation :set_default_changes_status
+
+    def opened!
+      self.open = true
+      self
+    end
+
+    def open!
+      opened!.tap(&:save!)
+    end
+
+    def closed!
+      self.open = false
+      self
+    end
+
+    def close!
+      closed!.tap(&:save!)
+    end
   end
 end

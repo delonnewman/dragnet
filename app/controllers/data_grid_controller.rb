@@ -39,7 +39,7 @@ class DataGridController < ApplicationController
   end
 
   def presenter
-    Dragnet::DataGridPresenter.new(survey.ensure_data_grid!(current_user), data_grid_params)
+    Dragnet::DataGridPresenter.new(Dragnet::DataGrid.ensure!(survey, current_user), data_grid_params)
   end
 
   def survey
