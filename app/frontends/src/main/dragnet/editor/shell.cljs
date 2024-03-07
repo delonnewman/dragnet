@@ -6,7 +6,7 @@
     [cljs.repl :refer [ex-triage ex-str]]
     [dragnet.editor.components :refer [survey-editor]]
     [dragnet.editor.core :refer [survey-url]]
-    [dragnet.entities.survey :refer [make-survey survey->update make-question-types]]
+    [dragnet.entities.core :refer [make-survey survey->update make-question-types]]
     [dragnet.shared.utils :refer [blank? validate-presence! pp pp-str http-request] :include-macros true]
     [reagent.core :as r]
     [reagent.dom :as rdom]))

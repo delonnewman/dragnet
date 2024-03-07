@@ -2,6 +2,8 @@
 
 # Helpers used throughout the application
 module ApplicationHelper
+  include Pagy::Frontend
+
   # Return Simple CSS-based Sparklines
   #
   # @param [Hash{String => Integer}] data

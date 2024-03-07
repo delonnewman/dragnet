@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class Survey::SubmissionParameters < Composed
+  class Survey::SubmissionParametersProjection < Composed
     alias survey subject
 
-    def call
-      { answers_attributes: answers_attributes }
+    def project
+      { answers_attributes: }
     end
+    alias to_h project
 
     private
 

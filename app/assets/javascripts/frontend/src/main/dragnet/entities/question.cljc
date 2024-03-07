@@ -1,1 +1,0 @@
-(ns dragnet.entities.question)

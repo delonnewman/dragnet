@@ -64,7 +64,7 @@ module Dragnet
     private
 
     def relation
-      QueryRelation.new(@survey.replies, sort_by:, sort_direction:, filter_by:)
+      DataGrid::QueryRelation.new(@survey.replies, sort_by:, sort_direction:, filter_by:)
     end
     memoize :relation
   end

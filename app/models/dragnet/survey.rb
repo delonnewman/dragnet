@@ -28,8 +28,14 @@ module Dragnet
     has_many :ahoy_visits, through: :replies
     has_many :events, through: :replies # Used by StatsReport
     with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created?]
-    with DispatchSubmissionRequest, calling: :run
-    with SubmissionParameters, calling: :call
+
+    def dispatch_submittion_request
+      DispatchSubmissionRequest.new(self).run
+    end
+
+    def submission_parameters
+      SubmissionParametersProjection.new(self).to_h
+    end
 
     # To satisfy the Reportable protocol, along with #questions above
     has_many :records, -> { where(submitted: true) }, class_name: 'Dragnet::Reply', dependent: :restrict_with_error, inverse_of: :survey
@@ -37,17 +43,43 @@ module Dragnet
     # Editing
     enum :edits_status, { saved: 0, unsaved: 1, cannot_save: -1 }, prefix: :edits
     has_many :edits, -> { where(applied: false) }, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
-    with Editing, delegating: %i[edited? new_edit current_edit latest_edit latest_edit_valid? set_default_edits_status]
-    before_validation :set_default_edits_status
+    before_validation { EditingStatus.default!(self) }
 
-    # Data projection for API integration
-    with Projection, calling: :project
+    def edited?
+      Edits.present?(self)
+    end
+
+    def projection
+      DataProjection.new(self).to_h
+    end
 
     # Copying
     belongs_to :copy_of, class_name: 'Dragnet::Survey', optional: true
     accepts_nested_attributes_for :copy_of, update_only: true, reject_if: ->(attrs) { attrs.compact_blank!.empty? }
     has_many :copies, foreign_key: 'copy_of_id', class_name: 'Dragnet::Survey', dependent: :nullify, inverse_of: :copy_of
-    with Copying, delegating: %i[copy! copy copy?]
+
+    def copy?
+      !survey.copy_of_id.nil?
+    end
+
+    # @return [Survey, false]
+    def copy!
+      s     = copy
+      saved = s.save!
+      return s if saved
+
+      false
+    end
+
+    # @return [Survey]
+    def copy
+      Survey.new(copy_data)
+    end
+
+    # @return [Hash]
+    def copy_data
+      CopyProjection.new(self).to_h
+    end
 
     # Execute code on record changes
     has_many :trigger_registrations, class_name: 'Dragnet::TriggerRegistration', dependent: :delete_all, inverse_of: :survey

@@ -10,7 +10,7 @@ class SurveyEditorController < EndpointController
 
   # PUT / PATCH - /api/v1/editing/surveys/:id
   def update
-    edit = survey.edits.create!(survey_data: read_transit(request.body))
+    edit = new_edit(read_transit(request.body))
 
     respond_to do |format|
       format.transit { render transit: { edit_id: edit.id, created_at: edit.created_at.to_time } }
@@ -19,7 +19,7 @@ class SurveyEditorController < EndpointController
 
   # POST - /api/v1/editing/surveys/:id/apply
   def apply
-    edit = survey.latest_edit
+    edit = latest_edit
     raise "Couldn't find draft to apply" unless edit
 
     respond_to do |format|
@@ -39,6 +39,14 @@ class SurveyEditorController < EndpointController
     Dragnet::Survey
       .includes(questions: %i[question_type question_options])
       .find(params[:id])
+  end
+
+  def latest_edit
+    Dragnet::Survey::Edits.latest(survey)
+  end
+
+  def new_edit(data)
+    Dragnet::Survey::Edits.create!(survey, data:)
   end
 
   def survey_editing(s = survey)

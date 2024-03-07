@@ -3,18 +3,19 @@ module Dragnet
   # edit survey data.
   #
   # @see SurveyEdit#survey_data
-  # @see Survey
-  # @see Question
-  # @see QuestionOption
-  class SurveyEdit::SurveyAttributeProjection < Advice
-    advises SurveyEdit, as: :edit
+  # @see Survey::DataProjection
+  class Survey::AttributeProjection
+    def initialize(survey_data)
+      @survey_data = survey_data
+    end
 
     # @return [Hash]
-    def attributes(survey_data = edit.survey_data)
-      survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|
+    def project
+      @survey_data.slice(:id, :name, :author_id, :description).tap do |attrs|
         attrs[:questions_attributes] = question_attributes
       end
     end
+    alias to_h project
 
     # @return [Array]
     def question_attributes
@@ -31,7 +32,7 @@ module Dragnet
 
     # @return [Array]
     def question_data
-      edit.survey_data[:questions] || EMPTY_ARRAY
+      @survey_data[:questions] || EMPTY_ARRAY
     end
 
     # @param [Question] question

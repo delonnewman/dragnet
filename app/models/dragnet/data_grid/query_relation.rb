@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module DataGrid
+  class DataGrid
     class QueryRelation
       include Dragnet
-      prepend Memoizable
+      include Memoizable
 
       attr_reader :sort_by, :sort_direction, :filter_by
 

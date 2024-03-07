@@ -1,4 +1,4 @@
-(ns dragnet.entities.survey
+(ns dragnet.entities.core
   (:require
     [clojure.spec.alpha :as s]
     [dragnet.shared.utils :as utils :refer [->uuid echo] :include-macros true]

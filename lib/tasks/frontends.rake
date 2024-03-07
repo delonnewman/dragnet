@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FRONTEND_SOURCE_PATH = 'app/assets/javascripts/frontend'
+FRONTEND_SOURCE_PATH = 'app/frontends'
 
 namespace :frontend do
   desc 'Start dev server for frontend'
