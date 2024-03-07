@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module Perspectives
-    class DataGridSortQuery < Base
+  class Perspective
+    class DataGridSortQuery < Perspective
       def sort(_question, _scope, _direction, _join_name)
         raise "can't sort questions of type: #{question_type}"
       end

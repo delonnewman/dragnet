@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::Perspectives::AnswerEvaluation::Number < Dragnet::Perspectives::AnswerEvaluation
+class Dragnet::Perspective::AnswerEvaluation::Number < Dragnet::Perspective::AnswerEvaluation
   def assign_value!(answer, value)
     return answer.float_value if answer.question.settings.decimal?
 

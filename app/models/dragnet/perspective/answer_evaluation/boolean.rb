@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::Perspectives::AnswerEvaluation::Boolean < Dragnet::Perspectives::AnswerEvaluation
+class Dragnet::Perspective::AnswerEvaluation::Boolean < Dragnet::Perspective::AnswerEvaluation
   def assign_value!(answer, value)
     answer.boolean_value = value
   end

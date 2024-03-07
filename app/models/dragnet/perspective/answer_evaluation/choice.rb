@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::Perspectives::AnswerEvaluation::Choice < Dragnet::Perspectives::AnswerEvaluation
+class Dragnet::Perspective::AnswerEvaluation::Choice < Dragnet::Perspective::AnswerEvaluation
   def assign_value!(answer, value)
     answer.question_option_id = value
   end

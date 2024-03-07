@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module Perspectives
+  class Perspective
     # @abstract
     # A polymorphic perspective for answer evaluation, subclasses dispatch on the following methods.
-    class AnswerEvaluation < Base
+    class AnswerEvaluation < Perspective
       # Assign the given value to the appropriate attribute
       # @param [Answer] answer
       # @param [Object] value

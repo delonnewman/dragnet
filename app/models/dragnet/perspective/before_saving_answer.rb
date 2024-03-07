@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module Perspectives
-    class BeforeSavingAnswer < Base
+  class Perspective
+    class BeforeSavingAnswer < Perspective
       def update(_answer, _question)
         # do nothing
       end

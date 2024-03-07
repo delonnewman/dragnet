@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module Perspectives
-    class AnswerStats < Base
+  class Perspective
+    class AnswerStats < Perspective
       class Choice < self
         def collect(reportable, question)
           weight = question_options[:weight]

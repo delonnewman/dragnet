@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module Perspectives
-    class AnswerOccurrence < Base
+  class Perspective
+    class AnswerOccurrence < Perspective
       class Choice < self
         def collect(reportable, question)
           opts = question.question_options.reduce({}) { |table, opt| table.merge!(opt.id => opt.text) }

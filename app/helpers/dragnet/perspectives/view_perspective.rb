@@ -4,7 +4,7 @@ module Dragnet
   module Perspectives
     # @abstract
     # An abstract class for perspectives that are a part of the view layer.
-    class ViewPerspective < Base
+    class ViewPerspective < Perspective
       include ActionView::Helpers::TagHelper
       include Rails.application.routes.url_helpers
 

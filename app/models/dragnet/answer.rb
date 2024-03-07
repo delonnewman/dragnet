@@ -20,7 +20,7 @@ module Dragnet
     end
 
     before_save do
-      Perspectives::BeforeSavingAnswer.get(question_type).update(self, question)
+      Perspective::BeforeSavingAnswer.get(question_type).update(self, question)
     end
 
     def assign_value!(value)
@@ -52,7 +52,7 @@ module Dragnet
     private
 
     def evaluation
-      Perspectives::AnswerEvaluation.get(question_type)
+      Perspective::AnswerEvaluation.get(question_type)
     end
   end
 end

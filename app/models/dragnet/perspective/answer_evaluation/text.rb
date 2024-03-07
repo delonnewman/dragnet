@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::Perspectives::AnswerEvaluation::Text < Dragnet::Perspectives::AnswerEvaluation
+class Dragnet::Perspective::AnswerEvaluation::Text < Dragnet::Perspective::AnswerEvaluation
   def assign_value!(answer, value)
     if answer.question.settings.long_answer?
       answer.long_text_value = value

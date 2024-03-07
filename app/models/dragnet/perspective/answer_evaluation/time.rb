@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::Perspectives::AnswerEvaluation::Time < Dragnet::Perspectives::AnswerEvaluation
+class Dragnet::Perspective::AnswerEvaluation::Time < Dragnet::Perspective::AnswerEvaluation
   def assign_value!(answer, value)
     answer.time_value = value if answer.question.settings.include_time?
     answer.date_value = value if answer.question.settings.include_date?

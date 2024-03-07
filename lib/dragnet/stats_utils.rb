@@ -16,7 +16,7 @@ module Dragnet
       end
     end
 
-    # Normalize abitrary numeric values to values between 0 and 1.
+    # Normalize values to values between 0 and 1.
     #
     # @param [Array<Numeric>]
     #

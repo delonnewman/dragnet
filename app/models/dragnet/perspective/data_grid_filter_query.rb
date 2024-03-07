@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Dragnet
-  module Perspectives
-    class DataGridFilterQuery < Base
+  class Perspective
+    class DataGridFilterQuery < Perspective
       def filter(_question, _scope, _table, _value)
         raise "can't filter questions of type: #{question_type}"
       end
