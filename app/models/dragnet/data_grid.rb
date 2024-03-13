@@ -15,11 +15,8 @@ module Dragnet
     delegate :record_changes?, to: :survey
 
     def self.ensure!(survey, user)
-      survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create!(user:)
-    end
-
-    def self.ensure(survey, user)
-      survey.data_grids.find_by(user_id: user.id) || survey.data_grids.create(user:)
+      relation = survey.data_grids.includes(questions: %i[question_type question_options])
+      relation.find_by(user_id: user.id) || relation.create!(user:)
     end
 
     def query(params)

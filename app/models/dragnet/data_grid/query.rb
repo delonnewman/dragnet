@@ -64,8 +64,12 @@ module Dragnet
     private
 
     def relation
-      DataGrid::QueryRelation.new(@survey.replies, sort_by:, sort_direction:, filter_by:)
+      DataGrid::QueryRelation.new(base_relation, sort_by:, sort_direction:, filter_by:)
     end
     memoize :relation
+
+    def base_relation
+      @survey.replies.includes(questions: %i[question_type question_options], answers: { question: %i[question_type question_options] })
+    end
   end
 end

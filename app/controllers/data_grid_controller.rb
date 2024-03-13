@@ -43,7 +43,7 @@ class DataGridController < ApplicationController
   end
 
   def survey
-    Dragnet::Survey.includes(:replies, questions: [:question_type]).find(params[:survey_id])
+    Dragnet::Survey.includes(questions: [:question_type, :question_options]).find(params[:survey_id])
   end
 
   def data_grid_params
