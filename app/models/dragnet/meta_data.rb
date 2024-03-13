@@ -53,7 +53,7 @@ module Dragnet
 
     def update_data!(data)
       @self_describable.meta_data = data
-      @self_describable.save!
+      @self_describable.save! if @self_describable.persisted?
       reset_cache!
       self
     end
