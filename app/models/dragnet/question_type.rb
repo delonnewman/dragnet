@@ -36,5 +36,13 @@ module Dragnet
     def is?(ident)
       ident == self.ident
     end
+
+    def type
+      type_class.new(self)
+    end
+
+    def type_class
+      type_class_name.constantize
+    end
   end
 end

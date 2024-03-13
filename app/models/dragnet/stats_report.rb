@@ -81,14 +81,14 @@ module Dragnet
     #
     # @return [Hash{String, Integer}]
     def answer_occurrence(question)
-      Perspective::AnswerOccurrence.get(question.question_type).collect(reportable, question)
+      question.type.occurrence_table(reportable, question)
     end
 
     # @param question [Question]
     #
     # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
     def answer_stats(question)
-      Perspective::AnswerStats.get(question.question_type).collect(reportable, question)
+      question.type.stats_table(reportable, question)
     end
   end
 end

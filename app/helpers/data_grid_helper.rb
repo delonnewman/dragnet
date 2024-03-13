@@ -47,7 +47,7 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def question_filter(question, default_value)
-    Dragnet::Perspectives::DataGridFilterInput.get(question.question_type, self).render(question, default_value)
+    Dragnet::Type::View.for(question.type, context: self).data_grid_filter_input(question, default_value)
   end
 
   # Render the answers to the question as readonly HTML according to their question type.
@@ -58,9 +58,8 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
-    Dragnet::Perspectives::DataGridDisplay
-      .get(question.question_type, self)
-      .render(reply.answers_to(question), question, alt: alt)
+    answers = reply.answers_to(question)
+    Dragnet::Type::View.for(question.type, context: self).data_grid_display(answers, question, alt: alt)
   end
 
   # Render the answers to the question as editable HTML inputs according to their question type.
@@ -70,7 +69,8 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def answers_input(reply, question)
-    Dragnet::Perspectives::DataGridEdit.get(question.question_type, self).render(reply.answers_to(question))
+    answers = reply.answers_to(question)
+    Dragnet::Type::View.for(question.type, context: self).data_grid_edit_input(answers)
   end
 
   def fmt_date(date)

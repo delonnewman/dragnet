@@ -112,6 +112,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.string "name", null: false
     t.string "slug", null: false
     t.string "icon"
+    t.string "type_class_name", null: false
     t.uuid "parent_type_id"
     t.json "meta_data"
     t.index ["name"], name: "index_question_types_on_name"

@@ -15,22 +15,22 @@ module Dragnet
     delegate :to_i, :to_f, to: :number_value, allow_nil: true
 
     belongs_to :question_type, class_name: 'Dragnet::QuestionType'
-    after_initialize do
+    delegate :type, to: :question_type
+    before_save do
       self.question_type = question.question_type if question
     end
 
     before_save do
-      Perspective::BeforeSavingAnswer.get(question_type).update(self, question)
+      type.before_saving_answer(self, question)
     end
 
     def assign_value!(value)
-      evaluation.assign_value!(self, value)
+      type.assign_value!(self, value)
     end
-
     alias value= assign_value!
 
     def value
-      evaluation.value(self)
+      type.value(self)
     end
 
     def text_value
@@ -38,7 +38,7 @@ module Dragnet
     end
 
     def number_value
-      evaluation.number_value(self)
+      type.number_value(self)
     end
 
     def assign_sort_value!
@@ -46,13 +46,7 @@ module Dragnet
     end
 
     def sort_value
-      evaluation.sort_value(self)
-    end
-
-    private
-
-    def evaluation
-      Perspective::AnswerEvaluation.get(question_type)
+      type.sort_value(self)
     end
   end
 end

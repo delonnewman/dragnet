@@ -76,9 +76,7 @@ module Dragnet
       end
 
       def sorted_records(question, scope)
-        Perspective::DataGridSortQuery
-          .get(question.question_type)
-          .sort(question, scope, sort_direction, join_aliases.fetch(:sorting, :answers))
+        question.type.data_grid_sort(question, scope, sort_direction, join_aliases.fetch(:sorting, :answers))
       end
 
       SIMPLE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
@@ -107,7 +105,7 @@ module Dragnet
       end
 
       def filtered_values(scope, question, table, value)
-        Perspective::DataGridFilterQuery.get(question.question_type).filter(question, scope, table, value)
+        question.type.data_grid_filter(question, scope, table, value)
       end
     end
   end
