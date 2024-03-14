@@ -4,10 +4,11 @@ module Dragnet
   # A proxy for collected MetaDatum records and their life-cycle
   class MetaData
     delegate :each, :include?, :key?, :keys, :values, :empty?, :to_a, to: :data
+    delegate :new_record?, :persisted?, to: :@self_describable
 
     def initialize(self_describable)
       @self_describable = self_describable
-      @data = self_describable.meta_data.freeze || EMPTY_HASH
+      @data = load_data
     end
 
     def to_s
@@ -26,7 +27,7 @@ module Dragnet
     def data
       return @data if @data
 
-      @data = reload_data
+      @data = load_data
     end
     alias to_h data
 
@@ -53,24 +54,37 @@ module Dragnet
 
     def update_data!(data)
       @self_describable.meta_data = data
-      @self_describable.save! if @self_describable.persisted?
-      reset_cache!
+
+      if persisted?
+        @self_describable.save!
+        reset_cache!
+      end
+
       self
     end
     alias data= update_data!
 
     def update_data(data)
       @self_describable.meta_data = data
-      return false unless @self_describable.save
 
-      reset_cache!
-      true
+      if new_record?
+        return true
+      elsif persisted? && @self_describable.save
+        reset_cache!
+        return true
+      end
+
+      false
     end
 
     private
 
-    def reload_data
-      @self_describable.reload.meta_data.deep_transform_keys!(&:to_sym).freeze
+    def load_data
+      @self_describable.reload if persisted?
+      data = @self_describable.meta_data
+      return EMPTY_HASH unless data
+
+      data.deep_transform_keys!(&:to_sym).freeze
     end
 
     def normalize_key(key)
