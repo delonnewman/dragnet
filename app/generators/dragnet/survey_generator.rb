@@ -32,7 +32,7 @@ class Dragnet::SurveyGenerator < Dragnet::ActiveRecordGenerator
     {
       name:   Faker::Movie.title,
       author: User.generate,
-      public: Faker::Boolean.boolean
+      public: Faker::Boolean.boolean,
     }
   end
 
@@ -43,7 +43,7 @@ class Dragnet::SurveyGenerator < Dragnet::ActiveRecordGenerator
     attributes
       .fetch(:questions, EMPTY_HASH)
       .merge(others.fetch(:questions, EMPTY_HASH))
-      .with_defaults!(survey: survey)
+      .with_defaults!(survey:)
       .except!(:count, :min, :max)
   end
 

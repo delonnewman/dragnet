@@ -20,7 +20,7 @@ class Dragnet::SurveyEditingPresenter < Dragnet::View::Presenter
   def survey_data
     return survey.projection unless survey.edited?
 
-    Survey::Edits.latest(survey).survey_data
+    SurveEdit.latest(survey).survey_data
   end
 
   def survey_edits

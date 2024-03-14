@@ -3,7 +3,7 @@ describe Dragnet::Answer do
 
   let(:survey) { Dragnet::Survey.generate! }
   let(:question) { survey.questions.to_a.sample }
-  let(:reply) { Dragnet::Reply[survey: survey].generate }
+  let(:reply) { Dragnet::Reply[survey:].generate }
 
   it_behaves_like Dragnet::Retractable do
     let(:retractable) { answer }
@@ -19,7 +19,7 @@ describe Dragnet::Answer do
     context 'when no question is given, and no question type is given' do
       subject(:answer) { described_class.new }
 
-      it 'will have a nil question type' do
+      it 'has a nil question type' do
         expect(answer.question_type).to be_nil
       end
     end

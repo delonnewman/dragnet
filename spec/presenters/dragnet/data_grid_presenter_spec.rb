@@ -1,24 +1,32 @@
 # frozen_string_literal: true
 
 describe Dragnet::DataGridPresenter do
-  subject(:presenter) { described_class.new(grid, params) }
-
-  let(:grid) { Dragnet::DataGrid.new(survey: survey) }
+  let(:grid) { Dragnet::DataGrid.new(survey:) }
   let(:survey) { Dragnet::Survey.generate! }
-  let(:params) { {} }
 
-  describe '#survey_id' do
-    it 'returns the surveys id' do
-      expect(presenter.survey_id).to eq(survey.id)
+  describe '#show_clear_filter?' do
+    it 'returns false when there are no filters present' do
+      presenter = described_class.new(grid, {})
+
+      expect(presenter).not_to be_show_clear_filter
+    end
+
+    it 'returns true when filters are present' do
+      presenter = described_class.new(grid, { filter_by: { user_id: 1 } })
+
+      expect(presenter).to be_show_clear_filter
     end
   end
 
-  describe '#paginated_records' do
-    let(:params) { { items: items } }
-    let(:items) { 5 }
+  describe '#records' do
+    before do
+      10.times { Dragnet::Reply[survey:].generate! }
+    end
 
-    it 'will return no more records than the items specified' do
-      expect(presenter.paginated_records.count).to be < items
+    it 'returns no more records than the items specified' do
+      presenter = described_class.new(grid, { items: 5 })
+
+      expect(presenter.records.count).to be <= 5
     end
   end
 end

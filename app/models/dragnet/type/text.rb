@@ -53,7 +53,5 @@ module Dragnet
 
       answer.short_text_value
     end
-
-    alias sort_value value
   end
 end

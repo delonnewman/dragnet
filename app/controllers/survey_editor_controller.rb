@@ -42,11 +42,11 @@ class SurveyEditorController < EndpointController
   end
 
   def latest_edit
-    Dragnet::Survey::Edits.latest(survey)
+    Dragnet::SurveyEdit.latest(survey)
   end
 
   def new_edit(data)
-    Dragnet::Survey::Edits.create!(survey, data:)
+    Dragnet::SurveyEdit.create_from!(survey, data:)
   end
 
   def survey_editing(s = survey)

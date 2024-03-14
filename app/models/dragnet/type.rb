@@ -46,12 +46,6 @@ module Dragnet
       raise Answer::EvaluationError, "can't convert #{answer.question_type} to number"
     end
 
-    # @!method sort_value
-    #   Return a value that is appropriate for the type for sorting in the data grid and reports
-    #   @param [Answer] answer
-    #   @return [Object, nil]
-    alias sort_value number_value
-
     private
 
     def project_stats_table(data)

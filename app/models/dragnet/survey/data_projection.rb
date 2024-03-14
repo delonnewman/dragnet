@@ -48,7 +48,7 @@ module Dragnet
           {
             question_options: %i[id text weight],
             question_type:    %i[id slug name],
-          }
+          },
         ]
       )
     end

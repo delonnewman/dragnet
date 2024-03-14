@@ -11,7 +11,7 @@ QuestionType.create(
       type_class_name: 'Dragnet::Type::Choice',
       icon:     'fa-regular fa-square-check',
       meta: { multiple_answers: { type: :boolean, text: 'Allow multiple answers' },
-                  countable:        { type: :boolean, text: 'Calculate statistics' } } },
+              countable:        { type: :boolean, text: 'Calculate statistics' } } },
     { name:     'Number',
       type_class_name: 'Dragnet::Type::Number',
       icon:     'fa-regular fa-calculator',
@@ -28,27 +28,29 @@ QuestionType.create(
       icon: 'fa-regular fa-toggle-on'
     },
   ]
-)
+) if QuestionType.none?
 
-user = User.create!(
-  login:    'admin',
-  email:    'contact@delonnewman.name',
-  name:     'Delon Newman',
-  nickname: 'Delon',
-  password: 'testing123'
-).tap(&:confirm)
+unless Rails.env.test?
+  user = User.create!(
+    login:    'admin',
+    email:    'contact@delonnewman.name',
+    name:     'Delon Newman',
+    nickname: 'Delon',
+    password: 'testing123'
+  ).tap(&:confirm)
 
-Survey.create!(
-  name:                 'Contact Information',
-  author:               user,
-  questions_attributes: [
-    { text: 'Name',     question_type_ident: 'text' },
-    { text: 'Email',    question_type_ident: 'text' },
-    { text: 'Address',  question_type_ident: 'text', meta: { long_answer: true } },
-    { text: 'Phone',    question_type_ident: 'text' },
-    { text: 'Comments', question_type_ident: 'text', meta: { long_answer: true } },
-  ]
-)
+  Survey.create!(
+    name:                 'Contact Information',
+    author:               user,
+    questions_attributes: [
+      { text: 'Name',     question_type_ident: 'text' },
+      { text: 'Email',    question_type_ident: 'text' },
+      { text: 'Address',  question_type_ident: 'text', meta: { long_answer: true } },
+      { text: 'Phone',    question_type_ident: 'text' },
+      { text: 'Comments', question_type_ident: 'text', meta: { long_answer: true } },
+    ]
+  )
+end
 
 # Generate some sample data if in development
 if Rails.env.development?
@@ -75,19 +77,23 @@ if Rails.env.development?
   puts 'Done.'
 
   print 'Generating Replies...'
-  surveys.each do |s|
+  surveys.each do |survey|
+    survey_id = survey.id
     Dragnet::StatsUtils.time_series((Time.zone.today - 60)..(Time.zone.today)).each_pair do |created_at, count|
       next if Faker::Boolean.boolean(true_ratio: 0.6)
 
       count.times do
-        Reply[survey: s, created_at: created_at].generate.tap do |r|
-          r.save!
+        Reply[survey:, created_at:].generate.tap do |reply|
+          reply.save!
+          reply_id = reply.id
           visit = Ahoy::Visit.generate!
-          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:view], visit: visit, survey_id: s.id, reply_id: r.id].generate!
-          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:update], visit: visit, survey_id: s.id, reply_id: r.id].generate!
-          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:complete], visit: visit, survey_id: s.id, reply_id: r.id].generate! if r.submitted?
-          r.ahoy_visit = visit
-          r.save!
+          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:view], visit:, survey_id:, reply_id:].generate!
+          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:update], visit:, survey_id:, reply_id:].generate!
+          if reply.submitted?
+            Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:complete], visit:, survey_id:, reply_id:].generate!
+          end
+          reply.ahoy_visit = visit
+          reply.save!
           print '.'
         end
       end

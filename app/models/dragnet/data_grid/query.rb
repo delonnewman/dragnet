@@ -5,46 +5,40 @@ module Dragnet
     include Dragnet
     include Memoizable
 
-    attr_reader :params
+    PRIMATIVE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
 
-    delegate :to_sql, to: :records
+    attr_reader :sort_by, :sort_direction, :filter_by, :questions
+    alias filters filter_by
+    alias sorted_by sort_by
 
-    def initialize(survey, params)
-      @survey = survey
-      @params = params.frozen? ? params : params.dup.freeze
+    def initialize(questions, params, defaults = EMPTY_HASH)
+      @questions = questions
+      @sort_by = params[:sort_by] || defaults.fetch(:sort_by, :created_at)
+      @sort_direction = params[:sort_direction] || defaults.fetch(:sort_direction, :desc)
+      @filter_by = params[:filter_by] || defaults.fetch(:filter_by, EMPTY_HASH)
     end
 
-    def sort_by
-      params.fetch(:sort_by, :created_at)
+    def relation(replies, **options)
+      DataGrid::QueryRelation.new(self, replies, **options)
     end
 
-    def sort_direction
-      params.fetch(:sort_direction, :desc)
+    def sort_by_question?
+      uuid?(sort_by)
+    end
+    alias sorted_by_question? sort_by_question?
+
+    def filtered?
+      !@filter_by.empty?
+    end
+    alias has_filters? filtered?
+
+    def primative_attribute?(name)
+      PRIMATIVE_FILTER_ATTRIBUTES.include?(name)
     end
 
-    def filter_by
-      params.fetch(:filter_by, EMPTY_HASH)
+    def question?(question_id)
+      questions_map.key?(question_id)
     end
-
-    # @return [Array<String>]
-    def question_ids
-      filter_by.keys.select { uuid?(_1) }
-    end
-    memoize :question_ids
-
-    # @return [Array<Question>]
-    def questions
-      return EMPTY_ARRAY if question_ids.empty?
-
-      Question.includes(:question_type).find(question_ids)
-    end
-    memoize :questions
-
-    # @return [Hash{String => Question}]
-    def questions_map
-      questions.index_by(&:id)
-    end
-    memoize :questions_map
 
     def question(question_id)
       questions_map.fetch(question_id) do
@@ -52,24 +46,29 @@ module Dragnet
       end
     end
 
-    def question?(question_id)
-      questions_map.key?(question_id)
+    # @return [Hash{String => Question}]
+    def questions_map
+      questions.index_by(&:id)
+    end
+    memoize :questions_map
+
+    # @param [Symbol, Question] column
+    def sorted_by_column?(column)
+      return sort_by == column.id if sorted_by_question? && column.is_a?(Question)
+
+      sort_by == column
     end
 
-    # @return [ActiveRecord::Relation<Reply>]
-    def records
-      relation.build
+    def opposite_sort_direction
+      sorted_ascending? ? :desc : :asc
     end
 
-    private
-
-    def relation
-      DataGrid::QueryRelation.new(base_relation, sort_by:, sort_direction:, filter_by:)
+    def sorted_ascending?
+      sort_direction == :asc
     end
-    memoize :relation
 
-    def base_relation
-      @survey.replies.includes(questions: %i[question_type question_options], answers: { question: %i[question_type question_options] })
+    def sorted_descending?
+      sort_direction == :desc
     end
   end
 end

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class Question::Settings < Advice
-    advises Question
+  class Question::Settings
+    def initialize(question)
+      @question = question
+    end
 
     def countable?
       setting?(:countable)
@@ -41,10 +43,10 @@ module Dragnet
     end
 
     def setting(setting)
-      default = question.question_type.meta[setting]
-      return default if question.meta.blank?
+      default = @question.question_type.meta[setting]
+      return default if @question.meta.blank?
 
-      question.meta.fetch(setting, default)
+      @question.meta.fetch(setting, default)
     end
   end
 end

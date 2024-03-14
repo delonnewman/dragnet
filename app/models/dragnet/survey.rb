@@ -17,8 +17,10 @@ module Dragnet
     before_validation :generate_name_and_slug
 
     # Questions
-    has_many :questions, -> { order(:display_order) }, class_name: 'Dragnet::Question', dependent: :delete_all, inverse_of: :survey
+    has_many :questions, -> { order(:display_order) }, class_name: 'Dragnet::Question', dependent: :delete_all, inverse_of: :survey, strict_loading: true
     accepts_nested_attributes_for :questions, allow_destroy: true
+
+    scope :whole, -> { eager_load(:author, questions: %i[question_type question_options]) }
 
     # Record Data
     has_many :replies, class_name: 'Dragnet::Reply', dependent: :delete_all, inverse_of: :survey
@@ -46,7 +48,7 @@ module Dragnet
     before_validation { EditingStatus.default!(self) }
 
     def edited?
-      Edits.present?(self)
+      SurveyEdit.present?(self)
     end
 
     def projection
@@ -64,21 +66,10 @@ module Dragnet
 
     # @return [Survey, false]
     def copy!
-      s     = copy
-      saved = s.save!
-      return s if saved
+      copy = Copy.new(self)
+      return copy if copy.save!
 
       false
-    end
-
-    # @return [Survey]
-    def copy
-      Survey.new(copy_data)
-    end
-
-    # @return [Hash]
-    def copy_data
-      CopyProjection.new(self).to_h
     end
 
     # Execute code on record changes

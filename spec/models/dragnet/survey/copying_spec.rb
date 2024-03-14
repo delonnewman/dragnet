@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Dragnet::Survey do
   describe '#copy_data' do
     let(:survey) { described_class.generate!(questions: { question_type: }) }
-    let(:question_type) { Dragnet::QuestionType.create!(name: 'Choice') }
+    let(:question_type) { Dragnet::QuestionType.get(:choice) }
 
     it 'removes survey id' do
       expect(survey.copy_data).not_to have_key(:id)

@@ -8,13 +8,24 @@ module Dragnet
     serialize :survey_data
     after_save { Survey::EditingStatus.update!(self) }
 
-    def survey_attributes
-      Survey::AttributeProjection.new(survey_data).to_h
+    def self.current(survey)
+      latest(survey) || new(survey)
     end
 
-    # @return [Survey]
-    def validating_survey
-      Survey.new(survey_attributes)
+    def self.latest(survey)
+      survey.edits.where(applied: false).order(created_at: :desc).first
+    end
+
+    def self.from(survey, data: survey.projection)
+      new(survey:, survey_data: data)
+    end
+
+    def self.create_from!(survey)
+      from(survey).save!
+    end
+
+    def self.present?(survey)
+      latest(survey).present?
     end
 
     # @param [Time] timestamp
@@ -79,6 +90,15 @@ module Dragnet
 
     def clean_up_old_drafts
       survey.edits.where.not(id:).delete_all
+    end
+
+    def survey_attributes
+      Survey::AttributeProjection.new(survey_data).to_h
+    end
+
+    # @return [Survey]
+    def validating_survey
+      Survey.new(survey_attributes)
     end
   end
 end

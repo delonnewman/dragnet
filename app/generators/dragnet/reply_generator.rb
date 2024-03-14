@@ -17,10 +17,10 @@ class Dragnet::ReplyGenerator < Dragnet::ActiveRecordGenerator
   private
 
   def generate_questions(survey, reply)
-    survey.questions.each do |q|
-      next unless q.required? || Faker::Boolean.boolean(true_ratio: 0.3)
+    survey.questions.each do |question|
+      next unless question.required? || Faker::Boolean.boolean(true_ratio: 0.3)
 
-      reply.answers << Answer[survey: survey, reply: reply, question: q, question_type_id: q.question_type_id].generate
+      reply.answers << Answer[survey:, reply:, question:, question_type_id: question.question_type_id].generate
     end
   end
 end

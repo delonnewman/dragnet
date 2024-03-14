@@ -7,14 +7,17 @@ module Dragnet
     belongs_to :survey,   class_name: 'Dragnet::Survey'
     belongs_to :reply,    class_name: 'Dragnet::Reply'
     belongs_to :question, class_name: 'Dragnet::Question'
+    accepts_nested_attributes_for :question
+
+    scope :whole, -> { eager_load(:question_option, :question_type, question: %i[question_type question_options]) }
 
     # for Question Option values
     belongs_to :question_option, optional: true, class_name: 'Dragnet::QuestionOption'
+    accepts_nested_attributes_for :question_option
 
-    delegate :to_s, :blank?, to: :value, allow_nil: true
-    delegate :to_i, :to_f, to: :number_value, allow_nil: true
-
-    belongs_to :question_type, class_name: 'Dragnet::QuestionType'
+    # must be optional since an answer should only have a question_type if it has a question
+    belongs_to :question_type, optional: true, class_name: 'Dragnet::QuestionType'
+    accepts_nested_attributes_for :question_type
     delegate :type, to: :question_type
     before_save do
       self.question_type = question.question_type if question
@@ -23,6 +26,10 @@ module Dragnet
     before_save do
       type.before_saving_answer(self, question)
     end
+
+    # Answers should be able to be treated as various kinds of values
+    delegate :to_s, :blank?, to: :value, allow_nil: true
+    delegate :to_i, :to_f, :to_r, to: :number_value, allow_nil: true
 
     def assign_value!(value)
       type.assign_value!(self, value)
@@ -39,14 +46,6 @@ module Dragnet
 
     def number_value
       type.number_value(self)
-    end
-
-    def assign_sort_value!
-      answer.sort_value = sort_value
-    end
-
-    def sort_value
-      type.sort_value(self)
     end
   end
 end

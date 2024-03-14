@@ -6,18 +6,33 @@ module Dragnet
       include Dragnet
       include Memoizable
 
-      attr_reader :sort_by, :sort_direction, :filter_by
+      delegate :sort_by, :sort_direction, :filter_by, :sort_by_question?, to: :@query
+      delegate :to_sql, to: :build
 
-      def initialize(base_relation, params)
-        @base_relation = base_relation
-        @sort_by, @sort_direction, @filter_by =
-          params.values_at(:sort_by, :sort_direction, :filter_by)
+      attr_reader :offset, :items
+
+      def initialize(query, replies, offset: nil, items: nil)
+        @query  = query
+        @offset = offset
+        @items  = items
+
+        @base_relation = replies.includes(
+          questions: %i[question_type question_options],
+          answers:   { question: %i[question_type question_options] }
+        )
       end
 
       # @return [ActiveRecord::Relation<Reply>]
       def build
+        return records unless offset && items
+
+        records.offset(offset).limit(items)
+      end
+
+      def records
         ordered_records(filtered_records(@base_relation))
       end
+      memoize :records
 
       private
 
@@ -50,28 +65,24 @@ module Dragnet
         join_aliases.count.zero?
       end
 
-      def sort_by_question?
-        uuid?(sort_by)
-      end
-
       def ordered_records(scope)
         if !sort_by_question?
           scope.order(sort_by => sort_direction)
         else
-          question = Question.includes(:question_type).find(sort_by)
-          sorted_records(question, sorting_scope(scope, question))
+          question = @query.question(sort_by)
+          sorted_records(question, sorting_scope(scope, question.id))
         end
       end
 
-      def sorting_scope(scope, question)
+      def sorting_scope(scope, question_id)
         if no_joins?
-          scope.joins(:answers).where(answers: { question_id: question.id })
+          scope.joins(:answers).where(answers: { question_id: })
         else
           join_name = next_join_alias
           join_aliases[:sorting] = join_name
           scope
             .joins(Arel.sql("inner join answers #{join_name} on replies.id = #{join_name}.reply_id"))
-            .where(join_name => { question_id: question.id })
+            .where(join_name => { question_id: })
         end
       end
 
@@ -79,19 +90,16 @@ module Dragnet
         question.type.data_grid_sort(question, scope, sort_direction, join_aliases.fetch(:sorting, :answers))
       end
 
-      SIMPLE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
-      private_constant :SIMPLE_FILTER_ATTRIBUTES
-
       def filtered_records(scope)
-        return scope if filter_by.empty?
+        return scope unless @query.filtered?
 
-        filter_by.reduce(scope) do |current_scope, (field, value)|
-          if SIMPLE_FILTER_ATTRIBUTES.include?(field)
+        @query.filters.reduce(scope) do |current_scope, (field, value)|
+          if @query.primative_attribute?(field)
             current_scope.where(field => value)
-          elsif question?(field)
+          elsif @query.question?(field)
             join_name = join_alias(field)
             narrowed  = narrowed_scope(current_scope, field, join_name)
-            filtered_values(narrowed, question(field), join_name, value)
+            filtered_values(narrowed, @query.question(field), join_name, value)
           else
             current_scope
           end

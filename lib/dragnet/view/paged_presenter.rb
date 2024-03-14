@@ -20,7 +20,7 @@ module Dragnet
         raise NotImplementedError
       end
 
-      def paginated_records
+      def records
         raise NotImplementedError
       end
 

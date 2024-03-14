@@ -9,7 +9,7 @@ class SurveysController < ApplicationController
   def index; end
 
   def show
-    presenter = Dragnet::SurveyPresenter.new(survey, params)
+    presenter = Dragnet::SurveyPresenter.new(whole_survey, params)
 
     render :show, locals: { report: presenter.stats_report, survey: presenter }
   end
@@ -21,7 +21,7 @@ class SurveysController < ApplicationController
   end
 
   def edit
-    render :edit, locals: { survey: survey }
+    render :edit, locals: { survey: }
   end
 
   def destroy
@@ -41,7 +41,7 @@ class SurveysController < ApplicationController
   end
 
   def settings
-    render :settings, locals: { survey: survey }
+    render :settings, locals: { survey: }
   end
 
   def open
@@ -53,7 +53,7 @@ class SurveysController < ApplicationController
   def close
     survey.close!
 
-    render partial: 'workspace/survey_card', locals: { survey: survey }
+    render partial: 'workspace/survey_card', locals: { survey: }
   end
 
   def share
@@ -62,13 +62,17 @@ class SurveysController < ApplicationController
 
   def qrcode
     respond_to do |format|
-      format.html { render :qrcode, locals: { survey: survey } }
+      format.html { render :qrcode, locals: { survey: } }
       format.png  { send_qrcode_data survey, format: :png }
       format.svg  { send_qrcode_data survey, format: :svg }
     end
   end
 
   private
+
+  def whole_survey
+    Dragnet::Survey.whole.find(survey_id)
+  end
 
   def survey
     @survey ||= Dragnet::Survey.find(survey_id)

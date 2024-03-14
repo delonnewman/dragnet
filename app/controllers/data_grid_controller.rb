@@ -7,24 +7,18 @@ class DataGridController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html do
-        render :show, locals: { grid: presenter }
-      end
-      format.csv do
-        render_file :show, export_name(presenter.survey), locals: { grid: presenter }
-      end
-      format.xlsx do
-        render_file :show, export_name(presenter.survey), locals: { grid: presenter }
-      end
+      format.html { render :show, locals: { grid: } }
+      format.csv  { render_file :show, export_name(survey), locals: { grid: } }
+      format.xlsx { render_file :show, export_name(survey), locals: { grid: } }
     end
   end
 
   def rows
-    render partial: 'data_grid/rows', locals: { grid: presenter }
+    render partial: 'data_grid/rows', locals: { grid: }
   end
 
   def table
-    render partial: 'data_grid/table', locals: { grid: presenter }
+    render partial: 'data_grid/table', locals: { grid: }
   end
 
   private
@@ -38,12 +32,12 @@ class DataGridController < ApplicationController
     "#{survey.slug}-#{Dragnet::Utils.slug(Time.zone.now)}.#{params[:format]}"
   end
 
-  def presenter
-    Dragnet::DataGridPresenter.new(Dragnet::DataGrid.ensure!(survey, current_user), data_grid_params)
+  def grid
+    Dragnet::DataGridPresenter.new(Dragnet::DataGrid.find_or_create!(survey, user: current_user), data_grid_params)
   end
 
   def survey
-    Dragnet::Survey.includes(questions: [:question_type, :question_options]).find(params[:survey_id])
+    @survey ||= Dragnet::Survey.whole.find(params[:survey_id])
   end
 
   def data_grid_params

@@ -1,8 +1,8 @@
 class NilClass
-  def if_nil(value = self, &block)
+  def if_nil(value = self)
     return value unless block_given?
 
-    block.call
+    yield
   end
 end
 
@@ -13,7 +13,13 @@ class Object
 end
 
 class Hash
-  def rename_keys(mapping)
-    transform_keys(&mapping)
+  def transform(&)
+    dup.transform!(&)
+  end
+
+  def transform!
+    each_pair do |key, value|
+      store(key, yield(key, value))
+    end
   end
 end

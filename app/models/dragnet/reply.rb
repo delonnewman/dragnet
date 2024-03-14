@@ -14,7 +14,6 @@ module Dragnet
 
     # Submission
     delegate :submission_parameters, to: :survey
-    with Submission, delegating: %i[submit! submitted!]
     scope :incomplete, -> { where(submitted: false) }
 
     # Analytics
@@ -29,18 +28,43 @@ module Dragnet
       survey.update(latest_submission_at: submitted_at) if submitted?
     end
 
-    # Cached data values to improve performance in Data Grid
-    #
-    # @!attribute answer_records
-    #   @return [Array<Answer>]
-    serialize :answer_records
+    before_save :reset_answers_data!
 
-    before_save do
-      self.answer_records = answers
+    def reset_answers_data!
+      self.answers_data = AnswerRecords.new(self).data
     end
 
     def answers_to(question)
       answer_records.select { |a| a.question_id == question.id }
+    end
+
+    def answer_records
+      AnswerRecords.build(answers_data)
+    end
+    memoize :answer_records
+
+    # Mark the reply as submitted
+    #
+    # @param [Time] timestamp
+    #
+    # @return [Reply]
+    def submitted!(timestamp)
+      self.submitted    = true
+      self.submitted_at = timestamp
+      self
+    end
+
+    # Apply changes to attributes, validate, mark as submitted and save the reply
+    #
+    # @param [Hash{Symbol, String => Object}, ActionController::Parameters] attributes
+    # @param [Time] timestamp
+    #
+    # @return [Boolean]
+    def submit!(attributes, timestamp: Time.zone.now)
+      self.attributes = attributes
+      validate!(:submission)
+      submitted!(timestamp)
+      save!
     end
   end
 end
