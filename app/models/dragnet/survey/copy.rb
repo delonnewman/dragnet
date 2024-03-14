@@ -4,7 +4,7 @@ module Dragnet
       Survey.new(data(survey))
     end
 
-    def data(survey)
+    def self.data(survey)
       attributes = Survey::AttributeProjection.new(survey.projection).to_h
       attributes.tap do |attrs|
         attrs[:copy_of_id] = attrs.delete(:id)

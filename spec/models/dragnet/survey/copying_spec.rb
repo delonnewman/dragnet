@@ -1,22 +1,23 @@
 require 'rails_helper'
 
-describe Dragnet::Survey do
-  describe '#copy_data' do
-    let(:survey) { described_class.generate!(questions: { question_type: }) }
+describe Dragnet::Survey::Copy do
+  describe '.data' do
+    let(:survey) { Dragnet::Survey.generate!(questions: { question_type: }) }
     let(:question_type) { Dragnet::QuestionType.get(:choice) }
+    let(:data) { described_class.data(survey) }
 
     it 'removes survey id' do
-      expect(survey.copy_data).not_to have_key(:id)
+      expect(data).not_to have_key(:id)
     end
 
     it 'removes question ids' do
-      survey.copy_data[:questions_attributes].each do |question|
+      data[:questions_attributes].each do |question|
         expect(question).not_to have_key(:id)
       end
     end
 
     it 'removes question option ids' do
-      survey.copy_data[:questions_attributes].each do |question|
+      data[:questions_attributes].each do |question|
         question[:question_options_attributes].each do |question_option|
           expect(question_option).not_to have_key(:id)
         end

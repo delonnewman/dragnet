@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Dragnet::Survey do
-  subject(:survey) { described_class.create!(name: name, author: author) }
+  subject(:survey) { described_class.whole.create!(name:, author:) }
 
   let(:name) { Dragnet::Generators::Name.generate }
   let(:author) { Dragnet::User.generate! }
@@ -15,46 +15,40 @@ describe Dragnet::Survey do
   end
 
   describe '#save' do
-    context 'when no slug is given' do
-      it 'will generate a slug when no slug is given' do
-        expect(survey.slug).to eq Dragnet::Utils.slug(survey.name)
-      end
+    it 'generates a slug when no slug is given' do
+      expect(survey.slug).to eq Dragnet::Utils.slug(survey.name)
     end
 
-    context 'when slug is given' do
-      subject(:survey) { described_class.create!(name: name, slug: 'testing-123', author: author) }
+    it 'uses the given slug when a slug is given' do
+      survey = described_class.create!(name:, slug: 'testing-123', author:)
 
-      it 'will use the given slug' do
-        expect(survey.slug).to eq 'testing-123'
-      end
+      expect(survey.slug).to eq 'testing-123'
     end
 
-    context 'when a name is given' do
-      it 'will use the given name' do
-        expect(survey.name).to eq name
-      end
+    it 'uses the given name when a name is given' do
+      expect(survey.name).to eq name
     end
 
     context 'when no name is given' do
       let(:name) { nil }
 
-      it 'will generate a name' do
+      it 'generates a name' do
         expect(survey.name).not_to be_blank
       end
     end
 
     context 'when no edit status is given' do
-      it 'will set the edit status to :saved' do
+      it 'sets the edit status to :saved' do
         expect(survey).to be_edits_saved
       end
     end
 
     context 'when an edit status is given' do
-      subject(:survey) { described_class.create!(name: name, edits_status: edits_status, author: author) }
+      subject(:survey) { described_class.create!(name:, edits_status:, author:) }
 
       let(:edits_status) { 'unsaved' }
 
-      it 'will set the edit status to :saved' do
+      it 'sets the edit status to :saved' do
         expect(survey.edits_status).to eq(edits_status)
       end
     end

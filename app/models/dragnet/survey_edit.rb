@@ -9,23 +9,23 @@ module Dragnet
     after_save { Survey::EditingStatus.update!(self) }
 
     def self.current(survey)
-      latest(survey) || new(survey)
+      latest(survey) || build_with(survey)
     end
 
-    def self.latest(survey)
-      survey.edits.where(applied: false).order(created_at: :desc).first
+    def self.create_with!(survey)
+      build_with(survey).save!
     end
 
-    def self.from(survey, data: survey.projection)
+    def self.build_with(survey, data: survey.projection)
       new(survey:, survey_data: data)
-    end
-
-    def self.create_from!(survey)
-      from(survey).save!
     end
 
     def self.present?(survey)
       latest(survey).present?
+    end
+
+    def self.latest(survey)
+      survey.edits.where(applied: false).order(created_at: :desc).first
     end
 
     # @param [Time] timestamp

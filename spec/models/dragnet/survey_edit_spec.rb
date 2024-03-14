@@ -26,7 +26,7 @@ describe Dragnet::SurveyEdit do
 
   context 'when the survey has an un-applied edit' do
     before do
-      described_class.create!(survey)
+      described_class.create_with!(survey)
     end
 
     describe '.latest' do

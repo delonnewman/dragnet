@@ -17,7 +17,7 @@ module Dragnet
     before_validation :generate_name_and_slug
 
     # Questions
-    has_many :questions, -> { order(:display_order) }, class_name: 'Dragnet::Question', dependent: :delete_all, inverse_of: :survey, strict_loading: true
+    has_many :questions, -> { order(:display_order) }, class_name: 'Dragnet::Question', dependent: :delete_all, inverse_of: :survey
     accepts_nested_attributes_for :questions, allow_destroy: true
 
     scope :whole, -> { eager_load(:author, questions: %i[question_type question_options]) }
