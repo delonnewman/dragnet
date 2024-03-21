@@ -6,41 +6,43 @@ module Dragnet
       @record = record
       @attribute = attribute
       @root_name = root_name
-      @scope = scope
+      @scope_attribute = scope
     end
 
-    def to_s
-      name = record_name
-      return name if name.present?
-
-      unique_name
+    def as_slug
+      Utils.slug(as_name)
     end
 
-    def record_name
-      record.public_send(attribute)
-    end
+    def as_name
+      return record_name unless generate?
 
-    def record_scope_value
-      record.public_send(scope)
+      generate
     end
+    alias to_s as_name
 
-    def unique_name
+    def generate
       n = auto_named_count
-      n.zero? ? root_name : "#{root_name} (#{n})"
+      n.zero? ? @root_name : "#{@root_name} (#{n})"
     end
 
-    def generate_name?
-      name.blank? || auto_named? || duplicated_root? and new_record? || scope_attribute_will_change?
+    def generate?
+      @record.name.blank? || auto_named? || duplicated_root? and @record.new_record? || scope_attribute_will_change?
     end
+
+    private
 
     def scope_attribute_will_change?
-      return true unless scope
+      return false unless @scope_attribute
 
-      will_save_change_to_attribute?(scope)
+      @record.will_save_change_to_attribute?(@scope_attribute)
     end
 
     def auto_named?
-      name.start_with?(root_name)
+      record_name.start_with?(@root_name)
+    end
+
+    def record_name
+      @record.public_send(@attribute)
     end
 
     def duplicated_root?
@@ -52,20 +54,16 @@ module Dragnet
     end
 
     def auto_named_count
-      query = model.where(attribute => root_name).or(model.where(attribute => "#{root_name} (%)"))
-      return query.count unless scope
+      model = @record.class
+      field = model.arel_table[@attribute]
+      query = model.where(@attribute => @root_name).or(model.where(field.matches("#{@root_name} (%)")))
+      return query.count unless @scope_attribute
 
-      query.or(model.where(scope => record_scope_value)).count
+      query.where(@scope_attribute => record_scope_value).count
     end
 
-    private
-
-    def model
-      record.class
+    def record_scope_value
+      @record.public_send(@scope_attribute)
     end
-
-    attr_reader :record, :attribute, :root_name, :scope
-
-    delegate :name, :slug, :new_record?, :will_save_change_to_attribute?, to: :@record
   end
 end

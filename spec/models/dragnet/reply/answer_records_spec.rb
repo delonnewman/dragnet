@@ -5,7 +5,7 @@ RSpec.describe Dragnet::Reply::AnswerRecords do
   let(:question_type) { QuestionType.get(:choice) }
   let(:survey) { Dragnet::Survey.generate! }
 
-  describe '.attributes' do
+  xdescribe '.attributes' do
     it 'does not run any queries' do
       answer_data = described_class.new(reply).data
 

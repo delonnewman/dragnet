@@ -13,8 +13,7 @@ module Dragnet
     # Naming
     validates :name, presence: true
     validates :name, uniqueness: { scope: :author }, on: :create
-    with Naming, 'New Survey', delegating: %i[ident generate_name_and_slug]
-    before_validation :generate_name_and_slug
+    before_validation { Name.assign!(self) }
 
     # Questions
     has_many :questions, -> { order(:display_order) }, class_name: 'Dragnet::Question', dependent: :delete_all, inverse_of: :survey
@@ -31,8 +30,8 @@ module Dragnet
     has_many :events, through: :replies # Used by StatsReport
     with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created?]
 
-    def dispatch_submittion_request
-      DispatchSubmissionRequest.new(self).run
+    def dispatch_submission_request(...)
+      DispatchSubmissionRequest.new(self).run(...)
     end
 
     def submission_parameters

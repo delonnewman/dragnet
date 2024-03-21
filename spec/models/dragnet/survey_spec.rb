@@ -28,25 +28,42 @@ describe Dragnet::Survey do
   end
 
   describe '#save' do
-    it 'generates a slug when no slug is given' do
-      expect(survey.slug).to eq Dragnet::Utils.slug(survey.name)
-    end
+    describe 'Naming' do
+      it 'generates a slug when no slug is given' do
+        survey = described_class.create!(name:, slug: '', author:)
 
-    it 'uses the given slug when a slug is given' do
-      survey = described_class.create!(name:, slug: 'testing-123', author:)
+        expect(survey.slug).to eq Dragnet::Utils.slug(survey.name)
+      end
 
-      expect(survey.slug).to eq 'testing-123'
-    end
+      it 'uses the given slug when a slug is given' do
+        survey = described_class.create!(name:, slug: 'testing-123', author:)
 
-    it 'uses the given name when a name is given' do
-      expect(survey.name).to eq name
-    end
+        expect(survey.slug).to eq 'testing-123'
+      end
 
-    context 'when no name is given' do
-      let(:name) { nil }
+      it 'uses the given name when a name is given' do
+        survey = described_class.create!(name: 'testing-123', author:)
 
-      it 'generates a name' do
+        expect(survey.name).to eq 'testing-123'
+      end
+
+      it 'generates a name when no name is given' do
+        survey = described_class.create!(name: '', author:)
+
         expect(survey.name).not_to be_blank
+      end
+
+      it 'generates a unique name if a survey by the same author already has a generated name' do
+        survey_names = Array.new(10) { described_class.create!(name: '', author:) }.map(&:name).uniq
+
+        expect(survey_names.count).to be 10
+      end
+
+      it 'generates the same name if a survey by a different author already has a generated name' do
+        survey1 = described_class.create!(name: '', author:)
+        survey2 = described_class.create!(name: '', author: User.generate!)
+
+        expect(survey2.name).to eq survey1.name
       end
     end
 
