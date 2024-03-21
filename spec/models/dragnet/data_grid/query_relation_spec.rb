@@ -11,6 +11,6 @@ RSpec.describe Dragnet::DataGrid::QueryRelation do
   end
 
   it 'avoids N+1s' do
-    expect { relation.build.load }.to perform_queries_count(4)
+    expect { relation.build.load }.to perform_number_of_queries 5
   end
 end

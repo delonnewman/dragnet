@@ -4,7 +4,7 @@
 # expect { ... }.to perform_queries_count(1)
 #
 # (see https://medium.com/@esperonleticia/rspec-matcher-to-identify-n-1-queries-62986d019a45)
-RSpec::Matchers.define :perform_queries_count do |expected_count|
+RSpec::Matchers.define :perform_number_of_queries do |expected_count|
   supports_block_expectations
 
   match do |block|

@@ -27,7 +27,7 @@ module Dragnet
     def data
       return @data if @data
 
-      @data = load_data
+      @data = load_data(reload: true)
     end
     alias to_h data
 
@@ -79,8 +79,9 @@ module Dragnet
 
     private
 
-    def load_data
-      @self_describable.reload if persisted?
+    def load_data(reload: false)
+      @self_describable.reload if persisted? && reload
+
       data = @self_describable.meta_data
       return EMPTY_HASH unless data
 

@@ -27,14 +27,17 @@ module Dragnet
     end
 
     def value(answer)
-      question  = answer.question
-      date_time = question.settings.include_date_and_time?
-      return answer.date_value if !date_time && question.settings.include_date?
-      return answer.time_value if !date_time && question.settings.include_time?
+      question = answer.question
+      date = answer.date_value
+      time = answer.time_value
 
-      d = answer.date_value
-      t = answer.time_value
-      DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec, t.utc_offset)
+      if date && time && question.settings.include_date_and_time?
+        DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec, time.utc_offset)
+      end
+
+      return date if date && question.settings.include_date?
+
+      time
     end
 
     def number_value(answer)

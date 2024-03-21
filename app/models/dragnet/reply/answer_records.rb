@@ -67,7 +67,21 @@ module Dragnet
         :updated_at,
         :question_option,
         :question_type,
-        question: %i[id text hash_code display_order required survey_id retracted retracted_at meta_data question_type question_options]
+        question: [
+          :id,
+          :text,
+          :hash_code,
+          :display_order,
+          :required,
+          :survey_id,
+          :retracted,
+          :retracted_at,
+          :meta_data,
+          {
+            question_type:    %i[id name slug type_class_name parent_type_id meta_data],
+            question_options: %i[id text weight display_order],
+          },
+        ]
       )
     end
   end

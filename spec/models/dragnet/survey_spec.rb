@@ -14,6 +14,19 @@ describe Dragnet::Survey do
     let(:retractable) { survey }
   end
 
+  describe '.whole' do
+    before do
+      described_class.generate!
+    end
+
+    it "loads all of a survey's componets in one query" do
+      relation = described_class.whole
+
+      expect { relation.first.questions.each { |q| q.question_type; q.question_options.load } }
+        .to perform_number_of_queries(2) # performs a prefetch query
+    end
+  end
+
   describe '#save' do
     it 'generates a slug when no slug is given' do
       expect(survey.slug).to eq Dragnet::Utils.slug(survey.name)

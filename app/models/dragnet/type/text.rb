@@ -30,7 +30,7 @@ module Dragnet
       data =
         reportable
           .answers
-          .where(question: question)
+          .where(question:)
           .pick(min(column), max(column), sum(column), avg(column), stddev(column))
 
       project_stats_table(data)
