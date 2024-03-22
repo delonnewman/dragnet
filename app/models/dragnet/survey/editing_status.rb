@@ -1,6 +1,6 @@
 module Dragnet
   class Survey::EditingStatus
-    def self.default!(survey)
+    def self.assign_default!(survey)
       saved!(survey) unless survey.edits_status?
     end
 
