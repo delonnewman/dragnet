@@ -11,14 +11,14 @@ module Dragnet
     belongs_to :author, class_name: 'Dragnet::User'
 
     # Naming
-    validates :name, presence: true
-    validates :name, uniqueness: { scope: :author }, on: :create
+    validates :name, presence: true, uniqueness: { scope: :author }, on: :create
     before_validation { Name.assign!(self) }
 
     # Questions
     has_many :questions, -> { order(:display_order) }, class_name: 'Dragnet::Question', dependent: :delete_all, inverse_of: :survey
     accepts_nested_attributes_for :questions, allow_destroy: true
 
+    # Treat surveys as whole values
     scope :whole, -> { eager_load(:author, questions: %i[question_type question_options]) }
 
     # Record Data
@@ -44,7 +44,7 @@ module Dragnet
     # Editing
     enum :edits_status, { saved: 0, unsaved: 1, cannot_save: -1 }, prefix: :edits
     has_many :edits, -> { where(applied: false) }, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
-    before_validation { EditingStatus.default!(self) }
+    before_validation { EditingStatus.assign_default!(self) }
 
     def edited?
       SurveyEdit.present?(self)
