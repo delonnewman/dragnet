@@ -2,12 +2,23 @@
 
 module Dragnet
   module ConsoleMethods
-    def s(survey_id)
-      Dragnet::Survey.find(survey_id)
+    def s(index = 0, id: nil)
+      sample_record Dragnet::Survey, index, id:
     end
 
-    def u(user_id)
-      Dragnet::User.find(user_id)
+    def u(index = 0, id: nil)
+      sample_record Dragnet::User, index, id:
+    end
+
+    def sample_record(klass, index = 0, id: nil)
+      return klass.find(id) if id
+
+      @ids ||= {}
+      @ids[klass] ||= klass.ids
+
+      @this ||= {}
+      @this[klass] ||= []
+      @this[klass][index] ||= klass.find(@ids[klass].sample)
     end
   end
 end
