@@ -5,7 +5,13 @@ module Dragnet
     include Dragnet
     include Memoizable
 
-    PRIMATIVE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
+    PRIMITIVE_FILTER_ATTRIBUTES = %i[created_at user_id].to_set.freeze
+
+    def self.primitive_attribute?(name)
+      PRIMITIVE_FILTER_ATTRIBUTES.include?(name)
+    end
+
+    delegate :primitive_attribute?, to: 'self.class'
 
     attr_reader :sort_by, :sort_direction, :filter_by, :questions
     alias filters filter_by
@@ -31,10 +37,6 @@ module Dragnet
       !@filter_by.empty?
     end
     alias has_filters? filtered?
-
-    def primative_attribute?(name)
-      PRIMATIVE_FILTER_ATTRIBUTES.include?(name)
-    end
 
     def question?(question_id)
       questions_map.key?(question_id)

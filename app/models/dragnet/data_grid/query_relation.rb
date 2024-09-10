@@ -70,7 +70,8 @@ module Dragnet
           scope.order(sort_by => sort_direction)
         else
           question = @query.question(sort_by)
-          sorted_records(question, sorting_scope(scope, question.id))
+          scope = sorting_scope(scope, question.id)
+          question.type.data_grid_sort(question, scope, sort_direction, join_aliases.fetch(:sorting, :answers))
         end
       end
 
@@ -86,15 +87,11 @@ module Dragnet
         end
       end
 
-      def sorted_records(question, scope)
-        question.type.data_grid_sort(question, scope, sort_direction, join_aliases.fetch(:sorting, :answers))
-      end
-
       def filtered_records(scope)
         return scope unless @query.filtered?
 
         @query.filters.reduce(scope) do |current_scope, (field, value)|
-          if @query.primative_attribute?(field)
+          if @query.primitive_attribute?(field)
             current_scope.where(field => value)
           elsif @query.question?(field)
             join_name = join_alias(field)

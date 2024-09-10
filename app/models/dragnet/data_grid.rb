@@ -3,6 +3,9 @@
 module Dragnet
   # Provides data access and business rules for survey data grids
   class DataGrid < ApplicationRecord
+    validates :survey_id, uniqueness: { scope: :user_id }
+    validates :user_id, uniqueness: { scope: :survey_id }
+
     # Surveys & Questions
     belongs_to :survey, class_name: 'Dragnet::Survey', inverse_of: :data_grids
     has_many :questions, through: :survey, inverse_of: :survey
