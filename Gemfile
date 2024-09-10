@@ -72,8 +72,12 @@ git 'https://github.com/delonnewman/el-toolkit.git' do
   gem 'el-core', require: 'el/data_utils'
 end
 
+
+group :test do
+  gem 'simplecov', require: false
+end
+
 group :development, :test do
-  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri]
   gem 'pry-stack_explorer'
 
@@ -88,23 +92,11 @@ group :development, :test do
   gem 'brakeman'
   gem 'bullet'
   gem 'bundler-audit'
-
-  # markdown lint
-  gem 'mdl', require: false
-
-  gem 'rubocop'
-  gem 'rubocop-rails', require: false
-  gem 'rubocop-rspec', require: false
-  gem 'rubocop-rake', require: false
-  gem 'rubocop-performance', require: false
-
-  gem 'simplecov', require: false
 end
 
 group :development do
   gem 'web-console'
 
-  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   gem 'rack-mini-profiler'
 
   gem "rails_live_reload"
@@ -115,4 +107,10 @@ group :development do
   gem 'yard-rspec'
 
   gem 'dockerfile-rails'
+
+  gem 'rubocop'
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rake', require: false
+  gem 'rubocop-performance', require: false
 end
