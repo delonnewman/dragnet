@@ -17,6 +17,7 @@
 (s/def :question.type/name string?)
 (s/def :question.type/slug string?)
 (s/def :question.type/settings (s/nilable map?))
+(s/def :question.type/entity (s/keys :req [:entity/id :entity/type :question.type/name :question.type/slug]))
 
 (s/def :question.option/text string?)
 (s/def :question.option/weight integer?)
@@ -48,8 +49,6 @@
       (throw (ex-info (expound-str spec data) ex-data))
       data)))
 
-
-(s/def :question.type/entity (s/keys :req [:entity/id :entity/type :question.type/name :question.type/slug]))
 
 (def ^{:doc "Validate a type map. Throw an exception if the map is invalid otherwise return the map."}
   validate-question-type! (entity-validator :question.type/entity))

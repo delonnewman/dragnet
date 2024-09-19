@@ -5,8 +5,8 @@
   "scripts": {
     "watch": "shadow-cljs watch submitter editor test",
     "browser-repl": "shadow-cljs browser-repl",
-    "submitter-repl": "shadow-cljs cljs-repl submitter",
-    "editor-repl": "shadow-cljs cljs-repl editor",
+    "submitter-repl": "shadow-cljs cljs-repl submitter-dev",
+    "editor-repl": "shadow-cljs cljs-repl editor-dev",
     "build": "shadow-cljs release editor submitter"
   },
   "devDependencies": {

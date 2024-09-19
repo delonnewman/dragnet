@@ -12,6 +12,11 @@
   [] (.-origin (.-location *window*)))
 
 
+(defn element-by-id
+  "A simple wrapper for JavaScript's getElementById"
+  [id] (.getElementById js/document id))
+
+
 (defn ex-arguments
   [& {:keys [expected received]}]
   (ex-info
