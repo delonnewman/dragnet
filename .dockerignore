@@ -3,15 +3,11 @@
 # Ignore git directory.
 /.git/
 
-.idea/
-.github/
-
 # Ignore bundler config.
 /.bundle
 
-# Ignore all default key files.
-# /config/master.key
-/config/credentials/*.key
+/config/master.key
+/config/credentials.yml.enc
 
 # Ignore all environment files.
 /.env*
@@ -40,3 +36,16 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 /public/assets
+
+.github/
+.clj-kondo/
+.yardoc/
+.idea/
+.lsp/
+.ruby-lsp/
+.rubocop.yml
+doc/
+docs/
+coverage/
+app/frontends/
+tmp/cache/assets/sprockets/

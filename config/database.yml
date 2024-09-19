@@ -81,4 +81,4 @@ test:
 #
 production:
   <<: *default
-  url: <%= ENV["DRAGNET_DATABASE_URL"] %>
+  url: <%= ENV["DATABASE_URL"] %>

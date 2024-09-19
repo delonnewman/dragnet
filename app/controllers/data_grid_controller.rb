@@ -8,8 +8,9 @@ class DataGridController < ApplicationController
   def show
     respond_to do |format|
       format.html { render :show, locals: { grid: } }
-      format.csv  { render_file :show, export_name(survey), locals: { grid: } }
-      format.xlsx { render_file :show, export_name(survey), locals: { grid: } }
+      format.csv  { render_file :show, locals: { grid: } }
+      format.xlsx { render_file :show, locals: { grid: } }
+      format.transit { render transit: grid.to_h }
     end
   end
 
@@ -23,8 +24,9 @@ class DataGridController < ApplicationController
 
   private
 
-  def render_file(view, filename, **options)
+  def render_file(view, **options)
     render view, **options
+    filename = export_name(survey)
     response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
   end
 

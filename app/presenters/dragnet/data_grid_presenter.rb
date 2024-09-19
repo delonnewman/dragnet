@@ -17,6 +17,32 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   end
   memoize :survey_presenter
 
+  def to_h
+    record_data = records.pull(
+      :id,
+      :created_at,
+      :updated_at,
+      answers: %i[
+        id
+        question
+        question_option_id
+        text_value
+        number_value
+        time_value
+        date_value
+        boolean_value
+      ]
+    )
+
+    {
+      id: survey.id,
+      name: survey.name,
+      records: record_data,
+      offset: pager.offset,
+      items: pager.items,
+    }
+  end
+
   def records
     relation.build
   end

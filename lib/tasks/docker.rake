@@ -3,7 +3,8 @@ namespace :docker do
     desc 'Build Docker image'
     task build: :environment do
       sh "docker build -t ghcr.io/delonnewman/dragnet:#{Dragnet.release}" \
-         " -t ghcr.io/delonnewman/dragnet:#{Dragnet.version} -t ghcr.io/delonnewman/dragnet:latest ."
+         " -t ghcr.io/delonnewman/dragnet:#{Dragnet.version} -t ghcr.io/delonnewman/dragnet:latest" \
+         ' --build-arg RAILS_MASTER_KEY=$(cat config/credentials/production.key) .'
     end
 
     desc 'Push Docker image'

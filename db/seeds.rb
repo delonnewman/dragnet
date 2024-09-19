@@ -31,7 +31,7 @@ QuestionType.create(
 ) if QuestionType.none?
 
 unless Rails.env.test?
-  user = User.create!(
+  user = User.find_by(login: 'admin') || User.create!(
     login:    'admin',
     email:    'contact@delonnewman.name',
     name:     'Delon Newman',
@@ -49,7 +49,7 @@ unless Rails.env.test?
       { text: 'Phone',    question_type_ident: 'text' },
       { text: 'Comments', question_type_ident: 'text', meta: { long_answer: true } },
     ]
-  )
+  ) unless Survey.exists?(name: 'Contact Information')
 end
 
 # Generate some sample data if in development

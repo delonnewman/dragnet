@@ -67,7 +67,7 @@ module ApplicationHelper
 
   def release_link
     release = Dragnet.release
-    url     = Dragnet.github_url.join("/releases/tag/#{release}")
+    url     = Dragnet.github_url.join("/releases/tag/#{release}").to_s
 
     link_to release, url, class: 'text-muted'
   end

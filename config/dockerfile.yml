@@ -7,7 +7,7 @@ options:
   ci: false
   compose: true
   fullstaq: false
-  jemalloc: false
+  jemalloc: true
   label: {}
   mysql: false
   nginx: false
@@ -20,7 +20,7 @@ options:
   root: false
   sqlite3: false
   swap:
-  yjit: false
+  yjit: true
   packages: {}
   envs: {}
   args: {}
