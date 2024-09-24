@@ -6,7 +6,7 @@
     const rootElement = document.getElementById("survey-submitter");
 
     const script = document.createElement("script");
-    script.src = "<%= request.base_url %>/js/submitter/main.js";
+    script.src = "<%= request.base_url %>/js/submitter/shell.js";
     script.onload = function() {
       dragnet.submitter.shell.init(rootElement, surveyID, replyID);
     };
