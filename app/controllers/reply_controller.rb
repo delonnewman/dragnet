@@ -18,8 +18,8 @@ class ReplyController < ApplicationController
   def edit
     reply = replies.find(params[:id])
 
-    if current_user.can_edit_reply?(reply)
-      render :edit, locals: { reply: reply }
+    if reply.can_edit_reply?(current_user)
+      render :edit, locals: { reply: }
     else
       redirect_to root_path, alert: "You don't have permission to reply to this survey"
     end
@@ -28,23 +28,25 @@ class ReplyController < ApplicationController
   def update
     reply = replies.find(params[:id])
 
-    if !current_user.can_update_reply?(reply)
+    if !reply.can_update_reply?(current_user)
       redirect_to root_path, alert: "You don't have permission to reply to this survey"
     elsif reply.submit!(reply_params)
       tracker.update_submission_form(reply)
       redirect_to reply_success_path(reply)
     else
-      render :edit, locals: { reply: reply }
+      render :edit, locals: { reply: }
     end
   end
 
   def submit
-    reply = Dragnet::Reply.find(params[:id])
+    reply = replies.find(params[:id])
 
-    if reply.update(submission_params(reply))
+    if !reply.can_complete_reply?(current_user)
+      redirect_to root_path, alert: "You don't have permission to reply to this survey"
+    elsif reply.update(submission_params(reply))
       redirect_to reply_success_path(reply.id)
     else
-      render :edit, locals: { reply: reply }
+      render :edit, locals: { reply: }
     end
   end
 
@@ -52,22 +54,19 @@ class ReplyController < ApplicationController
     reply = replies.find(params[:reply_id])
 
     tracker.complete_submission_form(reply)
-    render :success, locals: { reply: reply }
+    render :success, locals: { reply: }
   end
 
   private
 
-  # rubocop: disable Rails/DynamicFindBy
   def dispatch_submission_request
     Dragnet::Survey.find_by_short_id!(params.require(:survey_id)).dispatch_submission_request(
       wants_preview: params[:preview].present?,
-      user:          current_user,
-      visit:         current_visit,
-      tracker:       tracker
+      user: current_user,
+      visit: current_visit,
+      tracker:
     )
   end
-
-  # rubocop: enable Rails/DynamicFindBy
 
   def current_visit
     Ahoy.instance.visit_or_create
