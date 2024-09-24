@@ -28,7 +28,7 @@ module Dragnet
     # Analytics / Submission
     has_many :ahoy_visits, through: :replies
     has_many :events, through: :replies # Used by StatsReport
-    with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created?]
+    with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created? user_can_submit_reply?]
 
     def dispatch_submission_request(...)
       DispatchSubmissionRequest.new(self).run(...)

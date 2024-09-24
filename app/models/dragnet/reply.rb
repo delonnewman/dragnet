@@ -12,6 +12,8 @@ module Dragnet
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :reply
     accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
+    with ReplySubmissionPolicy, delegating: %i[can_edit_reply? can_update_reply?]
+
     # Submission
     delegate :submission_parameters, to: :survey
     scope :incomplete, -> { where(submitted: false) }
