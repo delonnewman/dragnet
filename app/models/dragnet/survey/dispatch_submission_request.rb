@@ -9,16 +9,17 @@ module Dragnet
 
     def call(user:, visit:, tracker:, wants_preview:)
       fail! error: format(SUBMITTED_ERROR, survey.name.inspect) if already_submitted?(visit, wants_preview)
-      fail! error: PERMISSION_ERROR unless user.can_create_reply?(survey)
+      fail! error: PERMISSION_ERROR unless survey.user_can_submit_reply?(user)
 
-      if user.can_preview_survey?(survey, wants_preview: wants_preview)
+      if wants_preview && survey.can_submit_reply?(user)
         result.reply   = survey.replies.build
+
         result.preview = true
       elsif survey.visitor_reply_created?(visit)
         result.reply = survey.ahoy_visits.of_visitor(visit.visitor_token).first.reply
         tracker.view_submission_form(result.reply)
       else
-        result.reply = Reply.create!(survey: survey)
+        result.reply = Reply.create!(survey:)
         tracker.view_submission_form(result.reply)
       end
     end
