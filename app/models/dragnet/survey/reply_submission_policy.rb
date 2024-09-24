@@ -19,5 +19,12 @@ module Dragnet
     def visitor_reply_submitted?(current_visit)
       !survey.ahoy_visits.of_visitor(current_visit.visitor_token).where(replies: { submitted: true }).empty?
     end
+
+    # @param [User] user
+    #
+    # @return [Boolean]
+    def user_can_submit_reply?(user)
+      user == survey.author || survey.public? || survey.open?
+    end
   end
 end
