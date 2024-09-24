@@ -22,4 +22,11 @@ describe Dragnet::Survey::ReplySubmissionPolicy do
 
     expect(policy).to be_user_can_submit_reply(other_user)
   end
+
+  it "doesn't permit users who aren't authors who to submit replies to closed private surveys" do
+    survey.public = false
+    survey.closed!
+
+    expect(policy).not_to be_user_can_submit_reply(other_user)
+  end
 end
