@@ -23,7 +23,7 @@ module Dragnet
     # @param [User] user
     #
     # @return [Boolean]
-    def user_can_submit_reply?(user)
+    def can_submit_reply?(user)
       user == survey.author || survey.public? || survey.open?
     end
   end
