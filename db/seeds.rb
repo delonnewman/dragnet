@@ -2,31 +2,30 @@ include Dragnet
 
 QuestionType.create(
   [
-    { name:     'Text',
-      icon:     'fa-regular fa-keyboard',
+    { name: 'Text',
+      icon: 'fa-regular fa-keyboard',
       type_class_name: 'Dragnet::Type::Text',
       meta: { long_answer: { type: :boolean, text: 'Long Answer' },
               countable:   { type: :boolean, text: 'Calculate sentiment analysis score for text' } } },
-    { name:     'Choice',
+    { name: 'Choice',
       type_class_name: 'Dragnet::Type::Choice',
-      icon:     'fa-regular fa-square-check',
+      icon: 'fa-regular fa-square-check',
       meta: { multiple_answers: { type: :boolean, text: 'Allow multiple answers' },
               countable:        { type: :boolean, text: 'Calculate statistics' } } },
-    { name:     'Number',
+    { name: 'Number',
       type_class_name: 'Dragnet::Type::Number',
-      icon:     'fa-regular fa-calculator',
+      icon: 'fa-regular fa-calculator',
       meta: { countable: { type: :boolean, text: 'Calculate statistics', default: true },
               decimal:   { type: :boolean, text: 'Allow decimal numbers', default: false } } },
-    { name:     'Time',
+    { name: 'Time',
       type_class_name: 'Dragnet::Type::Time',
-      icon:     'fa-regular fa-clock',
+      icon: 'fa-regular fa-clock',
       meta: { include_date: { type: :boolean, text: 'Include Date', default: true },
               include_time: { type: :boolean, text: 'Include Time', default: true } } },
     { name: 'Yes or No',
       type_class_name: 'Dragnet::Type::Boolean',
       slug: 'boolean',
-      icon: 'fa-regular fa-toggle-on'
-    },
+      icon: 'fa-regular fa-toggle-on' },
   ]
 ) if QuestionType.none?
 
@@ -40,8 +39,9 @@ unless Rails.env.test?
   ).tap(&:confirm)
 
   Survey.create!(
-    name:                 'Contact Information',
-    author:               user,
+    name: 'Contact Information',
+    author: user,
+    public: true,
     questions_attributes: [
       { text: 'Name',     question_type_ident: 'text' },
       { text: 'Email',    question_type_ident: 'text' },
