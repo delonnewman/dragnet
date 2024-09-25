@@ -36,12 +36,12 @@
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to survey_preview_path(survey), class: "nav-link #{'active' if selected == :preview}" do %>
+    <%= link_to preview_survey_path(survey), class: "nav-link #{'active' if selected == :preview}" do %>
       <%= icon 'fas', 'eye' %> Preview
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to survey_share_path(survey), class: "nav-link #{'active' if selected == :share}" do %>
+    <%= link_to share_survey_path(survey), class: "nav-link #{'active' if selected == :share}" do %>
       <%= icon 'fas', 'paper-plane' %> Share
     <% end %>
   </li>

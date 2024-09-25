@@ -6,25 +6,25 @@
   <% else %>
     <ul class="nav nav-pills mb-3">
       <li class="nav-item">
-        <%= nav_link survey_share_path(survey, method: 'email'), active: survey.share_email? do %>
+        <%= nav_link share_survey_path(survey, method: 'email'), active: survey.share_email? do %>
           <%= icon 'far', 'envelope' %>
           <% if survey.share_email? %>Email<% end %>
         <% end %>
       </li>
       <li class="nav-item">
-        <%= nav_link survey_share_path(survey, method: 'qrcode'), active: survey.share_qrcode? do %>
+        <%= nav_link share_survey_path(survey, method: 'qrcode'), active: survey.share_qrcode? do %>
           <%= icon 'fas', 'qrcode' %>
           <% if survey.share_qrcode? %>QRCode<% end %>
         <% end %>
       </li>
       <li class="nav-item">
-        <%= nav_link survey_share_path(survey, method: 'link'), active: survey.share_link? do %>
+        <%= nav_link share_survey_path(survey, method: 'link'), active: survey.share_link? do %>
           <%= icon 'fas', 'link' %>
           <% if survey.share_link? %>Link<% end %>
         <% end %>
       </li>
       <li class="nav-item">
-        <%= nav_link survey_share_path(survey, method: 'code'), active: survey.share_code? do %>
+        <%= nav_link share_survey_path(survey, method: 'code'), active: survey.share_code? do %>
           <%= icon 'fas', 'code' %>
           <% if survey.share_code? %>Code<% end %>
         <% end %>

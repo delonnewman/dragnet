@@ -7,16 +7,17 @@ Rails.application.routes.draw do
   get 'stats', to: 'stats#show'
 
   resources :surveys, only: %i[show new edit destroy] do
-    post 'copy'
-    post 'open'
-    post 'close'
+    member do
+      post 'copy'
+      post 'open'
+      post 'close'
+      get 'preview'
+      get 'share'
+      get 'share/:method', to: 'surveys#share'
+    end
 
-    get 'preview'
-    get 'settings'
-
-    get 'share'
-    get 'share/:method', to: 'surveys#share'
     get 'qrcode'
+    get 'settings'
 
     get 'stats', to: 'stats#show'
 
@@ -27,14 +28,18 @@ Rails.application.routes.draw do
     get 'changes', to: 'record_changes#index'
   end
 
-  resources :reply, only: %i[edit update] do
-    get 'success'
-    post 'submit', to: 'reply#submit'
+  resources :replies, only: %i[edit update] do
+    member do
+      get 'complete'
+      post 'submit'
+    end
   end
+  get '/reply/:survey_id/preview', to: 'reply#preview'
 
   # survey name is optional
-  get '/r/:survey_id/:survey_name', to: 'reply#new', as: 'reply_to'
-  get '/r/:survey_id', to: 'reply#new'
+  get '/r/:survey_id/:survey_name', to: 'submission_request#new', as: 'reply_to'
+  get '/r/:survey_id', to: 'submission_request#new'
+  get '/reply/:survey_id', to: 'submission_request#new'
 
   scope '/api/v1', defaults: { format: :transit } do
     scope '/editing' do
@@ -46,7 +51,6 @@ Rails.application.routes.draw do
       resources :reply_submission, path: '/replies', only: %i[show]
 
       post '/replies/:survey_id', to: 'reply_submission#new', as: 'new_reply' # for generating a reply through the API
-      post '/replies/:id/submit', to: 'reply#submit', as: 'submit_reply' # FIXME: remove from MFE and then delete
       get '/replies/:survey_id/preview', to: 'reply_submission#preview', as: 'preview_reply'
     end
   end
