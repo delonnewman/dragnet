@@ -5,12 +5,16 @@ module Dragnet
     EVENT_TAGS = {
       request: 'Submission Request',
       view: 'View Submission Form',
-      update: 'Upadte Submission Form',
+      update: 'Update Submission Form',
       complete: 'Complete Submission Form',
     }.freeze
 
     def self.event_tags
       EVENT_TAGS.keys
+    end
+
+    def self.event_names
+      EVENT_TAGS.values
     end
 
     # @param [Ahoy::Tracker] ahoy_tracker
