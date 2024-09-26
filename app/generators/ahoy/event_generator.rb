@@ -7,10 +7,10 @@ module Ahoy
       survey_id = attributes.fetch(:survey_id) { raise 'A survey_id attribute is required' }
       reply_id  = attributes.fetch(:reply_id)  { raise 'A reply_id attribute is required' }
 
-      Event.new(visit: visit) do |e|
+      Event.new(visit:) do |e|
         e.user = attributes.fetch(:user) { Faker::Boolean.boolean ? User.generate : nil }
-        e.name = attributes.fetch(:name) { ReplyTracker::EVENT_TAGS.values.sample }
-        e.properties = { survey_id: survey_id, reply_id: reply_id }
+        e.name = attributes.fetch(:name) { ReplyTracker.event_names.sample }
+        e.properties = { survey_id:, reply_id: }
       end
     end
   end

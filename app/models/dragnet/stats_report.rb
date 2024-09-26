@@ -26,7 +26,7 @@ module Dragnet
 
     # @return [ActiveRecord::Relation<Ahoy::View>]
     def views
-      reportable.events.where(name: ReplyTracker::EVENT_TAGS[:view])
+      reportable.events.where(name: ReplyTracker.event_name(:view))
     end
 
     # @return [Integer]

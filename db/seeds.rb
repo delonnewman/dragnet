@@ -87,10 +87,10 @@ if Rails.env.development?
           reply.save!
           reply_id = reply.id
           visit = Ahoy::Visit.generate!
-          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:view], visit:, survey_id:, reply_id:].generate!
-          Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:update], visit:, survey_id:, reply_id:].generate!
+          Ahoy::Event[name: ReplyTracker.event_name(:view), visit:, survey_id:, reply_id:].generate!
+          Ahoy::Event[name: ReplyTracker.event_name(:update), visit:, survey_id:, reply_id:].generate!
           if reply.submitted?
-            Ahoy::Event[name: ReplyTracker::EVENT_TAGS[:complete], visit:, survey_id:, reply_id:].generate!
+            Ahoy::Event[name: ReplyTracker.event_name(:complete), visit:, survey_id:, reply_id:].generate!
           end
           reply.ahoy_visit = visit
           reply.save!
