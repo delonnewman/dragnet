@@ -5,7 +5,7 @@ module Dragnet
     EVENT_TAGS = {
       view: 'view-submission-form',
       update: 'update-submission-form',
-      complete: 'complete-submission-form'
+      complete: 'complete-submission-form',
     }.freeze
 
     # @param [Ahoy::Tracker] ahoy_tracker
