@@ -4,8 +4,8 @@ module WorkspaceHelper
   # TODO: make the switch work
   def survey_open_indicator(survey)
     htmx = {
-      'hx-post'    => survey.open? ? survey_close_path(survey) : survey_open_path(survey),
-      'hx-vals'    => { authenticity_token: authenticity_token }.to_json,
+      'hx-post'    => survey.open? ? close_survey_path(survey) : open_survey_path(survey),
+      'hx-vals'    => { authenticity_token: }.to_json,
       'hx-target'  => "#survey-card-#{survey.id}",
       'hx-swap'    => 'outerHTML',
       'hx-trigger' => 'change',
@@ -55,7 +55,7 @@ module WorkspaceHelper
 
   def copy_survey_button(survey, include_label: false)
     icon_button(
-      include_label ? 'Duplicate' : nil, survey_copy_path(survey),
+      include_label ? 'Duplicate' : nil, copy_survey_path(survey),
       icon:  'clone',
       title: 'Duplicate this survey',
       data:  { bs_toggle: 'tooltip' },
@@ -87,7 +87,7 @@ module WorkspaceHelper
   end
 
   def survey_preview_link(survey)
-    icon_link('Preview Survey', survey_preview_path(survey), icon: 'eye')
+    icon_link('Preview Survey', preview_survey_path(survey), icon: 'eye')
   end
 
   def survey_data_link(survey)
