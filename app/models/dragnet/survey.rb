@@ -30,10 +30,6 @@ module Dragnet
     has_many :events, through: :replies # Used by StatsReport
     with ReplySubmissionPolicy, delegating: %i[visitor_reply_submitted? visitor_reply_created? can_submit_reply?]
 
-    def dispatch_submission_request(...)
-      DispatchSubmissionRequest.new(self).run(...)
-    end
-
     def submission_parameters
       SubmissionParametersProjection.new(self).project
     end
