@@ -1,6 +1,40 @@
 # frozen_string_literal: true
 
 describe Dragnet::ReplyTracker do
+  subject(:tracker) { described_class.new(ahoy) }
+
+  let(:ahoy) { Ahoy::Tracker.new }
+
+  let(:reply) { Dragnet::Reply[survey: Dragnet::Survey.generate!].generate! }
+
+  before do
+    ahoy.track_visit
+  end
+
+  it 'tracks visitor events for replies' do
+    expect { tracker.track_event(:view, reply) }.to change { reply.events.count }.by(1)
+  end
+
+  it 'ensures that replies have the correct visit associated with them when tracking events' do
+    expect { tracker.track_event(:request, reply) }.to change(reply, :ahoy_visit).from(nil).to(ahoy.visit)
+  end
+
+  it 'provides a helper method for request events' do
+    expect { tracker.request_submission_form(reply) }.to change { reply.events.by_reply_event_tag(:request).count }.from(0).to(1)
+  end
+
+  it 'provides a helper method for view events' do
+    expect { tracker.view_submission_form(reply) }.to change { reply.events.by_reply_event_tag(:view).count }.from(0).to(1)
+  end
+
+  it 'provides a helper method for update events' do
+    expect { tracker.update_submission_form(reply) }.to change { reply.events.by_reply_event_tag(:update).count }.from(0).to(1)
+  end
+
+  it 'provides a helper method for complete events' do
+    expect { tracker.complete_submission_form(reply) }.to change { reply.events.by_reply_event_tag(:complete).count }.from(0).to(1)
+  end
+
   describe '.event_tags' do
     it 'returns an array of the tags of all the events that can be tracked' do
       expect(described_class.event_tags).to eq(%i[request view update complete])

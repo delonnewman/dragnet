@@ -13,4 +13,5 @@ class Ahoy::Event < Dragnet::ApplicationRecord
   has_one :survey_author, through: :survey, source: :author
 
   scope :with_survey_id, ->(survey_id) { joins(:survey).where(survey: { id: survey_id }) }
+  scope :by_reply_event_tag, ->(tag) { where(name: Dragnet::ReplyTracker.event_name(tag)) }
 end

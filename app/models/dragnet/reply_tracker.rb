@@ -23,6 +23,8 @@ module Dragnet
       end
     end
 
+    delegate :event_name, to: 'self.class'
+
     # @param [Ahoy::Tracker] ahoy_tracker
     def initialize(ahoy_tracker)
       @ahoy = ahoy_tracker
@@ -30,26 +32,34 @@ module Dragnet
 
     # @param [Reply] reply
     # @return [void]
+    def request_submission_form(reply)
+      track_event :request, reply
+    end
+
+    # @param [Reply] reply
+    # @return [void]
     def view_submission_form(reply)
-      track EVENT_TAGS[:view], reply_id: reply.id, survey_id: reply.survey_id
+      track_event :view, reply
     end
 
     # @param [Reply] reply
     # @return [void]
     def update_submission_form(reply)
-      track EVENT_TAGS[:update], reply_id: reply.id, survey_id: reply.survey_id
+      track_event :update, reply
     end
 
     # @param [Reply] reply
     # @return [void]
     def complete_submission_form(reply)
-      track EVENT_TAGS[:complete], reply_id: reply.id, survey_id: reply.survey_id
+      track_event :complete, reply
     end
 
-    private
-
-    attr_reader :ahoy
-
-    delegate :track, to: :ahoy
+    # @param [Symbol] tag
+    # @param [Reply] reply
+    # @return [void]
+    def track_event(tag, reply)
+      reply.ensure_visit(@ahoy.visit)
+      @ahoy.track event_name(tag), reply.id, survey_id: reply.survey_id
+    end
   end
 end
