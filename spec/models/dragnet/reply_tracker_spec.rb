@@ -14,4 +14,14 @@ describe Dragnet::ReplyTracker do
       expect(described_class.event_names).to eq(event_names)
     end
   end
+
+  describe '.event_name' do
+    it 'returns the name of the event the corresponds to the tag' do
+      expect(described_class.event_name(:request)).to eq('Submission Request')
+    end
+
+    it 'raises an exception if the tag is not valid' do
+      expect { described_class.event_name(:some_invalid_tag) }.to raise_error(/unknown event tag/)
+    end
+  end
 end

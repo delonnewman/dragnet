@@ -17,6 +17,12 @@ module Dragnet
       EVENT_TAGS.values
     end
 
+    def self.event_name(tag)
+      EVENT_TAGS.fetch(tag) do
+        raise "unknown event tag: #{tag.inspect}"
+      end
+    end
+
     # @param [Ahoy::Tracker] ahoy_tracker
     def initialize(ahoy_tracker)
       @ahoy = ahoy_tracker
