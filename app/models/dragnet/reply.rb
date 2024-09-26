@@ -38,8 +38,9 @@ module Dragnet
     # Analytics
     belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
     has_many :events, through: :ahoy_visit
-    before_create do
-      self.ahoy_visit = Ahoy.instance.try(:visit_or_create) unless ahoy_visit_id?
+
+    def ensure_visit(visit)
+      update(ahoy_visit: visit) if ahoy_visit != visit
     end
 
     before_save :reset_answers_data!
