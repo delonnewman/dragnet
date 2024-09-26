@@ -3,10 +3,15 @@
 module Dragnet
   class ReplyTracker
     EVENT_TAGS = {
-      view: 'view-submission-form',
-      update: 'update-submission-form',
-      complete: 'complete-submission-form',
+      request: 'Submission Request',
+      view: 'View Submission Form',
+      update: 'Upadte Submission Form',
+      complete: 'Complete Submission Form',
     }.freeze
+
+    def self.event_tags
+      EVENT_TAGS.keys
+    end
 
     # @param [Ahoy::Tracker] ahoy_tracker
     def initialize(ahoy_tracker)
