@@ -6,18 +6,18 @@ module Dragnet
 
     # Return true if a reply to the survey has been created for the current visitor. Otherwise return false.
     #
-    # @param [Ahoy::Visit] current_visit
+    # @param visitor_token
     # @return [Boolean]
-    def visitor_reply_created?(current_visit)
-      !survey.ahoy_visits.of_visitor(current_visit.visitor_token).empty?
+    def visitor_reply_created?(visitor_token)
+      !survey.ahoy_visits.of_visitor(visitor_token).empty?
     end
 
     # Return true if a reply to the survey has been created & submitted for the current visitor. Otherwise return false.
     #
-    # @param [Ahoy::Visit] current_visit
+    # @param visitor_token
     # @return [Boolean]
-    def visitor_reply_submitted?(current_visit)
-      !survey.ahoy_visits.of_visitor(current_visit.visitor_token).where(replies: { submitted: true }).empty?
+    def visitor_reply_submitted?(visitor_token)
+      !survey.ahoy_visits.of_visitor(visitor_token).where(replies: { submitted: true }).empty?
     end
 
     # @param [User] user
