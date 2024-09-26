@@ -7,16 +7,16 @@ class Dragnet::ReplyGenerator < Dragnet::ActiveRecordGenerator
     Reply.new(survey: s) do |r|
       r.created_at   = attributes.fetch(:created_at) { Faker::Date.between(from: 2.years.ago, to: Date.today) }
       r.updated_at   = attributes.fetch(:updated_at) { r.created_at }
-      r.submitted    = Faker::Boolean.boolean(true_ratio: 0.8)
+      r.submitted    = attributes.fetch(:submitted) { Faker::Boolean.boolean(true_ratio: 0.8) }
       r.submitted_at = r.created_at if r.submitted?
 
-      generate_questions(s, r)
+      generate_answers(s, r)
     end
   end
 
   private
 
-  def generate_questions(survey, reply)
+  def generate_answers(survey, reply)
     survey.questions.each do |question|
       next unless question.required? || Faker::Boolean.boolean(true_ratio: 0.3)
 
