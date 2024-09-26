@@ -35,7 +35,7 @@ module Dragnet
     end
 
     def submission_parameters
-      SubmissionParametersProjection.new(self).to_h
+      SubmissionParametersProjection.new(self).project
     end
 
     # To satisfy the Reportable protocol, along with #questions above

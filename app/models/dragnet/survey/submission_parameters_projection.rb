@@ -5,9 +5,8 @@ module Dragnet
     alias survey subject
 
     def project
-      { answers_attributes: }
+      [:id, :survey_id, { answers_attributes: }]
     end
-    alias to_h project
 
     private
 
