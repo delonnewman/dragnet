@@ -14,7 +14,6 @@ require_relative 'dragnet/class_meta_data'
 require_relative 'dragnet/memoizable'
 
 require_relative 'dragnet/composed'
-require_relative 'dragnet/command'
 require_relative 'dragnet/advising'
 require_relative 'dragnet/advice'
 require_relative 'dragnet/policy'
