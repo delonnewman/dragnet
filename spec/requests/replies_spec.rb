@@ -12,11 +12,11 @@ describe 'Replies', type: :request do
       expect(response).to redirect_to(root_path)
     end
 
-    it 'succeeds if editing the reply is permitted' do
+    it 'renders edit view if the reply is permitted' do
       survey.open!
       get edit_reply_path(reply)
 
-      expect(response).to have_http_status(:success)
+      expect(response).to render_template(:edit)
     end
   end
 
