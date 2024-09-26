@@ -41,7 +41,7 @@ class RepliesController < ApplicationController
   def preview
     survey = Dragnet::Survey.find(params[:survey_id])
 
-    if survey.can_submit_reply?(current_user)
+    if survey.can_preview?(current_user)
       render :edit, locals: { reply: survey.replies.build }
     else
       redirect_to root_path, alert: t('replies.not_permitted')
@@ -54,12 +54,12 @@ class RepliesController < ApplicationController
     @tracker ||= Dragnet::ReplyTracker.new(ahoy)
   end
 
-  def replies
-    Dragnet::Reply.includes(:survey, :answers, questions: [:question_type])
-  end
-
   def reply
     @reply ||= replies.find(params[:id])
+  end
+
+  def replies
+    Dragnet::Reply.includes(:survey, :answers, questions: [:question_type])
   end
 
   def reply_params

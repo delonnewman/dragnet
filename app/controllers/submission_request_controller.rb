@@ -17,7 +17,7 @@ class SubmissionRequestController < ApplicationController
 
   def reply
     if revisit?
-      survey.ahoy_visits.of_visitor(visitor_token).first.reply
+      tracker.existing_reply(survey, current_visit.visitor_token)
     else
       survey.replies.create!
     end
@@ -28,7 +28,7 @@ class SubmissionRequestController < ApplicationController
   end
 
   def already_submitted?
-    survey.visitor_reply_submitted?(current_visit&.visitor_token)
+    tracker.reply_completed?(survey, current_visit.visitor_token)
   end
 
   def not_permitted?
@@ -36,7 +36,11 @@ class SubmissionRequestController < ApplicationController
   end
 
   def revisit?
-    survey.visitor_reply_created?(current_user)
+    tracker.reply_created?(survey, current_visit.visitor_token)
+  end
+
+  def tracker
+    @tracker ||= Dragnet::ReplyTracker.new(ahoy)
   end
 
   def current_visit
