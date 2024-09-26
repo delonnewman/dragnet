@@ -4,6 +4,9 @@ module Dragnet
   class Reply < ApplicationRecord
     include Retractable
 
+    CSRF_TOKEN_PRECISION = 256
+    EXPIRATION_DURATION = 30.minutes # TODO: move this to configration
+
     retract_associated :answers
 
     belongs_to :survey, class_name: 'Dragnet::Survey'
@@ -17,17 +20,26 @@ module Dragnet
     # Submission
     delegate :submission_parameters, to: :survey
     scope :incomplete, -> { where(submitted: false) }
+    validates :csrf_token, presence: true
+    before_validation if: :new_record? do
+      self.csrf_token = SecureRandom.hex(CSRF_TOKEN_PRECISION)
+      self.expires_at = EXPIRATION_DURATION.from_now
+    end
+
+    # Cache submission date in survey to improve query performance for workspaces
+    after_save do
+      survey.update(latest_submission_at: submitted_at) if submitted?
+    end
+
+    def expired?(now = Time.zone.now)
+      expired_at <= now
+    end
 
     # Analytics
     belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
     has_many :events, through: :ahoy_visit
     before_create do
       self.ahoy_visit = Ahoy.instance.try(:visit_or_create) unless ahoy_visit_id?
-    end
-
-    # Cache submission date in survey to improve query performance for workspaces
-    after_save do
-      survey.update(latest_submission_at: submitted_at) if submitted?
     end
 
     before_save :reset_answers_data!

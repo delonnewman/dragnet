@@ -164,6 +164,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.uuid "survey_id", null: false
     t.uuid "user_id"
     t.json "answers_data"
+    t.string "csrf_token", null: false
+    t.datetime "expires_at", precision: nil, null: false
     t.boolean "submitted", default: false, null: false
     t.datetime "submitted_at", precision: nil
     t.boolean "retracted", default: false, null: false
@@ -173,6 +175,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
     t.datetime "updated_at", null: false
     t.bigint "ahoy_visit_id"
     t.index ["ahoy_visit_id"], name: "index_replies_on_ahoy_visit_id"
+    t.index ["expires_at"], name: "index_replies_on_expires_at"
     t.index ["retracted"], name: "index_replies_on_retracted"
     t.index ["retracted_at"], name: "index_replies_on_retracted_at"
     t.index ["submitted"], name: "index_replies_on_submitted"

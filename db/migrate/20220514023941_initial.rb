@@ -109,9 +109,15 @@ class Initial < ActiveRecord::Migration[7.0]
       t.uuid :user_id,   index: true, null: true # for records added via data grid
       t.json :answers_data # cached answers data
 
+      # security
+      t.string :csrf_token, null: false
+      t.timestamp :expires_at, null: false, index: true
+
+      # submission
       t.boolean :submitted, null: false, index: true, default: false
       t.timestamp :submitted_at
 
+      # retraction
       t.boolean :retracted, default: false, null: false, index: true
       t.timestamp :retracted_at, index: true
 
