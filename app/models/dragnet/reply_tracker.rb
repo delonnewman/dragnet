@@ -75,5 +75,9 @@ module Dragnet
     def reply_completed?(survey, visitor_token)
       !survey.ahoy_visits.of_visitor(visitor_token).where(replies: { submitted: true }).empty?
     end
+
+    def existing_reply(survey, visitor_token)
+      survey.ahoy_visits.of_visitor(visitor_token).first&.reply
+    end
   end
 end

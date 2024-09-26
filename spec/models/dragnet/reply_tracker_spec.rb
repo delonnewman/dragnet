@@ -52,6 +52,16 @@ describe Dragnet::ReplyTracker do
     expect(tracker).to be_reply_completed(survey, ahoy.visitor_token)
   end
 
+  it 'can find an existing reply for survey if one exists' do
+    reply = Dragnet::Reply[survey:, ahoy_visit: ahoy.visit].generate!
+
+    expect(tracker.existing_reply(survey, ahoy.visitor_token)).to eq(reply)
+  end
+
+  it "returns nil if a reply doesn't exist when asked" do
+    expect(tracker.existing_reply(survey, ahoy.visitor_token)).to be_nil
+  end
+
   describe '.event_tags' do
     it 'returns an array of the tags of all the events that can be tracked' do
       expect(described_class.event_tags).to eq(%i[request view update complete])
