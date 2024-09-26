@@ -5,7 +5,8 @@ describe Dragnet::ReplyTracker do
 
   let(:ahoy) { Ahoy::Tracker.new }
 
-  let(:reply) { Dragnet::Reply[survey: Dragnet::Survey.generate!].generate! }
+  let(:reply) { Dragnet::Reply[survey:].generate! }
+  let(:survey) { Dragnet::Survey.generate! }
 
   before do
     ahoy.track_visit
@@ -33,6 +34,22 @@ describe Dragnet::ReplyTracker do
 
   it 'provides a helper method for complete events' do
     expect { tracker.complete_submission_form(reply) }.to change { reply.events.by_reply_event_tag(:complete).count }.from(0).to(1)
+  end
+
+  it 'knows when a reply has been created for a survey by a visitor' do
+    tracker.view_submission_form(reply)
+
+    expect(tracker).to be_reply_created(survey, ahoy.visitor_token)
+  end
+
+  it 'knows when a reply has not be created for a survey by a visitor' do
+    expect(tracker).not_to be_reply_created(survey, ahoy.visitor_token)
+  end
+
+  it 'knows when a reply has been completed for a survey by a visitor' do
+    Dragnet::Reply[survey:, submitted: true, ahoy_visit: ahoy.visit].generate!
+
+    expect(tracker).to be_reply_completed(survey, ahoy.visitor_token)
   end
 
   describe '.event_tags' do

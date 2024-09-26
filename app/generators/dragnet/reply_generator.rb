@@ -9,6 +9,7 @@ class Dragnet::ReplyGenerator < Dragnet::ActiveRecordGenerator
       r.updated_at   = attributes.fetch(:updated_at) { r.created_at }
       r.submitted    = attributes.fetch(:submitted) { Faker::Boolean.boolean(true_ratio: 0.8) }
       r.submitted_at = r.created_at if r.submitted?
+      r.ahoy_visit   = attributes.fetch(:ahoy_visit, nil)
 
       generate_answers(s, r)
     end
