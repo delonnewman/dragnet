@@ -43,5 +43,11 @@ describe Dragnet::Reply do
 
       expect { reply.ensure_visit(visit) }.to perform_number_of_queries(0)
     end
+
+    it "doesn't update the visit if it's nil even if the visit associated with the reply is not the same" do
+      reply.ahoy_visit = Ahoy::Visit.generate!
+
+      expect { reply.ensure_visit(nil) }.not_to change(reply, :ahoy_visit)
+    end
   end
 end

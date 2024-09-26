@@ -40,7 +40,7 @@ module Dragnet
     has_many :events, through: :ahoy_visit
 
     def ensure_visit(visit)
-      update(ahoy_visit: visit) if ahoy_visit != visit
+      update(ahoy_visit: visit) if visit && ahoy_visit_id != visit.id
     end
 
     before_save :reset_answers_data!
