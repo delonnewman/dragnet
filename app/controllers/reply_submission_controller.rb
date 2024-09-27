@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Provides reply submission data to the submitter frontend
 class ReplySubmissionController < EndpointController
   include FormSubmissionHelper
 
@@ -15,31 +16,27 @@ class ReplySubmissionController < EndpointController
   def show
     respond_to do |format|
       format.html    { render plain: form_code(reply) }
-      format.json    { render json: reply_submission.submission_data }
-      format.transit { render body: transit(reply_submission.submission_data) }
+      format.json    { render json: reply_submission_data(reply) }
+      format.transit { render body: transit(reply_submission_data(reply)) }
     end
   end
 
   def preview
     respond_to do |format|
       format.html    { render plain: form_code(new_reply) }
-      format.json    { render json: reply_submission(new_reply).submission_data }
-      format.transit { render body: transit(reply_submission(new_reply).submission_data) }
+      format.json    { render json: reply_submission_data(new_reply) }
+      format.transit { render body: transit(reply_submission_data(new_reply)) }
     end
   end
 
   private
 
-  def submission_params(reply)
-    params.require(:reply).permit(*reply.submission_parameters)
-  end
-
   def form_code(reply)
     survey_form_code(reply.survey_id, request.base_url)
   end
 
-  def reply_submission(reply = self.reply)
-    Dragnet::ReplySubmissionPresenter.new(reply)
+  def reply_submission_data(reply)
+    Dragnet::ReplySubmissionPresenter.new(reply).submission_data.merge(authenticity_token:)
   end
 
   def new_reply
@@ -55,7 +52,11 @@ class ReplySubmissionController < EndpointController
   end
 
   def newly_saved_reply_data
-    { reply_id: newly_saved_reply.id, survey_id: newly_saved_reply.survey_id }
+    { reply_id: newly_saved_reply.id, survey_id: newly_saved_reply.survey_id, authenticity_token: }
+  end
+
+  def authenticity_token
+    session[:_csrf_token]
   end
 
   def reply

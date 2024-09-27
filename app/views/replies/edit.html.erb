@@ -2,14 +2,14 @@
   <body>
     <main
       id="survey-submitter"
-      data-authenticity-token="<%= authenticity_token %>"
-      data-survey-id="<%= reply.survey_id %>"
       data-is-preview="<%= reply.new_record? %>"
       data-reply-id="<%= reply.id %>"
     ></main>
     <script>
      (function() {
        const script = document.createElement("script");
+       const element = document.getElementById("survey-submitter");
+
        script.src = "<%= request.base_url %>/js/submitter/shell.js";
        script.onload = function() {
          dragnet.submitter.shell.init("survey-submitter");
