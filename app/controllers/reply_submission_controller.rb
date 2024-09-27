@@ -20,14 +20,6 @@ class ReplySubmissionController < EndpointController
     end
   end
 
-  def preview
-    respond_to do |format|
-      format.html    { render plain: form_code(new_reply) }
-      format.json    { render json: reply_submission(new_reply).submission_data }
-      format.transit { render body: transit(reply_submission(new_reply).submission_data) }
-    end
-  end
-
   private
 
   def submission_params(reply)

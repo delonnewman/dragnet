@@ -34,7 +34,7 @@ Rails.application.routes.draw do
       post 'submit'
     end
   end
-  get '/reply/:survey_id/preview', to: 'replies#preview'
+  get '/reply/:survey_id/preview', to: 'replies#preview', as: 'preview_form'
 
   # survey name is optional
   get '/r/:survey_id/:survey_name', to: 'submission_request#new', as: 'reply_to'
@@ -49,9 +49,7 @@ Rails.application.routes.draw do
 
     scope '/submission' do
       resources :reply_submission, path: '/replies', only: %i[show]
-
       post '/replies/:survey_id', to: 'reply_submission#new', as: 'new_reply' # for generating a reply through the API
-      get '/replies/:survey_id/preview', to: 'reply_submission#preview', as: 'preview_reply'
     end
   end
 end

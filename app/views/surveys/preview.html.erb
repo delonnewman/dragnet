@@ -16,6 +16,6 @@
     width="1280"
     height="800"
     class="d-block mx-auto border mt-2"
-    src="<%= reply_to_path(survey.short_id, survey.slug, preview: true) %>">
+    src="<%= preview_form_path(survey.id) %>">
   </iframe>
 <% end %>
