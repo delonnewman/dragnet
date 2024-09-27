@@ -44,6 +44,6 @@ class SubmissionRequestController < ApplicationController
   end
 
   def current_visit
-    Ahoy.instance.visit_or_create
+    ahoy.visit
   end
 end
