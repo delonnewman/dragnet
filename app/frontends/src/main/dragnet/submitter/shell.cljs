@@ -23,28 +23,30 @@
   (go (let [res (<! (http/get (reply-url id :preview preview)))]
         (:body res))))
 
+(def state (r/atom {}))
 
 (defn ^:export init
   "Initialize reply submission UI with the root element, survey-id and reply-id,
   the third argument (normally a Reply ID) can also be a flag currently only a
   'preview' flag is supported. All three arguments should be non-nil."
-  [root-elem survey-id reply-id]
-  (utils/validate-presence! root-elem survey-id reply-id)
-  (let [current (r/atom nil)
-        preview (= "preview" reply-id)
-        id      (if preview survey-id reply-id)]
-    (add-watch current :render-ui (ui-renderer root-elem reply-id :preview preview))
-    (go (let [state (<! (fetch-reply-data id :preview preview))]
-          (reset! current state)))))
+  [element-id & {:keys [reply-id]}]
+  (let [root-elem (js/document.getElementById element-id)
+        survey-id (.getAttribute root-elem "data-survey-id")
+        reply-id (or reply-id (.getAttribute root-elem "data-reply-id"))
+        preview (= "true" (.getAttribute root-elem "data-is-preview"))
+        csrf-token (.getAttribute root-elem "data-authenticity-token")]
+    (utils/validate-presence! root-elem survey-id reply-id)
+    (add-watch state :render-ui (ui-renderer root-elem reply-id :preview preview))
+    (go (let [data (<! (fetch-reply-data reply-id))]
+          (swap! state merge (assoc data :csrf-token csrf-token))))))
 
 
 (defn ^:export initWithNewReply
   "Initialize a new reply and reply submission UI with the root element and survey-id."
   [root-elem-id survey-id]
-  (let [elem (.getElementById js/document root-elem-id)]
-    (if-let [rid (storage/stored-reply-id survey-id)]
-      (init elem survey-id, rid)
-      (go (let [res  (<! (http/post (reply-url survey-id)))
-                rid  (get-in res [:body :reply_id])]
-            (storage/store-reply-id! survey-id rid)
-            (init elem survey-id rid))))))
+  (if-let [rid (storage/stored-reply-id survey-id)]
+    (init root-elem-id :reply-id rid)
+    (go (let [res  (<! (http/post (reply-url survey-id)))
+              rid  (get-in res [:body :reply_id])]
+          (storage/store-reply-id! survey-id rid)
+          (init root-elem-id)))))

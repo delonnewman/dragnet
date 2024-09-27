@@ -17,7 +17,7 @@
 
 (defn submission-url
   [reply-id]
-  (str (reply-url reply-id) "/submit"))
+  (str "/replies/" reply-id "/submit"))
 
 
 (defn answer-form-name

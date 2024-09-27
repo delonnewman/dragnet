@@ -1,15 +1,21 @@
-<main id="survey-submitter"></main>
-<script>
-  (function() {
-    const surveyID = <%== reply.survey_id.to_json %>
-    const replyID = <%== (reply.id || 'preview').to_json %>;
-    const rootElement = document.getElementById("survey-submitter");
-
-    const script = document.createElement("script");
-    script.src = "<%= request.base_url %>/js/submitter/shell.js";
-    script.onload = function() {
-      dragnet.submitter.shell.init(rootElement, surveyID, replyID);
-    };
-    document.head.append(script);
-  }.call(window))
-</script>
+<html>
+  <body>
+    <main
+      id="survey-submitter"
+      data-authenticity-token="<%= authenticity_token %>"
+      data-survey-id="<%= reply.survey_id %>"
+      data-is-preview="<%= reply.new_record? %>"
+      data-reply-id="<%= reply.id %>"
+    ></main>
+    <script>
+     (function() {
+       const script = document.createElement("script");
+       script.src = "<%= request.base_url %>/js/submitter/shell.js";
+       script.onload = function() {
+         dragnet.submitter.shell.init("survey-submitter");
+       };
+       document.head.append(script);
+     }.call(window))
+    </script>
+  </body>
+</html>

@@ -25,6 +25,7 @@
     [:div.reply-submitter
      [:h1 (survey :name)]
      [:form {:action (submission-url reply-id) :method "post"}
+      [:input {:type "hidden" :name "authenticity_token" :value (:csrf-token state)}]
       [:input {:type "hidden" :name (form-name [:reply :id]) :value reply-id}]
       [:input {:type "hidden" :name (form-name [:reply :survey_id]) :value (survey :id)}]
       (for [question (->> survey :questions vals)]
