@@ -41,3 +41,4 @@ app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 .vscode/settings.json
 
 /config/credentials/production.key
+/config/credentials/
