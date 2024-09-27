@@ -15,7 +15,7 @@ module Dragnet
     belongs_to :question_option, optional: true, class_name: 'Dragnet::QuestionOption'
     accepts_nested_attributes_for :question_option
 
-    belongs_to :question_type, class_name: 'Dragnet::QuestionType'
+    belongs_to :question_type, optional: true, class_name: 'Dragnet::QuestionType'
     accepts_nested_attributes_for :question_type
     delegate :type, to: :question_type
     before_save do
