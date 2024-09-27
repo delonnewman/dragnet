@@ -20,16 +20,25 @@ describe 'Submission Requests', type: :request do
 
     it 'redirects to root path when a reply has already been submitted by the current visitor' do
       survey.open!
-      submit_reply
+      create_reply submitted: true
       get reply_to_path(survey.short_id, survey.slug)
 
       expect(response).to redirect_to(root_path)
     end
 
-    def submit_reply
+    it 'redirects to the edit path of an existing reply when permitted and an reply already exists for the visitor' do
+      survey.open!
+      create_reply
+      get reply_to_path(survey.short_id, survey.slug)
+      reply = survey.existing_reply(cookies[:ahoy_visitor])
+
+      expect(response).to redirect_to(edit_reply_path(reply))
+    end
+
+    def create_reply(submitted: false)
       get reply_to_path(survey.short_id, survey.slug)
       visit = Ahoy::Visit.find_by!(visit_token: cookies[:ahoy_visit])
-      Dragnet::Reply[survey:, submitted: true, ahoy_visit: visit].generate!
+      Dragnet::Reply[survey:, submitted:, ahoy_visit: visit].generate!
     end
   end
 end
