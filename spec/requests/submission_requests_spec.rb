@@ -41,4 +41,18 @@ describe 'Submission Requests', type: :request do
       Dragnet::Reply[survey:, submitted:, ahoy_visit: visit].generate!
     end
   end
+
+  describe 'GET /reply/404' do
+    it 'returns http not found' do
+      get '/reply/404'
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe 'GET /reply/403' do
+    it 'returns http forbidden' do
+      get '/reply/403'
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end

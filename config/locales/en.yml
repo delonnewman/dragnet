@@ -33,3 +33,4 @@ en:
   replies:
     not_permitted: "You don't have permission to reply to this survey"
     already_submitted: "It seems you've already submitted a reply to survey %{survey_name}"
+    not_found: "We can't seem to find that survey"

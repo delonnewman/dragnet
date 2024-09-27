@@ -13,6 +13,14 @@ class SubmissionRequestController < ApplicationController
     end
   end
 
+  def not_found
+    render status: :not_found
+  end
+
+  def forbidden
+    render status: :forbidden
+  end
+
   private
 
   def reply
@@ -21,10 +29,6 @@ class SubmissionRequestController < ApplicationController
     else
       survey.replies.create!
     end
-  end
-
-  def survey
-    @survey ||= Dragnet::Survey.find_by_short_id!(params.require(:survey_id))
   end
 
   def already_submitted?
@@ -41,5 +45,9 @@ class SubmissionRequestController < ApplicationController
 
   def current_visit
     ahoy.visit
+  end
+
+  def survey
+    @survey ||= Dragnet::Survey.find_by_short_id!(params.require(:survey_id))
   end
 end
