@@ -78,7 +78,7 @@ module Dragnet
           :retracted_at,
           :meta_data,
           {
-            question_type:    %i[id name slug type_class_name parent_type_id meta_data],
+            question_type: %i[id name slug type_class_name parent_type_id meta_data],
             question_options: %i[id text weight display_order],
           },
         ]
