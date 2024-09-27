@@ -22,7 +22,7 @@ module Dragnet
     scope :incomplete, -> { where(submitted: false) }
     validates :csrf_token, presence: true
     before_validation if: :new_record? do
-      self.csrf_token = SecureRandom.hex(CSRF_TOKEN_PRECISION)
+      self.csrf_token = SecureRandom.urlsafe_base64(CSRF_TOKEN_PRECISION)
       self.expires_at = EXPIRATION_DURATION.from_now
     end
 
@@ -44,7 +44,6 @@ module Dragnet
     end
 
     before_save :reset_answers_data!
-
     def reset_answers_data!
       self.answers_data = AnswerRecords.new(self).data
     end
