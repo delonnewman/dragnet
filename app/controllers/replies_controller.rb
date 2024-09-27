@@ -34,8 +34,12 @@ class RepliesController < ApplicationController
     end
   end
 
-  def success
-    render :success, locals: { reply: }
+  def complete
+    if reply.can_complete_reply?(current_user)
+      render :success, locals: { reply: }
+    else
+      redirect_to root_path, alert: t('replies.not_permitted')
+    end
   end
 
   def preview

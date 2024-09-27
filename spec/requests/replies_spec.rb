@@ -44,7 +44,7 @@ describe 'Replies', type: :request do
   end
 
   describe 'POST /replies/:id/submit' do
-    it 'redirects to root path when updating the reply is not permitted' do
+    it 'redirects to root path when completing the reply is not permitted' do
       survey.close!
       post submit_reply_path(reply)
 
@@ -66,7 +66,22 @@ describe 'Replies', type: :request do
     end
   end
 
-  describe 'GET /replies/:id/complete'
+  describe 'GET /replies/:id/complete' do
+    it 'redirects to root path when completing the reply is not permitted' do
+      survey.close!
+      get complete_reply_path(reply)
+
+      expect(response).to redirect_to(root_path)
+    end
+
+    it 'renders the success view if completing the reply is permitted' do
+      survey.open!
+      get complete_reply_path(reply)
+
+      expect(response).to render_template(:success)
+    end
+  end
+
   describe 'GET /reply/:survey_id/preview'
 
   def update_params
