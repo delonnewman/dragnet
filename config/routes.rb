@@ -49,7 +49,9 @@ Rails.application.routes.draw do
 
     scope '/submission' do
       resources :reply_submission, path: '/replies', only: %i[show]
+
       post '/replies/:survey_id', to: 'reply_submission#new', as: 'new_reply' # for generating a reply through the API
+      get '/replies/:survey_id/preview', to: 'reply_submission#preview'
     end
   end
 end
