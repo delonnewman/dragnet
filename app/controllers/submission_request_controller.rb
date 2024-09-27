@@ -5,9 +5,9 @@ class SubmissionRequestController < ApplicationController
 
   def new
     if already_submitted?
-      redirect_to root_path, alert: t('replies.already_submitted', survey_name: survey.name)
+      redirect_to survey_forbidden_path, alert: t('replies.already_submitted', survey_name: survey.name)
     elsif not_permitted?
-      redirect_to root_path, alert: t('replies.not_permitted')
+      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
     else
       redirect_to edit_reply_path(reply)
     end

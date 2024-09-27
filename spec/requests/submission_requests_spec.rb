@@ -4,11 +4,11 @@ describe 'Submission Requests', type: :request do
   describe 'GET /r/:survey_id' do
     let(:survey) { Dragnet::Survey[public: false].generate! }
 
-    it 'redirects to root path when a new reply is not permitted' do
+    it 'redirects to survey forbidden path when a new reply is not permitted' do
       survey.close!
       get reply_to_path(survey.short_id, survey.slug)
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(survey_forbidden_path)
     end
 
     it 'redirects to the edit path of a new reply when permitted' do
@@ -18,12 +18,12 @@ describe 'Submission Requests', type: :request do
       expect(response).to redirect_to(edit_reply_path(survey.replies.last))
     end
 
-    it 'redirects to root path when a reply has already been submitted by the current visitor' do
+    it 'redirects to survey_forbidden path when a reply has already been submitted by the current visitor' do
       survey.open!
       create_reply submitted: true
       get reply_to_path(survey.short_id, survey.slug)
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(survey_forbidden_path)
     end
 
     it 'redirects to the edit path of an existing reply when permitted and an reply already exists for the visitor' do
