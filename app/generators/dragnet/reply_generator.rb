@@ -21,7 +21,7 @@ class Dragnet::ReplyGenerator < Dragnet::ActiveRecordGenerator
     survey.questions.each do |question|
       next unless question.required? || Faker::Boolean.boolean(true_ratio: 0.3)
 
-      reply.answers << Answer[survey:, reply:, question:, question_type_id: question.question_type_id].generate
+      reply.answers << Answer[survey:, reply:, question:].generate
     end
   end
 end

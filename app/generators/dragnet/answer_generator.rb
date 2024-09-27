@@ -13,6 +13,8 @@ class Dragnet::AnswerGenerator < Dragnet::ActiveRecordGenerator
     end
   end
 
+  private
+
   def value(question)
     case question.question_type.ident
     when :text
