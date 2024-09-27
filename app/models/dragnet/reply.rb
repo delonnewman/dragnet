@@ -75,11 +75,11 @@ module Dragnet
     # @param [Time] timestamp
     #
     # @return [Boolean]
-    def submit!(attributes, timestamp: Time.zone.now)
+    def submit(attributes, timestamp: Time.zone.now)
       self.attributes = attributes
-      validate!(:submission)
+      validate(:submission)
       submitted!(timestamp)
-      save!
+      save
     end
   end
 end

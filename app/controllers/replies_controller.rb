@@ -26,7 +26,7 @@ class RepliesController < ApplicationController
   def submit
     if !reply.can_complete_reply?(current_user)
       redirect_to root_path, alert: t('replies.not_permitted')
-    elsif reply.submit!(reply_params)
+    elsif reply.submit(reply_params)
       tracker.complete_submission_form(reply)
       redirect_to complete_reply_path(reply.id)
     else
