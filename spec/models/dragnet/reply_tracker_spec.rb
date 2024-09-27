@@ -36,32 +36,6 @@ describe Dragnet::ReplyTracker do
     expect { tracker.complete_submission_form(reply) }.to change { reply.events.by_reply_event_tag(:complete).count }.from(0).to(1)
   end
 
-  it 'knows when a reply has been created for a survey by a visitor' do
-    tracker.view_submission_form(reply)
-
-    expect(tracker).to be_reply_created(survey, ahoy.visitor_token)
-  end
-
-  it 'knows when a reply has not be created for a survey by a visitor' do
-    expect(tracker).not_to be_reply_created(survey, ahoy.visitor_token)
-  end
-
-  it 'knows when a reply has been completed for a survey by a visitor' do
-    Dragnet::Reply[survey:, submitted: true, ahoy_visit: ahoy.visit].generate!
-
-    expect(tracker).to be_reply_completed(survey, ahoy.visitor_token)
-  end
-
-  it 'can find an existing reply for survey if one exists' do
-    reply = Dragnet::Reply[survey:, ahoy_visit: ahoy.visit].generate!
-
-    expect(tracker.existing_reply(survey, ahoy.visitor_token)).to eq(reply)
-  end
-
-  it "returns nil if a reply doesn't exist when asked" do
-    expect(tracker.existing_reply(survey, ahoy.visitor_token)).to be_nil
-  end
-
   describe '.event_tags' do
     it 'returns an array of the tags of all the events that can be tracked' do
       expect(described_class.event_tags).to eq(%i[request view update complete])
