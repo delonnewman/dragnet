@@ -29,6 +29,7 @@ module Dragnet
     has_many :ahoy_visits, through: :replies
     has_many :events, through: :replies # Used by StatsReport
     with ReplySubmissionPolicy, delegating: %i[can_submit_reply? can_preview?]
+    with SubmissionParameters, delegating: %i[form_attributes form_data]
 
     def reply_created?(visitor_token)
       !ahoy_visits.of_visitor(visitor_token).empty?
@@ -40,10 +41,6 @@ module Dragnet
 
     def existing_reply(visitor_token)
       ahoy_visits.of_visitor(visitor_token).first&.reply
-    end
-
-    def submission_parameters
-      SubmissionParametersProjection.new(self).project
     end
 
     # To satisfy the Reportable protocol, along with #questions above

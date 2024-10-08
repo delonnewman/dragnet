@@ -1,9 +1,21 @@
 # frozen_string_literal: true
 
 describe 'Submission Requests', type: :request do
-  describe 'GET /r/:survey_id' do
-    let(:survey) { Dragnet::Survey[public: false].generate! }
+  let(:survey) { Dragnet::Survey[public: false].generate! }
 
+  def create_reply(submitted: false)
+    get reply_to_path(survey.short_id, survey.slug)
+    visit = Ahoy::Visit.find_by!(visit_token: cookies[:ahoy_visit])
+    Dragnet::Reply[survey:, submitted:, ahoy_visit: visit].generate!
+  end
+
+  def submission_data
+    survey.questions.each_with_object({}) do |question, form_data|
+      form_data[question.form_name] = Dragnet::AnswerValue[question:].generate
+    end
+  end
+
+  describe 'GET /r/:survey_id' do
     it 'redirects to survey forbidden path when a new reply is not permitted' do
       survey.close!
       get reply_to_path(survey.short_id, survey.slug)
@@ -18,7 +30,7 @@ describe 'Submission Requests', type: :request do
       expect(response).to redirect_to(edit_reply_path(survey.replies.last))
     end
 
-    it 'redirects to survey_forbidden path when a reply has already been submitted by the current visitor' do
+    it 'redirects to survey forbidden path when a reply has already been submitted by the current visitor' do
       survey.open!
       create_reply submitted: true
       get reply_to_path(survey.short_id, survey.slug)
@@ -34,11 +46,29 @@ describe 'Submission Requests', type: :request do
 
       expect(response).to redirect_to(edit_reply_path(reply))
     end
+  end
 
-    def create_reply(submitted: false)
-      get reply_to_path(survey.short_id, survey.slug)
-      visit = Ahoy::Visit.find_by!(visit_token: cookies[:ahoy_visit])
-      Dragnet::Reply[survey:, submitted:, ahoy_visit: visit].generate!
+  describe 'POST /r/:survey_id' do
+    it 'redirects to survey forbidden path when a new reply is not permitted' do
+      survey.close!
+      post reply_to_path(survey.short_id, survey.slug)
+
+      expect(response).to redirect_to(survey_forbidden_path)
+    end
+
+    it 'redirects to survey forbidden path when a reply has already been submitted by the current visitor' do
+      survey.open!
+      create_reply submitted: true
+      post reply_to_path(survey.short_id, survey.slug)
+
+      expect(response).to redirect_to(survey_forbidden_path)
+    end
+
+    it 'renders replies/success template when the submission has been successful' do
+      survey.open!
+      post reply_to_path(survey.short_id, survey.slug), params: submission_data
+
+      expect(response).to render_template('replies/success')
     end
   end
 

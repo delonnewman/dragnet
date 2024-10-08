@@ -80,8 +80,8 @@ class Initial < ActiveRecord::Migration[7.0]
     create_table :questions, id: :uuid do |t|
       t.string  :text,                       null: false
       t.bigint  :hash_code,     index: true, null: false
-      t.string  :type,          index: true
       t.integer :display_order, null: false, default: 0
+      t.string  :form_name,     index: true, null: false
       t.boolean :required,      null: false, default: false
 
       t.belongs_to :question_type, index: true, null: false, type: :uuid

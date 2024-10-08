@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
+ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -123,20 +123,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_221532) do
   create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "text", null: false
     t.bigint "hash_code", null: false
-    t.string "type"
     t.integer "display_order", default: 0, null: false
+    t.string "form_name", null: false
     t.boolean "required", default: false, null: false
     t.uuid "question_type_id", null: false
     t.uuid "survey_id", null: false
     t.boolean "retracted", default: false, null: false
     t.datetime "retracted_at", precision: nil
     t.json "meta_data"
+    t.index ["form_name"], name: "index_questions_on_form_name"
     t.index ["hash_code"], name: "index_questions_on_hash_code"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
     t.index ["retracted"], name: "index_questions_on_retracted"
     t.index ["retracted_at"], name: "index_questions_on_retracted_at"
     t.index ["survey_id"], name: "index_questions_on_survey_id"
-    t.index ["type"], name: "index_questions_on_type"
   end
 
   create_table "record_changes", force: :cascade do |t|

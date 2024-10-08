@@ -10,12 +10,13 @@ module Dragnet
 
     def form_data(reply, params)
       data = params.to_h
-      questions = Question.where(form_name: data.keys)
+      questions = survey.questions.where(form_name: data.keys)
 
       {
         answers_attributes: questions.map do |question|
           {
             question_id: question.id,
+            question_type_id: question.question_type_id,
             reply_id: reply.id,
             survey_id: survey.id,
             value: data[question.form_name],

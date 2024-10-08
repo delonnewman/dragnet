@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
+# Handles survey submission requests from users
 class SubmissionRequestController < ApplicationController
   layout 'external'
 
+  before_action :check_permissions, only: %i[new submit]
+
   def new
-    if already_submitted?
-      redirect_to survey_forbidden_path, alert: t('replies.already_submitted', survey_name: survey.name)
-    elsif not_permitted?
-      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
+    redirect_to edit_reply_path(reply)
+  end
+
+  def submit
+    if reply.submit(submission_params)
+      render 'replies/success', locals: { reply: }
     else
-      redirect_to edit_reply_path(reply)
+      render body: reply.errors.full_messages.join(', '), status: :unproccessable_entity
     end
   end
 
@@ -22,6 +27,14 @@ class SubmissionRequestController < ApplicationController
   end
 
   private
+
+  def check_permissions
+    if already_submitted?
+      redirect_to survey_forbidden_path, alert: t('replies.already_submitted', survey_name: survey.name)
+    elsif not_permitted?
+      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
+    end
+  end
 
   def reply
     if revisit?
@@ -49,5 +62,9 @@ class SubmissionRequestController < ApplicationController
 
   def survey
     @survey ||= Dragnet::Survey.find_by_short_id!(params.require(:survey_id))
+  end
+
+  def submission_params
+    survey.submission_parameters.form_data(reply, params.permit(*survey.submission_parameters.form_attributes))
   end
 end

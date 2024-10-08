@@ -25,4 +25,8 @@ describe Dragnet::Question do
         .to perform_number_of_queries(2) # performs a prefetch query
     end
   end
+
+  it 'provides a form name' do
+    expect(question.form_name).to eq(Dragnet::Utils.slug(question.text, delimiter: '_'))
+  end
 end

@@ -9,26 +9,7 @@ class Dragnet::AnswerGenerator < Dragnet::ActiveRecordGenerator
     # TODO: Add support for multiple choice
     Answer.new(survey: s, reply: r, question: q) do |a|
       a.question_type = q.question_type
-      a.value = value(q)
-    end
-  end
-
-  private
-
-  def value(question)
-    case question.question_type.ident
-    when :text
-      question.settings.long_answer? ? LongAnswer.generate : ShortAnswer.generate
-    when :choice
-      QuestionOptionAnswer[question].generate
-    when :number
-      Random.rand(100)
-    when :time
-      Faker::Time.between(from: 3.months.ago, to: Time.zone.now)
-    when :boolean
-      Faker::Boolean.boolean
-    else
-      raise "Don't know how to generate an answer for #{question.question_type.ident.inspect}"
+      a.value = Dragnet::AnswerValue[question: q].generate
     end
   end
 end

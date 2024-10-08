@@ -28,6 +28,10 @@ require_relative 'dragnet/generators'
 require_relative 'dragnet/active_record_generator'
 require_relative 'dragnet/generation'
 
+# Add collection of generators to Generator and ParameterizedGenerator
+Dragnet::Generator.include(Dragnet::Generators)
+Dragnet::ParameterizedGenerator.include(Dragnet::Generators)
+
 # View Layer
 require_relative 'dragnet/view/presenter'
 require_relative 'dragnet/view/paged_presenter'
