@@ -34,7 +34,7 @@ class Dragnet::SurveyPresenter < Dragnet::View::Presenter
   end
 
   def share_method
-    (params && params[:method]) || 'email'
+    params&.fetch(:method, 'email')
   end
 
   def stats_report
