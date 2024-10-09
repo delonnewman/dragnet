@@ -32,7 +32,7 @@ module Dragnet
     end
 
     def expired?(now = Time.zone.now)
-      expired_at <= now
+      expires_at <= now
     end
 
     # Analytics

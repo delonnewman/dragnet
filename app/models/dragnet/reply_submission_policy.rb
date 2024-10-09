@@ -24,7 +24,7 @@ module Dragnet
     #
     # @return [Boolean]
     def can_edit_reply?(user)
-      can_submit_reply?(user) && !reply.submitted?
+      can_submit_reply?(user) && !reply.submitted? && !reply.expired?
     end
     alias can_update_reply? can_edit_reply?
     alias can_complete_reply? can_edit_reply?

@@ -37,4 +37,13 @@ describe Dragnet::ReplySubmissionPolicy do
 
     expect(policy).not_to be_can_edit_reply(other_user)
   end
+
+  it "doesn't permit editing of replies that are expired" do
+    survey.opened!
+    reply.submitted = false
+    reply.submitted_at = nil
+    reply.expires_at = Time.zone.now
+
+    expect(policy).not_to be_can_edit_reply(other_user)
+  end
 end
