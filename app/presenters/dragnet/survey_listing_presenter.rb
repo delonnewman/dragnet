@@ -10,7 +10,7 @@ class Dragnet::SurveyListingPresenter < Dragnet::View::PagedPresenter
   memoize :surveys
 
   # @return [Pagy]
-  def pager = Pagy.new(count: user.surveys.count, page: page, items: items)
+  def pager = Pagy.new(count: user.surveys.count, page:, items:)
   memoize :pager
 
   # Return reply data for the given survey

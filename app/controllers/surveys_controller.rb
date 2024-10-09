@@ -47,7 +47,7 @@ class SurveysController < ApplicationController
   def open
     survey.open!
 
-    render partial: 'workspace/survey_card', locals: { survey: survey }
+    render partial: 'workspace/survey_card', locals: { survey: }
   end
 
   def close
