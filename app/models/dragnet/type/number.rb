@@ -4,9 +4,9 @@ module Dragnet
   class Type::Number < Type
     def data_grid_sort(question, scope, direction, join_name)
       if question.settings.decimal?
-        scope.order(Arel.sql("#{join_name}.float_value") => direction)
+        scope.order(sanitize_sql_for_order("#{join_name}.float_value") => direction)
       else
-        scope.order(Arel.sql("#{join_name}.integer_value") => direction)
+        scope.order(sanitize_sql_for_order("#{join_name}.integer_value") => direction)
       end
     end
 

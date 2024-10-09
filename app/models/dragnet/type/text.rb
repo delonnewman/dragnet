@@ -4,9 +4,9 @@ module Dragnet
   class Type::Text < Type
     def data_grid_sort(question, scope, direction, join_name)
       if question.settings.long_answer?
-        scope.order(Arel.sql("#{join_name}.long_text_value") => direction)
+        scope.order(sanitize_sql_for_order("#{join_name}.long_text_value") => direction)
       else
-        scope.order(Arel.sql("#{join_name}.short_text_value") => direction)
+        scope.order(sanitize_sql_for_order("#{join_name}.short_text_value") => direction)
       end
     end
 

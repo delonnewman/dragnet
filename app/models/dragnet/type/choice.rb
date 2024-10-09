@@ -3,7 +3,7 @@
 module Dragnet
   class Type::Choice < Type
     def data_grid_sort(_question, scope, direction, join_name)
-      scope.order(Arel.sql("#{join_name}.question_option_id") => direction)
+      scope.order(sanitize_sql_for_order("#{join_name}.question_option_id") => direction)
     end
 
     def data_grid_filter(_question, scope, table, value)

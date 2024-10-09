@@ -4,11 +4,14 @@ module Dragnet
   class Type::Time < Type
     def data_grid_sort(question, scope, direction, join_name)
       if question.settings.include_date_and_time?
-        scope.order(Arel.sql("#{join_name}.date_value") => direction, Arel.sql("#{join_name}.time_value") => direction)
+        scope.order(
+          sanitize_sql_for_order("#{join_name}.date_value") => direction,
+          sanitize_sql_for_order("#{join_name}.time_value") => direction
+        )
       elsif question.settings.include_time?
-        scope.order(Arel.sql("#{join_name}.time_value") => direction)
+        scope.order(sanitize_sql_for_order("#{join_name}.time_value") => direction)
       else
-        scope.order(Arel.sql("#{join_name}.date_value") => direction)
+        scope.order(sanitize_sql_for_order("#{join_name}.date_value") => direction)
       end
     end
 

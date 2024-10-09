@@ -1,5 +1,8 @@
 module Dragnet
   class Type
+    # include sql sanitation methods from ActiveRecord
+    include ActiveRecord::Sanitization::ClassMethods
+
     attr_reader :question_type
 
     def initialize(question_type)
