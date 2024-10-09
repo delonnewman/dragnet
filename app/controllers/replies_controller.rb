@@ -8,13 +8,13 @@ class RepliesController < ApplicationController
       tracker.view_submission_form(reply)
       render :edit, locals: { reply: }
     else
-      redirect_to root_path, alert: t('replies.not_permitted')
+      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
     end
   end
 
   def update
     if !reply.can_update_reply?(current_user)
-      redirect_to root_path, alert: t('replies.not_permitted')
+      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
     elsif reply.update(reply_params)
       tracker.update_submission_form(reply)
       redirect_to edit_reply_path(reply)
@@ -25,7 +25,7 @@ class RepliesController < ApplicationController
 
   def submit
     if !reply.can_complete_reply?(current_user)
-      redirect_to root_path, alert: t('replies.not_permitted')
+      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
     elsif reply.submit(reply_params)
       tracker.complete_submission_form(reply)
       redirect_to complete_reply_path(reply.id)
@@ -38,7 +38,7 @@ class RepliesController < ApplicationController
     if reply.can_complete_reply?(current_user)
       render :success, locals: { reply: }
     else
-      redirect_to root_path, alert: t('replies.not_permitted')
+      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
     end
   end
 
@@ -48,7 +48,7 @@ class RepliesController < ApplicationController
     if survey.can_preview?(current_user)
       render :edit, locals: { reply: survey.replies.build }
     else
-      redirect_to root_path, alert: t('replies.not_permitted')
+      redirect_to survey_forbidden_path, alert: t('replies.not_permitted')
     end
   end
 

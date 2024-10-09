@@ -40,7 +40,7 @@ describe 'Replies', type: :request do
       survey.close!
       get edit_reply_path(reply)
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(survey_forbidden_path)
     end
 
     it 'renders edit view if the reply is permitted' do
@@ -56,7 +56,7 @@ describe 'Replies', type: :request do
       survey.close!
       put reply_path(reply)
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(survey_forbidden_path)
     end
 
     it "renders the edit view if updating the reply is permitted, but the updates aren't valid" do
@@ -79,7 +79,7 @@ describe 'Replies', type: :request do
       survey.close!
       post submit_reply_path(reply)
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(survey_forbidden_path)
     end
 
     it 'redirects to the complete reply path when the submission has been successful' do
@@ -102,7 +102,7 @@ describe 'Replies', type: :request do
       survey.close!
       get complete_reply_path(reply)
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(survey_forbidden_path)
     end
 
     it 'renders the success view if completing the reply is permitted' do
@@ -118,7 +118,7 @@ describe 'Replies', type: :request do
       survey.close!
       get preview_form_path(survey.id)
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(survey_forbidden_path)
     end
 
     it 'renders the edit view when previewing is permitted' do
