@@ -26,12 +26,12 @@ module Dragnet
 
       # @return [Integer]
       def items
-        params.fetch(:items, default_items)
+        params.fetch(:items, default_items).to_i
       end
 
       # @return [Integer]
       def page
-        params.fetch(:page, 1)
+        params.fetch(:page, 1).to_i
       end
     end
   end
