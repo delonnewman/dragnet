@@ -2,7 +2,7 @@ module Dragnet
   module Survey::Name
     def self.assign!(survey)
       name = unique_name(survey)
-      survey.name = name.to_s if name.generate?
+      survey.name = name.as_name if name.generate?
       survey.slug = name.as_slug if name.generate? || assign_slug?(survey)
     end
 

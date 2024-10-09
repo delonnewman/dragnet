@@ -2,19 +2,20 @@
 
 module Dragnet
   class UniqueName
-    def initialize(record, attribute: :name, scope: nil, root_name: "New #{record.class.model_name.human}")
+    def initialize(record, scope: nil)
       @record = record
-      @attribute = attribute
-      @root_name = root_name
+      @root_name = "New #{record.class.model_name.human}"
       @scope_attribute = scope
     end
 
     def as_slug
+      return @record.slug if @record.slug.present? && !generate?
+
       Utils.slug(as_name)
     end
 
     def as_name
-      return record_name unless generate?
+      return @record.name unless generate?
 
       generate
     end
@@ -38,11 +39,7 @@ module Dragnet
     end
 
     def auto_named?
-      record_name.start_with?(@root_name)
-    end
-
-    def record_name
-      @record.public_send(@attribute)
+      @record.name.start_with?(@root_name)
     end
 
     def duplicated_root?
@@ -55,8 +52,8 @@ module Dragnet
 
     def auto_named_count
       model = @record.class
-      field = model.arel_table[@attribute]
-      query = model.where(@attribute => @root_name).or(model.where(field.matches("#{@root_name} (%)")))
+      field = model.arel_table[:name]
+      query = model.where(name: @root_name).or(model.where(field.matches("#{@root_name} (%)")))
       return query.count unless @scope_attribute
 
       query.where(@scope_attribute => record_scope_value).count
