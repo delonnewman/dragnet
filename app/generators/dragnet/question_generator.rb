@@ -2,8 +2,8 @@
 class Dragnet::QuestionGenerator < Dragnet::ActiveRecordGenerator
   def call(*)
     Question.new do |q|
-      q.text          = Faker::Movie.quote
       q.survey        = attributes.fetch(:survey) { raise 'A survey attribute is required' }
+      q.text          = Dragnet::QuestionText[other_questions: q.survey.questions.map(&:text).to_set].generate
       q.question_type = attributes.fetch(:question_type, QuestionType.generate)
       q.required      = Faker::Boolean.boolean(true_ratio: 0.3)
 

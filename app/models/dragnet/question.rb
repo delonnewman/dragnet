@@ -5,7 +5,7 @@ module Dragnet
     include SelfDescribable
     include Retractable
 
-    # validates :text, presence: true, uniqueness: { scope: :survey_id }
+    validates :text, presence: true, uniqueness: { scope: :survey_id }
 
     belongs_to :survey, class_name: 'Dragnet::Survey'
 
