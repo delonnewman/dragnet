@@ -1,8 +1,39 @@
 # frozen_string_literal: true
 
 describe 'Replies', type: :request do
-  let(:survey) { Dragnet::Survey[public: false].generate! }
+  let(:survey) { Dragnet::Survey[public: false, questions: { question_type: }].generate! }
   let(:reply) { Dragnet::Reply[survey:, submitted: false].generate! }
+  let(:question_type) { Dragnet::QuestionType.get(:number) }
+
+  def update_params
+    question = survey.questions.first
+    value = Dragnet::AnswerValue[question:].generate
+
+    {
+      reply: {
+        id: reply.id,
+        survey_id: survey.id,
+        answers_attributes: {
+          question.id => {
+            question_id: question.id,
+            reply_id: reply.id,
+            survey_id: survey.id,
+            question_type_id: question.question_type_id,
+            value:,
+          },
+        },
+      },
+    }
+  end
+
+  def invalid_update_params
+    question = survey.questions.first
+    question_type_id = question.question_type_id
+    question_id = question.id
+
+    # missing survey_id
+    { reply: { answers_attributes: { question_id => { question_id:, question_type_id:, value: 1 } } } }
+  end
 
   describe 'GET /replies/:id/edit' do
     it 'redirects to root path when editing the reply is not permitted' do
@@ -30,7 +61,7 @@ describe 'Replies', type: :request do
 
     it "renders the edit view if updating the reply is permitted, but the updates aren't valid" do
       survey.open!
-      put reply_path(reply), params: { reply: { survey_id: '' } }
+      put reply_path(reply), params: invalid_update_params
 
       expect(response).to render_template(:edit)
     end
@@ -60,7 +91,7 @@ describe 'Replies', type: :request do
 
     it "renders the edit view if updating the reply is permitted, but the submission updates aren't valid" do
       survey.open!
-      post submit_reply_path(reply), params: { reply: { survey_id: '' } }
+      post submit_reply_path(reply), params: invalid_update_params
 
       expect(response).to render_template(:edit)
     end
@@ -96,26 +127,5 @@ describe 'Replies', type: :request do
 
       expect(response).to render_template(:edit)
     end
-  end
-
-  def update_params
-    question = survey.questions.first
-    answer = Dragnet::Answer[survey:, reply:, question:].generate
-
-    {
-      reply: {
-        id: reply.id,
-        survey_id: survey.id,
-        answers_attributes: {
-          question.id => {
-            question_id: question.id,
-            reply_id: reply.id,
-            survey_id: survey.id,
-            question_type_id: question.question_type_id,
-            value: answer.value,
-          },
-        },
-      },
-    }
   end
 end

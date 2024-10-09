@@ -15,28 +15,27 @@ module Dragnet
     belongs_to :question_option, optional: true, class_name: 'Dragnet::QuestionOption'
     accepts_nested_attributes_for :question_option
 
-    belongs_to :question_type, optional: true, class_name: 'Dragnet::QuestionType'
+    belongs_to :question_type, optional: true, class_name: 'Dragnet::QuestionType' # Why does this need to be optional?
     accepts_nested_attributes_for :question_type
-    delegate :type, to: :question_type
+    delegate :type, to: :question_type, allow_nil: true
     before_save do
       self.question_type = question.question_type if question
     end
 
     before_save do
-      type.before_saving_answer(self, question)
+      type&.before_saving_answer(self, question)
     end
 
     # Answers should be able to be treated as various kinds of values
     delegate :to_s, :blank?, to: :value, allow_nil: true
     delegate :to_i, :to_f, :to_r, to: :number_value, allow_nil: true
 
-    def assign_value!(value)
-      type.assign_value!(self, value)
+    def value=(value)
+      type&.assign_value!(self, value)
     end
-    alias value= assign_value!
 
     def value
-      type.value(self)
+      type&.value(self)
     end
 
     def text_value
@@ -44,7 +43,7 @@ module Dragnet
     end
 
     def number_value
-      type.number_value(self)
+      type&.number_value(self)
     end
   end
 end

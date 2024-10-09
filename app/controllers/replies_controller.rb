@@ -67,6 +67,6 @@ class RepliesController < ApplicationController
   end
 
   def reply_params
-    params.require(:reply).permit(*reply.submission_parameters)
+    params.require(:reply).permit(*reply.submission_parameters.reply_attributes)
   end
 end
