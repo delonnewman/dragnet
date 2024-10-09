@@ -22,20 +22,6 @@ describe Dragnet::Reply do
 
     let(:survey) { Dragnet::Survey[questions: { question_type: Dragnet::QuestionType.get(:text) }].generate! }
 
-    it "updates the reply with any attributes that it's been given" do
-      original_data = reply.answers.map(&:value)
-      reply.submit(submission_data)
-      updated_data = reply.reload.answers.map(&:value)
-
-      expect(updated_data).not_to eq(original_data)
-    end
-
-    it 'marks it as submitted' do
-      reply.submit(submission_data)
-
-      expect(reply).to be_submitted
-    end
-
     def submission_data
       question = survey.questions.first
 
@@ -52,6 +38,20 @@ describe Dragnet::Reply do
           },
         },
       }
+    end
+
+    it "updates the reply with any attributes that it's been given" do
+      original_data = reply.answers.map(&:value)
+      reply.submit(submission_data)
+      updated_data = reply.reload.answers.map(&:value)
+
+      expect(updated_data).not_to eq(original_data)
+    end
+
+    it 'marks it as submitted' do
+      reply.submit(submission_data)
+
+      expect(reply).to be_submitted
     end
   end
 
