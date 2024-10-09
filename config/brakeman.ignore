@@ -1,0 +1,74 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "24de010b6aaf1f69f0cbb86120c5cd10bf2e1bd95a61081f215f8360e67527a5",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/workspace/surveys.html.erb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "pagy_bootstrap_nav(Dragnet::SurveyListingPresenter.new(current_user.workspace, params).pager)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "WorkspaceController",
+          "method": "surveys",
+          "line": 15,
+          "file": "app/controllers/workspace_controller.rb",
+          "rendered": {
+            "name": "workspace/surveys",
+            "file": "app/views/workspace/surveys.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "workspace/surveys"
+      },
+      "user_input": "params",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "96619fcc6b3655b9da505c5f972c5b5b4eb38170126b8cf418bf6836a572e416",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/surveys/share.html.erb",
+      "line": 56,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "survey_qrcode(Dragnet::SurveyPresenter.new(survey, params), :format => :svg, :module_size => 15)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "SurveysController",
+          "method": "share",
+          "line": 60,
+          "file": "app/controllers/surveys_controller.rb",
+          "rendered": {
+            "name": "surveys/share",
+            "file": "app/views/surveys/share.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "surveys/share"
+      },
+      "user_input": "params",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    }
+  ],
+  "updated": "2024-10-09 14:16:00 -0400",
+  "brakeman_version": "5.4.0"
+}
