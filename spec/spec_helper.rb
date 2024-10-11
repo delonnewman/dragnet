@@ -2,11 +2,14 @@
 
 require 'simplecov'
 require 'simplecov_small_badge'
+require 'simplecov-lcov'
 
 SimpleCov.start('rails') do
+  SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
   SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
-    SimpleCovSmallBadge::Formatter
+    SimpleCovSmallBadge::Formatter,
+    SimpleCov::Formatter::LcovFormatter,
   ])
 end
 

@@ -46,3 +46,4 @@ app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 /coverage/.last_run.json
 /coverage/.resultset.json.lock
 /coverage/.resultset.json
+/coverage/lcov/
