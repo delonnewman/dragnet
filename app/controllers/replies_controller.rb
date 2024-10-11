@@ -7,13 +7,21 @@ class RepliesController < ApplicationController
     forbid unless reply.can_edit_reply?(current_user)
   end
 
+  before_action only: %i[update] do
+    forbid unless reply.can_update_reply?(current_user)
+  end
+
+  before_action only: %i[submit complete] do
+    forbid unless reply.can_complete_reply?(current_user)
+  end
+
+  before_action only: %i[preview] do
+    forbid unless survey.can_preview?(current_user)
+  end
+
   def edit
     tracker.view_submission_form(reply)
     render :edit, locals: { reply: }
-  end
-
-  before_action only: %i[update] do
-    forbid unless reply.can_update_reply?(current_user)
   end
 
   def update
@@ -25,10 +33,6 @@ class RepliesController < ApplicationController
     end
   end
 
-  before_action only: %i[submit] do
-    forbid unless reply.can_complete_reply?(current_user)
-  end
-
   def submit
     if reply.submit(reply_params)
       tracker.complete_submission_form(reply)
@@ -38,16 +42,8 @@ class RepliesController < ApplicationController
     end
   end
 
-  before_action only: %i[complete] do
-    forbid unless reply.can_complete_reply?(current_user)
-  end
-
   def complete
     render :success, locals: { reply: }
-  end
-
-  before_action only: %i[preview] do
-    forbid unless survey.can_preview?(current_user)
   end
 
   def preview
