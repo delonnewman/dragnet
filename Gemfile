@@ -75,7 +75,6 @@ end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'simplecov-small-badge', require: false
   gem 'simplecov-lcov', require: false
 
   gem 'rails-controller-testing'
