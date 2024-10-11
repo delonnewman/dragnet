@@ -75,7 +75,7 @@ end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'simplecov_json_formatter', require: false
+  gem 'simplecov_json_formatter'
   gem 'rails-controller-testing'
 end
 

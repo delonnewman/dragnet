@@ -42,7 +42,7 @@ jobs:
           CC_TEST_REPORTER_ID: "7b61fa9ea465e19ec3d750aafc3622cba4bf8b257d61f9ea20c46900bbe03fda"
         with:
           coverageLocations: |
-            ${{github.workspace}}/coverage/.resultset.json:simplecov
+            ${{github.workspace}}/coverage:simplecov
           debug: true
 
   lint:
