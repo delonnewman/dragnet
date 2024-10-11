@@ -41,3 +41,5 @@ app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 
 /config/credentials/production.key
 /config/credentials/
+/coverage/assets/
+/coverage/index.html
