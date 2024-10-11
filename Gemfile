@@ -75,7 +75,7 @@ end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'simplecov_json_formatter'
+  gem 'simplecov-small-badge', require: false
   gem 'rails-controller-testing'
 end
 

@@ -36,7 +36,6 @@ public/js/submitter/
 public/js/editor/
 public/js/test/js/
 /.yarn/
-/coverage/
 app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 .vscode/settings.json
 
