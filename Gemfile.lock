@@ -535,6 +535,7 @@ DEPENDENCIES
   sentimental
   shortuuid
   simplecov
+  simplecov_json_formatter
   sprockets-rails
   transit-rails
   transit-ruby
