@@ -107,7 +107,7 @@ class Initial < ActiveRecord::Migration[7.0]
     create_table :replies, id: :uuid do |t|
       t.uuid :survey_id, index: true, null: false
       t.uuid :user_id,   index: true, null: true # for records added via data grid
-      t.json :answers_data # cached answers data
+      t.json :cached_answers_data, null: false
 
       # security
       t.string :csrf_token, null: false

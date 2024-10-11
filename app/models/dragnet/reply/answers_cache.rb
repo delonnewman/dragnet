@@ -1,22 +1,30 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class Reply::AnswerRecords
+  class Reply::AnswersCache
+    include Memoizable
+
+    def initialize(reply)
+      @reply = reply
+    end
+
+    def answers
+      attributes.map do |attributes|
+        Answer.new(attributes)
+      end
+    end
+    memoize :answers
+
     QUESTION_ATTRIBUTES = {
       :question_type     => :question_type_attributes,
       'question_type'    => :question_type_attributes,
       :question_options  => :question_options_attributes,
       'question_options' => :question_options_attributes,
     }.freeze
+    private_constant :QUESTION_ATTRIBUTES
 
-    def self.build(answer_data)
-      attributes(answer_data).map do |attributes|
-        Answer.new(attributes)
-      end
-    end
-
-    def self.attributes(answer_data)
-      answer_data.map do |answer|
+    def attributes
+      data!.map do |answer|
         answer.transform do |key, value|
           case key
           when :question, 'question'
@@ -32,24 +40,22 @@ module Dragnet
       end
     end
 
-    attr_reader :data
+    def data!
+      raise 'No data in cache' unless data
 
-    def initialize(reply)
-      @data = pull_data(reply.answers.whole).freeze
+      data
     end
 
-    def attributes
-      self.class.attributes(@data)
+    def data
+      @reply.cached_answers_data
     end
 
-    def build
-      self.class.build(@data)
+    def reset!
+      @reply.cached_answers_data = pull_data
     end
 
-    private
-
-    def pull_data(answers)
-      answers.pull(
+    def pull_data
+      @reply.answers.whole.pull(
         :id,
         :reply_id,
         :survey_id,

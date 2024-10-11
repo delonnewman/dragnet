@@ -17,6 +17,26 @@ module Dragnet
 
     with ReplySubmissionPolicy, delegating: %i[can_edit_reply? can_update_reply? can_complete_reply?]
 
+    # Analytics
+    belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
+    has_many :events, through: :ahoy_visit
+
+    def ensure_visit(visit)
+      update(ahoy_visit: visit) if visit && ahoy_visit_id != visit.id
+    end
+
+    # Answer caching (used for better performance in the data grid)
+    with AnswersCache
+    before_save { answers_cache.reset! }
+
+    def cached_answers
+      answers_cache.answers
+    end
+
+    def answers_to(question)
+      cached_answers.select { |a| a.question_id == question.id }
+    end
+
     # Submission
     delegate :submission_parameters, to: :survey
     scope :incomplete, -> { where(submitted: false) }
@@ -34,28 +54,6 @@ module Dragnet
     def expired?(now = Time.zone.now)
       expires_at <= now
     end
-
-    # Analytics
-    belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
-    has_many :events, through: :ahoy_visit
-
-    def ensure_visit(visit)
-      update(ahoy_visit: visit) if visit && ahoy_visit_id != visit.id
-    end
-
-    before_save :reset_answers_data!
-    def reset_answers_data!
-      self.answers_data = AnswerRecords.new(self).data
-    end
-
-    def answers_to(question)
-      answer_records.select { |a| a.question_id == question.id }
-    end
-
-    def answer_records
-      AnswerRecords.build(answers_data)
-    end
-    memoize :answer_records
 
     # Mark the reply as submitted
     #
@@ -75,7 +73,7 @@ module Dragnet
     #
     # @return [Boolean]
     def submit(attributes, timestamp: Time.zone.now)
-      self.attributes = attributes
+      assign_attributes(attributes)
       validate(:submission)
       submitted!(timestamp)
       save

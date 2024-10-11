@@ -163,7 +163,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "survey_id", null: false
     t.uuid "user_id"
-    t.json "answers_data"
+    t.json "cached_answers_data", null: false
     t.string "csrf_token", null: false
     t.datetime "expires_at", precision: nil, null: false
     t.boolean "submitted", default: false, null: false

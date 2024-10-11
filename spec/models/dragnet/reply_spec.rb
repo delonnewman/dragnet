@@ -17,6 +17,25 @@ describe Dragnet::Reply do
     expect(survey.latest_submission_at).to eq submitted_at
   end
 
+  it 'ensures that answers data cache is updated before saving' do
+    reply.cached_answers_data = nil
+
+    expect { reply.save! }.to change(reply, :cached_answers_data).from(nil)
+  end
+
+  it 'provides cached answers' do
+    reply.save!
+
+    expect { reply.cached_answers }.to perform_number_of_queries(0)
+  end
+
+  it 'when providing answers to a question it used answer cache' do
+    question = survey.questions.first
+    reply.save!
+
+    expect { reply.answers_to(question) }.to perform_number_of_queries(0)
+  end
+
   describe '#submit' do
     subject(:reply) { described_class[survey:].generate! }
 
@@ -46,6 +65,12 @@ describe Dragnet::Reply do
       updated_data = reply.reload.answers.map(&:value)
 
       expect(updated_data).not_to eq(original_data)
+    end
+
+    it 'updates answers data cache' do
+      reply.cached_answers_data = nil
+
+      expect { reply.submit(submission_data) }.to change(reply, :cached_answers_data).from(nil)
     end
 
     it 'marks it as submitted' do
