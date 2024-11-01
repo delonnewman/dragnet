@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/delonnewman/el-toolkit.git
-  revision: db8801a0ad8c977ff8e7a02b8c150511a8ebfdb2
+  revision: 0bfa1a2cdfbb21ac6e8d062b12c7dad0c7e3d8f4
   specs:
-    el-core (0.1.0)
+    el-toolkit (0.0.1)
+      rack
 
 GIT
   remote: https://github.com/delonnewman/gen-test.git
@@ -496,7 +497,7 @@ DEPENDENCIES
   debug
   devise
   dockerfile-rails
-  el-core!
+  el-toolkit!
   erubi
   faker
   fast_blank
