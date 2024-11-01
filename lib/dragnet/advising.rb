@@ -94,7 +94,7 @@ module Dragnet
     # TODO: warn if a conflict exists between delegates and existing methods
     def with(klass, *args, as: nil, delegating: EMPTY_ARRAY, **options)
       delegating = [delegating] unless delegating.is_a?(Array)
-      pc = PointCut.new(advice: klass, args: args, name: as, delegate_methods: delegating, options: options)
+      pc = PointCut.new(advice: klass, args:, name: as, delegate_methods: delegating, options:)
       add_point_cut(pc)
       advice[klass] = pc
     end
