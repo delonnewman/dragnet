@@ -37,12 +37,9 @@ module Dragnet
       ident == self.ident
     end
 
-    def type
-      type_class.new(self)
-    end
-
-    def type_class
-      type_class_name.constantize
+    # Dispatch extensible actions by type
+    def perform(action)
+      action.send_type(self)
     end
   end
 end

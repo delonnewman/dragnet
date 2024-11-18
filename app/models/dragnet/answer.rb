@@ -23,27 +23,27 @@ module Dragnet
     end
 
     before_save do
-      type&.before_saving_answer(self, question)
+      type&.perform(Action::DoBeforeSavingAnswer.new(answer: self, question:))
     end
 
     # Answers should be able to be treated as various kinds of values
     delegate :to_s, :blank?, to: :value, allow_nil: true
     delegate :to_i, :to_f, :to_r, to: :number_value, allow_nil: true
 
-    def value=(value)
-      type&.assign_value!(self, value)
-    end
-
-    def value
-      type&.value(self)
-    end
-
     def text_value
       value.to_s
     end
 
+    def value
+      type&.perform(Action::GetValue.new(answer: self))
+    end
+
+    def value=(value)
+      type&.perform(Action::AssignValue.new(answer: self, value:)
+    end
+
     def number_value
-      type&.number_value(self)
+      type&.perform(Action::GetNumberValue.new(answer: self))
     end
   end
 end

@@ -88,7 +88,7 @@ module Dragnet
     #
     # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
     def answer_stats(question)
-      question.type.stats_table(reportable, question)
+      question.type.perform(Action::CalculateStatsTable.new(reportable:, question:))
     end
   end
 end

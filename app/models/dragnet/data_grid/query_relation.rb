@@ -71,7 +71,8 @@ module Dragnet
         else
           question = @query.question(sort_by)
           scope = sorting_scope(scope, question.id)
-          question.type.data_grid_sort(question, scope, sort_direction, join_aliases.fetch(:sorting, :answers))
+          join_name = join_aliases.fetch(:sorting, :answers)
+          question.type.perform(Action::SortDataGrid.new(question:, scope:, direction:, join_name:))
         end
       end
 
@@ -110,7 +111,7 @@ module Dragnet
       end
 
       def filtered_values(scope, question, table, value)
-        question.type.data_grid_filter(question, scope, table, value)
+        question.type.perform(Action::FilterDataGrid.new(question:, scope:, table:, value:))
       end
     end
   end
