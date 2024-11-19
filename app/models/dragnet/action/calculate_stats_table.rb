@@ -1,4 +1,4 @@
-class Dragnet
+module Dragnet
   class Action::CalculateStatsTable < Action
     private attr_reader :reportable, :question
 

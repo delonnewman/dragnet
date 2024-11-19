@@ -1,4 +1,4 @@
-class Dragnet
+module Dragnet
   class Action::GetValue < Action
     private attr_reader :answer
 

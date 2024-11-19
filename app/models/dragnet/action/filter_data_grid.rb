@@ -1,4 +1,4 @@
-class Dragnet
+module Dragnet
   class Action::FilterDataGrid < Action
     private attr_reader :question, :scope, :table, :value
 

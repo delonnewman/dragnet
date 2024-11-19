@@ -1,4 +1,4 @@
-class Dragnet
+module Dragnet
   class Action::DoBeforeSavingAnswer < Action
     private attr_reader :answer, :question
 

@@ -1,4 +1,4 @@
-class Dragnet
+module Dragnet
   class Action::GetNumberValue < Action::GetValue
     def boolean(type)
       raise Answer::EvaluationError, "can't convert #{type} to number"

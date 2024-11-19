@@ -23,7 +23,7 @@ module Dragnet
     end
 
     before_save do
-      type&.perform(Action::DoBeforeSavingAnswer.new(answer: self, question:))
+      type&.perform(:do_before_saving_answer, answer: self, question:)
     end
 
     # Answers should be able to be treated as various kinds of values
@@ -35,15 +35,16 @@ module Dragnet
     end
 
     def value
-      type&.perform(Action::GetValue.new(answer: self))
+      type&.perform(:get_value, answer: self)
+      type&.perform(type&.get_value(answer: self))
     end
 
     def value=(value)
-      type&.perform(Action::AssignValue.new(answer: self, value:)
+      type&.perform(:assign_value, answer: self, value:)
     end
 
     def number_value
-      type&.perform(Action::GetNumberValue.new(answer: self))
+      type&.perform(:get_number_value, answer: self)
     end
   end
 end

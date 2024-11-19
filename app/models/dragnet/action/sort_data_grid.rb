@@ -1,4 +1,4 @@
-class Dragnet
+module Dragnet
   class Action::SortDataGrid < Action
     # include sql sanitation methods from ActiveRecord
     include ActiveRecord::Sanitization::ClassMethods
