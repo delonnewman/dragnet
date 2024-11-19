@@ -1,13 +1,9 @@
 module Dragnet
   class Action::FilterDataGrid < Action
-    private attr_reader :question, :scope, :table, :value
-
-    def initialize(question:, scope:, table:, value:)
-      @question = question
-      @scope = scope
-      @table = table
-      @value = value
-    end
+    attribute :question
+    attribute :scope
+    attribute :table
+    attribute :value
 
     def boolean(type)
       scope.where(table => { boolean_value: value })

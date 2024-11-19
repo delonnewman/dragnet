@@ -1,5 +1,5 @@
 module Dragnet
-  class Type::Boolean < Type
+  class Type::Number < Type
     ignore :do_before_saving_answer
 
     perform \
@@ -7,6 +7,8 @@ module Dragnet
       :get_value,
       :get_number_value,
       :filter_data_grid,
-      :sort_data_grid
+      :sort_data_grid,
+      :calculate_stats_table,
+      :calculate_occurrence_table
   end
 end

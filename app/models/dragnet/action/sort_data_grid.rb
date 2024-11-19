@@ -3,14 +3,10 @@ module Dragnet
     # include sql sanitation methods from ActiveRecord
     include ActiveRecord::Sanitization::ClassMethods
 
-    private attr_reader :question, :scope, :direction, :join_name
-
-    def initialize(question:, scope:, direction:, join_name:)
-      @question = question
-      @scope = scope
-      @direction = direction
-      @join_name = join_name
-    end
+    attribute :question
+    attribute :scope
+    attribute :direction
+    attribute :join_name
 
     def boolean(type)
       scope.order(sanitize_sql_for_order("#{join_name}.boolean_value") => direction)

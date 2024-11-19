@@ -1,19 +1,9 @@
+# frozen_string_literal: true
+
 module Dragnet
   class Action::CalculateStatsTable < Action
-    private attr_reader :reportable, :question
-
-    def initialize(reportable:, question:)
-      @reportable = reportable
-      @question = question
-    end
-
-    def boolean(type)
-      raise "can't collect stats for type boolean"
-    end
-
-    def time(type)
-      raise "can't collect stats for type time"
-    end
+    attribute :reportable
+    attribute :question
 
     def number(type)
       name = question.settings.decimal? ? :float_value : :integer_value
@@ -34,6 +24,8 @@ module Dragnet
     end
 
     private
+
+    attr_reader :reportable, :question
 
     def collect_stats(question, column:)
       data =

@@ -1,24 +1,24 @@
-class Dragnet
+module Dragnet
   class Action
-    def self.build(name, **args)
-      actions.fetch(name).new(**args)
+    def self.attributes
+      @attributes ||= []
     end
 
-    def self.actions
-      @actions ||= {}
+    def self.attribute(name)
+      attributes << name
+      private attr_reader name
     end
 
-    def self.inherited(subclass)
-      name = subclass.name.split("::").last.underscore.to_sym
-      key  = subclass.superclass != Action ? subclass.superclass : name # TODO: make this recursive
-      actions[key] = subclass
-      private define_method name do |**kwargs|
-        subclass.new(**kwargs)
+    def initialize(attributes)
+      self.class.attributes.each do |attribute|
+        raise ArgumentError, "#{attribute} is required" unless attributes.key?(attribute)
+
+        instance_variable_set(:"@#{attribute}", attributes[attribute])
       end
     end
 
     def send_type(question_type)
-      public_send(question_type.ident)
+      public_send(question_type.ident, question_type)
     end
   end
 end

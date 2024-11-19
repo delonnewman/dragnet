@@ -1,7 +1,9 @@
 module Dragnet
-  class Email < Type
+  class Email < Type::Text
+    ignore :calculate_stats_table, :calculate_occurrence_table
+
     def get_value(...)
-      Action::GetValueEmail.new(...)
+      GetValueEmail.new(...)
     end
   end
 end

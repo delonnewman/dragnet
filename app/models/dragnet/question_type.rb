@@ -44,10 +44,5 @@ module Dragnet
     def type_class
       type_class_name.constantize
     end
-
-    # Dispatch extensible actions by type
-    def perform(action, **kwargs)
-      Action.get(action, **kwargs).send_type(self)
-    end
   end
 end

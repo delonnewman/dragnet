@@ -1,11 +1,7 @@
 module Dragnet
   class Action::DoBeforeSavingAnswer < Action
-    private attr_reader :answer, :question
-
-    def initialize(answer:, question:)
-      @answer = answer
-      @question = question
-    end
+    attribute :answer
+    attribute :question
 
     # Do nothing by default
     def number(type); end

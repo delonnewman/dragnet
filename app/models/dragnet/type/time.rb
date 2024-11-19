@@ -1,5 +1,5 @@
 module Dragnet
-  class Type::Boolean < Type
+  class Type::Time < Type
     ignore :do_before_saving_answer
 
     perform \

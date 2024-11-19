@@ -1,16 +1,27 @@
-class Dragnet
+module Dragnet
   class Type
-    # Dispatch extensible actions by type
-    def perform(action, **args)
-      Action.build(action, **args).send_type(question_type)
+    def self.perform(*action_names)
+      action_classes = action_names.map do |name|
+        [name, "Action::#{name.classify}".constantize]
+      end
+
+      action_classes.each do |(name, klass)|
+        define_method name do |**args|
+          klass.new(**args)
+        end
+      end
     end
 
-    def assign_value(...)
-      Action::AssignValue.new(...)
+    def self.ignore(*action_names)
+      action_names.each do |name|
+        define_method name do |**_|
+          Action::DoNothing.new
+        end
+      end
     end
 
-    def get_value(...)
-      Action::GetValue.new(...)
+    def send_action(action_name, ...)
+      public_send(action_name, ...).send_type(question_type)
     end
   end
 end

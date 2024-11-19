@@ -1,5 +1,7 @@
 module Dragnet
   class Action::GetNumberValue < Action::GetValue
+    attribute :answer
+
     def boolean(type)
       raise Answer::EvaluationError, "can't convert #{type} to number"
     end

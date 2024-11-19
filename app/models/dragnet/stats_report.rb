@@ -81,14 +81,14 @@ module Dragnet
     #
     # @return [Hash{String, Integer}]
     def answer_occurrence(question)
-      question.type.occurrence_table(reportable, question)
+      question.type.send_action(:calculate_occurrence_table, reportable:, question:)
     end
 
     # @param question [Question]
     #
     # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
     def answer_stats(question)
-      question.type.perform(Action::CalculateStatsTable.new(reportable:, question:))
+      question.type.send_action(:calculate_stats_table, reportable:, question:)
     end
   end
 end

@@ -1,20 +1,16 @@
 module Dragnet
   class Action::GetValue < Action
-    private attr_reader :answer
+    attribute :answer
 
-    def initialize(answer:)
-      @answer = answer
-    end
-
-    def boolean(type)
+    def boolean(_type)
       answer.boolean_value
     end
 
-    def choice(type)
+    def choice(_type)
       answer.question_option&.text
     end
 
-    def number(type)
+    def number(_type)
       if answer.question.settings.decimal?
         answer.float_value
       else
@@ -22,13 +18,13 @@ module Dragnet
       end
     end
 
-    def text(type)
+    def text(_type)
       return answer.long_text_value if answer.question.settings.long_answer?
 
       answer.short_text_value
     end
 
-    def time(type)
+    def time(_type)
       question = answer.question
       date = answer.date_value
       time = answer.time_value
