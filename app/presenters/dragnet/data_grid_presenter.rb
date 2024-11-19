@@ -54,7 +54,7 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   memoize :record_count
 
   def relation
-    query.relation(survey.replies, offset: pager.offset, items: pager.items)
+    query.relation(survey.replies, offset: pager.offset, items: pager.count)
   end
   memoize :relation
 

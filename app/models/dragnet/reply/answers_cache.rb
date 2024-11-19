@@ -2,8 +2,6 @@
 
 module Dragnet
   class Reply::AnswersCache
-    include Memoizable
-
     def initialize(reply)
       @reply = reply
     end
@@ -13,7 +11,6 @@ module Dragnet
         Answer.new(attributes)
       end
     end
-    memoize :answers
 
     QUESTION_ATTRIBUTES = {
       :question_type     => :question_type_attributes,
@@ -41,9 +38,9 @@ module Dragnet
     end
 
     def data!
-      raise 'No data in cache' unless data
+      raise 'No data in cache' unless (cached = data)
 
-      data
+      cached
     end
 
     def data
@@ -52,6 +49,10 @@ module Dragnet
 
     def reset!
       @reply.cached_answers_data = pull_data
+    end
+
+    def update!
+      @reply.update_columns(cached_answers_data: pull_data)
     end
 
     def pull_data

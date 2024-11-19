@@ -14,7 +14,7 @@ describe Dragnet::Reply do
     survey.save!
     reply.update(submitted: true, submitted_at:)
 
-    expect(survey.latest_submission_at).to eq submitted_at
+    expect(survey.reload.latest_submission_at).to eq submitted_at
   end
 
   it 'ensures that answers data cache is updated before saving' do
@@ -40,6 +40,7 @@ describe Dragnet::Reply do
     subject(:reply) { described_class[survey:].generate! }
 
     let(:survey) { Dragnet::Survey[questions: { question_type: Dragnet::QuestionType.get(:text) }].generate! }
+    let(:reply_params) { ActionController::Parameters.new(submission_data).permit(*reply.submission_parameters.reply_attributes) }
 
     def submission_data
       question = survey.questions.first
@@ -60,11 +61,12 @@ describe Dragnet::Reply do
     end
 
     it "updates the reply with any attributes that it's been given" do
-      original_data = reply.answers.map(&:value)
-      reply.submit(submission_data)
-      updated_data = reply.reload.answers.map(&:value)
+      reply.save!
+      reply.submit(reply_params)
 
-      expect(updated_data).not_to eq(original_data)
+      expect(reply.answers.count).to eq(reply.cached_answers.count)
+      expect(reply.answers.map(&:value)).to include(*reply.cached_answers.map(&:value))
+      expect(reply.answers.map(&:value)).to include('testing')
     end
 
     it 'updates answers data cache' do

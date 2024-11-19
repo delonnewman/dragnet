@@ -15,8 +15,6 @@ module Dragnet
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :reply
     accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
-    with ReplySubmissionPolicy, delegating: %i[can_edit_reply? can_update_reply? can_complete_reply?]
-
     # Analytics
     belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
     has_many :events, through: :ahoy_visit
@@ -27,7 +25,14 @@ module Dragnet
 
     # Answer caching (used for better performance in the data grid)
     with AnswersCache
-    before_save { answers_cache.reset! }
+
+    before_save do
+      answers_cache.reset! if new_record? || cached_answers_data.blank?
+    end
+
+    after_save unless: :new_record? do
+      # reload.answers_cache.reset!
+    end
 
     def cached_answers
       answers_cache.answers
@@ -38,7 +43,9 @@ module Dragnet
     end
 
     # Submission
+    with ReplySubmissionPolicy, delegating: %i[can_edit_reply? can_update_reply? can_complete_reply?]
     delegate :submission_parameters, to: :survey
+    scope :complete, -> { where(submitted: true) }
     scope :incomplete, -> { where(submitted: false) }
     validates :csrf_token, presence: true
     before_validation if: :new_record? do
@@ -47,8 +54,8 @@ module Dragnet
     end
 
     # Cache submission date in survey to improve query performance for workspaces
-    after_save do
-      survey.update(latest_submission_at: submitted_at) if submitted?
+    after_save if: :submitted? do
+      survey.update(latest_submission_at: submitted_at)
     end
 
     def expired?(now = Time.zone.now)
