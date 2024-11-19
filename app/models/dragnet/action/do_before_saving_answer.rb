@@ -3,12 +3,6 @@ module Dragnet
     attribute :answer
     attribute :question
 
-    # Do nothing by default
-    def number(type); end
-    def time(type); end
-    def boolean(type); end
-    def choice(type); end
-
     def text(type)
       return unless question.settings.long_answer? && question.settings.countable?
 
