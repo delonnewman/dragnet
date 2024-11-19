@@ -9,7 +9,8 @@ module Dragnet
       private attr_reader name
     end
 
-    def initialize(attributes)
+    def initialize(question_type, attributes)
+      @question_type = question_type
       self.class.attributes.each do |attribute|
         raise ArgumentError, "#{attribute} is required" unless attributes.key?(attribute)
 
@@ -18,7 +19,13 @@ module Dragnet
     end
 
     def send_type(question_type)
-      public_send(question_type.ident, question_type)
+      public_send(question_type.ident)
     end
+
+    private
+
+    attr_reader :question_type
+
+    delegate :type, to: :question_type
   end
 end

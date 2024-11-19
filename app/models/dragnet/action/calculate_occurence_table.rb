@@ -3,15 +3,15 @@ module Dragnet
     attribute :reportable
     attribute :question
 
-    def text(type)
-      unless question.settings.long_answer? && question.settings.countable?
+    def text
+      unless type.calculate_sentiment?(question)
         raise "can't collect occurrence stats for text unless the setting is turned on"
       end
 
       reportable.answers.where(question:).group(:float_value).count
     end
 
-    def number(type)
+    def number
       if question.settings.decimal?
         reportable.answers.where(question:).group(:float_value).count
       else
@@ -19,7 +19,7 @@ module Dragnet
       end
     end
 
-    def choice(type)
+    def choice
       opts = question.question_options.reduce({}) { |table, opt| table.merge!(opt.id => opt.text) }
       data = reportable.answers.where(question:).group(:question_option_id).count
 

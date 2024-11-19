@@ -8,11 +8,11 @@ module Dragnet
     attribute :direction
     attribute :join_name
 
-    def boolean(type)
+    def boolean
       scope.order(sanitize_sql_for_order("#{join_name}.boolean_value") => direction)
     end
 
-    def number(type)
+    def number
       if question.settings.decimal?
         scope.order(sanitize_sql_for_order("#{join_name}.float_value") => direction)
       else
@@ -20,7 +20,7 @@ module Dragnet
       end
     end
 
-    def text(type)
+    def text
       if question.settings.long_answer?
         scope.order(sanitize_sql_for_order("#{join_name}.long_text_value") => direction)
       else
@@ -28,20 +28,22 @@ module Dragnet
       end
     end
 
-    def time(type)
-      if question.settings.include_date_and_time?
-        scope.order(
-          sanitize_sql_for_order("#{join_name}.date_value") => direction,
-          sanitize_sql_for_order("#{join_name}.time_value") => direction
-        )
-      elsif question.settings.include_time?
-        scope.order(sanitize_sql_for_order("#{join_name}.time_value") => direction)
-      else
-        scope.order(sanitize_sql_for_order("#{join_name}.date_value") => direction)
-      end
+    def time
+      scope.order(sanitize_sql_for_order("#{join_name}.time_value") => direction)
     end
 
-    def choice(type)
+    def date_and_time
+      scope.order(
+        sanitize_sql_for_order("#{join_name}.date_value") => direction,
+        sanitize_sql_for_order("#{join_name}.time_value") => direction
+      )
+    end
+
+    def date
+      scope.order(sanitize_sql_for_order("#{join_name}.date_value") => direction)
+    end
+
+    def choice
       scope.order(sanitize_sql_for_order("#{join_name}.question_option_id") => direction)
     end
   end

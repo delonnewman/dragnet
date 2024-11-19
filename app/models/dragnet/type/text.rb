@@ -10,4 +10,8 @@ module Dragnet
       :calculate_stats_table,
       :calculate_occurrence_table
   end
+
+  def calculate_sentiment?(question)
+    question.settings.long_answer? && question.settings.countable?
+  end
 end

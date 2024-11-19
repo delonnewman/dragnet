@@ -5,21 +5,21 @@ module Dragnet
     attribute :reportable
     attribute :question
 
-    def number(type)
+    def number
       name = question.settings.decimal? ? :float_value : :integer_value
 
       collect_stats(question, column: Answer.arel_table[name])
     end
 
-    def text(type)
-      unless question.settings.long_answer? && question.settings.countable?
+    def text
+      unless type.calculate_sentiment?(question)
         raise "can't collect stats for text unless the setting is turned on"
       end
 
       collect_stats(question, column: Answer.arel_table[:float_value])
     end
 
-    def choice(type)
+    def choice
       collect_stats(question, column: QuestionOption.arel_table[:weight])
     end
 

@@ -1,21 +1,17 @@
 module Dragnet
   class Action::AssignValue < Action
-    private attr_reader :answer, :value
+    attribute :answer
+    attribute :value
 
-    def initialize(answer:, value:)
-      @answer = answer
-      @value = value
-    end
-
-    def boolean(type)
+    def boolean
       answer.boolean_value = value
     end
 
-    def choice(type)
+    def choice
       answer.question_option_id = value
     end
 
-    def number(type)
+    def number
       if answer.question.settings.decimal?
         answer.float_value = value
       else
@@ -23,7 +19,7 @@ module Dragnet
       end
     end
 
-    def text(type)
+    def text
       if answer.question.settings.long_answer?
         answer.long_text_value = value
       else
@@ -31,9 +27,17 @@ module Dragnet
       end
     end
 
-    def time(type)
-      answer.time_value = value if answer.question.settings.include_time?
-      answer.date_value = value if answer.question.settings.include_date?
+    def time
+      answer.time_value = value
+    end
+
+    def date
+      answer.date_value = value
+    end
+
+    def date_and_time
+      answer.time_value = value.to_time
+      answer.date_value = value.to_date
     end
   end
 end
