@@ -1,17 +1,18 @@
 # syntax = docker/dockerfile:1
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=3.2.2
-ARG RAILS_MASTER_KEY=DUMMY
+ARG RUBY_VERSION=""
+ARG RAILS_MASTER_KEY=""
+ARG BUNDLE_WITHOUT=""
+ARG RAILS_ENV=""
 FROM ruby:$RUBY_VERSION-slim AS base
 
 # Rails app lives here
 WORKDIR /rails
 
-# Set production environment
-ENV RAILS_ENV="production" \
+ENV RAILS_ENV=$RAILS_ENV \
     BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_WITHOUT="development:test"
+    BUNDLE_WITHOUT=$BUNDLE_WITHOUT
 
 # Update gems and bundler
 RUN gem update --system --no-document && \
