@@ -53,14 +53,13 @@ unless Rails.env.test?
 end
 
 # Generate some sample data if in development
-if Rails.env.development?
+if Rails.env.development? && User.count.zero?
   puts 'Generating some data that should aid development 🦫🚧 ...'
 
   print 'Generating Users...'
   5.times do
     User[password: 'testing123'].generate.tap do |u|
-      u.save!
-      print '.'
+      print u.save ? '.' : 'x'
     end
   end
   puts 'Done.'
@@ -69,8 +68,7 @@ if Rails.env.development?
   surveys = User.all.flat_map do |u|
     Array.new(5) do
       Survey[author: u].generate.tap do |s|
-        s.save!
-        print '.'
+        print s.save ? '.' : 'x'
       end
     end
   end
@@ -93,8 +91,7 @@ if Rails.env.development?
             Ahoy::Event[name: ReplyTracker.event_name(:complete), visit:, survey_id:, reply_id:].generate!
           end
           reply.ahoy_visit = visit
-          reply.save!
-          print '.'
+          print reply.save ? '.' : 'x'
         end
       end
     end
