@@ -6,7 +6,7 @@ describe Dragnet::Reply::AnswersCache do
   let(:reply) { Dragnet::Reply[survey:].generate }
   let(:survey) { Dragnet::Survey.generate! }
 
-  it 'can be reset' do
+  it 'can be set' do
     expect { cache.set! }.to change(cache, :data).from(nil)
   end
 
