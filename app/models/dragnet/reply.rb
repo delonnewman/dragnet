@@ -4,9 +4,6 @@ module Dragnet
   class Reply < ApplicationRecord
     include Retractable
 
-    CSRF_TOKEN_PRECISION = 256
-    EXPIRATION_DURATION = 30.minutes # TODO: move this to configration
-
     retract_associated :answers
 
     belongs_to :survey, class_name: 'Dragnet::Survey'
@@ -25,9 +22,8 @@ module Dragnet
       update(ahoy_visit: visit) if visit && ahoy_visit_id != visit.id
     end
 
-    # Answer caching (used for better performance in the data grid)
     with AnswersCache
-    before_save { answers_cache.reset! }
+    before_save { answers_cache.set! }
 
     def cached_answers
       answers_cache.answers
@@ -38,9 +34,15 @@ module Dragnet
     end
 
     # Submission
+    CSRF_TOKEN_PRECISION = 256
+    EXPIRATION_DURATION = 30.minutes # TODO: move this to configration
+
     delegate :submission_parameters, to: :survey
+
     scope :incomplete, -> { where(submitted: false) }
+
     validates :csrf_token, presence: true
+
     before_validation if: :new_record? do
       self.csrf_token = SecureRandom.urlsafe_base64(CSRF_TOKEN_PRECISION)
       self.expires_at = EXPIRATION_DURATION.from_now
@@ -55,23 +57,12 @@ module Dragnet
       expires_at <= now
     end
 
-    # Mark the reply as submitted
-    #
-    # @param [Time] timestamp
-    #
-    # @return [Reply]
     def submitted!(timestamp)
       self.submitted    = true
       self.submitted_at = timestamp
       self
     end
 
-    # Apply changes to attributes, validate, mark as submitted and save the reply
-    #
-    # @param [Hash{Symbol, String => Object}, ActionController::Parameters] attributes
-    # @param [Time] timestamp
-    #
-    # @return [Boolean]
     def submit(attributes, timestamp: Time.zone.now)
       assign_attributes(attributes)
       validate(:submission)
