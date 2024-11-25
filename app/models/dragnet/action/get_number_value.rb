@@ -11,9 +11,7 @@ module Dragnet
     end
 
     def text
-      unless type.calculate_sentiment?(answer.question)
-        raise Answer::EvaluationError, "can't convert #{type} to number"
-      end
+      raise Answer::EvaluationError, "can't convert #{type} to number" unless type.calculate_sentiment?(answer.question)
 
       answer.float_value
     end
