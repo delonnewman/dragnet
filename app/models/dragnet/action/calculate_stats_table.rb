@@ -12,9 +12,7 @@ module Dragnet
     end
 
     def text
-      unless type.calculate_sentiment?(question)
-        raise "can't collect stats for text unless the setting is turned on"
-      end
+      raise "can't collect stats for text unless the setting is turned on" unless type.calculate_sentiment?(question)
 
       collect_stats(question, column: Answer.arel_table[:float_value])
     end
