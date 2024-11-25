@@ -27,6 +27,8 @@ module Dragnet
       @reply.cached_answers_data = pull_data
     end
 
+    private
+
     def pull_data
       @reply.answers.whole.pull(
         :id,
