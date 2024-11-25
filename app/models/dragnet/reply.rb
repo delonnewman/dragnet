@@ -4,23 +4,14 @@ module Dragnet
   class Reply < ApplicationRecord
     include Retractable
 
-    retract_associated :answers
-
     belongs_to :survey, class_name: 'Dragnet::Survey'
     has_many :questions, class_name: 'Dragnet::Question', through: :survey
 
+    # Answers
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :reply
     accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
 
-    with ReplySubmissionPolicy, delegating: %i[can_edit_reply? can_update_reply? can_complete_reply?]
-
-    # Analytics
-    belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
-    has_many :events, through: :ahoy_visit
-
-    def ensure_visit(visit)
-      update(ahoy_visit: visit) if visit && ahoy_visit_id != visit.id
-    end
+    retract_associated :answers
 
     with AnswersCache
     before_save { answers_cache.set! }
@@ -33,7 +24,17 @@ module Dragnet
       cached_answers.select { |a| a.question_id == question.id }
     end
 
+    # Analytics
+    belongs_to :ahoy_visit, class_name: 'Ahoy::Visit', optional: true
+    has_many :events, through: :ahoy_visit
+
+    def ensure_visit(visit)
+      update(ahoy_visit: visit) if visit && ahoy_visit_id != visit.id
+    end
+
     # Submission
+    with ReplySubmissionPolicy, delegating: %i[can_edit_reply? can_update_reply? can_complete_reply?]
+
     CSRF_TOKEN_PRECISION = 256
     EXPIRATION_DURATION = 30.minutes # TODO: move this to configration
 
