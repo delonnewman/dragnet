@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 module Dragnet
+  # Modify the data grid relation to filter records
   class Action::FilterDataGrid < Action
     attribute :question
-    attribute :scope
+    attribute :relation
     attribute :table
     attribute :value
 

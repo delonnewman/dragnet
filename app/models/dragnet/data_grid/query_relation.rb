@@ -111,7 +111,7 @@ module Dragnet
       end
 
       def filtered_values(scope, question, table, value)
-        question.type.send_action(:filter_data_grid, question:, scope:, table:, value:)
+        question.type.send_action(:filter_data_grid, question:, relation: scope, table:, value:)
       end
     end
   end
