@@ -7,7 +7,7 @@ describe Dragnet::Reply::AnswersCache do
   let(:survey) { Dragnet::Survey.generate! }
 
   it 'can be reset' do
-    expect { cache.reset! }.to change(cache, :data).from(nil)
+    expect { cache.set! }.to change(cache, :data).from(nil)
   end
 
   it "raises an error when answers are requested if there's no data in the cache" do
@@ -15,7 +15,7 @@ describe Dragnet::Reply::AnswersCache do
   end
 
   it 'builds answers from cached data' do
-    cache.reset!
+    cache.set!
 
     expect { cache.answers }.to perform_number_of_queries(0)
   end
