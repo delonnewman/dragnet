@@ -25,17 +25,15 @@ module Dragnet
     end
 
     def time
-      question = answer.question
-      date = answer.date_value
-      time = answer.time_value
+      answer.time_value
+    end
 
-      if date && time && question.settings.include_date_and_time?
-        return DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec, time.utc_offset)
-      end
+    def date
+      answer.date_value
+    end
 
-      return date if date && question.settings.include_date?
-
-      time
+    def date_and_time
+      DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec, time.utc_offset)
     end
   end
 end

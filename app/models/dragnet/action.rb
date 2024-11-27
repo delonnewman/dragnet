@@ -9,7 +9,7 @@ module Dragnet
       private attr_reader name
     end
 
-    def initialize(question_type, attributes)
+    def initialize(question_type, **attributes)
       @question_type = question_type
       self.class.attributes.each do |attribute|
         raise ArgumentError, "#{attribute} is required" unless attributes.key?(attribute)

@@ -2,12 +2,12 @@ module Dragnet
   class Type
     def self.perform(*action_names)
       action_classes = action_names.map do |name|
-        [name, "Action::#{name.classify}".constantize]
+        [name, "::Dragnet::Action::#{name.to_s.classify}".constantize]
       end
 
       action_classes.each do |(name, klass)|
         define_method name do |**args|
-          klass.new(**args)
+          klass.new(question_type, **args)
         end
       end
     end
@@ -20,8 +20,16 @@ module Dragnet
       end
     end
 
+    def initialize(question_type)
+      @question_type = question_type
+    end
+
     def send_action(action_name, ...)
       public_send(action_name, ...).send_type(question_type)
     end
+
+    private
+
+    attr_reader :question_type
   end
 end
