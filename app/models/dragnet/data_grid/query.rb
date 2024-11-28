@@ -21,7 +21,7 @@ module Dragnet
       @questions = questions
       @sort_by = params[:sort_by] || defaults.fetch(:sort_by, :created_at)
       @sort_direction = params[:sort_direction] || defaults.fetch(:sort_direction, :desc)
-      @filter_by = params[:filter_by] || defaults.fetch(:filter_by, EMPTY_HASH)
+      @filter_by = (params[:filter_by] || defaults.fetch(:filter_by, EMPTY_HASH)).to_h
     end
 
     def relation(replies, **options)
