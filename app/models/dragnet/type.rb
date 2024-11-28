@@ -20,6 +20,8 @@ module Dragnet
       end
     end
 
+    attr_reader :question_type
+
     def initialize(question_type)
       @question_type = question_type
     end
@@ -27,9 +29,5 @@ module Dragnet
     def send_action(action_name, ...)
       public_send(action_name, ...).send_type(question_type)
     end
-
-    private
-
-    attr_reader :question_type
   end
 end
