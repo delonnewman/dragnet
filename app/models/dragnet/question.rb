@@ -36,9 +36,5 @@ module Dragnet
       Settings.new(self)
     end
     memoize :settings
-
-    def type
-      question_type
-    end
   end
 end
