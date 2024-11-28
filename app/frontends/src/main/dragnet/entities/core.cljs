@@ -1,7 +1,7 @@
 (ns dragnet.entities.core
   (:require
     [clojure.spec.alpha :as s]
-    [dragnet.shared.utils :as utils :refer [->uuid echo map-values] :include-macros true]
+    [dragnet.shared.utils :as utils :refer [->uuid map-values] :include-macros true]
     [expound.alpha :refer [expound-str]]))
 
 
@@ -112,20 +112,19 @@
 
   Only :text and :type are required."
   [& {:keys [id text order display_order required settings options question_options type question_type]
-      :or {id (random-uuid)
-           options question_options
-           order (or display_order 0)
-           type question_type
-           required false}}]
-  (-> {:entity/id (->uuid id)
-       :entity/type :question
-       :question/text text
-       :question/display-order order
-       :question/required required
-       :question/settings settings
-       :question/options (map-values make-question-option options)
-       :question/type (make-question-type type)}
-      validate-question!))
+      :or {id (random-uuid) required false}}]
+  (let [options (or options question_options)
+        order (or order display_order 0)
+        type (or type question_type)]
+    (-> {:entity/id (->uuid id)
+         :entity/type :question
+         :question/text text
+         :question/display-order order
+         :question/required required
+         :question/settings settings
+         :question/options (map-values make-question-option options)
+         :question/type (make-question-type type)}
+        validate-question!)))
 
 
 (s/def :survey/author (s/keys :req [:entity/id :entity/type :user/name :user/nickname]))
@@ -162,9 +161,9 @@
 
   Only :name and :author are required."
   [& {:keys [id name description author questions updated-at updated_at]
-      :or {id (random-uuid) updated-at (or updated_at (js/Date.))}}]
-  (echo questions)
-  (let [survey
+      :or {id (random-uuid)}}]
+  (let [updated-at (or updated-at updated_at (js/Date.))
+        survey
         {:entity/id (->uuid id)
          :entity/type :survey
          :survey/name name
