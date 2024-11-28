@@ -72,7 +72,7 @@ module Dragnet
           question = @query.question(sort_by)
           scope = sorting_scope(scope, question.id)
           join_name = join_aliases.fetch(:sorting, :answers)
-          question.type.send_action(:sort_data_grid, question:, scope:, direction:, join_name:)
+          question.type.send_action(:sort_data_grid, question:, scope:, direction: sort_direction, join_name:)
         end
       end
 
