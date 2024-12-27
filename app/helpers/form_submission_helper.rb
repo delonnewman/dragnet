@@ -15,8 +15,9 @@ module FormSubmissionHelper
     </script>
   ERB
 
-  def survey_form_code(survey_id, base_url = request.base_url)
-    # although arguments seem to not be used, they add 'survey_id' and 'base_url' to lexical binding which is needed in the template
-    eval(Erubi::Engine.new(FORM_TEMPLATE).src)
+  def survey_form_code(survey_id, base_url = request.base_url) # rubocop:disable Lint/UnusedMethodArgument
+    # Although arguments seem to not be used, they add 'survey_id' and 'base_url'
+    # to lexical binding which is needed in the template
+    eval(Erubi::Engine.new(FORM_TEMPLATE).src) # rubocop:disable Security/Eval
   end
 end
