@@ -1,8 +1,8 @@
 (ns dragnet.common.utils
   (:require
-    [cljs-http.client :as http]
-    [cljs.core.async :refer [<! go]]
-    [clojure.string :as s]))
+   [cljs-http.client :as http]
+   [cljs.core.async :refer [<! go]]
+   [clojure.string :as s]))
 
 
 (def ^:dynamic *window* js/window)
@@ -20,8 +20,8 @@
 (defn ex-arguments
   [& {:keys [expected received]}]
   (ex-info
-    (str "wrong number of arguments, expected " (pr-str expected) " received " (pr-str received))
-    #:ex-arguments{:expected expected :received received}))
+   (str "wrong number of arguments, expected " (pr-str expected) " received " (pr-str received))
+   #:ex-arguments{:expected expected :received received}))
 
 
 (defn url-helper
@@ -74,11 +74,11 @@
   [& keys]
   (let [ks (if (and (= 1 (count keys)) (coll? (first keys))) (first keys) keys)]
     (reduce
-      (fn [s k]
-        (let [k' (if (number? k) (str k) (name k))]
-          (str s "[" k' "]")))
-      (name (first ks))
-      (drop 1 ks))))
+     (fn [s k]
+       (let [k' (if (number? k) (str k) (name k))]
+         (str s "[" k' "]")))
+     (name (first ks))
+     (drop 1 ks))))
 
 
 (defn entity?
@@ -225,11 +225,11 @@
   [& {:keys [expected-type received spec]}]
   (let [received-type (type received)]
     (ex-info
-      (str "wrong type, expected " (name-of-type expected-type) ", "
-           "received " (pr-str received) ":" (name-of-type received-type))
-      #:ex-type{:expected-type expected-type
-                :received-value received
-                :received-type received-type :spec spec})))
+     (str "wrong type, expected " (name-of-type expected-type) ", "
+          "received " (pr-str received) ":" (name-of-type received-type))
+     #:ex-type{:expected-type expected-type
+               :received-value received
+               :received-type received-type :spec spec})))
 
 
 (defn ex-coercion
