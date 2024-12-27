@@ -1,4 +1,4 @@
-(ns dragnet.shared.core)
+(ns dragnet.common.core)
 
 
 (defn- question-settings-predicate

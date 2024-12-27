@@ -6,7 +6,7 @@
      [survey survey-edited? question-type-slug question-types question-type-list question-type-uid errors?]]
     [dragnet.common.components :refer
      [icon switch text-field remove-button]]
-    [dragnet.shared.core :refer
+    [dragnet.common.core :refer
      [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
     [dragnet.shared.utils :as utils :refer [time-ago-in-words pp-str] :include-macros true]))
 

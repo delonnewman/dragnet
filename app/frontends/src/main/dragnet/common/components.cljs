@@ -1,7 +1,7 @@
 (ns dragnet.common.components
   (:require
     [clojure.string :as s]
-    [dragnet.shared.core :refer
+    [dragnet.common.core :refer
      [question-id long-answer? multiple-answers? include-time? include-date?]]
     [dragnet.shared.utils :refer [form-name]]))
 
