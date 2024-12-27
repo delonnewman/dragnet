@@ -12,10 +12,22 @@
   [:div.prompt.mb-4
    [:label {:for (str "question-" question-id)} label]
    [:div
-    [:input {:type "hidden" :name (answer-form-name question-id :question_id) :value question-id}]
-    [:input {:type "hidden" :name (answer-form-name question-id :reply_id) :value reply-id}]
-    [:input {:type "hidden" :name (answer-form-name question-id :survey_id) :value survey-id}]
-    [:input {:type "hidden" :name (answer-form-name question-id :question_type_id) :value question-type-id}]
+    [:input
+     {:type "hidden"
+      :name (answer-form-name question-id :question_id)
+      :value question-id}]
+    [:input
+     {:type "hidden"
+      :name (answer-form-name question-id :reply_id)
+      :value reply-id}]
+    [:input
+     {:type "hidden"
+      :name (answer-form-name question-id :survey_id)
+      :value survey-id}]
+    [:input
+     {:type "hidden"
+      :name (answer-form-name question-id :question_type_id)
+      :value question-type-id}]
     children]])
 
 
@@ -29,13 +41,14 @@
       [:input {:type "hidden" :name (form-name [:reply :id]) :value reply-id}]
       [:input {:type "hidden" :name (form-name [:reply :survey_id]) :value (survey :id)}]
       (for [question (->> survey :questions vals)]
-        ^{:key (question :id)} [answer-prompt
-                                :question-id (question :id)
-                                :survey-id (survey :id)
-                                :reply-id reply-id
-                                :question-type-id (question :question_type_id)
-                                :label (question :text)
-                                :children (prompt-body question :form-name-prefix [:reply :answers_attributes])])
+        ^{:key (question :id)}
+        [answer-prompt
+         :question-id (question :id)
+         :survey-id (survey :id)
+         :reply-id reply-id 
+         :question-type-id (question :question_type_id) 
+         :label (question :text) 
+         :children (prompt-body question :form-name-prefix [:reply :answers_attributes])])
       (when-not preview
         [:button.btn.btn-primary
          {:type "submit" :onsubmit (remove-stored-id-code (survey :id))} "Submit"])]]))
