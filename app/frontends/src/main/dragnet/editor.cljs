@@ -1,4 +1,4 @@
-(ns dragnet.editor.shell
+(ns dragnet.editor
   "The survey editor UI shell"
   (:require
     [cljs-http.client :as http]

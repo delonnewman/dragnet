@@ -3,7 +3,7 @@
  {:editor {:target :browser
            :output-dir "../../public/js/editor"
            :asset-path "/js/editor"
-           :modules {:shell {:init-fn dragnet.editor.shell/init}}}
+           :modules {:shell {:init-fn dragnet.editor/init}}}
   :submitter {:target :browser
               :output-dir "../../public/js/submitter"
               :asset-path "/js/submitter"
