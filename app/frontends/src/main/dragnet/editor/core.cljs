@@ -3,7 +3,10 @@
   (:require
     [cljs.core.async :refer [<! go]]
     [clojure.spec.alpha :as s]
-    [dragnet.common.utils :as utils :refer [->int ->uuid pp pp-str ppt echo http-request] :include-macros true]))
+    [dragnet.common.utils
+     :as utils
+     :refer [->int ->uuid pp pp-str ppt echo http-request]
+     :include-macros true]))
 
 
 (def survey-path (utils/path-helper ["/api/v1/editing/surveys" :entity/id]))
