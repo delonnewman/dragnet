@@ -1,12 +1,12 @@
 (ns dragnet.editor.core
   "Core logic for the Editor UI"
   (:require
-    [cljs.core.async :refer [<! go]]
-    [clojure.spec.alpha :as s]
-    [dragnet.common.utils
-     :as utils
-     :refer [->int ->uuid pp pp-str ppt echo http-request]
-     :include-macros true]))
+   [cljs.core.async :refer [<! go]]
+   [clojure.spec.alpha :as s]
+   [dragnet.common.utils
+    :as utils
+    :refer [->int ->uuid pp pp-str ppt echo http-request]
+    :include-macros true]))
 
 
 (def survey-path (utils/path-helper ["/api/v1/editing/surveys" :entity/id]))
@@ -18,9 +18,7 @@
 
 (comment
 
-(survey-url 1)
-
-)
+  (survey-url 1))
 
 (defn survey
   [state & key-path]
@@ -71,8 +69,8 @@
 
 
 (s/fdef question-type
-        :args (s/cat :state map? :type-id uuid?)
-        :ret map?)
+  :args (s/cat :state map? :type-id uuid?)
+  :ret map?)
 
 
 (defn question-type
@@ -276,8 +274,8 @@
 
 
 (s/fdef change-type!
-        :args (s/cat :ref #(instance? Atom %) :question map?)
-        :ret fn?)
+  :args (s/cat :ref #(instance? Atom %) :question map?)
+  :ret fn?)
 
 
 (defn change-type!
