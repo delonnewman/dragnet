@@ -1,4 +1,4 @@
-(ns dragnet.entities.core
+(ns dragnet.editor.entities
   (:require
     [clojure.spec.alpha :as s]
     [dragnet.common.utils :as utils :refer [->uuid map-values] :include-macros true]
