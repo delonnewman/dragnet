@@ -1,14 +1,27 @@
 (ns dragnet.editor.components
   "View components for the Editor UI"
   (:require
-    [clojure.string :as s]
-    [dragnet.editor.core :as editor :refer
-     [survey survey-edited? question-type-slug question-types question-type-list question-type-uid errors?]]
-    [dragnet.common.components :refer
-     [icon switch text-field remove-button]]
-    [dragnet.common.core :refer
-     [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
-    [dragnet.common.utils :as utils :refer [time-ago-in-words pp-str] :include-macros true]))
+   [clojure.string :as s]
+   [dragnet.editor.core :as editor :refer
+    [survey
+     survey-edited?
+     question-type-slug
+     question-types
+     question-type-list
+     question-type-uid
+     errors?]]
+   [dragnet.common.components :refer
+    [icon switch text-field remove-button]]
+   [dragnet.common.core :refer
+    [multiple-answers?
+     long-answer?
+     include-date?
+     include-time?
+     include-date-and-time?]]
+   [dragnet.common.utils
+    :as utils
+    :refer [time-ago-in-words pp-str]
+    :include-macros true]))
 
 
 (defn choice-option
@@ -85,19 +98,21 @@
     (when-let [type ((question-types @ref) (question :question_type_id))]
       (for [[ident {text :text type :type default :default}] (type :question.type/settings)]
         (let [form-id (str "option-" (question :id) "-" (name ident))]
-          ^{:key form-id} [switch
-                           {:id form-id
-                            :checked (editor/question-setting question ident :default default)
-                            :on-change (editor/change-setting! ref question ident)
-                            :style {:margin-right "20px"}
-                            :label text}])))
+          ^{:key form-id}
+          [switch
+           {:id form-id
+            :checked (editor/question-setting question ident :default default)
+            :on-change (editor/change-setting! ref question ident)
+            :style {:margin-right "20px"}
+            :label text}])))
     (let [form-id (str "option-" (question :id) "-required")]
-      ^{:key form-id} [switch
-                       {:id form-id
-                        :checked (question :question/required)
-                        :on-change (editor/change-required! ref question)
-                        :style {:margin-right "20px"}
-                        :label "Required"}])]])
+      ^{:key form-id}
+      [switch
+       {:id form-id
+        :checked (question :question/required)
+        :on-change (editor/change-required! ref question)
+        :style {:margin-right "20px"}
+        :label "Required"}])]])
 
 
 (defn select-question-type
@@ -186,7 +201,7 @@
         (str "Last saved " (time-ago-in-words (editor/updated-at @ref)))
         (str "Up to date. Saved " (time-ago-in-words (editor/updated-at @ref))))]]
     [:small#errors.text-danger
-     (if (errors? @ref) (str "Error: " (s/join ", " (editor/errors @ref))))]
+     (when (errors? @ref) (str "Error: " (s/join ", " (editor/errors @ref))))]
     [:div
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
