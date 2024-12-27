@@ -1,4 +1,4 @@
-(ns dragnet.shared.components
+(ns dragnet.common.components
   (:require
     [clojure.string :as s]
     [dragnet.shared.core :refer

@@ -4,7 +4,7 @@
     [clojure.string :as s]
     [dragnet.editor.core :as editor :refer
      [survey survey-edited? question-type-slug question-types question-type-list question-type-uid errors?]]
-    [dragnet.shared.components :refer
+    [dragnet.common.components :refer
      [icon switch text-field remove-button]]
     [dragnet.shared.core :refer
      [multiple-answers? long-answer? include-date? include-time? include-date-and-time?]]
