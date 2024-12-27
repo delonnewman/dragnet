@@ -1,4 +1,4 @@
-(ns dragnet.shared.utils
+(ns dragnet.common.utils
   (:require
     [cljs-http.client :as http]
     [cljs.core.async :refer [<! go]]

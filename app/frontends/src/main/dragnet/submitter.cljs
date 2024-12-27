@@ -3,7 +3,7 @@
   (:require
     [cljs-http.client :as http]
     [cljs.core.async :refer [go <!]]
-    [dragnet.utils :as utils :include-macros true]
+    [dragnet.common.utils :as utils :include-macros true]
     [dragnet.submitter.components :refer [reply-submitter]]
     [dragnet.submitter :refer [reply-url]]
     [dragnet.submitter.local-storage :as storage]

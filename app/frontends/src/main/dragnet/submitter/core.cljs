@@ -1,6 +1,6 @@
 (ns dragnet.submitter.core
   (:require
-    [dragnet.shared.utils :as utils]))
+    [dragnet.common.utils :as utils]))
 
 
 (defn reply-path

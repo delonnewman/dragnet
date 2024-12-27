@@ -7,7 +7,7 @@
     [dragnet.editor.components :refer [survey-editor]]
     [dragnet.editor.core :refer [survey-url]]
     [dragnet.entities.core :refer [make-survey survey->update make-question-types]]
-    [dragnet.shared.utils :refer [validate-presence! pp pp-str http-request] :include-macros true]
+    [dragnet.common.utils :refer [validate-presence! pp pp-str http-request] :include-macros true]
     [reagent.core :as r]
     [reagent.dom :as rdom]))
 

@@ -1,4 +1,4 @@
-(ns dragnet.shared.utils)
+(ns dragnet.common.utils)
 
 
 (defmacro validate-presence!

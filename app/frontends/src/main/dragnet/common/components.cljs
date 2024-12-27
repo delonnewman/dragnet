@@ -3,7 +3,7 @@
     [clojure.string :as s]
     [dragnet.common.core :refer
      [question-id long-answer? multiple-answers? include-time? include-date?]]
-    [dragnet.shared.utils :refer [form-name]]))
+    [dragnet.common.utils :refer [form-name]]))
 
 
 (defn icon

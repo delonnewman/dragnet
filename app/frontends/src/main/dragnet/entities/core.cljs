@@ -1,7 +1,7 @@
 (ns dragnet.entities.core
   (:require
     [clojure.spec.alpha :as s]
-    [dragnet.shared.utils :as utils :refer [->uuid map-values] :include-macros true]
+    [dragnet.common.utils :as utils :refer [->uuid map-values] :include-macros true]
     [expound.alpha :refer [expound-str]]))
 
 

@@ -1,7 +1,7 @@
 (ns dragnet.submitter.components
   (:require
     [dragnet.common.components :refer [prompt-body]]
-    [dragnet.shared.utils :refer [form-name]]
+    [dragnet.common.utils :refer [form-name]]
     [dragnet.submitter.core :refer [submission-url answer-form-name]]
     [dragnet.submitter.local-storage :refer [remove-stored-id-code]]))
 
