@@ -1,4 +1,4 @@
-(ns dragnet.editor.core
+(ns dragnet.editor
   "Core logic for the Editor UI"
   (:require
     [cljs.core.async :refer [<! go]]
@@ -12,6 +12,12 @@
 (def apply-survey-edits-path (utils/path-helper ["/api/v1/editing/surveys" :entity/id "apply"]))
 (def apply-survey-edits-url (utils/url-helper apply-survey-edits-path))
 
+
+(comment
+
+(survey-url 1)
+
+)
 
 (defn survey
   [state & key-path]
