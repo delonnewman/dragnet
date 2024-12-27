@@ -7,7 +7,7 @@
   :submitter {:target :browser
               :output-dir "../../public/js/submitter"
               :asset-path "/js/submitter"
-              :modules {:shell {:init-fn dragnet.submitter.shell/init}}}
+              :modules {:shell {:init-fn dragnet.submitter/init}}}
  :test {:target :browser-test
         :test-dir "../../public/js/test"}
  :ci {:target :karma
