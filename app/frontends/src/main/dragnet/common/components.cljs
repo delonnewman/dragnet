@@ -1,9 +1,13 @@
 (ns dragnet.common.components
   (:require
-    [clojure.string :as s]
-    [dragnet.common.core :refer
-     [question-id long-answer? multiple-answers? include-time? include-date?]]
-    [dragnet.common.utils :refer [form-name]]))
+   [clojure.string :as s]
+   [dragnet.common.core :refer
+    [question-id
+     long-answer?
+     multiple-answers?
+     include-time?
+     include-date?]]
+   [dragnet.common.utils :refer [form-name]]))
 
 
 (defn icon
@@ -106,32 +110,32 @@
   {"text"
    (fn [q & {:keys [prefix class-name]}]
      (text-prompt
-       :id (question-id q)
-       :class-name class-name
-       :name (form-name (concat prefix [(:id q) :value]))
-       :long (long-answer? q)))
+      :id (question-id q)
+      :class-name class-name
+      :name (form-name (concat prefix [(:id q) :value]))
+      :long (long-answer? q)))
    "choice"
    (fn [q & {:keys [prefix class-name]}]
      (choice-prompt
-       :id (question-id q)
-       :class-name class-name
-       :name (form-name (concat prefix [(:id q) :value]))
-       :options (->> q :question_options vals)
-       :multi (multiple-answers? q)))
+      :id (question-id q)
+      :class-name class-name
+      :name (form-name (concat prefix [(:id q) :value]))
+      :options (->> q :question_options vals)
+      :multi (multiple-answers? q)))
    "time"
    (fn [q & {:keys [prefix class-name]}]
      (time-prompt
-       :id (question-id q)
-       :class-name class-name
-       :name (form-name (concat prefix [(:id q) :value]))
-       :time (include-time? q)
-       :date (include-date? q)))
+      :id (question-id q)
+      :class-name class-name
+      :name (form-name (concat prefix [(:id q) :value]))
+      :time (include-time? q)
+      :date (include-date? q)))
    "number"
    (fn [q & {:keys [prefix class-name]}]
      (number-prompt
-       :id (question-id q)
-       :class-name class-name
-       :name (form-name (concat prefix [(:id q) :value]))))})
+      :id (question-id q)
+      :class-name class-name
+      :name (form-name (concat prefix [(:id q) :value]))))})
 
 
 (defn prompt-body
