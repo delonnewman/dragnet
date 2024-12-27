@@ -42,7 +42,7 @@
           (swap! state merge data)))))
 
 
-(defn ^:export initWithNewReply
+(defn ^:export init-with-new-reply
   "Initialize a new reply and reply submission UI with the root element ID and survey-id."
   [root-elem-id survey-id]
   (if-let [rid (storage/stored-reply-id survey-id)]

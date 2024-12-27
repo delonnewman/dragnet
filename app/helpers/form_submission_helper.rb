@@ -8,7 +8,7 @@ module FormSubmissionHelper
         const script = document.createElement("script");
         script.src = "<%= base_url %>/js/submitter/main.js";
         script.onload = function () {
-          dragnet.submitter.shell.initWithNewReply("dragnet-survey-form-<%= survey_id %>", <%= survey_id.to_json %>);
+          dragnet.submitter.init_with_new_reply("dragnet-survey-form-<%= survey_id %>", <%= survey_id.to_json %>);
         };
         document.head.append(script);
       }.call(window))
