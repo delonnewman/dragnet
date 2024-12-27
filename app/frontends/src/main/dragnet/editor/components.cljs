@@ -2,7 +2,7 @@
   "View components for the Editor UI"
   (:require
     [clojure.string :as s]
-    [dragnet.editor :as editor :refer
+    [dragnet.editor.core :as editor :refer
      [survey survey-edited? question-type-slug question-types question-type-list question-type-uid errors?]]
     [dragnet.shared.components :refer
      [icon switch text-field remove-button]]

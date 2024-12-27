@@ -1,4 +1,4 @@
-(ns dragnet.editor
+(ns dragnet.editor.core
   "Core logic for the Editor UI"
   (:require
     [cljs.core.async :refer [<! go]]

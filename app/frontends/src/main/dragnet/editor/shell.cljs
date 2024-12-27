@@ -5,7 +5,7 @@
     [cljs.core.async :refer [<! go take!]]
     [cljs.repl :refer [ex-triage ex-str]]
     [dragnet.editor.components :refer [survey-editor]]
-    [dragnet.editor :refer [survey-url]]
+    [dragnet.editor.core :refer [survey-url]]
     [dragnet.entities.core :refer [make-survey survey->update make-question-types]]
     [dragnet.shared.utils :refer [validate-presence! pp pp-str http-request] :include-macros true]
     [reagent.core :as r]
