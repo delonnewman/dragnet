@@ -1,8 +1,11 @@
 (ns dragnet.editor.entities
   (:require
-    [clojure.spec.alpha :as s]
-    [dragnet.common.utils :as utils :refer [->uuid map-values] :include-macros true]
-    [expound.alpha :refer [expound-str]]))
+   [clojure.spec.alpha :as s]
+   [dragnet.common.utils
+    :as utils
+    :refer [->uuid map-values]
+    :include-macros true]
+   [expound.alpha :refer [expound-str]]))
 
 
 (s/def :number/natural (s/or :positive pos? :zero zero?))
