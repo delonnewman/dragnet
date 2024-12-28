@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 class SurveyEditorController < EndpointController
-  # GET - /api/v1/editing/surveys/:id
   def show
     respond_to do |format|
       format.transit { render transit: survey_editing.editing_data }
     end
   end
 
-  # PUT / PATCH - /api/v1/editing/surveys/:id
   def update
     edit = new_edit(read_transit(request.body))
 
@@ -17,7 +15,6 @@ class SurveyEditorController < EndpointController
     end
   end
 
-  # POST - /api/v1/editing/surveys/:id/apply
   def apply
     edit = latest_edit
     raise "Couldn't find draft to apply" unless edit
