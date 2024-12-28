@@ -1,18 +1,18 @@
 (ns dragnet.editor
   "The survey editor UI shell"
   (:require
-    [cljs-http.client :as http]
-    [cljs.core.async :refer [<! go take!]]
-    [cljs.repl :refer [ex-triage ex-str]]
-    [dragnet.editor.components :refer [survey-editor]]
-    [dragnet.editor.core :refer [survey-url]]
-    [dragnet.editor.entities
-     :refer [make-survey survey->update make-question-types]]
-    [dragnet.common.utils
-     :refer [validate-presence! pp pp-str http-request]
-     :include-macros true]
-    [reagent.core :as r]
-    [reagent.dom :as rdom]))
+   [cljs-http.client :as http]
+   [cljs.core.async :refer [<! go take!]]
+   [cljs.repl :refer [ex-triage ex-str]]
+   [dragnet.editor.components :refer [survey-editor]]
+   [dragnet.editor.core :refer [survey-url]]
+   [dragnet.editor.entities
+    :refer [make-survey survey->update make-question-types]]
+   [dragnet.common.utils
+    :refer [validate-presence! pp pp-str http-request]
+    :include-macros true]
+   [reagent.core :as r]
+   [reagent.dom :as rdom]))
 
 
 (defn error-handler
@@ -52,7 +52,7 @@
             (swap! ref assoc :edits (conj (@ref :edits) edit)))))))
 
 
-(defn survey-data->ui-state
+(defn make-ui-state
   [data]
   (assoc data
          :survey (make-survey (data :survey))
@@ -61,7 +61,7 @@
 
 (def element-id "survey-editor")
 (def survey-id-attribute "data-survey-id")
-(def state (r/atom {})) ;; TODO: add a validator using spec
+(def state (r/atom {}))
 
 
 (defn add-watchers
@@ -70,7 +70,7 @@
   (add-watch state :auto-update (auto-updater)))
 
 
-(defn init
+(defn -main
   "Initialize survey editor UI"
   []
   (let [root-elem (js/document.getElementById element-id)
@@ -80,4 +80,4 @@
     (js/console.info "Initializing editor for " survey-id)
     (go
       (let [res (<! (http/get (survey-url survey-id)))]
-        (swap! state merge (survey-data->ui-state (res :body)))))))
+        (swap! state merge (make-ui-state (res :body)))))))
