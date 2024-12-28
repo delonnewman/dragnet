@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dragnet
   class ApplicationRecord < ActiveRecord::Base
     # instance-level application model extentions
