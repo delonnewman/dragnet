@@ -2,8 +2,7 @@
   "The survey editor UI shell"
   (:require
    [cljs-http.client :as http]
-   [cljs.core.async :refer [<! go take!]]
-   [cljs.repl :refer [ex-triage ex-str]]
+   [cljs.core.async :refer [<! go]]
    [dragnet.editor.components :refer [survey-editor]]
    [dragnet.editor.core :refer [survey-url]]
    [dragnet.editor.entities

@@ -37,15 +37,15 @@
        {:type "text"
         :placeholder "Option Text"
         :default-value (option :question.option/text)
-        :on-change (editor/update-option-text! state question option)}]]
+        :on-change (editor/update-option-text-handler state question option)}]]
      [:div
       [:input.form-control
        {:type "number"
         :placeholder "Numerical Weight"
         :default-value (option :question.option/weight)
-        :on-change (editor/update-option-weight! state question option)}]]
+        :on-change (editor/update-option-weight-handler state question option)}]]
      [:div.ms-1
-      [remove-button {:on-click (editor/remove-option! state question option)}]]]))
+      [remove-button {:on-click (editor/remove-option-handler state question option)}]]]))
 
 
 (defn choice-body
@@ -54,7 +54,7 @@
    [:div.question-options
     (for [option (->> (:question/options question) vals (remove :entity/_destroy))]
       ^{:key (utils/dom-id question option)} [choice-option ref question option])]
-   [:a.btn.btn-link {:href "#" :on-click (editor/add-option! ref question)} "Add Option"]])
+   [:a.btn.btn-link {:href "#" :on-click (editor/add-option-handler ref question)} "Add Option"]])
 
 
 (defn text-body
@@ -102,7 +102,7 @@
           [switch
            {:id form-id
             :checked (editor/question-setting question ident :default default)
-            :on-change (editor/change-setting! ref question ident)
+            :on-change (editor/change-setting-handler ref question ident)
             :style {:margin-right "20px"}
             :label text}])))
     (let [form-id (str "option-" (question :id) "-required")]
@@ -110,7 +110,7 @@
       [switch
        {:id form-id
         :checked (question :question/required)
-        :on-change (editor/change-required! ref question)
+        :on-change (editor/change-required-handler ref question)
         :style {:margin-right "20px"}
         :label "Required"}])]])
 
@@ -119,7 +119,7 @@
   [ref question]
   (let [type-id (editor/question-type-id question)
         attrs {:aria-label "Select Question Type"
-               :on-change (editor/change-type! ref question)}]
+               :on-change (editor/change-type-handler ref question)}]
     [:select.form-select.w-25
      (if type-id (assoc attrs :value type-id) attrs)
      (when-not type-id
@@ -145,7 +145,7 @@
         :on-change (editor/update-question-text! ref question)}]
       (when (question :question/required) [:span {:title "Required"} "*"])]
      [select-question-type ref question]
-     [remove-button {:on-click (editor/remove-question! ref question)}]]
+     [remove-button {:on-click (editor/remove-question-handler ref question)}]]
     [question-card-body ref question]]
    [question-card-footer ref question]])
 
@@ -206,18 +206,18 @@
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
        :disabled (not (survey-edited? @ref))
-       :on-click (editor/save-survey! ref)}
+       :on-click (editor/save-survey-handler ref)}
       "Save"]]]
    [survey-details
     {:id (survey @ref :entity/id)
      :name (survey @ref :survey/name)
      :description (survey @ref :survey/description)
-     :on-change-description (editor/update-survey-field! ref :survey/description)
-     :on-change-name (editor/update-survey-field! ref :survey/name)}]
+     :on-change-description (editor/update-survey-field-handler ref :survey/description)
+     :on-change-name (editor/update-survey-field-handler ref :survey/name)}]
    [:div.mb-3.d-flex.justify-content-end
     [:button.btn.btn-sm.btn-secondary
      {:type "button"
-      :on-click (editor/add-question! ref)}
+      :on-click (editor/add-question-handler ref)}
      (icon "fa-solid" "plus" "Add Question")]]
    [survey-questions ref]
    [dev-info @ref]])

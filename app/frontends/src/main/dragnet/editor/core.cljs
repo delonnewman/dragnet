@@ -139,7 +139,7 @@
     (swap! state assoc :errors (res :body))))
 
 
-(defn save-survey!
+(defn save-survey-handler
   [ref]
   (fn []
     (go
@@ -152,7 +152,7 @@
         (swap! ref assoc :edits nil :updated_at t)))))
 
 
-(defn update-survey-field!
+(defn update-survey-field-handler
   [ref field]
   (fn [e]
     (swap! ref update-survey-field field (-> e .-target .-value))))
@@ -195,13 +195,13 @@
     {:id (swap! temp-id dec) :question/text (new-question-text)}))
 
 
-(defn add-question!
+(defn add-question-handler
   [ref]
   (fn []
     (swap! ref assoc-question (new-question))))
 
 
-(defn add-option!
+(defn add-option-handler
   [ref question]
   (fn [e]
     (swap! ref assoc-option question (new-option))
@@ -211,10 +211,13 @@
 
 (defn remove-option
   [state question option]
-  (assoc-in state [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) :_destroy] true))
+  (assoc-in
+   state
+   [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) :_destroy]
+   true))
 
 
-(defn remove-option!
+(defn remove-option-handler
   [ref question option]
   (fn [e]
     (swap! ref remove-option question option)
@@ -222,7 +225,7 @@
     (-> e .-nativeEvent .stopPropagation)))
 
 
-(defn remove-question!
+(defn remove-question-handler
   [ref question]
   (fn []
     (swap! ref remove-question question)))
@@ -230,10 +233,13 @@
 
 (defn assoc-in-option
   [state question option field value]
-  (assoc-in state [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) field] value))
+  (assoc-in
+   state
+   [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) field]
+   value))
 
 
-(defn option-updater
+(defn make-option-handler
   [field value-fn]
   (fn [ref question option]
     (fn [event]
@@ -241,11 +247,11 @@
         (swap! ref assoc-in-option question option field value)))))
 
 
-(def update-option-text! (option-updater :question.option/text identity))
-(def update-option-weight! (option-updater :question.option/weight ->int))
+(def update-option-text-handler (make-option-handler :question.option/text identity))
+(def update-option-weight-handler (make-option-handler :question.option/weight ->int))
 
 
-(defn change-setting!
+(defn change-setting-handler
   [ref question setting]
   (fn [event]
     (println "change-setting-handler" event)
@@ -258,7 +264,7 @@
       (swap! ref assoc-in path settings))))
 
 
-(defn change-required!
+(defn change-required-handler
   [ref question]
   (fn [event]
     (let [checked (-> event .-target .-checked)]
@@ -284,7 +290,7 @@
   :ret fn?)
 
 
-(defn change-type!
+(defn change-type-handler
   [ref question]
   (fn [event]
     (let [type-id (-> event .-target .-value)]
