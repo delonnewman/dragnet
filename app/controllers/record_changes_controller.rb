@@ -5,7 +5,7 @@ class RecordChangesController < ApplicationController
     record_changes = survey.record_changes.where(applied: true).order(created_at: :desc)
 
     respond_to do |format|
-      format.atom { render :index, locals: { survey: survey, record_changes: record_changes } }
+      format.atom { render :index, locals: { survey:, record_changes: } }
     end
   end
 
