@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dragnet
   class QuestionOption < ApplicationRecord
     belongs_to :question, class_name: 'Dragnet::Question'
