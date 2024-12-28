@@ -1,14 +1,14 @@
 (ns dragnet.submitter
   "The reply submitter UI shell"
   (:require
-    [cljs-http.client :as http]
-    [cljs.core.async :refer [go <!]]
-    [dragnet.common.utils :as utils :include-macros true]
-    [dragnet.submitter.components :refer [reply-submitter]]
-    [dragnet.submitter :refer [reply-url]]
-    [dragnet.submitter.local-storage :as storage]
-    [reagent.core :as r]
-    [reagent.dom :as rdom]))
+   [cljs-http.client :as http]
+   [cljs.core.async :refer [go <!]]
+   [dragnet.common.utils :as utils :include-macros true]
+   [dragnet.submitter.components :refer [reply-submitter]]
+   [dragnet.submitter.core :refer [reply-url]]
+   [dragnet.submitter.local-storage :as storage]
+   [reagent.core :as r]
+   [reagent.dom :as rdom]))
 
 
 (defn ui-renderer
