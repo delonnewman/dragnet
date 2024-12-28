@@ -29,7 +29,6 @@
           :opt [:entity/id :entity/_destroy]))
 
 
-(s/def :question/id uuid?)
 (s/def :question/text string?)
 (s/def :question/display-order :number/natural)
 (s/def :question/required boolean?)
@@ -38,7 +37,6 @@
 (s/def :question/type :question.type/entity)
 
 
-(s/def :survey/id uuid?)
 (s/def :survey/name string?)
 (s/def :survey/description string?)
 (s/def :survey/updated-at inst?)
