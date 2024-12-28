@@ -12,7 +12,7 @@ module Dragnet
       latest(survey) || build_with(survey)
     end
 
-    def self.create_with!(survey, data:)
+    def self.create_with!(survey, data: survey.projection)
       build_with(survey, data:).tap(&:save!)
     end
 
