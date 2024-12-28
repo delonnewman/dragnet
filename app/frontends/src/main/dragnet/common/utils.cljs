@@ -12,11 +12,6 @@
   [] (.-origin (.-location *window*)))
 
 
-(defn element-by-id
-  "A simple wrapper for JavaScript's getElementById"
-  [id] (.getElementById js/document id))
-
-
 (defn ex-arguments
   [& {:keys [expected received]}]
   (ex-info
@@ -160,34 +155,6 @@
   (not-every? present? col))
 
 
-(defn every-blank
-  [col]
-  (filter blank? col))
-
-
-(defn presence
-  [x]
-  (if (blank? x) nil x))
-
-
-(defn remove-blank
-  [col]
-  (if (map? col)
-    (->> col (filter #(present? (% 1))) (into {}))
-    (->> col (filter present?) (into (empty col)))))
-
-
-(defn fblank
-  ([f] (fblank f nil))
-  ([f alt]
-   (fn [x] (if (blank? x) alt x))))
-
-
-(defn tap
-  [f]
-  (fn [x] (f x) x))
-
-
 ;; TODO: add locale support
 ;; (see https://api.rubyonrails.org/classes/Array.html#method-i-to_sentence)
 (defn ->sentence
@@ -221,17 +188,6 @@
   [x] (-> x type name-of-type))
 
 
-(defn ex-type
-  [& {:keys [expected-type received spec]}]
-  (let [received-type (type received)]
-    (ex-info
-     (str "wrong type, expected " (name-of-type expected-type) ", "
-          "received " (pr-str received) ":" (name-of-type received-type))
-     #:ex-type{:expected-type expected-type
-               :received-value received
-               :received-type received-type :spec spec})))
-
-
 (defn ex-coercion
   [& {:keys [value target-type]}]
   (ex-info (str "cannot coerce " (pr-str value) ":" (type-name value) " into a " target-type)
@@ -247,18 +203,12 @@
     :else (throw (ex-coercion :value x :target-type "UUID"))))
 
 
-(def ->?uuid (fnil ->uuid nil))
-
-
 (defn ->int
   [x]
   (cond
     (int? x) x
     (or (float? x) (string? x)) (js/parseInt x 10)
     :else (throw (ex-coercion :value x :target-type "int"))))
-
-
-(def ->?int (fnil ->int 0))
 
 
 (defn map-values
