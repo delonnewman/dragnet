@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Controllers that provide front-end API endpoints
 class EndpointController < ActionController::API
   include ActionController::MimeResponds
