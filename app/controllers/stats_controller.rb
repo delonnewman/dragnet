@@ -9,7 +9,7 @@ class StatsController < ApplicationController
   def show
     report = Dragnet::StatsReport.new(reportable)
 
-    render :show, locals: { report: report, reportable: reportable }
+    render :show, locals: { report:, reportable: }
   end
 
   private
