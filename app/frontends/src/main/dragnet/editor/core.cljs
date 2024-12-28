@@ -143,11 +143,12 @@
   [ref]
   (fn []
     (go
-      (let [res (<! (http-request :method :post
-                                  :url (apply-survey-edits-url (@ref :survey))
-                                  :error-fn (error-handler ref)))
+      (let [res
+            (<! (http-request
+                 :method :post
+                 :url (apply-survey-edits-url (@ref :survey))
+                 :error-fn (error-handler ref)))
             t   (-> res :body :updated_at)]
-        (pp res)
         (swap! ref assoc :edits nil :updated_at t)))))
 
 
@@ -173,7 +174,10 @@
 
 (defn assoc-option
   [state question option]
-  (assoc-in state [:survey :survey/questions (question :entity/id) :question/options (option :entity/id)] option))
+  (assoc-in
+   state
+   [:survey :survey/questions (question :entity/id) :question/options (option :entity/id)]
+   option))
 
 
 (defn assoc-question
@@ -258,15 +262,21 @@
   [ref question]
   (fn [event]
     (let [checked (-> event .-target .-checked)]
-      (swap! ref assoc-in [:survey :survey/questions (question :entity/id) :question/required] checked))))
+      (swap!
+       ref
+       assoc-in
+       [:survey :survey/questions (question :entity/id) :question/required]
+       checked))))
 
 
 (defn assoc-question-type-id
   "Associate the type-id with the question"
   [state question type-id]
-  (ppt "assoc-question-type-id -> type-id" type-id)
   (let [type (question-type state type-id)]
-    (assoc-in state [:survey :survey/questions (question :entity/id) :question/type] type)))
+    (assoc-in
+     state
+     [:survey :survey/questions (question :entity/id) :question/type]
+     type)))
 
 
 (s/fdef change-type!
