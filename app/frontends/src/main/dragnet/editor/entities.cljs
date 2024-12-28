@@ -76,10 +76,6 @@
             (assoc m (->uuid id) (make-question-type type))) {} types))
 
 
-(defn valid-question-option?
-  "Return true if the data is a valid option. Otherwise return false."
-  [data] (s/valid? :question.option/entity data))
-
 (def ^{:doc "Validate an option map. Thow an exception if the map is invalid otherwise return the map."}
   validate-question-option! (entity-validator :question.option/entity))
 
@@ -98,12 +94,6 @@
 
 (def ^{:doc "Validate a question map. Throw an exception if the map is invalid otherwise return the map."}
   validate-question! (entity-validator :question/entity))
-
-(defn valid-question?
-  "Return true if the data is a valid question. Otherwise return false."
-  [data] (s/valid? :question/entity data))
-
-(s/valid? :question/entity nil)
 
 (defn make-question
   "Constuct a valid question map or throw an exception.
@@ -148,10 +138,6 @@
   (s/keys :req [:entity/id :entity/type :survey/name :survey/updated-at :survey/author]
           :opt [:survey/description :survey/questions]))
 
-(defn valid-survey?
-  "Return true if data is survey map. Otherwise return false."
-  [data] (s/valid? :survey/entity data))
-
 (def ^{:doc "Validate a survey map. Throw an exception if the map is invalid otherwise return the map."}
   validate-survey! (entity-validator :survey/entity))
 
@@ -173,11 +159,6 @@
          :survey/updated-at updated-at}
         survey (if description (assoc survey :survey/description description) survey)]
     (validate-survey! survey)))
-
-
-(defn survey-questions
-  [survey]
-  (:survey/questions survey))
 
 
 (defn options->update
