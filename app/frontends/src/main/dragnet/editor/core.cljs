@@ -132,10 +132,6 @@
   (assoc-in state [:survey field] value))
 
 
-(defn reset-edit-state
-  [state])
-
-
 (defn error-handler
   [state]
   (fn [res]
