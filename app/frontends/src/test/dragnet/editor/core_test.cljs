@@ -1,7 +1,7 @@
 (ns dragnet.editor.core-test
   (:require
     [clojure.test :refer [deftest is testing]]
-    [dragnet.editor :as core]
+    [dragnet.editor.core :as core]
     [dragnet.editor.testing-utils :as utils :refer [state]]))
 
 
