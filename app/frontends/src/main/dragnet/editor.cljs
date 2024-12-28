@@ -27,8 +27,12 @@
   (let [survey (state :survey)
         update (survey->update survey)]
     (js/console.info "update-survey" (survey-url survey))
-    (go (let [res (<! (http-request :method :put :url (survey-url survey) :transit-params update :error-fn (error-handler state)))]
-          (pp res)
+    (go (let [res
+              (<! (http-request
+                   :method :put
+                   :url (survey-url survey)
+                   :transit-params update
+                   :error-fn (error-handler state)))]
           (res :body)))))
 
 
