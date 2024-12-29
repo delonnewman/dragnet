@@ -24,7 +24,14 @@ module Dragnet
     end
 
     def send_action(action_name, ...)
-      public_send(action_name, ...).send_type(question_type)
+      public_send(action_name, ...).send_type(self)
+    end
+
+    def tags
+      array = [question_type.ident, self.class.name.demodulize.underscore.to_sym]
+      array << self.class.superclass.name.demodulize.underscore.to_sym unless self.class.superclass == Dragnet::Type
+      array.uniq!
+      array
     end
   end
 end

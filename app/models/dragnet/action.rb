@@ -27,8 +27,12 @@ module Dragnet
       end
     end
 
-    def send_type(question_type)
-      public_send(question_type.ident)
+    def send_type(type)
+      type.tags.each do |tag|
+        return public_send(tag) if respond_to?(tag)
+      end
+
+      raise NoMethodError, "undefined method `#{type.tags.to_sentence}` for #{self}:#{self.class}"
     end
 
     private

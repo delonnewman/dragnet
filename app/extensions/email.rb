@@ -8,14 +8,6 @@ module Dragnet
   module Ext
     class Email < Type::Text
       ignore :calculate_stats_table, :calculate_occurrence_table
-
-      def get_value(answer:)
-        GetEmailValue.new(question_type, answer:)
-      end
-    end
-
-    class GetEmailValue < Action::GetValue
-      alias email text
     end
   end
 end
