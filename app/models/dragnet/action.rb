@@ -3,7 +3,14 @@
 module Dragnet
   class Action
     def self.attributes
-      @attributes ||= []
+      return @attributes if defined?(@attributes)
+
+      @attributes =
+        if superclass.respond_to?(:attributes)
+          superclass.attributes.dup
+        else
+          []
+        end
     end
 
     def self.attribute(name)

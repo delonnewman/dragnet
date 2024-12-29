@@ -40,6 +40,8 @@ module Dragnet
     #   ActiveSupport::HashWithIndifferentAccess,
     # ]
 
+    config.autoload_lib(ignore: %w[extensions])
+
     console do
       require_relative '../lib/dragnet/console_methods'
       Rails::ConsoleMethods.include(Dragnet::ConsoleMethods)
