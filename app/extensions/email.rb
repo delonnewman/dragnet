@@ -10,14 +10,12 @@ module Dragnet
       ignore :calculate_stats_table, :calculate_occurrence_table
 
       def get_value(answer:)
-        GetValueEmail.new(question_type, answer:)
+        GetEmailValue.new(question_type, answer:)
       end
     end
 
-    class GetValueEmail < Action::GetValue
-      def email
-        text
-      end
+    class GetEmailValue < Action::GetValue
+      alias email text
     end
   end
 end
