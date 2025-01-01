@@ -3,7 +3,7 @@
  {:test {:extra-paths ["src/test"]}
   :dev  {:extra-deps {org.clojure/clojure                 {:mvn/version "1.11.1"}
                       org.clojure/clojurescript           {:mvn/version "1.11.57"}
-                      thheller/shadow-cljs                {:mvn/version "2.19.3"}
+                      thheller/shadow-cljs                {:mvn/version "2.28.20"}
                       reagent/reagent                     {:mvn/version "1.1.1"}
                       cljs-http/cljs-http                 {:mvn/version "0.1.48"}
                       com.cognitect/transit-cljs          {:mvn/version "0.8.269"}
@@ -16,6 +16,6 @@
   :docs {:extra-deps {codox/codox {:mvn/version "0.10.8"}}
          :exec-fn    codox.main/generate-docs
          :exec-args  {:source-paths ["src/main"] :language :clojurescript}}}
- :shadow-cljs {:extra-deps {thheller/shadow-cljs {:mvn/version "2.19.3"}}
+ :shadow-cljs {:extra-deps {thheller/shadow-cljs {:mvn/version "2.28.20"}}
                :main-opts  ["-m" "shadow.cljs.devtools.cli"]}
  }
