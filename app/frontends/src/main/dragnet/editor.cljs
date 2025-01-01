@@ -1,7 +1,6 @@
 (ns dragnet.editor
   "The survey editor UI shell"
   (:require
-   [cljs-http.client :as http]
    [cljs.core.async :refer [<! go]]
    [dragnet.editor.components :refer [survey-editor]]
    [dragnet.editor.core :refer [survey-url]]
@@ -11,7 +10,26 @@
     :refer [validate-presence! pp pp-str http-request]
     :include-macros true]
    [reagent.core :as r]
-   [reagent.dom :as rdom]))
+   [reagent.dom :as rdom]
+   [cognitect.transit :as t]))
+
+
+(def ^:dynamic *element-id* "survey-editor")
+(def survey-id-attribute "data-survey-id")
+(def state (r/atom {}))
+
+
+(defn root-element []
+  (js/document.getElementById *element-id*))
+
+
+(defn survey-id []
+  (when-let [elem (root-element)]
+    (.getAttribute elem survey-id-attribute)))
+
+
+(defn on-valid-page! []
+  (validate-presence! (root-element) (survey-id)))
 
 
 (defn error-handler
@@ -38,11 +56,11 @@
 (defn ui-renderer
   "Return a watcher for the editor's state that will
   render the editor UI to the given root element."
-  [root-elem]
+  []
   (fn [_ ref old new]
     (when (or (:errors new) (not= (:survey old) (:survey new)))
       (js/console.info "Last update" (-> new :survey/updated-at))
-      (rdom/render [survey-editor ref] root-elem))))
+      (rdom/render [survey-editor ref] (root-element)))))
 
 
 (defn auto-updater
@@ -62,25 +80,18 @@
          :question-types (make-question-types (data :question_types))))
 
 
-(def element-id "survey-editor")
-(def survey-id-attribute "data-survey-id")
-(def state (r/atom {}))
-
-
 (defn add-watchers
-  [root-element]
-  (add-watch state :render-ui (ui-renderer root-element))
+  []
+  (add-watch state :render-ui (ui-renderer))
   (add-watch state :auto-update (auto-updater)))
 
 
 (defn -main
   "Initialize survey editor UI"
   []
-  (let [root-elem (js/document.getElementById element-id)
-        survey-id (.getAttribute root-elem survey-id-attribute)]
-    (validate-presence! root-elem survey-id)
-    (add-watchers root-elem)
-    (js/console.info "Initializing editor for " survey-id)
-    (go
-      (let [res (<! (http/get (survey-url survey-id)))]
-        (swap! state merge (make-ui-state (res :body)))))))
+  (on-valid-page!)
+  (js/console.info "Initializing editor for " (survey-id))
+  (add-watchers)
+  (go
+    (let [res (<! (http/get (survey-url (survey-id))))]
+      (swap! state merge (make-ui-state (res :body))))))
