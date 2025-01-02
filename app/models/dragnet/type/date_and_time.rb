@@ -1,12 +1,4 @@
 module Dragnet
-  class Type::DateAndTime < Type
-    ignore :do_before_saving_answer
-
-    perform \
-      :assign_value,
-      :get_value,
-      :get_number_value,
-      :filter_data_grid,
-      :sort_data_grid
+  class Type::DateAndTime < Type::Time
   end
 end
