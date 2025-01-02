@@ -1,6 +1,7 @@
 (ns dragnet.editor
   "The survey editor UI shell"
   (:require
+   [cljs-http.client :as http]
    [cljs.core.async :refer [<! go]]
    [dragnet.editor.components :refer [survey-editor]]
    [dragnet.editor.core :refer [survey-url]]
