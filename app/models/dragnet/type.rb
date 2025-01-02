@@ -28,10 +28,13 @@ module Dragnet
     end
 
     def tags
+      return @tags if defined?(@tags)
+
       array = [question_type.ident, self.class.name.demodulize.underscore.to_sym]
       array << self.class.superclass.name.demodulize.underscore.to_sym unless self.class.superclass == Dragnet::Type
       array.uniq!
-      array
+
+      @tags = array
     end
   end
 end
