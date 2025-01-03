@@ -23,11 +23,11 @@ module Dragnet
     end
 
     def text
-      if question.settings.long_answer?
-        scope.order(sanitize_sql_for_order("#{join_name}.long_text_value") => direction)
-      else
-        scope.order(sanitize_sql_for_order("#{join_name}.short_text_value") => direction)
-      end
+      scope.order(sanitize_sql_for_order("#{join_name}.short_text_value") => direction)
+    end
+
+    def long_text
+      scope.order(sanitize_sql_for_order("#{join_name}.long_text_value") => direction)
     end
 
     def time

@@ -30,11 +30,11 @@ module Dragnet
     alias date_and_time date
 
     def text
-      if question.settings.long_answer?
-        relation.where.like(table => { long_text_value: "%#{value}%" })
-      else
-        relation.where.like(table => { short_text_value: "%#{value}%" })
-      end
+      relation.where.like(table => { short_text_value: "%#{value}%" })
+    end
+
+    def long_text
+      relation.where.like(table => { long_text_value: "%#{value}%" })
     end
 
     def choice

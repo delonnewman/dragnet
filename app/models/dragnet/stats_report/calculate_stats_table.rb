@@ -13,7 +13,7 @@ module Dragnet
       collect_stats(question, column: Answer.arel_table[:integer_value])
     end
 
-    def text
+    def long_text
       raise "can't collect stats for text unless the setting is turned on" unless type.calculate_sentiment?(question)
 
       collect_stats(question, column: Answer.arel_table[:float_value])

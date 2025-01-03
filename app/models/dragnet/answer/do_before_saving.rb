@@ -3,7 +3,7 @@ module Dragnet
     attribute :answer
     attribute :question
 
-    def text
+    def long_text
       return unless type.calculate_sentiment?(question)
 
       answer.float_value = Dragnet::TextSentiment.new(answer.long_text_value).score

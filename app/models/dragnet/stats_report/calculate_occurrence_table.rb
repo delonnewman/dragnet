@@ -3,7 +3,7 @@ module Dragnet
     attribute :reportable
     attribute :question
 
-    def text
+    def long_text
       unless type.calculate_sentiment?(question)
         raise "can't collect occurrence stats for text unless the setting is turned on"
       end

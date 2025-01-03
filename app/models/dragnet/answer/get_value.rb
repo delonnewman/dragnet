@@ -19,9 +19,11 @@ module Dragnet
     end
 
     def text
-      return answer.long_text_value if answer.question.settings.long_answer?
-
       answer.short_text_value
+    end
+
+    def long_text
+      answer.long_text_value
     end
 
     def time
