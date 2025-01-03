@@ -4,6 +4,7 @@ module Dragnet
   class Question < ApplicationRecord
     include SelfDescribable
     include Retractable
+    include Presentable
 
     validates :text, presence: true, uniqueness: { scope: :survey_id }
 

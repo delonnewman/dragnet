@@ -3,6 +3,8 @@
 module Dragnet
   # Provides data access and business rules for survey data grids
   class DataGrid < ApplicationRecord
+    include Presentable
+
     validates :survey_id, uniqueness: { scope: :user_id }
     validates :user_id, uniqueness: { scope: :survey_id }
 

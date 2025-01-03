@@ -18,7 +18,7 @@
         <th data-question-id="<%= question.id %>">
           <div class="d-flex justify-content-start align-items-center">
             <%= column_sort_link(grid, question, label: truncate(question.text), alt_label: question.text) %>
-            <%= question_filter(question, params.dig(:filter_by, question.id)) %>
+            <%= column_filter(question, params.dig(:filter_by, question.id)) %>
           </div>
         </th>
       <% end %>

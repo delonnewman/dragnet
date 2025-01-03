@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class DataGridDisplay < Display
+  class DataGrid::RenderAnswersText < TypeHelper
     attribute :answers
     attribute :question
     attribute :alt_text

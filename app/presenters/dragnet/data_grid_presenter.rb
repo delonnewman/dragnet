@@ -17,6 +17,10 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   end
   memoize :survey_presenter
 
+  def questions
+    survey.questions.map(&:present)
+  end
+
   def to_h
     record_data = records.pull(
       :id,

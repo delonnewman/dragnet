@@ -46,8 +46,8 @@ module DataGridHelper
   # @param [Question] question
   #
   # @return [String] the corresponding HTML
-  def question_filter(question, default_value)
-    question.type.send_action(:filter_input_display, context: self, question:, default_value:)
+  def column_filter(question, default_value)
+    render TypeView.init('data_grid/column_filter', question.type), locals: { question:, default_value:, data_grid_params: }
   end
 
   # Render the answers to the question as readonly HTML according to their question type.
@@ -59,7 +59,7 @@ module DataGridHelper
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
     answers = reply.answers_to(question)
-    question.type.send_action(:data_grid_display, context: self, answers:, question:, alt_text: alt)
+    question.type.send_action(:render_answers_text, context: self, answers:, question:, alt_text: alt) # rescue binding.pry
   end
 
   def fmt_date(date)

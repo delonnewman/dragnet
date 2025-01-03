@@ -5,6 +5,7 @@ module Dragnet
     include SelfDescribable
     include UniquelyIdentifiable
     include Retractable
+    include Presentable
 
     retract_associated :questions, :replies
 
