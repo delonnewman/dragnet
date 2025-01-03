@@ -11,12 +11,12 @@ module Dragnet
       answer.question_option_id = value
     end
 
-    def number
-      if answer.question.settings.decimal?
-        answer.float_value = value
-      else
-        answer.integer_value = value
-      end
+    def decimal
+      answer.float_value = value
+    end
+
+    def integer
+      answer.integer_value = value
     end
 
     def text
