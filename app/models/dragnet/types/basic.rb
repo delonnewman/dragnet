@@ -1,9 +1,9 @@
 module Dragnet
   module Types
     class Basic < Type
-      perform :assign_value, class_name: 'Dragnet::AssignValue'
-      perform :get_value, class_name: 'Dragnet::GetValue'
-      perform :get_number_value, class_name: 'Dragnet::GetNumberValue'
+      perform :assign_value, class_name: 'Dragnet::Answer::AssignValue'
+      perform :get_value, class_name: 'Dragnet::Answer::GetValue'
+      perform :get_number_value, class_name: 'Dragnet::Answer::GetNumberValue'
       perform :filter_data_grid, class_name: 'Dragnet::FilterDataGrid'
       perform :sort_data_grid, class_name: 'Dragnet::SortDataGrid'
 

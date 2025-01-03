@@ -1,5 +1,5 @@
 module Dragnet
-  class GetNumberValue < GetValue
+  class Answer::GetNumberValue < GetValue
     attribute :answer
 
     def boolean

@@ -1,5 +1,5 @@
 module Dragnet
-  class GetValue < GenericFunction
+  class Answer::GetValue < GenericFunction
     attribute :answer
 
     def boolean
