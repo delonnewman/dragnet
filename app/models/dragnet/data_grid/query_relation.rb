@@ -97,7 +97,7 @@ module Dragnet
           elsif @query.question?(field)
             join_name = join_alias(field)
             narrowed  = narrowed_scope(current_scope, field, join_name)
-            filtered_values(narrowed, @query.question(field), join_name, value)
+            question.type.send_action(:filter_data_grid, relation: scope, table:, value:)
           else
             current_scope
           end
@@ -108,10 +108,6 @@ module Dragnet
         scope
           .joins(Arel.sql("inner join answers #{join_name} on replies.id = #{join_name}.reply_id"))
           .where(join_name => { question_id: field })
-      end
-
-      def filtered_values(scope, question, table, value)
-        question.type.send_action(:filter_data_grid, question:, relation: scope, table:, value:)
       end
     end
   end
