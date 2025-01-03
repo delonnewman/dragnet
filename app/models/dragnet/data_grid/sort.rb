@@ -14,12 +14,12 @@ module Dragnet
       scope.order(sanitize_sql_for_order("#{join_name}.boolean_value") => direction)
     end
 
-    def number
-      if question.settings.decimal?
-        scope.order(sanitize_sql_for_order("#{join_name}.float_value") => direction)
-      else
-        scope.order(sanitize_sql_for_order("#{join_name}.integer_value") => direction)
-      end
+    def decimal
+      scope.order(sanitize_sql_for_order("#{join_name}.float_value") => direction)
+    end
+
+    def integer
+      scope.order(sanitize_sql_for_order("#{join_name}.integer_value") => direction)
     end
 
     def text
