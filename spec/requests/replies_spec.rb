@@ -3,7 +3,7 @@
 describe 'Replies', type: :request do
   let(:survey) { Dragnet::Survey[public: false, questions: { question_type: }].generate! }
   let(:reply) { Dragnet::Reply[survey:, submitted: false].generate! }
-  let(:question_type) { Dragnet::QuestionType.get(:number) }
+  let(:question_type) { Dragnet::QuestionType.get!(:integer) }
 
   def update_params
     question = survey.questions.first
@@ -37,7 +37,7 @@ describe 'Replies', type: :request do
 
   describe 'GET /replies/:id/edit' do
     it 'redirects to root path when editing the reply is not permitted' do
-      survey.close!
+      survey.close! rescue binding.pry
       get edit_reply_path(reply)
 
       expect(response).to redirect_to(survey_forbidden_path)

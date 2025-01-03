@@ -17,6 +17,11 @@ module Dragnet
     end
     memoize self: :get
 
+    def self.get!(ident)
+      find_by!(slug: ident)
+    end
+    memoize self: :get!
+
     def self.slugs
       all.map(&:slug)
     end

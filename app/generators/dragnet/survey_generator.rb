@@ -12,7 +12,7 @@ class Dragnet::SurveyGenerator < Dragnet::ActiveRecordGenerator
   def call(other_attributes = EMPTY_HASH)
     Survey.new(survey_attributes(other_attributes)) do |survey|
       num_questions(other_attributes).times do
-        survey.questions << Question[question_attributes(survey, other_attributes)].generate
+        survey.questions << Question[question_attributes(survey, other_attributes)].generate rescue binding.pry
       end
     end
   end
