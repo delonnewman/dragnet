@@ -9,7 +9,7 @@ module Dragnet
 
     def answers
       data!.map do |attributes|
-        Answer.new(attributes)
+        Answer.new(attributes) rescue binding.pry
       end
     end
 

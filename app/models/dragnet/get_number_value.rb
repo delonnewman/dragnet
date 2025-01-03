@@ -1,5 +1,5 @@
 module Dragnet
-  class Action::GetNumberValue < Action::GetValue
+  class GetNumberValue < GetValue
     attribute :answer
 
     def boolean
@@ -16,10 +16,8 @@ module Dragnet
       answer.float_value
     end
 
-    def time
+    def temporal
       super&.to_i
     end
-    alias date time
-    alias date_and_time time
   end
 end
