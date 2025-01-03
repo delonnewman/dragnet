@@ -4,20 +4,27 @@ module Dragnet
 
     FILE_EXTENSIONS = %w(builder erb).freeze
 
-    def self.init(*args)
-      new(*args)
-    end
-    memoize self: :init
-
     attr_reader :name, :type
 
-    def initialize(name, type)
+    def initialize(name, type, **locals)
       @name = name
       @type = type
+      @locals = locals
     end
 
     def render_in(view_context)
-      view_context.render file: template_file, layout: false
+      view_context.render inline: template, layout: false, type: template_type, locals: @locals
+    end
+
+    def template_type
+      ext = template_file.extname.presence
+      return :erb unless ext
+
+      ext.from(1).to_sym
+    end
+
+    def template
+      @template ||= template_file.read
     end
 
     def template_file
