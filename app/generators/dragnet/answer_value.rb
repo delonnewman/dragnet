@@ -29,6 +29,8 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
       time
     when :boolean
       Faker::Boolean.boolean
+    when :email
+      Email.generate
     else
       raise "Don't know how to generate an answer for #{question.question_type.ident.inspect}"
     end
