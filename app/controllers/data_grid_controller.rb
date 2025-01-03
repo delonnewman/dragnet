@@ -35,7 +35,7 @@ class DataGridController < ApplicationController
   end
 
   def grid
-    Dragnet::DataGridPresenter.new(Dragnet::DataGrid.whole.find_or_create!(survey, user: current_user), data_grid_params)
+    Dragnet::DataGrid.whole.find_or_create!(survey, user: current_user).present(with: data_grid_params)
   end
 
   def survey
