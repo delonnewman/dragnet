@@ -12,12 +12,12 @@ module Dragnet
       relation.where(table => { boolean_value: value })
     end
 
-    def number
-      if question.settings.decimal?
-        relation.where(table => { float_value: value })
-      else
-        relation.where(table => { integer_value: value })
-      end
+    def decimal
+      relation.where(table => { float_value: value })
+    end
+
+    def integer
+      relation.where(table => { integer_value: value })
     end
 
     def time
