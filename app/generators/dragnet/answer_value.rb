@@ -9,15 +9,24 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
   end
 
   def call
-    case question.question_type.ident
+    type = question.question_type.ident
+
+    case type
     when :text
-      question.settings.long_answer? ? LongAnswer.generate : ShortAnswer.generate
+      ShortAnswer.generate
+    when :long_text
+      LongAnswer.generate
     when :choice
       QuestionOptionAnswer[question].generate
-    when :number
-      Random.rand(100)
-    when :time
-      Faker::Time.between(from: 3.months.ago, to: Time.zone.now)
+    when :integer
+      rand(100)
+    when :decimal
+      (rand(100) + rand).round(rand(5))
+    when :time, :date, :date_and_time
+      time = Faker::Time.between(from: 3.months.ago, to: Time.zone.now)
+      return time.to_date if type == :date
+      return time.to_datetime if type == :date_and_time
+      time
     when :boolean
       Faker::Boolean.boolean
     else

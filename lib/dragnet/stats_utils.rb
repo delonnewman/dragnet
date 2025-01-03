@@ -9,7 +9,7 @@ module Dragnet
     def time_series(range)
       range.index_with do
         if rand(4).zero?
-          rand(400)
+          rand(150)
         else
           rand(20)
         end

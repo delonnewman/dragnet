@@ -4,26 +4,37 @@ QuestionType.create(
   [
     { name: 'Text',
       icon: 'fa-regular fa-keyboard',
-      type_class_name: 'Dragnet::Type::Text',
-      meta: { long_answer: { type: :boolean, text: 'Long Answer' },
-              countable:   { type: :boolean, text: 'Calculate sentiment analysis score for text' } } },
+      type_class_name: 'Dragnet::Types::Text',
+      meta: { countable:   { type: :boolean, text: 'Calculate sentiment analysis score for text' } } },
     { name: 'Choice',
-      type_class_name: 'Dragnet::Type::Choice',
+      type_class_name: 'Dragnet::Types::Choice',
       icon: 'fa-regular fa-square-check',
       meta: { multiple_answers: { type: :boolean, text: 'Allow multiple answers' },
               countable:        { type: :boolean, text: 'Calculate statistics' } } },
-    { name: 'Number',
-      type_class_name: 'Dragnet::Type::Number',
+    { name: 'Whole Number',
+      slug: 'integer',
+      type_class_name: 'Dragnet::Types::Integer',
       icon: 'fa-regular fa-calculator',
-      meta: { countable: { type: :boolean, text: 'Calculate statistics', default: true },
-              decimal:   { type: :boolean, text: 'Allow decimal numbers', default: false } } },
+      meta: { countable: { type: :boolean, text: 'Calculate statistics', default: true } } },
+    { name: 'Decimal',
+      slug: 'decimal',
+      type_class_name: 'Dragnet::Types::Decimal',
+      icon: 'fa-regular fa-calculator',
+      meta: { countable: { type: :boolean, text: 'Calculate statistics', default: true } } },
     { name: 'Time',
-      type_class_name: 'Dragnet::Type::Time',
-      icon: 'fa-regular fa-clock',
-      meta: { include_date: { type: :boolean, text: 'Include Date', default: true },
-              include_time: { type: :boolean, text: 'Include Time', default: true } } },
+      slug: 'time',
+      type_class_name: 'Dragnet::Types::Time',
+      icon: 'fa-regular fa-clock' },
+    { name: 'Date',
+      slug: 'date',
+      type_class_name: 'Dragnet::Types::Date',
+      icon: 'fa-regular fa-clock' },
+    { name: 'Date & Time',
+      slug: 'date_and_time',
+      type_class_name: 'Dragnet::Types::DateAndTime',
+      icon: 'fa-regular fa-clock' },
     { name: 'Yes or No',
-      type_class_name: 'Dragnet::Type::Boolean',
+      type_class_name: 'Dragnet::Types::Boolean',
       slug: 'boolean',
       icon: 'fa-regular fa-toggle-on' },
   ]
@@ -53,7 +64,7 @@ unless Rails.env.test?
 end
 
 # Generate some sample data if in development
-if Rails.env.development? && User.count.zero?
+if Rails.env.development? && User.count == 1
   puts 'Generating some data that should aid development 🦫🚧 ...'
 
   print 'Generating Users...'

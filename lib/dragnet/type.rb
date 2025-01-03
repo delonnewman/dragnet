@@ -1,8 +1,8 @@
 module Dragnet
   class Type
     def self.perform(action, class_name: nil)
-      klass = class_name || name.to_s.classify.constantize
-      define_method name do |**args|
+      klass = (class_name || name.to_s.classify).constantize
+      define_method action do |**args|
         klass.new(question_type, **args)
       end
     end
@@ -10,7 +10,7 @@ module Dragnet
     def self.ignore(*action_names)
       action_names.each do |name|
         define_method name do |**_|
-          Action::DoNothing.new
+          DoNothing.new
         end
       end
     end
