@@ -47,7 +47,7 @@ module DataGridHelper
   #
   # @return [String] the corresponding HTML
   def column_filter(question, default_value)
-    render TypeView.init('data_grid/column_filter', question.type), locals: { question:, default_value:, data_grid_params: }
+    render Dragnet::TypeView.init('data_grid/column_filter', question.type), locals: { question:, default_value:, data_grid_params: }
   end
 
   # Render the answers to the question as readonly HTML according to their question type.
