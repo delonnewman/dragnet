@@ -4,11 +4,9 @@ require 'faker'
 require 'active_support'
 require 'active_record'
 
-require_relative 'dragnet/predicates'
 require_relative 'dragnet/utils'
 require_relative 'dragnet/time_utils'
 require_relative 'dragnet/stats_utils'
-require_relative 'dragnet/core_ext'
 require_relative 'dragnet/class_meta_data'
 require_relative 'dragnet/memoizable'
 

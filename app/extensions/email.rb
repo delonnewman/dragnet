@@ -6,7 +6,7 @@ Dragnet::QuestionType.find_or_create_by!(
 
 module Dragnet
   module Ext
-    class Email < Type::Text
+    class Email < Types::Text
       ignore :calculate_stats_table, :calculate_occurrence_table
     end
   end

@@ -47,5 +47,14 @@ module Dragnet
       # a la boost, a la clojure
       seed ^ hash + 0x9e3779b9 + (seed << 6) + (seed >> 2)
     end
+
+    UUID_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+    private_constant :UUID_PATTERN
+
+    def uuid?(string)
+      return false unless string
+
+      !!(string =~ UUID_PATTERN)
+    end
   end
 end

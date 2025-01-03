@@ -29,7 +29,7 @@ module Dragnet
     end
 
     def sort_by_question?
-      uuid?(sort_by)
+      Utils.uuid?(sort_by)
     end
     alias sorted_by_question? sort_by_question?
 

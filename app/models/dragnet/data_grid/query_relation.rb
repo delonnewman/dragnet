@@ -50,7 +50,7 @@ module Dragnet
 
       def join_aliases
         filter_by.each_with_object({}) do |(field, _), aliases|
-          aliases[field] = next_join_alias if uuid?(field)
+          aliases[field] = next_join_alias if Utils.uuid?(field)
         end
       end
       memoize :join_aliases
