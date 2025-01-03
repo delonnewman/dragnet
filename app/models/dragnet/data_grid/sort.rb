@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class SortDataGrid < GenericFunction
+  class DataGrid::Sort < GenericFunction
     # include sql sanitation methods from ActiveRecord
     include ActiveRecord::Sanitization::ClassMethods
 
