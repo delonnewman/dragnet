@@ -1,5 +1,5 @@
 module Dragnet
-  class CalculateOccurrenceTable < GenericFunction
+  class StatsReport::CalculateOccurrenceTable < GenericFunction
     attribute :reportable
     attribute :question
 
