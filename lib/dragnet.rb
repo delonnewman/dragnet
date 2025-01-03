@@ -13,6 +13,7 @@ require_relative 'dragnet/core_ext'
 require_relative 'dragnet/class_meta_data'
 require_relative 'dragnet/memoizable'
 require_relative 'dragnet/generic_function'
+require_relative 'dragnet/type'
 
 require_relative 'dragnet/composed'
 require_relative 'dragnet/advising'
