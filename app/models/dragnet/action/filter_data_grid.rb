@@ -2,7 +2,7 @@
 
 module Dragnet
   # Modify the data grid relation to filter records
-  class Action::FilterDataGrid < Action
+  class Action::FilterDataGrid < GenericFunction
     attribute :question
     attribute :relation
     attribute :table

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class Action::CalculateStatsTable < Action
+  class Action::CalculateStatsTable < GenericFunction
     attribute :reportable
     attribute :question
 
