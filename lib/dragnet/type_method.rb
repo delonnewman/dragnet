@@ -36,7 +36,7 @@ module Dragnet
         return public_send(tag) if respond_to?(tag)
       end
 
-      raise NoMethodError, "undefined method `#{self.class.message_name}` for #{type.class}"
+      raise NoMethodError, "undefined method `#{self.class.message_name}` for #{type.class} tried with #{type.tags.to_sentence}"
     end
 
     private

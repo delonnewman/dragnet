@@ -20,33 +20,33 @@ module Dragnet
         end
       end.join(', ')
     end
-  end
 
-  def temporal
-    return alt_text if answers.blank?
+    def temporal
+      return alt_text if answers.blank?
 
-    tag.div(class: 'text-nowrap text-end') do
-      answers.map do |answer|
-        if question.settings.include_date_and_time?
-          context.format_datetime(answer.value)
-        elsif question.settings.include_time?
-          context.format_time(answer.value)
-        else
-          context.format_date(answer.value)
-        end
-      end.join(', ')
+      tag.div(class: 'text-nowrap text-end') do
+        answers.map do |answer|
+          if question.settings.include_date_and_time?
+            context.format_datetime(answer.value)
+          elsif question.settings.include_time?
+            context.format_time(answer.value)
+          else
+            context.format_date(answer.value)
+          end
+        end.join(', ')
+      end
     end
-  end
 
-  def basic
-    classes = %w[text-nowrap]
-    classes << 'text-end' if question_type.is?(:number)
+    def basic
+      classes = %w[text-nowrap]
+      classes << 'text-end' if question_type.is?(:number)
 
-    tag.div(class: classes) do
-      if answers.present?
-        answers.join(', ')
-      else
-        alt_text
+      tag.div(class: classes) do
+        if answers.present?
+          answers.join(', ')
+        else
+          alt_text
+        end
       end
     end
   end
