@@ -2,6 +2,10 @@
 
 module Dragnet
   class TypeMethod
+    def self.message_name
+      name.demodulize.underscore.to_sym
+    end
+
     def self.attributes
       return @attributes if defined?(@attributes)
 
@@ -32,7 +36,7 @@ module Dragnet
         return public_send(tag) if respond_to?(tag)
       end
 
-      raise NoMethodError, "undefined method `#{type.tags.to_sentence}` for #{self}:#{self.class}"
+      raise NoMethodError, "undefined method `#{self.class.message_name}` for #{type.class}"
     end
 
     private
