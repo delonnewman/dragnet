@@ -1,5 +1,5 @@
 module Dragnet
-  class DoBeforeSavingAnswer < GenericFunction
+  class Answer::DoBeforeSaving < GenericFunction
     attribute :answer
     attribute :question
 
