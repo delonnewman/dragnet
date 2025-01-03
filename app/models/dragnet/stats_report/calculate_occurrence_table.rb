@@ -11,12 +11,12 @@ module Dragnet
       reportable.answers.where(question:).group(:float_value).count
     end
 
-    def number
-      if question.settings.decimal?
-        reportable.answers.where(question:).group(:float_value).count
-      else
-        reportable.answers.where(question:).group(:integer_value).count
-      end
+    def decimal
+      reportable.answers.where(question:).group(:float_value).count
+    end
+
+    def integer
+      reportable.answers.where(question:).group(:integer_value).count
     end
 
     def choice

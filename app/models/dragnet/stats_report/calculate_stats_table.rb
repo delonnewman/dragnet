@@ -5,10 +5,12 @@ module Dragnet
     attribute :reportable
     attribute :question
 
-    def number
-      name = question.settings.decimal? ? :float_value : :integer_value
+    def decimal
+      collect_stats(question, column: Answer.arel_table[:float_value])
+    end
 
-      collect_stats(question, column: Answer.arel_table[name])
+    def integer
+      collect_stats(question, column: Answer.arel_table[:integer_value])
     end
 
     def text
