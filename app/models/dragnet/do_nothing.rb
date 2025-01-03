@@ -1,5 +1,5 @@
 module Dragnet
-  class DoNothing < GenericFunction
+  class DoNothing < TypeMethod
     def initialize
       super(nil)
     end

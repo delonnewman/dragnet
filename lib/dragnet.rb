@@ -12,7 +12,8 @@ require_relative 'dragnet/stats_utils'
 require_relative 'dragnet/core_ext'
 require_relative 'dragnet/class_meta_data'
 require_relative 'dragnet/memoizable'
-require_relative 'dragnet/generic_function'
+
+require_relative 'dragnet/type_method'
 require_relative 'dragnet/type'
 
 require_relative 'dragnet/composed'

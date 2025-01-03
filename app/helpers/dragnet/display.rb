@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class Display < GenericFunction
+  class Display < TypeMethod
     include ActionView::Helpers::TagHelper
     include Rails.application.routes.url_helpers
 

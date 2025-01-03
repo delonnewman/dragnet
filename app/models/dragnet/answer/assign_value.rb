@@ -1,5 +1,5 @@
 module Dragnet
-  class Answer::AssignValue < GenericFunction
+  class Answer::AssignValue < TypeMethod
     attribute :answer
     attribute :value
 

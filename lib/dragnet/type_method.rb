@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class GenericFunction
+  class TypeMethod
     def self.attributes
       return @attributes if defined?(@attributes)
 

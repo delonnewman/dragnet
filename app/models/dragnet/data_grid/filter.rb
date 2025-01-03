@@ -2,7 +2,7 @@
 
 module Dragnet
   # Modify the data grid relation to filter records
-  class DataGrid::Filter < GenericFunction
+  class DataGrid::Filter < TypeMethod
     attribute :relation
     attribute :table
     attribute :value
