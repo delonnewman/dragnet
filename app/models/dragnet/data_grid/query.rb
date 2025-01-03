@@ -19,8 +19,8 @@ module Dragnet
 
     def initialize(questions, params, defaults = EMPTY_HASH)
       @questions = questions
-      @sort_by = params[:sort_by] || defaults.fetch(:sort_by, :created_at)
-      @sort_direction = params[:sort_direction] || defaults.fetch(:sort_direction, :desc)
+      @sort_by = (params[:sort_by] || defaults.fetch(:sort_by, :created_at)).to_s
+      @sort_direction = (params[:sort_direction] || defaults.fetch(:sort_direction, :desc)).to_sym
       @filter_by = (params[:filter_by] || defaults.fetch(:filter_by, EMPTY_HASH)).to_h
     end
 
@@ -58,7 +58,7 @@ module Dragnet
     def sorted_by_column?(column)
       return sort_by == column.id if sorted_by_question? && column.is_a?(Question)
 
-      sort_by == column
+      sort_by == column.to_s
     end
 
     def opposite_sort_direction

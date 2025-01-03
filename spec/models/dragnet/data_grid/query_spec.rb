@@ -51,4 +51,32 @@ RSpec.describe Dragnet::DataGrid::Query do
       expect { query.question('some value') }.to raise_error(/unknown question/)
     end
   end
+
+  describe '#sorted_by_column?' do
+    it 'returns true when the sorted_by value is given' do
+      query = described_class.new(survey.questions, { sort_by: 'created_at' })
+
+      expect(query).to be_sorted_by_column('created_at')
+    end
+
+    it 'returns true when the sorted_by value is given as symbol' do
+      query = described_class.new(survey.questions, { sort_by: 'created_at' })
+
+      expect(query).to be_sorted_by_column(:created_at)
+    end
+
+    it 'returns true when the question whose id is the sorted by value is given' do
+      question = survey.questions.first
+      query = described_class.new(survey.questions, { sort_by: question.id })
+
+      expect(query).to be_sorted_by_column(question)
+    end
+
+    it 'returns false when the value is not a valid question id' do
+      fake_id = SecureRandom.uuid
+      query = described_class.new(survey.questions, { sort_by: fake_id })
+
+      expect(query).not_to be_sorted_by_column(survey.questions.first)
+    end
+  end
 end
