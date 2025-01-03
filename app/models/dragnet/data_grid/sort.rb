@@ -5,7 +5,6 @@ module Dragnet
     # include sql sanitation methods from ActiveRecord
     include ActiveRecord::Sanitization::ClassMethods
 
-    attribute :question
     attribute :scope
     attribute :direction
     attribute :join_name
