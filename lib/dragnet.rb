@@ -4,7 +4,6 @@ require 'faker'
 require 'active_support'
 require 'active_record'
 
-require_relative 'dragnet/constants'
 require_relative 'dragnet/predicates'
 require_relative 'dragnet/utils'
 require_relative 'dragnet/time_utils'
@@ -40,6 +39,11 @@ require_relative 'dragnet/view/presenter'
 require_relative 'dragnet/view/paged_presenter'
 
 module Dragnet
+  EMPTY_HASH   = {}.freeze
+  EMPTY_ARRAY  = [].freeze
+  EMPTY_SET    = Set.new.freeze
+  EMPTY_STRING = ''.freeze
+
   GITHUB_URL = 'https://github.com/delonnewman/dragnet/'
   private_constant :GITHUB_URL
 
