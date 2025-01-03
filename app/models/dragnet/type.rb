@@ -1,11 +1,9 @@
 module Dragnet
   class Type
-    def self.perform(*action_names)
-      action_names.each do |name|
-        klass = "::Dragnet::Action::#{name.to_s.classify}".constantize
-        define_method name do |**args|
-          klass.new(question_type, **args)
-        end
+    def self.perform(action, class_name: nil)
+      klass = class_name || name.to_s.classify.constantize
+      define_method name do |**args|
+        klass.new(question_type, **args)
       end
     end
 
