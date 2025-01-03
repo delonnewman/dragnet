@@ -10,12 +10,12 @@ module Dragnet
       answer.question_option&.text
     end
 
-    def number
-      if answer.question.settings.decimal?
-        answer.float_value
-      else
-        answer.integer_value
-      end
+    def decimal
+      answer.float_value
+    end
+
+    def integer
+      answer.integer_value
     end
 
     def text
