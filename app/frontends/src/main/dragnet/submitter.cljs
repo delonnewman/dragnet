@@ -23,31 +23,61 @@
   (go (let [res (<! (http/get (reply-url id :preview preview)))]
         (:body res))))
 
+
 (def state (r/atom {}))
 
-(defn find-element [element-id]
-  (if-let [elem (js/document.getElementById element-id)]
-    elem
-    (throw (js/Error. (str "Can't find element by id: " (pr-str element-id))))))
+(def ^:dynamic *element-id* "survey-submitter")
+(def is-preview-attributes "data-is-preview")
+(def reply-id-attribute "data-reply-id")
+(def survey-id-attribute "data-survey-id")
+
+
+(defn root-element []
+  (js/document.getElementById *element-id*))
+
+
+(defn get-element-attribute
+  "Get and attribute value from the root element."
+  [attribute]
+  (when-let [elem (root-element)]
+    (.getAttribute elem attribute)))
+
+
+(def get-survey-id (partial get-element-attribute survey-id-attribute))
+
+
+(defn get-reply-id
+  "Return the reply id from the page or nil if it's not present."
+  [] (-> (get-element-attribute reply-id-attribute) utils/presence))
+
+
+(defn preview?
+  "Return preview status from the page, it will only return true if
+  the preview attribute is set to \"true\"."
+  [] (= "true" (get-element-attribute is-preview-attributes)))
+
 
 (defn ^:export init
-  "Initialize reply submission UI with the root element ID and optionally a reply-id."
-  [element-id reply-id]
-  (let [root-elem (find-element element-id)
-        reply-id (or reply-id (.getAttribute root-elem "data-reply-id"))
-        preview (= "true" (.getAttribute root-elem "data-is-preview"))]
-    (utils/validate-presence! root-elem reply-id)
-    (add-watch state :render-ui (ui-renderer root-elem reply-id :preview preview))
-    (go (let [data (<! (fetch-reply-data reply-id))]
-          (swap! state merge data)))))
+  "Initialize reply submission UI. When a reply id is not specified with
+  the optional parameter look for it on the root element."
+  [& [reply-id]]
+  (let [preview (preview?)
+        id (if preview (get-survey-id) (or reply-id (get-reply-id)))]
+    (utils/validate-presence! (root-element))
+    (add-watch state :render-ui (ui-renderer (root-element) id :preview preview))
+    (go
+      (let [data (<! (fetch-reply-data id :preview preview))]
+        (swap! state merge data)))))
 
 
 (defn ^:export init-with-new-reply
-  "Initialize a new reply and reply submission UI with the root element ID and survey-id."
-  [root-elem-id survey-id]
-  (if-let [rid (storage/stored-reply-id survey-id)]
-    (init root-elem-id rid)
-    (go (let [res  (<! (http/post (reply-url survey-id)))
-              rid  (get-in res [:body :reply_id])]
-          (storage/store-reply-id! survey-id rid)
-          (init root-elem-id rid)))))
+  "Initialize a new reply and reply submission UI with
+  the root element ID and survey-id."
+  [survey-id]
+  (if-let [reply-id (storage/stored-reply-id survey-id)]
+    (init reply-id)
+    (go
+      (let [response (<! (http/post (reply-url survey-id)))
+            reply-id (get-in response [:body :reply_id])]
+        (storage/store-reply-id! survey-id reply-id)
+        (init reply-id)))))
