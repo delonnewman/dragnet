@@ -2,7 +2,8 @@
   (:require
    [cljs-http.client :as http]
    [cljs.core.async :refer [<! go]]
-   [clojure.string :as s]))
+   [clojure.string :as s]
+   [cognitect.transit :as t]))
 
 
 (def ^:dynamic *window* js/window)
@@ -202,6 +203,7 @@
   [x]
   (cond
     (uuid? x) x
+    (t/uuid? x) (parse-uuid (str x))
     (string? x) (parse-uuid x)
     :else (throw (ex-coercion :value x :target-type "UUID"))))
 
