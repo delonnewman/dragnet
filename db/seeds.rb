@@ -1,10 +1,14 @@
 include Dragnet
 
-QuestionType.create(
+QuestionType.create!(
   [
     { name: 'Text',
       icon: 'fa-regular fa-keyboard',
-      type_class_name: 'Dragnet::Types::Text',
+      type_class_name: 'Dragnet::Types::Text' },
+    { name: 'Paragraphs',
+      slug: 'long_text',
+      icon: 'fa-regular fa-keyboard',
+      type_class_name: 'Dragnet::Types::LongText',
       meta: { countable:   { type: :boolean, text: 'Calculate sentiment analysis score for text' } } },
     { name: 'Choice',
       type_class_name: 'Dragnet::Types::Choice',
@@ -37,17 +41,24 @@ QuestionType.create(
       type_class_name: 'Dragnet::Types::Boolean',
       slug: 'boolean',
       icon: 'fa-regular fa-toggle-on' },
+    { name: 'Email',
+      icon: 'fa-regular fa-envelope',
+      type_class_name: 'Dragnet::Ext::Email' },
+    { name: 'Phone Number',
+      slug: 'phone',
+      icon: 'fa-regular fa-envelope',
+      type_class_name: 'Dragnet::Ext::Phone' },
   ]
 ) if QuestionType.none?
 
 unless Rails.env.test?
-  user = User.find_by(login: 'admin') || User.create!(
+  user = User.find_by(login: 'admin') || User.new(
     login:    'admin',
     email:    'contact@delonnewman.name',
     name:     'Delon Newman',
     nickname: 'Delon',
     password: 'testing123'
-  ).tap(&:confirm)
+  ).tap { |user| user.skip_confirmation!; user.save! }
 
   Survey.create!(
     name: 'Contact Information',
@@ -56,7 +67,7 @@ unless Rails.env.test?
     questions_attributes: [
       { text: 'Name',     question_type_ident: 'text' },
       { text: 'Email',    question_type_ident: 'email' },
-      { text: 'Address',  question_type_ident: 'text' ,
+      { text: 'Address',  question_type_ident: 'text' },
       { text: 'Phone',    question_type_ident: 'phone' },
       { text: 'Comments', question_type_ident: 'long_text', meta: { countable: true } },
     ]
