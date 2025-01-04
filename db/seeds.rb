@@ -55,10 +55,10 @@ unless Rails.env.test?
     public: true,
     questions_attributes: [
       { text: 'Name',     question_type_ident: 'text' },
-      { text: 'Email',    question_type_ident: 'text' },
-      { text: 'Address',  question_type_ident: 'text', meta: { long_answer: true } },
-      { text: 'Phone',    question_type_ident: 'text' },
-      { text: 'Comments', question_type_ident: 'text', meta: { long_answer: true } },
+      { text: 'Email',    question_type_ident: 'email' },
+      { text: 'Address',  question_type_ident: 'text' ,
+      { text: 'Phone',    question_type_ident: 'phone' },
+      { text: 'Comments', question_type_ident: 'long_text', meta: { countable: true } },
     ]
   ) unless Survey.exists?(name: 'Contact Information')
 end
