@@ -12,7 +12,7 @@
 
        script.src = "<%= request.base_url %>/js/submitter/shell.js";
        script.onload = function() {
-         dragnet.submitter.shell.init("survey-submitter");
+         dragnet.submitter.init("survey-submitter");
        };
        document.head.append(script);
      }.call(window))
