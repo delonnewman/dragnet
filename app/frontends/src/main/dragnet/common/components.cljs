@@ -140,5 +140,5 @@
 
 (defn prompt-body
   [q & {:keys [form-name-prefix class-name]}]
-  (when-let [body (prompt-bodies (-> q :question_type :slug))]
+  (let [body (get prompt-bodies (-> q :question_type :slug) (prompt-bodies "text"))]
     (body q :prefix form-name-prefix :class-name class-name)))
