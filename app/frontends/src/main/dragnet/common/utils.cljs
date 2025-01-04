@@ -40,7 +40,7 @@
   (->> path-spec (filter keyword?) (map-indexed #(vector %2 (nth args %1))) (into {})))
 
 
-(defn- map->str-path
+(defn- path-spec->path
   [path-spec m]
   (->> path-spec (map #(get m % %)) (s/join "/")))
 
@@ -51,8 +51,8 @@
     (fn [& args]
       (let [args' (parse-path-args! args argc)]
         (if (map? args')
-          (map->str-path path-spec args')
-          (map->str-path path-spec (args-map path-spec args')))))))
+          (path-spec->path path-spec args')
+          (path-spec->path path-spec (args-map path-spec args')))))))
 
 
 (defn http-request
