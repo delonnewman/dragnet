@@ -25,7 +25,11 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   config.default_url_options = {
-    host: 'localhost'
+    host: 'forms.delonnewman.name'
+  }
+
+  config.action_mailer.default_url_options = {
+    host: "forms.delonnewman.name"
   }
 
   # Compress CSS using a preprocessor.
