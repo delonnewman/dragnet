@@ -51,4 +51,4 @@
          :children (prompt-body question :form-name-prefix [:reply :answers_attributes])])
       (when-not preview
         [:button.btn.btn-primary
-         {:type "submit" :onsubmit (remove-stored-id-code (survey :id))} "Submit"])]]))
+         {:type "submit" :onSubmit (remove-stored-id-code (survey :id))} "Submit"])]]))
