@@ -11,8 +11,7 @@
     :refer [validate-presence! pp pp-str http-request]
     :include-macros true]
    [reagent.core :as r]
-   [reagent.dom :as rdom]
-   [cognitect.transit :as t]))
+   [reagent.dom :as rdom]))
 
 
 (def ^:dynamic *element-id* "survey-editor")
