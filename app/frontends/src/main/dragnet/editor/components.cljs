@@ -219,5 +219,4 @@
      {:type "button"
       :on-click (editor/add-question-handler ref)}
      (icon "fa-solid" "plus" "Add Question")]]
-   [survey-questions ref]
-   [dev-info @ref]])
+   [survey-questions ref]])
