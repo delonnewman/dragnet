@@ -66,8 +66,8 @@
 (defn text-prompt
   [& {:keys [id name value long]}]
   (if long
-    [:textarea.form-control {:id id :name name :rows 3 :data-question-type "text"} value]
-    [:input.form-control {:id id :name name :type "text" :data-question-type "text" :default-value value}]))
+    [:textarea.form-control {:id id :name name :rows 3} value]
+    [:input.form-control {:id id :name name :type "text" :default-value value}]))
 
 
 (defn choice-prompt
@@ -75,12 +75,13 @@
   (let [type (if multi "checkbox" "radio")]
     (for [{text :text opt-id :id} options]
       (let [dom-id (str id "-option-" opt-id)]
-        ^{:key dom-id} [:div.form-check
-                        [:input.form-check-input
-                         {:type type :id dom-id :name name :value opt-id
-                          :data-question-type "choice"
-                          :default-checked (= opt-id value)}]
-                        [:label.form-check-label {:for dom-id} text]]))))
+        ^{:key dom-id}
+        [:div.form-check
+         [:input.form-check-input
+          {:type type :id dom-id :name name :value opt-id
+           :data-question-type "choice"
+           :default-checked (= opt-id value)}]
+         [:label.form-check-label {:for dom-id} text]]))))
 
 
 (defn- time-opts->input-type
@@ -102,18 +103,48 @@
 
 
 (defn number-prompt
-  [& {:keys [id name]}]
-  [:input.form-control {:id id :type "number" :name name}])
+  [& {:keys [id name value]}]
+  [:input.form-control {:id id :type "number" :name name :default-value value}])
+
+
+(defn email-prompt
+  [& {:keys [id name value]}]
+  [:input.form-control {:id id :type "email" :name name :default-value value}])
+
+
+(defn phone-prompt
+  [& {:keys [id name value]}]
+  [:input.form-control {:id id :type "phone" :name name :default-value value}])
 
 
 (def ^:private prompt-bodies
-  {"text"
+  {
+   "text"
    (fn [q & {:keys [prefix class-name]}]
      (text-prompt
       :id (question-id q)
       :class-name class-name
       :name (form-name (concat prefix [(:id q) :value]))
-      :long (long-answer? q)))
+      :long false))
+   "long_text"
+   (fn [q & {:keys [prefix class-name]}]
+     (text-prompt
+      :id (question-id q)
+      :class-name class-name
+      :name (form-name (concat prefix [(:id q) :value]))
+      :long true))
+   "email"
+   (fn [q & {:keys [prefix class-name]}]
+     (email-prompt
+      :id (question-id q)
+      :class-name class-name
+      :name (form-name (concat prefix [(:id q) :value]))))
+   "phone"
+   (fn [q & {:keys [prefix class-name]}]
+     (phone-prompt
+      :id (question-id q)
+      :class-name class-name
+      :name (form-name (concat prefix [(:id q) :value]))))
    "choice"
    (fn [q & {:keys [prefix class-name]}]
      (choice-prompt
