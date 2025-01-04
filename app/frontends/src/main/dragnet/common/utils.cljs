@@ -150,13 +150,16 @@
   ([x & ys] (and (present? x) (every? present? ys))))
 
 
+(defn presence
+  "Return nil if the value is blank, otherwise return the value."
+  [x] (if (blank? x) nil x))
+
+
 (defn any-blank?
   [col]
   (not-every? present? col))
 
 
-;; TODO: add locale support
-;; (see https://api.rubyonrails.org/classes/Array.html#method-i-to_sentence)
 (defn ->sentence
   [col & {:keys [delimiter last-delimiter two-word-delimiter]
           :or {delimiter ", " last-delimiter ", and " two-word-delimiter " and "}}]
