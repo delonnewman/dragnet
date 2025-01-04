@@ -35,7 +35,7 @@ class DataGridController < ApplicationController
   end
 
   def grid
-    Dragnet::DataGrid.whole.find_or_create!(survey, user: current_user).present(with: data_grid_params)
+    Dragnet::DataGrid.find_or_create!(survey, user: current_user).present(with: data_grid_params)
   end
 
   def survey
@@ -43,6 +43,6 @@ class DataGridController < ApplicationController
   end
 
   def data_grid_params
-    params.permit(:page, :items, :sort_by, :sort_direction, :created_at, :user_id, filter_by: {})
+    params.permit(:page, :items, :sort_by, :sort_direction, :created_at, :user_id, :survey_id, filter_by: {})
   end
 end

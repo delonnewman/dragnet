@@ -69,6 +69,7 @@ module Dragnet
         if !sort_by_question?
           scope.order(sort_by => sort_direction)
         else
+          question = @query.question(sort_by)
           scope = sorting_scope(scope, question.id)
           join_name = join_aliases.fetch(:sorting, :answers)
           question.type.send_action(:sort_data_grid, scope:, direction: sort_direction, join_name:)
