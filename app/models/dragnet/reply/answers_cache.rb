@@ -24,7 +24,11 @@ module Dragnet
     end
 
     def set!
-      @reply.cached_answers_data = pull_data
+      @reply.update_attribute!(:cached_answers_data, pull_data)
+    end
+
+    def not_set?
+      @reply.cached_answers_data.nil? || @reply.cached_answers_data.empty?
     end
 
     private

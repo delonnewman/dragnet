@@ -14,7 +14,8 @@ module Dragnet
     retract_associated :answers
 
     with AnswersCache
-    before_save { answers_cache.set! }
+    attribute :cached_answers_data, default: []
+    after_save { answers_cache.set! if submitted? && answers_cache.not_set? }
 
     def cached_answers
       answers_cache.answers
