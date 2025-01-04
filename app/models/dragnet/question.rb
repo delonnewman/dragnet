@@ -25,7 +25,7 @@ module Dragnet
     end
 
     def question_type_ident=(ident)
-      self.question_type = QuestionType.get(ident)
+      self.question_type = QuestionType.get!(ident)
     end
 
     # TODO: not sure why this isn't being created by `accepts_nested_attributes_for`
