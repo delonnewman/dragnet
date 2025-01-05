@@ -8,6 +8,7 @@
       path-helper
       pluralize
       presence
+      present?
       root-url
       *window*
       ->sentence
@@ -79,6 +80,11 @@
   (is (blank? []) "an empty collection is blank")
   (is (blank? nil) "nil is blank")
   (is (blank? "" "" "" "") "it accepts multiple arguments"))
+
+
+(deftest test-present
+  (is (present? "Hey!") "it's present if it's not blank")
+  (is (not (present? "")) "it's not present if it is blank"))
 
 
 (deftest test-presence
