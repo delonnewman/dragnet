@@ -1,4 +1,4 @@
-(ns dragnet.shared.utils-test
+(ns dragnet.common.utils-test
   (:require
     [clojure.test :refer [deftest testing is]]
     [dragnet.common.utils :refer
