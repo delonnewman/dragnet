@@ -26,18 +26,30 @@
     (str (root-url) (apply path-fn args))))
 
 
-(defn- parse-path-args!
+(defn- path-args
   [args argc]
   (cond
-    (and (= 1 (count args)) (map? (first args)) (<= argc (count (first args))))
+    ;; args map
+    (let [[map] args]
+      (and
+       (= 1 (count args))
+       (map? map)
+       (<= argc (count map))))
     (first args)
+
+    ;; args list
     (= argc (count args)) args
-    :else (throw (ex-arguments :expected argc :received (count args)))))
+
+    :else
+    (throw (ex-arguments :expected argc :received (count args)))))
 
 
 (defn- args-map
   [path-spec args]
-  (->> path-spec (filter keyword?) (map-indexed #(vector %2 (nth args %1))) (into {})))
+  (->> path-spec
+       (filter keyword?)
+       (map-indexed #(vector %2 (nth args %1)))
+       (into {})))
 
 
 (defn- path-spec->path
@@ -49,7 +61,7 @@
   [path-spec]
   (let [argc (->> path-spec (filter keyword?) count)]
     (fn [& args]
-      (let [args' (parse-path-args! args argc)]
+      (let [args' (path-args args argc)]
         (if (map? args')
           (path-spec->path path-spec args')
           (path-spec->path path-spec (args-map path-spec args')))))))
@@ -68,7 +80,10 @@
 
 (defn form-name
   [& keys]
-  (let [ks (if (and (= 1 (count keys)) (coll? (first keys))) (first keys) keys)]
+  (let [ks
+        (if (and (= 1 (count keys)) (coll? (first keys)))
+          (first keys)
+          keys)]
     (reduce
      (fn [s k]
        (let [k' (if (number? k) (str k) (name k))]
@@ -94,12 +109,20 @@
 (defn dom-id
   [entity & args]
   (let [[{prefix :prefix} rest] (extract-options args)
-        prefix (if prefix prefix (-> entity :entity/type name))
-        s (if-let [id (entity :entity/id)] (str prefix "-" id) prefix)]
+        prefix (or prefix (-> entity :entity/type name))
+        root (if-let [id (entity :entity/id)]
+               (str prefix "-" id)
+               prefix)]
     (if (empty? rest)
-      s
-      (str s "-" (s/join "-" (map dom-id rest))))))
+      root
+      (str root "-" (s/join "-" (map dom-id rest))))))
 
+(comment
+
+(dom-id {:entity/id 1 :entity/type :question})
+(dom-id {:entity/id 1 :entity/type :question} {:entity/id 1 :entity/type :question-option})
+(dom-id {:entity/id 1 :entity/type :question} {:prefix "test"})
+  )
 
 ;; A naive plural inflection, but good enough for this
 (defn pluralize
