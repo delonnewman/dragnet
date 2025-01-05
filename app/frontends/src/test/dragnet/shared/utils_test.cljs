@@ -1,7 +1,7 @@
 (ns dragnet.shared.utils-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [dragnet.shared.utils :refer [form-name pluralize root-url *window* ->sentence url-helper path-helper]]))
+    [dragnet.common.utils :refer [form-name pluralize root-url *window* ->sentence url-helper path-helper]]))
 
 
 (deftest test-form-name
