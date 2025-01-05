@@ -74,7 +74,7 @@
         "it should ignore extra keys if a map is given")))
 
 
-(deftest test-blank
+(deftest test-blank?
   (is (blank? "") "an empty string is blank")
   (is (blank? "   \t \n") "a string with only whitespace is blank")
   (is (blank? []) "an empty collection is blank")
@@ -82,7 +82,7 @@
   (is (blank? "" "" "" "") "it accepts multiple arguments"))
 
 
-(deftest test-present
+(deftest test-present?
   (is (present? "Hey!") "it's present if it's not blank")
   (is (not (present? "")) "it's not present if it is blank"))
 
