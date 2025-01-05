@@ -2,14 +2,16 @@
   (:require
     [clojure.test :refer [deftest testing is]]
     [dragnet.common.utils :refer
-     [form-name
+     [blank?
       dom-id
+      form-name
+      path-helper
       pluralize
+      presence
       root-url
       *window*
       ->sentence
-      url-helper
-      path-helper]]))
+      url-helper]]))
 
 
 (deftest test-form-name
@@ -69,3 +71,16 @@
         "the function can take a map whose keys correspond to the keywords in the path-spec")
     (is (= "/hey/you" (hey {:name "you" :age 36}))
         "it should ignore extra keys if a map is given")))
+
+
+(deftest test-blank
+  (is (blank? "") "an empty string is blank")
+  (is (blank? "   \t \n") "a string with only whitespace is blank")
+  (is (blank? []) "an empty collection is blank")
+  (is (blank? nil) "nil is blank")
+  (is (blank? "" "" "" "") "it accepts multiple arguments"))
+
+
+(deftest test-presence
+  (is (nil? (presence "")) "it's nil if the argument is blank")
+  (is (= "Ha!" (presence "Ha!")) "it's the value if the argument is present"))
