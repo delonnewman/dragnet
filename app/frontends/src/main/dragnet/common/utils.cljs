@@ -117,12 +117,6 @@
       root
       (str root "-" (s/join "-" (map dom-id rest))))))
 
-(comment
-
-(dom-id {:entity/id 1 :entity/type :question})
-(dom-id {:entity/id 1 :entity/type :question} {:entity/id 1 :entity/type :question-option})
-(dom-id {:entity/id 1 :entity/type :question} {:prefix "test"})
-  )
 
 ;; A naive plural inflection, but good enough for this
 (defn pluralize
