@@ -285,7 +285,7 @@
      type)))
 
 
-(s/fdef change-type!
+(s/fdef change-type-handler
   :args (s/cat :ref #(instance? Atom %) :question map?)
   :ret fn?)
 

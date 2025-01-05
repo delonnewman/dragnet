@@ -61,7 +61,7 @@
       "associates the type id with the specified question"))
 
 
-(deftest test-change-type
-  (let [changer (core/change-type! (atom {}) {:id "question-123"})]
+(deftest test-change-type-handler
+  (let [changer (core/change-type-handler (atom {}) {:id "question-123"})]
     (is (= (changer #js{:target #js{:value "type-345"}})
            {:survey {:questions {"question-123" {:question_type_id "type-345"}}}}))))
