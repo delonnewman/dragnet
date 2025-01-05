@@ -107,6 +107,8 @@
 
 
 (defn dom-id
+  "Construct a dom-id from a series of entity maps. If a :prefix
+  keyword argument is given that value will be used as the prefix."
   [entity & args]
   (let [[{prefix :prefix} rest] (extract-options args)
         prefix (or prefix (-> entity :entity/type name))
@@ -155,6 +157,8 @@
 
 
 (defn blank?
+  "Return true if the value is an empty string or a string is only
+  whitespace, or the value is an empty collection, otherwise return false."
   ([x]
    (if (seqable? x)
      (or (empty? x) (and (string? x) (empty? (s/replace x #"\s+" ""))))
@@ -164,6 +168,7 @@
 
 
 (defn present?
+  "Return true if the value is not blank, otherwise return false."
   ([x] (not (blank? x)))
   ([x & ys] (and (present? x) (every? present? ys))))
 
@@ -174,6 +179,8 @@
 
 
 (defn any-blank?
+  "Return true if any of the values in the collection are blank,
+  otherwise return false."
   [col]
   (not-every? present? col))
 
