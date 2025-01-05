@@ -5,7 +5,7 @@
    [clojure.spec.alpha :as s]
    [dragnet.common.utils
     :as utils
-    :refer [->int ->uuid pp pp-str ppt echo http-request]
+    :refer [->int ->uuid pp-str echo http-request]
     :include-macros true]))
 
 
@@ -15,10 +15,6 @@
 (def apply-survey-edits-path (utils/path-helper ["/api/v1/editing/surveys" :entity/id "apply"]))
 (def apply-survey-edits-url (utils/url-helper apply-survey-edits-path))
 
-
-(comment
-
-  (survey-url 1))
 
 (defn survey
   [state & key-path]
@@ -186,12 +182,10 @@
 
 
 (let [temp-id (atom 0)]
-  (defn new-option
-    []
+  (defn new-option []
     {:id (swap! temp-id dec) :question.option/text (new-option-text)})
 
-  (defn new-question
-    []
+  (defn new-question []
     {:id (swap! temp-id dec) :question/text (new-question-text)}))
 
 
