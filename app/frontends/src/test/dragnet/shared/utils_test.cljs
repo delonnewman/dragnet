@@ -1,7 +1,15 @@
 (ns dragnet.shared.utils-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [dragnet.common.utils :refer [form-name pluralize root-url *window* ->sentence url-helper path-helper]]))
+    [dragnet.common.utils :refer
+     [form-name
+      dom-id
+      pluralize
+      root-url
+      *window*
+      ->sentence
+      url-helper
+      path-helper]]))
 
 
 (deftest test-form-name
@@ -9,6 +17,14 @@
       "generates Rails style form names from args")
   (is (= "form[field][option]" (form-name [:form :field :option]))
       "generates Rails style form names from a collection"))
+
+
+(deftest test-dom-id
+  (is (= "question-1" (dom-id {:entity/id 1 :entity/type :question})))
+  (is (= "test-1" (dom-id {:entity/id 1 :entity/type :question} {:prefix "test"})))
+  (is (= "question-1-option-2"
+         (dom-id {:entity/id 1 :entity/type :question}
+                 {:entity/id 2 :entity/type :option}))))
 
 
 (deftest test-pluralize
