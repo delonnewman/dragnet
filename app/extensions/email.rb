@@ -1,9 +1,3 @@
-Dragnet::QuestionType.find_or_create_by!(
-  name: 'Email',
-  icon: 'fa-regular fa-envelope',
-  type_class_name: 'Dragnet::Ext::Email'
-)
-
 module Dragnet
   module Ext
     class Email < Types::Text
