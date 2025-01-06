@@ -46,6 +46,11 @@ module Dragnet
       question_type.type_class.new(self)
     end
 
+    def type_class=(klass)
+      self.type_class_name = klass.name
+      self.question_type = QuestionType.get!(klass.symbol)
+    end
+
     def type_class
       type_class_name.constantize
     end
