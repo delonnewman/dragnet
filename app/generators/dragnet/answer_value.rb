@@ -30,7 +30,11 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
     when :boolean
       Faker::Boolean.boolean
     when :email
-      Email.generate
+      Email[].generate
+    when :phone
+      Phone.generate
+    when :address
+      Faker::Address.full_address
     else
       raise "Don't know how to generate an answer for #{question.question_type.ident.inspect}"
     end

@@ -48,6 +48,9 @@ QuestionType.create!(
       slug: 'phone',
       icon: 'fa-regular fa-envelope',
       type_class_name: 'Dragnet::Ext::Phone' },
+    { name: 'Address',
+      icon: 'fa-regular fa-envelope',
+      type_class_name: 'Dragnet::Ext::Address' },
   ]
 ) if QuestionType.none?
 
@@ -67,7 +70,7 @@ unless Rails.env.test?
     questions_attributes: [
       { text: 'Name',     question_type_ident: 'text' },
       { text: 'Email',    question_type_ident: 'email' },
-      { text: 'Address',  question_type_ident: 'text' },
+      { text: 'Address',  question_type_ident: 'address' },
       { text: 'Phone',    question_type_ident: 'phone' },
       { text: 'Comments', question_type_ident: 'long_text', meta: { countable: true } },
     ]

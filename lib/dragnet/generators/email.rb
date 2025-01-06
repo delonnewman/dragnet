@@ -28,7 +28,6 @@ module Dragnet
       def call
         "#{login}@#{domain}"
       end
-
       alias to_s call
       alias inspect call
     end

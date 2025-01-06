@@ -41,6 +41,18 @@ module Dragnet
       classes = %w[text-nowrap]
       classes << 'text-end' if question_type.is?(:number)
 
+      concatenated_answers(classes:)
+    end
+
+    def text
+      concatenated_answers(classes: %w[text-truncated])
+    end
+
+    private
+
+    def concatenated_answers(classes:)
+      return alt_text if answers.blank?
+
       tag.div(class: classes) do
         if answers.present?
           answers.join(', ')

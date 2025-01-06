@@ -23,7 +23,12 @@ module Dragnet
     end
 
     before_save do
+      # For now just make this a simple async call, eventually we'll want to provide
+      # a coordination mechanism. We'll probably want to bake that into the type and
+      # type method framework, probably with the notion of a asynchronous type method.
+      # Concurrent::Promises.future do
       type&.send_action(:do_before_saving_answer, answer: self, question:)
+      # end
     end
 
     # Answers should be able to be treated as various kinds of values
@@ -44,6 +49,10 @@ module Dragnet
 
     def number_value
       type&.send_action(:get_number_value, answer: self)
+    end
+
+    def create_new_with!(new_attributes)
+      self.class.create!(attributes.merge(new_attributes))
     end
   end
 end
