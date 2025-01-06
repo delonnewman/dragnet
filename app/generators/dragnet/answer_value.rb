@@ -17,7 +17,7 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
     when :long_text
       LongAnswer.generate
     when :choice
-      QuestionOptionAnswer[question].generate
+      Dragnet::QuestionOptionAnswer[question].generate
     when :integer
       rand(100)
     when :decimal
@@ -31,6 +31,8 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
       Faker::Boolean.boolean
     when :email
       Email.generate
+    when :phone
+      Phone.generate
     else
       raise "Don't know how to generate an answer for #{question.question_type.ident.inspect}"
     end

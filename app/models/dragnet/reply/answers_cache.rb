@@ -5,18 +5,13 @@ module Dragnet
   class Reply::AnswersCache
     def initialize(reply)
       @reply = reply
+      @setting = false
     end
 
     def answers
-      data!.map do |attributes|
-        Answer.new(attributes) rescue binding.pry
+      data.map do |attributes|
+        Answer.new(attributes)
       end
-    end
-
-    def data!
-      raise 'No data in cache' unless data
-
-      data
     end
 
     def data
@@ -24,11 +19,17 @@ module Dragnet
     end
 
     def set!
-      @reply.update_attribute!(:cached_answers_data, pull_data)
+      @setting = true
+      @reply.update_attribute(:cached_answers_data, pull_data)
+      @setting = false
     end
 
-    def not_set?
-      @reply.cached_answers_data.nil? || @reply.cached_answers_data.empty?
+    def should_set?
+      @reply.submitted? && !set? && !@setting
+    end
+
+    def set?
+      @reply.cached_answers_data.present?
     end
 
     private

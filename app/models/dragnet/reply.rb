@@ -14,8 +14,8 @@ module Dragnet
     retract_associated :answers
 
     with AnswersCache
-    attribute :cached_answers_data, default: []
-    after_save { answers_cache.set! if submitted? && answers_cache.not_set? }
+    attribute :cached_answers_data, default: EMPTY_ARRAY
+    after_save { answers_cache.set! if answers_cache.should_set? }
 
     def cached_answers
       answers_cache.answers
@@ -66,10 +66,23 @@ module Dragnet
     end
 
     def submit(attributes, timestamp: Time.zone.now)
+      return if submitted?
+      perform_submission(attributes, timestamp)
+      save
+    end
+
+    def submit!(attrubutes, timestamp: Time.zone.now)
+      raise "Reply has already been submitted" if submitted;
+      perform_submission(attributes, timestamp)
+      save!
+    end
+
+    private
+
+    def perform_submission(attributes, timestamp)
       assign_attributes(attributes)
       validate(:submission)
       submitted!(timestamp)
-      save
     end
   end
 end

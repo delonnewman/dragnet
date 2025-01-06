@@ -4,23 +4,23 @@ describe Dragnet::Reply do
   subject(:reply) { described_class[survey:].generate }
 
   let(:survey) { Dragnet::Survey.generate }
+  let(:submitted_at) { Time.zone.now }
 
   it_behaves_like Dragnet::Retractable do
     let(:retractable) { reply }
   end
 
   it "updates it's survey's latest submission timestamp if submitted" do
-    submitted_at = Time.zone.now
     survey.save!
-    reply.update(submitted: true, submitted_at:)
+    reply.update!(submitted: true, submitted_at:)
 
     expect(survey.latest_submission_at).to eq submitted_at
   end
 
-  it 'ensures that answers data cache is updated before saving' do
-    reply.cached_answers_data = nil
+  it 'ensures that answers data cache is updated before saving if submitted' do
+    survey.save!
 
-    expect { reply.save! }.to change(reply, :cached_answers_data).from(nil)
+    expect { reply.update!(submitted: true, submitted_at:) }.to change(reply, :cached_answers_data).from([])
   end
 
   it 'provides cached answers' do
@@ -36,10 +36,10 @@ describe Dragnet::Reply do
     expect { reply.answers_to(question) }.to perform_number_of_queries(0)
   end
 
-  describe '#submit' do
-    subject(:reply) { described_class[survey:].generate! }
+  context 'when submitting' do
+    subject(:reply) { described_class[survey:, submitted: false].generate! }
 
-    let(:survey) { Dragnet::Survey[questions: { question_type: Dragnet::QuestionType.get(:text) }].generate! }
+    let(:survey) { Dragnet::Survey[questions: { question_type: Dragnet::QuestionType.get!(:text) }].generate! }
 
     def submission_data
       question = survey.questions.first
@@ -68,9 +68,7 @@ describe Dragnet::Reply do
     end
 
     it 'updates answers data cache' do
-      reply.cached_answers_data = nil
-
-      expect { reply.submit(submission_data) }.to change(reply, :cached_answers_data).from(nil)
+      expect { reply.submit!(submission_data) }.to change(reply, :cached_answers_data).from([])
     end
 
     it 'marks it as submitted' do
