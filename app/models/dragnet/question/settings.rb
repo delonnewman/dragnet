@@ -42,10 +42,7 @@ module Dragnet
       !!setting(setting)
     end
 
-    def setting(setting)
-      default = @question.question_type.meta[setting]
-      return default if @question.meta.blank?
-
+    def setting(setting, default: nil)
       @question.meta.fetch(setting, default)
     end
   end

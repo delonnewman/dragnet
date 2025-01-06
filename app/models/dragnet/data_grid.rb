@@ -19,7 +19,7 @@ module Dragnet
     has_many :record_changes, class_name: 'Dragnet::RecordChange', through: :survey, inverse_of: :survey
     delegate :record_changes?, to: :survey
 
-    scope :whole, -> { eager_load(survey: %i[author], questions: %i[question_type question_options]) }
+    scope :whole, -> { eager_load(survey: %i[author], questions: %i[question_options]) }
 
     def self.find_or_create!(survey, user: survey.author)
       grid = find_by(user_id: user.id, survey_id: survey.id)

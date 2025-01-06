@@ -17,8 +17,8 @@ module Dragnet
         @items  = items
 
         @base_relation = replies.includes(
-          questions: %i[question_type question_options],
-          answers:   { question: %i[question_type question_options] }
+          questions: %i[question_options],
+          answers:   { question: %i[question_options] }
         )
       end
 

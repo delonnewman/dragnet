@@ -69,7 +69,7 @@ class RepliesController < ApplicationController
   end
 
   def replies
-    Dragnet::Reply.includes(:survey, :answers, questions: [:question_type])
+    Dragnet::Reply.includes(:survey, :answers, :questions)
   end
 
   def reply_params

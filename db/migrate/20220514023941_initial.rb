@@ -67,16 +67,6 @@ class Initial < ActiveRecord::Migration[7.0]
       t.timestamps index: true
     end
 
-    create_table :question_types, id: :uuid do |t|
-      t.string :name, null: false, index: true
-      t.string :slug, null: false, index: true
-      t.string :icon
-      t.string :type_class_name, null: false
-
-      t.uuid :parent_type_id, index: true
-      t.json :meta_data
-    end
-
     create_table :type_registrations, id: :uuid do |t|
       t.string :name, null: false, index: true
       t.string :slug, null: false, index: true
@@ -93,8 +83,6 @@ class Initial < ActiveRecord::Migration[7.0]
       t.integer :display_order, null: false, default: 0
       t.string  :form_name,     index: true, null: false
       t.boolean :required,      null: false, default: false
-
-      t.belongs_to :question_type, index: true, null: false, type: :uuid
       t.string :type_class_name, index: true, null: false
 
       t.uuid       :survey_id,     index: true, null: false
@@ -142,7 +130,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.uuid :reply_id,    null: false, index: true
       t.uuid :question_id, null: false, index: true
 
-      t.belongs_to :question_type, index: true, type: :uuid # cached data
+      t.string :type_class_name, index: true, null: false
 
       # values
       t.belongs_to :question_option,  null: true, index: true

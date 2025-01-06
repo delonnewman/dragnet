@@ -20,7 +20,7 @@ module Dragnet
     accepts_nested_attributes_for :questions, allow_destroy: true
 
     # Treat surveys as whole values
-    scope :whole, -> { eager_load(:author, questions: %i[question_type question_options]) }
+    scope :whole, -> { eager_load(:author, questions: %i[question_options]) }
 
     # Record Data
     has_many :replies, class_name: 'Dragnet::Reply', dependent: :delete_all, inverse_of: :survey

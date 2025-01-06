@@ -21,7 +21,7 @@ describe Dragnet::Question do
     it "loads all of a questions's componets in one query" do
       relation = described_class.whole
 
-      expect { relation.first.tap { |q| q.question_type; q.question_options.load } }
+      expect { relation.first.tap { |q| q.question_options.load } }
         .to perform_number_of_queries(2) # performs a prefetch query
     end
   end

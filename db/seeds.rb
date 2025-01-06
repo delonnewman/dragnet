@@ -1,56 +1,5 @@
 include Dragnet
 
-QuestionType.create!(
-  [
-    { name: 'Text',
-      icon: 'fa-regular fa-keyboard',
-      type_class_name: 'Dragnet::Types::Text' },
-    { name: 'Paragraphs',
-      slug: 'long_text',
-      icon: 'fa-regular fa-keyboard',
-      type_class_name: 'Dragnet::Types::LongText',
-      meta: { countable:   { type: :boolean, text: 'Calculate sentiment analysis score for text' } } },
-    { name: 'Choice',
-      type_class_name: 'Dragnet::Types::Choice',
-      icon: 'fa-regular fa-square-check',
-      meta: { multiple_answers: { type: :boolean, text: 'Allow multiple answers' },
-              countable:        { type: :boolean, text: 'Calculate statistics' } } },
-    { name: 'Whole Number',
-      slug: 'integer',
-      type_class_name: 'Dragnet::Types::Integer',
-      icon: 'fa-regular fa-calculator',
-      meta: { countable: { type: :boolean, text: 'Calculate statistics', default: true } } },
-    { name: 'Decimal',
-      slug: 'decimal',
-      type_class_name: 'Dragnet::Types::Decimal',
-      icon: 'fa-regular fa-calculator',
-      meta: { countable: { type: :boolean, text: 'Calculate statistics', default: true } } },
-    { name: 'Time',
-      slug: 'time',
-      type_class_name: 'Dragnet::Types::Time',
-      icon: 'fa-regular fa-clock' },
-    { name: 'Date',
-      slug: 'date',
-      type_class_name: 'Dragnet::Types::Date',
-      icon: 'fa-regular fa-clock' },
-    { name: 'Date & Time',
-      slug: 'date_and_time',
-      type_class_name: 'Dragnet::Types::DateAndTime',
-      icon: 'fa-regular fa-clock' },
-    { name: 'Yes or No',
-      type_class_name: 'Dragnet::Types::Boolean',
-      slug: 'boolean',
-      icon: 'fa-regular fa-toggle-on' },
-    { name: 'Email',
-      icon: 'fa-regular fa-envelope',
-      type_class_name: 'Dragnet::Ext::Email' },
-    { name: 'Phone Number',
-      slug: 'phone',
-      icon: 'fa-regular fa-envelope',
-      type_class_name: 'Dragnet::Ext::Phone' },
-  ]
-) if QuestionType.none?
-
 TypeRegistration.create!(
   [
     { name: 'Text',
@@ -117,11 +66,11 @@ unless Rails.env.test?
     author: user,
     public: true,
     questions_attributes: [
-      { text: 'Name',     question_type_ident: 'text' },
-      { text: 'Email',    question_type_ident: 'email' },
-      { text: 'Address',  question_type_ident: 'text' },
-      { text: 'Phone',    question_type_ident: 'phone' },
-      { text: 'Comments', question_type_ident: 'long_text', meta: { countable: true } },
+      { text: 'Name',     type_class: Dragnet::Types::Text },
+      { text: 'Email',    type_class: Dragnet::Ext::Email },
+      { text: 'Address',  type_class: Dragnet::Types::Text },
+      { text: 'Phone',    type_class: Dragnet::Ext::Phone },
+      { text: 'Comments', type_class: Dragnet::Types::LongText, meta: { countable: true } },
     ]
   ) unless Survey.exists?(name: 'Contact Information')
 end

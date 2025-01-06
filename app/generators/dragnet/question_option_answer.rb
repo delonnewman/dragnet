@@ -1,7 +1,7 @@
 class Dragnet::QuestionOptionAnswer < Dragnet::ParameterizedGenerator
   attr_reader :question
 
-  delegate :question_type, to: :question
+  delegate :type, to: :question
 
   def initialize(question)
     super()
@@ -14,7 +14,7 @@ class Dragnet::QuestionOptionAnswer < Dragnet::ParameterizedGenerator
   end
 
   def call(*)
-    case question_type.ident
+    case type.class.symbol
     when :choice
       question_options.sample
     end

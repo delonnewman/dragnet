@@ -52,7 +52,7 @@ describe Dragnet::Reply do
             question_id: question.id,
             reply_id: reply.id,
             survey_id: survey.id,
-            question_type_id: question.question_type_id,
+            type_class_name: question.type_class_name,
             value: 'testing',
           },
         },

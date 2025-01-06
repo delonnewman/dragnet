@@ -39,7 +39,7 @@ module Dragnet
         :id,
         :reply_id,
         :survey_id,
-        :question_type_id,
+        :type_class_name,
         :question_id,
         :short_text_value,
         :long_text_value,

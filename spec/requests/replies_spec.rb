@@ -18,7 +18,7 @@ describe 'Replies', type: :request do
             question_id: question.id,
             reply_id: reply.id,
             survey_id: survey.id,
-            question_type_id: question.question_type_id,
+            type_class_name: question.type_class_name,
             value:,
           },
         },
@@ -28,11 +28,11 @@ describe 'Replies', type: :request do
 
   def invalid_update_params
     question = survey.questions.first
-    question_type_id = question.question_type_id
+    type_class_name = question.type_class_name
     question_id = question.id
 
     # missing survey_id
-    { reply: { answers_attributes: { question_id => { question_id:, question_type_id:, value: 1 } } } }
+    { reply: { answers_attributes: { question_id => { question_id:, type_class_name:, value: 1 } } } }
   end
 
   describe 'GET /replies/:id/edit' do

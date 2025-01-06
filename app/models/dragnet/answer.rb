@@ -18,7 +18,8 @@ module Dragnet
     accepts_nested_attributes_for :question_option
 
     before_save do
-      type&.send_action(:do_before_saving_answer, answer: self, question:)
+      self.type_class_name = question.type_class_name unless type_class_name
+      type.send_action(:do_before_saving_answer, answer: self, question:)
     end
 
     # Answers should be able to be treated as various kinds of values
@@ -30,15 +31,15 @@ module Dragnet
     end
 
     def value
-      type&.send_action(:get_value, answer: self)
+      type.send_action(:get_value, answer: self)
     end
 
     def value=(value)
-      type&.send_action(:assign_value, answer: self, value:)
+      type.send_action(:assign_value, answer: self, value:)
     end
 
     def number_value
-      type&.send_action(:get_number_value, answer: self)
+      type.send_action(:get_number_value, answer: self)
     end
   end
 end

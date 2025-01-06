@@ -9,7 +9,7 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
   end
 
   def call
-    type = question.question_type.ident
+    type = question.type_class.symbol
 
     case type
     when :text
@@ -34,7 +34,7 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
     when :phone
       Phone.generate
     else
-      raise "Don't know how to generate an answer for #{question.question_type.ident.inspect}"
+      raise "Don't know how to generate an answer for #{type}"
     end
   end
 end

@@ -37,7 +37,6 @@ RSpec.describe Dragnet::DataGrid do
     def walking_graph(relation)
       relation.survey
       relation.questions.each do |question|
-        question.question_type
         question.question_options.load
       end
     end

@@ -60,7 +60,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.uuid "survey_id", null: false
     t.uuid "reply_id", null: false
     t.uuid "question_id", null: false
-    t.uuid "question_type_id"
+    t.string "type_class_name", null: false
     t.bigint "question_option_id"
     t.string "short_text_value"
     t.text "long_text_value"
@@ -81,13 +81,13 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["long_text_value"], name: "index_answers_on_long_text_value"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["question_option_id"], name: "index_answers_on_question_option_id"
-    t.index ["question_type_id"], name: "index_answers_on_question_type_id"
     t.index ["reply_id"], name: "index_answers_on_reply_id"
     t.index ["retracted"], name: "index_answers_on_retracted"
     t.index ["retracted_at"], name: "index_answers_on_retracted_at"
     t.index ["short_text_value"], name: "index_answers_on_short_text_value"
     t.index ["survey_id"], name: "index_answers_on_survey_id"
     t.index ["time_value"], name: "index_answers_on_time_value"
+    t.index ["type_class_name"], name: "index_answers_on_type_class_name"
   end
 
   create_table "data_grids", force: :cascade do |t|
@@ -108,25 +108,12 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["weight"], name: "index_question_options_on_weight"
   end
 
-  create_table "question_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.string "icon"
-    t.string "type_class_name", null: false
-    t.uuid "parent_type_id"
-    t.json "meta_data"
-    t.index ["name"], name: "index_question_types_on_name"
-    t.index ["parent_type_id"], name: "index_question_types_on_parent_type_id"
-    t.index ["slug"], name: "index_question_types_on_slug"
-  end
-
   create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "text", null: false
     t.bigint "hash_code", null: false
     t.integer "display_order", default: 0, null: false
     t.string "form_name", null: false
     t.boolean "required", default: false, null: false
-    t.uuid "question_type_id", null: false
     t.string "type_class_name", null: false
     t.uuid "survey_id", null: false
     t.boolean "retracted", default: false, null: false
@@ -134,7 +121,6 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.json "meta_data"
     t.index ["form_name"], name: "index_questions_on_form_name"
     t.index ["hash_code"], name: "index_questions_on_hash_code"
-    t.index ["question_type_id"], name: "index_questions_on_question_type_id"
     t.index ["retracted"], name: "index_questions_on_retracted"
     t.index ["retracted_at"], name: "index_questions_on_retracted_at"
     t.index ["survey_id"], name: "index_questions_on_survey_id"

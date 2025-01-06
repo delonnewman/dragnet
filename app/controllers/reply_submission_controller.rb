@@ -61,7 +61,7 @@ class ReplySubmissionController < EndpointController
 
   def reply
     Dragnet::Reply
-      .includes(:survey, questions: %i[question_type question_options])
+      .includes(:survey, questions: %i[question_options])
       .find(params[:id])
   end
 end

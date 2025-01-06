@@ -16,7 +16,7 @@ module Dragnet
         answers_attributes: questions.map do |question|
           {
             question_id: question.id,
-            question_type_id: question.question_type_id,
+            type_class_name: question.type_class_name,
             reply_id: reply.id,
             survey_id: survey.id,
             value: data[question.form_name],

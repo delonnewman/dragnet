@@ -33,9 +33,7 @@ class SurveyEditorController < EndpointController
   private
 
   def survey
-    Dragnet::Survey
-      .includes(questions: %i[question_type question_options])
-      .find(params[:id])
+    Dragnet::Survey.whole.find(params[:id])
   end
 
   def latest_edit

@@ -22,7 +22,7 @@ describe Dragnet::Survey do
     it "loads all of a survey's componets in one query" do
       relation = described_class.whole
 
-      expect { relation.first.questions.each { |q| q.question_type; q.question_options.load } }
+      expect { relation.first.questions.each { |q| q.question_options.load } }
         .to perform_number_of_queries(2) # performs a prefetch query
     end
   end
