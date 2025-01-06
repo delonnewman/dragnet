@@ -8,6 +8,7 @@ module Dragnet
     belongs_to :reply,    class_name: 'Dragnet::Reply'
     belongs_to :question, class_name: 'Dragnet::Question'
     accepts_nested_attributes_for :question
+    delegate :type, to: :question
 
     scope :whole, -> { eager_load(:question_option, :question_type, question: %i[question_type question_options]) }
 
@@ -17,7 +18,6 @@ module Dragnet
 
     belongs_to :question_type, optional: true, class_name: 'Dragnet::QuestionType' # Why does this need to be optional?
     accepts_nested_attributes_for :question_type
-    delegate :type, to: :question_type, allow_nil: true
     before_save do
       self.question_type = question.question_type if question
     end

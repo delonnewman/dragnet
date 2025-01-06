@@ -12,7 +12,6 @@ module Dragnet
 
     belongs_to :question_type, class_name: 'Dragnet::QuestionType'
     accepts_nested_attributes_for :question_type
-    delegate :type, to: :question_type
 
     has_many :question_options, class_name: 'Dragnet::QuestionOption', dependent: :delete_all, inverse_of: :question
     accepts_nested_attributes_for :question_options, allow_destroy: true
@@ -37,5 +36,9 @@ module Dragnet
       Settings.new(self)
     end
     memoize :settings
+
+    def type
+      question_type.type_class.new(self)
+    end
   end
 end

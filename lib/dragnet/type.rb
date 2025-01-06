@@ -16,7 +16,7 @@ module Dragnet
     def self.perform(action, class_name: nil)
       klass = (class_name || name.to_s.classify).constantize
       define_method action do |**args|
-        klass.new(question_type, **args)
+        klass.new(question, **args)
       end
     end
 
@@ -28,12 +28,12 @@ module Dragnet
       end
     end
 
-    attr_reader :question_type
+    attr_reader :question
+    delegate :meta, :meta=, to: :question
     delegate :tags, to: 'self.class'
-    delegate :meta, :meta=, to: :question_type
 
-    def initialize(question_type)
-      @question_type = question_type
+    def initialize(question)
+      @question = question
     end
 
     def send_action(action_name, ...)
