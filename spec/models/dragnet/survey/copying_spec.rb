@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Dragnet::Survey::Copy do
   describe '.data' do
-    let(:survey) { Dragnet::Survey.generate!(questions: { question_type: }) }
-    let(:question_type) { Dragnet::QuestionType.get(:choice) }
+    let(:survey) { Dragnet::Survey.generate!(questions: { type_class: }) }
+    let(:type_class) { Dragnet::Types::Choice }
     let(:data) { described_class.data(survey) }
 
     it 'removes survey id' do
