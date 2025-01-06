@@ -1,10 +1,3 @@
-Dragnet::QuestionType.find_or_create_by!(
-  name: 'Phone Number',
-  slug: 'phone',
-  icon: 'fa-regular fa-envelope',
-  type_class_name: 'Dragnet::Ext::Phone'
-)
-
 module Dragnet
   module Ext
     class Phone < Types::Text
