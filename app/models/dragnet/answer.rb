@@ -6,21 +6,16 @@ module Dragnet
 
     belongs_to :survey,   class_name: 'Dragnet::Survey'
     belongs_to :reply,    class_name: 'Dragnet::Reply'
+
     belongs_to :question, class_name: 'Dragnet::Question'
     accepts_nested_attributes_for :question
     delegate :type, to: :question
 
-    scope :whole, -> { eager_load(:question_option, :question_type, question: %i[question_type question_options]) }
+    scope :whole, -> { eager_load(:question_option, question: %i[question_options]) }
 
     # for Question Option values
     belongs_to :question_option, optional: true, class_name: 'Dragnet::QuestionOption'
     accepts_nested_attributes_for :question_option
-
-    belongs_to :question_type, optional: true, class_name: 'Dragnet::QuestionType' # Why does this need to be optional?
-    accepts_nested_attributes_for :question_type
-    before_save do
-      self.question_type = question.question_type if question
-    end
 
     before_save do
       type&.send_action(:do_before_saving_answer, answer: self, question:)

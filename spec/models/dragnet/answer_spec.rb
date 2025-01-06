@@ -17,24 +17,8 @@ describe Dragnet::Answer do
     it "loads all of an answers's componets in one query" do
       relation = described_class.whole
 
-      expect { relation.first.tap { |a| a.question_type; a.question_option; a.question.tap { |q| q.question_type; q.question_options } } }
+      expect { relation.first.tap { |a| a.question_option; a.question.tap { |q| q.question_options } } }
         .to perform_number_of_queries(2) # performs a prefetch query
-    end
-  end
-
-  describe '#new' do
-    context 'when a question is given, but no question type' do
-      it 'the question type will be the same as the question' do
-        expect(answer.question_type).to eq(question.question_type)
-      end
-    end
-
-    context 'when no question is given, and no question type is given' do
-      subject(:answer) { described_class.new }
-
-      it 'has a nil question type' do
-        expect(answer.question_type).to be_nil
-      end
     end
   end
 end

@@ -8,7 +8,6 @@ class Dragnet::AnswerGenerator < Dragnet::ActiveRecordGenerator
 
     # TODO: Add support for multiple choice
     Answer.new(survey: s, reply: r, question: q) do |a|
-      a.question_type = q.question_type
       a.value = Dragnet::AnswerValue[question: q].generate
     end
   end
