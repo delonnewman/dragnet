@@ -30,6 +30,7 @@ module Dragnet
 
     attr_reader :question_type
     delegate :tags, to: 'self.class'
+    delegate :meta, :meta=, to: :question_type
 
     def initialize(question_type)
       @question_type = question_type
