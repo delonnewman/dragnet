@@ -39,7 +39,7 @@ describe Dragnet::Reply do
   context 'when submitting' do
     subject(:reply) { described_class[survey:, submitted: false].generate! }
 
-    let(:survey) { Dragnet::Survey[questions: { question_type: Dragnet::QuestionType.get!(:text) }].generate! }
+    let(:survey) { Dragnet::Survey[questions: { type_class: Dragnet::Types::Text }].generate! }
 
     def submission_data
       question = survey.questions.first
