@@ -1,29 +1,40 @@
 module Dragnet
   class Type
-    def self.tags
-      return @tags if defined?(@tags)
-
-      array = []
-      klass = self
-      until klass == Dragnet::Type
-        array << klass.name.demodulize.underscore.to_sym
-        klass = klass.superclass
+    class << self
+      def slug
+        name.demodulize.underscore
       end
 
-      @tags = array
-    end
-
-    def self.perform(action, class_name: nil)
-      klass = (class_name || name.to_s.classify).constantize
-      define_method action do |**args|
-        klass.new(question, **args)
+      def symbol
+        slug.to_sym
       end
-    end
+      alias to_sym symbol
 
-    def self.ignore(*action_names)
-      action_names.each do |name|
-        define_method name do |**_|
-          DoNothing.new
+      def tags
+        return @tags if defined?(@tags)
+
+        array = []
+        klass = self
+        until klass == Dragnet::Type
+          array << klass.symbol
+          klass = klass.superclass
+        end
+
+        @tags = array
+      end
+
+      def perform(action, class_name: nil)
+        klass = (class_name || name.to_s.classify).constantize
+        define_method action do |**args|
+          klass.new(question, **args)
+        end
+      end
+
+      def ignore(*action_names)
+        action_names.each do |name|
+          define_method name do |**_|
+            DoNothing.new
+          end
         end
       end
     end
