@@ -127,6 +127,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.string "form_name", null: false
     t.boolean "required", default: false, null: false
     t.uuid "question_type_id", null: false
+    t.string "type_class_name", null: false
     t.uuid "survey_id", null: false
     t.boolean "retracted", default: false, null: false
     t.datetime "retracted_at", precision: nil
@@ -137,6 +138,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["retracted"], name: "index_questions_on_retracted"
     t.index ["retracted_at"], name: "index_questions_on_retracted_at"
     t.index ["survey_id"], name: "index_questions_on_survey_id"
+    t.index ["type_class_name"], name: "index_questions_on_type_class_name"
   end
 
   create_table "record_changes", force: :cascade do |t|

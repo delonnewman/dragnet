@@ -95,6 +95,8 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :required,      null: false, default: false
 
       t.belongs_to :question_type, index: true, null: false, type: :uuid
+      t.string :type_class_name, index: true, null: false
+
       t.uuid       :survey_id,     index: true, null: false
       t.foreign_key :surveys, column: :survey_id, primary_key: :id, on_delete: :cascade
 

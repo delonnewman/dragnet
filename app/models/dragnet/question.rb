@@ -32,6 +32,11 @@ module Dragnet
       self.question_type = QuestionType.new(attributes)
     end
 
+    def question_type=(question_type)
+      self.question_type_id = question_type.id
+      self.type_class_name = question_type.type_class_name
+    end
+
     def settings
       Settings.new(self)
     end
@@ -39,6 +44,10 @@ module Dragnet
 
     def type
       question_type.type_class.new(self)
+    end
+
+    def type_class
+      type_class_name.constantize
     end
   end
 end
