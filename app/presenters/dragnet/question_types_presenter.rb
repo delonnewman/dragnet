@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class Dragnet::QuestionTypesPresenter < Dragnet::View::Presenter
-  presents as: :question_types
+  presents as: :registrations
 
   def question_types_mapping
-    types = question_types.pull(:id, :name, :slug, :icon, settings: [:*])
+    types = registrations.pull(:name, :slug, :meta)
 
     types.reduce({}) do |qt, type|
-      qt.merge!(type[:id] => type)
+      qt.merge!(type[:name] => type)
     end
   end
 end

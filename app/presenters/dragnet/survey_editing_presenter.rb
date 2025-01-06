@@ -14,7 +14,7 @@ class Dragnet::SurveyEditingPresenter < Dragnet::View::Presenter
   end
 
   def question_types
-    QuestionTypesPresenter.new(QuestionType.all).question_types_mapping
+    QuestionTypesPresenter.new(TypeRegistration.where(abstract: false)).question_types_mapping
   end
 
   def survey_data
