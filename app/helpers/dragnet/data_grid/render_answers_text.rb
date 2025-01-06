@@ -39,7 +39,7 @@ module Dragnet
 
     def basic
       classes = %w[text-nowrap]
-      classes << 'text-end' if type.isa?(Types::Number)
+      classes << 'text-end' if type.is_a?(Types::Number)
 
       tag.div(class: classes) do
         if answers.present?
