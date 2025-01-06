@@ -77,6 +77,16 @@ class Initial < ActiveRecord::Migration[7.0]
       t.json :meta_data
     end
 
+    create_table :type_registrations, id: :uuid do |t|
+      t.string :name, null: false, index: true
+      t.string :slug, null: false, index: true
+      t.string :type_class_name, null: false
+      t.boolean :abstract, null: false, default: false, index: true
+
+      t.uuid :parent_type_id, index: true
+      t.json :meta_data
+    end
+
     create_table :questions, id: :uuid do |t|
       t.string  :text,                       null: false
       t.bigint  :hash_code,     index: true, null: false

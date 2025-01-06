@@ -268,6 +268,19 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["user_defined"], name: "index_trigger_registrations_on_user_defined"
   end
 
+  create_table "type_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.string "type_class_name", null: false
+    t.boolean "abstract", default: false, null: false
+    t.uuid "parent_type_id"
+    t.json "meta_data"
+    t.index ["abstract"], name: "index_type_registrations_on_abstract"
+    t.index ["name"], name: "index_type_registrations_on_name"
+    t.index ["parent_type_id"], name: "index_type_registrations_on_parent_type_id"
+    t.index ["slug"], name: "index_type_registrations_on_slug"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "login", null: false
     t.string "email", null: false

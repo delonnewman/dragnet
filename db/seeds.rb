@@ -51,6 +51,58 @@ QuestionType.create!(
   ]
 ) if QuestionType.none?
 
+TypeRegistration.create!(
+  [
+    { name: 'Text',
+      type_class_name: 'Dragnet::Types::Text',
+      meta: { fa_icon_class: 'fa-regular fa-keyboard' }
+    },
+    { name: 'Paragraphs',
+      slug: 'long_text',
+      type_class_name: 'Dragnet::Types::LongText',
+      meta: { options: { countable: { type: :boolean, text: 'Calculate sentiment analysis score for text' } },
+              fa_icon_class: 'fa-regular fa-keyboard' } },
+    { name: 'Choice',
+      type_class_name: 'Dragnet::Types::Choice',
+      meta: { options: { multiple_answers: { type: :boolean, text: 'Allow multiple answers' },
+                         countable:        { type: :boolean, text: 'Calculate statistics' } },
+              fa_icon_class: 'fa-regular fa-square-check' } },
+    { name: 'Whole Number',
+      slug: 'integer',
+      type_class_name: 'Dragnet::Types::Integer',
+      meta: { options: { countable: { type: :boolean, text: 'Calculate statistics', default: true } },
+              fa_icon_class: 'fa-regular fa-calculator' } },
+    { name: 'Decimal',
+      slug: 'decimal',
+      type_class_name: 'Dragnet::Types::Decimal',
+      meta: { options: { countable: { type: :boolean, text: 'Calculate statistics', default: true } },
+              fa_icon_class: 'fa-regular fa-calculator' } },
+    { name: 'Time',
+      slug: 'time',
+      type_class_name: 'Dragnet::Types::Time',
+      meta: { fa_icon_class: 'fa-regular fa-clock' } },
+    { name: 'Date',
+      slug: 'date',
+      type_class_name: 'Dragnet::Types::Date',
+      meta: { fa_icon_class: 'fa-regular fa-clock' } },
+    { name: 'Date & Time',
+      slug: 'date_and_time',
+      type_class_name: 'Dragnet::Types::DateAndTime',
+      meta: { fa_icon_class: 'fa-regular fa-clock' } },
+    { name: 'Yes or No',
+      type_class_name: 'Dragnet::Types::Boolean',
+      slug: 'boolean',
+      meta: { fa_icon_class: 'fa-regular fa-toggle-on' } },
+    { name: 'Email',
+      type_class_name: 'Dragnet::Ext::Email',
+      meta: { fa_icon_class: 'fa-regular fa-envelope' } },
+    { name: 'Phone Number',
+      slug: 'phone',
+      type_class_name: 'Dragnet::Ext::Phone',
+      meta: { fa_icon_class: 'fa-regular fa-envelope' } },
+  ]
+) if TypeRegistration.none?
+
 unless Rails.env.test?
   user = User.find_by(login: 'admin') || User.new(
     login:    'admin',
