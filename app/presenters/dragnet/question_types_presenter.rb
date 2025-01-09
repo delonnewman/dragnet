@@ -4,16 +4,16 @@ class Dragnet::QuestionTypesPresenter < Dragnet::View::Presenter
   presents as: :registrations
 
   def question_types_mapping
-    data = registrations.pull(:name, :type_class_name, :slug, :meta_data).map do |reg|
-      reg.transform do |key, value|
-        if key == :meta_data
-          value.deep_symbolize_keys
-        else
-          value
-        end
-      end
+    data = registrations.map do |reg|
+      {
+        name: reg.name,
+        slug: reg.slug,
+        symbol: reg.type_class.symbol,
+        tags: reg.type_class.tags,
+        meta: reg.meta.to_h,
+      }
     end
 
-    data.index_by { |d| d[:type_class_name] }
+    data.index_by { |d| d[:symbol] }
   end
 end

@@ -3,8 +3,7 @@
    [clojure.spec.alpha :as s]
    [dragnet.common.utils
     :as utils
-    :refer [->uuid map-values]
-    :include-macros true]
+    :refer [->uuid map-values]]
    [expound.alpha :refer [expound-str]]))
 
 
@@ -16,11 +15,6 @@
 
 (s/def :user/name string?)
 (s/def :user/nickname string?)
-
-(s/def :question.type/name string?)
-(s/def :question.type/slug string?)
-(s/def :question.type/settings (s/nilable map?))
-(s/def :question.type/entity (s/keys :req [:entity/id :entity/type :question.type/name :question.type/slug]))
 
 (s/def :question.option/text string?)
 (s/def :question.option/weight integer?)
@@ -34,7 +28,7 @@
 (s/def :question/required boolean?)
 (s/def :question/settings (s/nilable map?))
 (s/def :question/options (s/map-of :entity/id :question.option/entity))
-(s/def :question/type :question.type/entity)
+(s/def :question/type keyword?)
 
 
 (s/def :survey/name string?)
@@ -49,31 +43,6 @@
     (if-let [ex-data (s/explain-data spec data)]
       (throw (ex-info (expound-str spec data) ex-data))
       data)))
-
-
-(def ^{:doc "Validate a type map. Throw an exception if the map is invalid otherwise return the map."}
-  validate-question-type! (entity-validator :question.type/entity))
-
-(defn make-question-type
-  "Constuct a valid type map or throw an exception.
-
-  Valid keys are: :id, :name, :slug and :settings.
-
-  Only :name and :slug are required."
-  [& {:keys [id name slug settings]}]
-  (-> {:entity/id (->uuid id)
-       :entity/type :question-type
-       :question.type/name name
-       :question.type/slug slug
-       :question.type/settings settings}
-      validate-question-type!))
-
-
-(defn make-question-types
-  "Construct a map of type maps with their reified UUIDs as keys."
-  [types]
-  (reduce (fn [m [id type]]
-            (assoc m (->uuid id) (make-question-type type))) {} types))
 
 
 (def ^{:doc "Validate an option map. Thow an exception if the map is invalid otherwise return the map."}
@@ -102,11 +71,10 @@
   :settings, :options (also :question_options), :type (also :question_type).
 
   Only :text and :type are required."
-  [& {:keys [id text order display_order required settings options question_options type question_type]
+  [& {:keys [id text order display_order required settings options question_options type]
       :or {id (random-uuid) required false}}]
   (let [options (or options question_options)
-        order (or order display_order 0)
-        type (or type question_type)]
+        order (or order display_order 0)]
     (-> {:entity/id (->uuid id)
          :entity/type :question
          :question/text text
@@ -114,7 +82,7 @@
          :question/required required
          :question/settings settings
          :question/options (map-values make-question-option options)
-         :question/type (make-question-type type)}
+         :question/type type}
         validate-question!)))
 
 
@@ -170,14 +138,6 @@
     :_destroy (:entity/_destroy option)}])
 
 
-(defn question-type->update
-  [type]
-  {:id (str (type :entity/id))
-   :name (type :question.type/name)
-   :slug (type :question.type/slug)
-   :settings (type :question.type/settings)})
-
-
 (defn question->update
   [[id question]]
   [(str id)
@@ -186,7 +146,7 @@
     :display_order (:question/display-order question)
     :required (:question/required question)
     :settings (:question/settings question)
-    :question_type (question-type->update (:question/type question))
+    :type_symbol (:question/type question)
     :question_options (->> question :question/options (map options->update) (into {}))
     :_destroy (:entity/_destroy question)}])
 

@@ -6,9 +6,8 @@
    [dragnet.editor.components :refer [survey-editor]]
    [dragnet.editor.core :refer [survey-url]]
    [dragnet.editor.entities
-    :refer [make-survey survey->update make-question-types]]
-   [dragnet.common.utils
-    :refer [http-request pp pp-str validate-presence!]]
+    :refer [make-survey survey->update]]
+   [dragnet.common.utils :as utils]
    [reagent.core :as r]
    [reagent.dom :as rdom]))
 
@@ -28,13 +27,13 @@
 
 
 (defn on-valid-page! []
-  (validate-presence! (root-element) (survey-id)))
+  (utils/validate-presence! (root-element) (survey-id)))
 
 
 (defn error-handler
   [state]
   (fn [res]
-    (js/console.error "handling error" (pp-str res))
+    (js/console.error "handling error" (utils/pp-str res))
     (swap! state assoc :errors (conj (state :errors)) (res :body))))
 
 
@@ -44,7 +43,7 @@
         update (survey->update survey)]
     (js/console.info "update-survey" (survey-url survey))
     (go (let [res
-              (<! (http-request
+              (<! (utils/http-request
                    :method :put
                    :url (survey-url survey)
                    :transit-params update
@@ -76,7 +75,7 @@
   [data]
   (assoc data
          :survey (make-survey (data :survey))
-         :question-types (make-question-types (data :question_types))))
+         :types (data :question_types)))
 
 
 (defn add-watchers
@@ -93,7 +92,6 @@
   (add-watchers)
   (go
     (let [res (<! (http/get (survey-url (survey-id))))]
-      (pp res)
       (swap! state merge (make-ui-state (res :body))))))
 
 (comment
@@ -101,6 +99,6 @@
 
   (go
     (let [result (<! (http/get (survey-url (survey-id))))]
-      (pp (:body result))
+      (utils/pp (:body result))
     ))
   )

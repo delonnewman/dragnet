@@ -16,6 +16,8 @@ module Dragnet
       data[:updated_at] = data[:updated_at]&.to_time
 
       questions = data[:questions].inject({}) do |qs, q|
+        q[:type] = q.delete(:type_class_name).constantize.symbol
+
         q[:question_options] = q[:question_options].inject({}) do |opts, opt|
           opts.merge!(opt[:id] => opt)
         end
@@ -23,7 +25,7 @@ module Dragnet
         qs.merge!(q[:id] => q)
       end
 
-      data.merge(questions:)
+      data.merge!(questions:)
     end
     alias to_h project
 

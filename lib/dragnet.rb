@@ -4,6 +4,10 @@ require 'faker'
 require 'active_support'
 require 'active_record'
 
+require_relative 'hash'
+require_relative 'nil_class'
+require_relative 'object'
+
 require_relative 'dragnet/utils'
 require_relative 'dragnet/time_utils'
 require_relative 'dragnet/stats_utils'
