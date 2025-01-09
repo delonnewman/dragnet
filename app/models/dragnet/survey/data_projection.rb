@@ -44,10 +44,9 @@ module Dragnet
           :display_order,
           :required,
           :config,
-          :question_type_id,
+          :type_class_name,
           {
             question_options: %i[id text weight],
-            question_type: %i[id slug name],
           },
         ]
       )
