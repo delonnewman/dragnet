@@ -15,10 +15,10 @@ services:
       - BUNDLE_DEPLOYMENT=${BUNDLE_DEPLOYMENT:-1}
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db/${POSTGRES_DB}
     depends_on:
-      postgres-db:
+      postgresql:
         condition: service_healthy
 
-  postgres-db:
+  postgresql:
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
