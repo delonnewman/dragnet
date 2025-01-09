@@ -37,6 +37,23 @@ module Dragnet
           end
         end
       end
+
+      def hierarchy
+        hash = {}
+        klasses = subclasses
+        current = klasses.shift
+
+        begin
+          unless current.subclasses.empty?
+            hash[current.symbol] = current.subclasses.map(&:symbol).uniq
+            klasses.push(*current.subclasses)
+            klasses.uniq!
+          end
+          current = klasses.shift
+        end until klasses.empty?
+
+        hash
+      end
     end
 
     attr_reader :question
