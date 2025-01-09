@@ -1,4 +1,5 @@
 (ns dragnet.common.utils
+  (:require-macros [dragnet.common.utils])
   (:require
    [cljs-http.client :as http]
    [cljs.core.async :refer [<! go]]
