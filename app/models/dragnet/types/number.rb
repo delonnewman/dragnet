@@ -1,6 +1,6 @@
 module Dragnet
   module Types
-    class Number < BasicCountable
+    class Number < Countable
       ignore :do_before_saving_answer
     end
   end
