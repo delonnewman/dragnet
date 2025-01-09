@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Dragnet
-  # A proxy for collected MetaDatum records and their life-cycle
+  # A proxy for meta data and their life-cycle
   class MetaData
-    delegate :each, :include?, :key?, :keys, :values, :empty?, :to_a, to: :data
+    delegate :each, :include?, :key?, :keys, :values, :empty?, :[], :fetch, :to_a, to: :data
     delegate :new_record?, :persisted?, to: :@self_describable
 
     def initialize(self_describable)
@@ -15,14 +15,6 @@ module Dragnet
       "#<#{self.class} #{data}>"
     end
     alias inspect to_s
-
-    def [](key)
-      data[normalize_key(key)]
-    end
-
-    def fetch(key, ...)
-      data.fetch(normalize_key(key), ...)
-    end
 
     def data
       return @data if @data
@@ -45,11 +37,11 @@ module Dragnet
     end
 
     def remove!(key)
-      update_data!(data.except(normalize_key(key)))
+      update_data!(data.except(key))
     end
 
     def remove(key)
-      update_data(data.except(normalize_key(key)))
+      update_data(data.except(key))
     end
 
     def update_data!(data)
@@ -85,11 +77,7 @@ module Dragnet
       data = @self_describable.meta_data
       return EMPTY_HASH unless data
 
-      data.deep_transform_keys!(&:to_sym).freeze
-    end
-
-    def normalize_key(key)
-      key.is_a?(Symbol) ? key.name : key
+      data.deep_symbolize_keys!.freeze
     end
   end
 end
