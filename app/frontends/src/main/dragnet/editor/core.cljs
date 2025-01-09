@@ -15,6 +15,10 @@
 (def apply-survey-edits-path (utils/path-helper ["/api/v1/editing/surveys" :entity/id "apply"]))
 (def apply-survey-edits-url (utils/url-helper apply-survey-edits-path))
 
+(comment
+  survey-url
+  (survey-url 1)
+  )
 
 (defn survey
   [state & key-path]

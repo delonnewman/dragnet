@@ -8,8 +8,7 @@
    [dragnet.editor.entities
     :refer [make-survey survey->update make-question-types]]
    [dragnet.common.utils
-    :refer [validate-presence! pp pp-str http-request]
-    :include-macros true]
+    :refer [http-request pp pp-str validate-presence!]]
    [reagent.core :as r]
    [reagent.dom :as rdom]))
 
@@ -94,4 +93,14 @@
   (add-watchers)
   (go
     (let [res (<! (http/get (survey-url (survey-id))))]
+      (pp res)
       (swap! state merge (make-ui-state (res :body))))))
+
+(comment
+  (survey-url (survey-id))
+
+  (go
+    (let [result (<! (http/get (survey-url (survey-id))))]
+      (pp (:body result))
+    ))
+  )
