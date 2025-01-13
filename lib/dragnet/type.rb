@@ -38,14 +38,14 @@ module Dragnet
         end
       end
 
-      def hierarchy
+      def hierarchy(reference: :itself)
         hash = {}
         klasses = subclasses
         current = klasses.shift
 
         begin
           unless current.subclasses.empty?
-            hash[current.symbol] = current.subclasses.map(&:symbol).uniq
+            hash[current.public_send(reference)] = current.subclasses.map(&reference).uniq
             klasses.push(*current.subclasses)
             klasses.uniq!
           end
