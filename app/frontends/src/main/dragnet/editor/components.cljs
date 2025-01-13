@@ -24,7 +24,7 @@
   [state]
   (fn [res]
     (js/console.error "handling error" (pp-str res))
-    (swap! state assoc :errors (res :body))))
+    (swap! state editor/with-errors (res :body))))
 
 
 (defmulti question-card-body :question/type)
