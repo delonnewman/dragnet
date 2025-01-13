@@ -7,8 +7,7 @@
    [dragnet.editor.core :as editor :refer [create-basis survey->update]]
    [dragnet.common.utils :as utils]
    [reagent.core :as r]
-   [reagent.dom :as rdom]
-   [dragnet.core :as core]))
+   [reagent.dom :as rdom]))
 
 
 (def ^:dynamic *element-id* "survey-editor")
