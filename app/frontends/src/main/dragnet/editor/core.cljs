@@ -40,10 +40,6 @@
    ::type-registry (core/->type-registry (:type_registry data))})
 
 
-(defn with-errors [basis errors]
-  (assoc basis ::errors errors))
-
-
 (defn survey
   [basis & key-path]
   (if (empty? key-path)
@@ -55,8 +51,12 @@
   (not= (::survey old) (::survey new)))
 
 
-(defn errors [state]
-  (state :errors))
+(defn with-errors [basis errors]
+  (assoc basis ::errors errors))
+
+
+(defn errors [basis]
+  (basis ::errors))
 
 
 (defn errors? [basis]
