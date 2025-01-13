@@ -66,8 +66,8 @@
 
 (defn survey-edited?
   "Return true if the survey state has edits otherwise return false"
-  [state]
-  (-> (state :edits) seq))
+  [basis]
+  (-> (basis ::edits) seq))
 
 
 (defn type-list
