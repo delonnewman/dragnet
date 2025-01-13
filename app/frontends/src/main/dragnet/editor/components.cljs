@@ -27,7 +27,11 @@
     (swap! state editor/with-errors (res :body))))
 
 
-(defmulti question-card-body :question/type)
+(defmulti question-card-body
+  (fn [_ref question]
+    (if (contains? question :question/type)
+      (:question/type question)
+      (throw (ex-info "questions must have a question type" {:question question})))))
 
 (defmethod question-card-body :dragnet.core.type/text [_ _]
   [:input.form-control {:type "text"}])
@@ -105,6 +109,20 @@
 
 (defmethod question-card-body :dragnet.core.type/time [_ _]
   [:input.form-control {:type "time"}])
+
+(defmethod question-card-body :dragnet.core.type/boolean [_ _] switch)
+
+(comment
+  (def question {:entity/id #uuid "2e85312c-807c-4ac1-99d2-c9255efc9c60",
+                 :entity/type :question,
+                 :question/text "Here's looking at you, kid.",
+                 :question/display-order 0,
+                 :question/required true,
+                 :question/settings nil,
+                 :question/options {},
+                 :question/type :dragnet.core.type/boolean})
+  (question-card-body question)
+)
 
 
 (defn change-required-handler

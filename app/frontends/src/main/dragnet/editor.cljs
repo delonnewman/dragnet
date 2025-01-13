@@ -345,6 +345,8 @@
     (add-watchers)
     (swap! state merge (editor/create-basis data)))
 
+  (dragnet.editor.components/question-card-body {:question/type {:test 1}})
+
 
   (def ui (create-basis data))
   (isa? (:dragnet.editor.core/type-hierarchy ui) :dragnet.core.type/boolean :dragnet.core/type)
