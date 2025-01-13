@@ -42,10 +42,10 @@
 
 
 (defn survey
-  [state & key-path]
+  [basis & key-path]
   (if (empty? key-path)
-    (state :survey)
-    (get-in state (cons :survey key-path))))
+    (basis :survey)
+    (get-in basis (cons :survey key-path))))
 
 
 (defn state-change? [old new]
