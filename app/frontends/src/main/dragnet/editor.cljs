@@ -56,7 +56,7 @@
   []
   (fn [_ ref old new]
     (js/console.info "Rendering...")
-    (when (or (:errors new) (not= (:survey old) (:survey new)))
+    (when (or (:errors new) (editor/state-change? old new))
       (js/console.info "Last update" (-> new :survey/updated-at))
       (rdom/render [survey-editor ref] (root-element)))))
 
