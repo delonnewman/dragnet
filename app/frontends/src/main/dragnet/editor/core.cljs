@@ -79,9 +79,9 @@
 (defn ex-question-type
   "Return an ex-info exception with a message and data
   regarding a question type look up error."
-  [type-id]
-  (ex-info (str "couldn't find a question type with id: " type-id)
-           {:ex-question-type/id type-id}))
+  [type-key]
+  (ex-info (str "couldn't find a type named: " type-key)
+           {:ex-type/key type-key}))
 
 
 (s/fdef question-type
@@ -95,11 +95,11 @@
   For the editor we can't rely on pulling the slug structurally
   (i.e. (-> q :question/type :question.type/slug)) because the
   question type is updated by it's id."
-  [state type-id]
-  (echo type-id)
-  (if-let [type (get-in state [:question-types type-id])]
+  [basis type-key]
+  (echo type-key)
+  (if-let [type (get-in basis [::type-registry type-key])]
     type
-    (throw (ex-question-type type-id))))
+    (throw (ex-question-type type-key))))
 
 
 (defn assoc-question-field
