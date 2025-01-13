@@ -8,8 +8,7 @@ class Dragnet::QuestionTypesPresenter < Dragnet::View::Presenter
       {
         name: reg.name,
         slug: reg.slug,
-        symbol: reg.type_class.symbol,
-        tags: reg.type_class.tags,
+        key: reg.type_class.symbol,
         meta: reg.meta.to_h,
       }
     end
