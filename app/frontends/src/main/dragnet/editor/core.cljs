@@ -109,16 +109,16 @@
 
 
 (defn assoc-option
-  [state question option]
+  [basis question option]
   (assoc-in
-   state
+   basis
    [::survey :survey/questions (question :entity/id) :question/options (option :entity/id)]
    option))
 
 
 (defn assoc-question
-  [state question]
-  (assoc-in state [::survey :survey/questions (question :entity/id)] question))
+  [basis question]
+  (assoc-in basis [::survey :survey/questions (question :entity/id)] question))
 
 
 (let [temp-id (atom 0)]
@@ -130,17 +130,17 @@
 
 
 (defn remove-option
-  [state question option]
+  [basis question option]
   (assoc-in
-   state
+   basis
    [::survey :survey/questions (question :entity/id) :question/options (option :entity/id) :_destroy]
    true))
 
 
 (defn assoc-in-option
-  [state question option field value]
+  [basis question option field value]
   (assoc-in
-   state
+   basis
    [::survey :survey/questions (question :entity/id) :question/options (option :entity/id) field]
    value))
 
