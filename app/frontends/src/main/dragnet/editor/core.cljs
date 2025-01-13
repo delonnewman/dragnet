@@ -80,8 +80,8 @@
 
 
 (defn assoc-question-field
-  [state question field value]
-  (assoc-in state [::survey :survey/questions (question :entity/id) field] value))
+  [basis question field value]
+  (assoc-in basis [::survey :survey/questions (question :entity/id) field] value))
 
 
 (defn remove-question
