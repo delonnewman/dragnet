@@ -1,7 +1,6 @@
 (ns dragnet.editor.core
   "Core logic for the Editor UI"
   (:require
-   [clojure.spec.alpha :as s]
    [dragnet.core :as core]
    [dragnet.editor.entities :refer [make-survey]]
    [dragnet.common.utils
@@ -44,8 +43,8 @@
 (defn survey
   [basis & key-path]
   (if (empty? key-path)
-    (basis :survey)
-    (get-in basis (cons :survey key-path))))
+    (basis ::survey)
+    (get-in basis (cons ::survey key-path))))
 
 
 (defn state-change? [old new]
@@ -78,17 +77,17 @@
 
 (defn assoc-question-field
   [state question field value]
-  (assoc-in state [:survey :survey/questions (question :entity/id) field] value))
+  (assoc-in state [::survey :survey/questions (question :entity/id) field] value))
 
 
 (defn remove-question
   [state question]
-  (assoc-in state [:survey :survey/questions (question :entity/id) :_destroy] true))
+  (assoc-in state [::survey :survey/questions (question :entity/id) :_destroy] true))
 
 
 (defn update-survey-field
   [state field value]
-  (assoc-in state [:survey field] value))
+  (assoc-in state [::survey field] value))
 
 
 (defn new-text-generator
@@ -109,13 +108,13 @@
   [state question option]
   (assoc-in
    state
-   [:survey :survey/questions (question :entity/id) :question/options (option :entity/id)]
+   [::survey :survey/questions (question :entity/id) :question/options (option :entity/id)]
    option))
 
 
 (defn assoc-question
   [state question]
-  (assoc-in state [:survey :survey/questions (question :entity/id)] question))
+  (assoc-in state [::survey :survey/questions (question :entity/id)] question))
 
 
 (let [temp-id (atom 0)]
@@ -130,7 +129,7 @@
   [state question option]
   (assoc-in
    state
-   [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) :_destroy]
+   [::survey :survey/questions (question :entity/id) :question/options (option :entity/id) :_destroy]
    true))
 
 
@@ -138,7 +137,7 @@
   [state question option field value]
   (assoc-in
    state
-   [:survey :survey/questions (question :entity/id) :question/options (option :entity/id) field]
+   [::survey :survey/questions (question :entity/id) :question/options (option :entity/id) field]
    value))
 
 
