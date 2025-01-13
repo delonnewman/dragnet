@@ -76,14 +76,6 @@
   (->> basis ::type-registry vals))
 
 
-(defn ex-question-type
-  "Return an ex-info exception with a message and data
-  regarding a question type look up error."
-  [type-key]
-  (ex-info (str "couldn't find a type named: " type-key)
-           {:ex-type/key type-key}))
-
-
 (s/fdef question-type
   :args (s/cat :state map? :type-id uuid?)
   :ret map?)
@@ -99,7 +91,7 @@
   (echo type-key)
   (if-let [type (get-in basis [::type-registry type-key])]
     type
-    (throw (ex-question-type type-key))))
+    (throw (core/ex-type type-key))))
 
 
 (defn assoc-question-field

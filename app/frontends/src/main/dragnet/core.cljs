@@ -38,6 +38,14 @@
   (-> type-registry type :meta))
 
 
+(defn ex-type
+  "Return an ex-info exception with a message and data
+  regarding a type look up error."
+  [type-key]
+  (ex-info (str "couldn't find a type named: " type-key)
+           {:ex-type/key type-key}))
+
+
 (comment
    (->type-hierarchy
     {:basic [:temporal :countable :boolean],
