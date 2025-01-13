@@ -76,24 +76,6 @@
   (->> basis ::type-registry vals))
 
 
-(s/fdef question-type
-  :args (s/cat :state map? :type-id uuid?)
-  :ret map?)
-
-
-(defn question-type
-  "Return the question type of the question or nil if not present.
-
-  For the editor we can't rely on pulling the slug structurally
-  (i.e. (-> q :question/type :question.type/slug)) because the
-  question type is updated by it's id."
-  [basis type-key]
-  (echo type-key)
-  (if-let [type (get-in basis [::type-registry type-key])]
-    type
-    (throw (core/ex-type type-key))))
-
-
 (defn assoc-question-field
   [state question field value]
   (assoc-in state [:survey :survey/questions (question :entity/id) field] value))
