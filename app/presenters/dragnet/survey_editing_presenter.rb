@@ -9,11 +9,12 @@ class Dragnet::SurveyEditingPresenter < Dragnet::View::Presenter
       survey:         survey_data,
       updated_at:     survey.updated_at.to_time,
       edits:          survey_edits,
-      question_types:,
+      type_hierarchy: Dragnet::Type.hierarchy(reference: :symbol),
+      type_registry:  types,
     }
   end
 
-  def question_types
+  def types
     QuestionTypesPresenter.new(TypeRegistration.where(abstract: false)).question_types_mapping
   end
 
