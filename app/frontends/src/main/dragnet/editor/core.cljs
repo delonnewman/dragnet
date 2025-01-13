@@ -62,9 +62,8 @@
   (-> state errors seq))
 
 
-(defn updated-at
-  [state]
-  (state :updated_at))
+(defn updated-at [basis]
+  (basis ::updated-at))
 
 
 (defn survey-edited?

@@ -56,7 +56,7 @@
   (fn [_ ref old new]
     (js/console.info "Rendering...")
     (when (or (:errors new) (editor/state-change? old new))
-      (js/console.info "Last update" (-> new :survey/updated-at))
+      (js/console.info "Last update" (editor/updated-at new))
       (rdom/render [survey-editor ref] (root-element)))))
 
 
@@ -339,6 +339,7 @@
    :meta {:fa_icon_class "fa-regular fa-keyboard"}}}
  }
 )
+  (editor/create-basis data)
   (do
     (reset! state {})
     (add-watchers)
