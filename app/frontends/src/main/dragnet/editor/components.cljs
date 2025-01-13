@@ -1,27 +1,59 @@
 (ns dragnet.editor.components
   "View components for the Editor UI"
   (:require
+   [cljs.core.async :refer [<! go]]
    [clojure.string :as s]
+   [dragnet.core :as core]
    [dragnet.editor.core :as editor :refer
     [survey
      survey-edited?
-     question-type-slug
-     question-types
-     question-type-list
-     question-type-uid
+     type-list
      errors?]]
    [dragnet.common.components :refer
     [icon switch text-field remove-button]]
    [dragnet.common.core :refer
-    [multiple-answers?
-     long-answer?
-     include-date?
-     include-time?
-     include-date-and-time?]]
+    [multiple-answers?]]
    [dragnet.common.utils
     :as utils
     :refer [time-ago-in-words pp-str]
-    :include-macros true]))
+    :include-macros true]
+   [dragnet.dom :as dom]))
+
+
+(defn error-handler
+  [state]
+  (fn [res]
+    (js/console.error "handling error" (pp-str res))
+    (swap! state assoc :errors (res :body))))
+
+
+(defmulti question-card-body :question/type)
+
+(defmethod question-card-body :dragnet.core.type/text [_ _]
+  [:input.form-control {:type "text"}])
+
+(defmethod question-card-body :dragnet.core.type/long-text [_ _]
+  [:textarea.form-control {:rows 3}])
+
+
+(defn remove-option-handler
+  [ref question option]
+  (dom/non-propagating-handler
+   (fn []
+     (swap! ref editor/remove-option question option))))
+
+
+(defn make-option-handler
+  [field value-fn]
+  (fn [ref question option]
+    (dom/non-propagating-handler
+     (fn [event]
+       (let [value (-> event .-target .-value value-fn)]
+         (swap! ref editor/assoc-in-option question option field value))))))
+
+
+(def update-option-text-handler (make-option-handler :question.option/text identity))
+(def update-option-weight-handler (make-option-handler :question.option/weight utils/->int))
 
 
 (defn choice-option
@@ -37,98 +69,107 @@
        {:type "text"
         :placeholder "Option Text"
         :default-value (option :question.option/text)
-        :on-change (editor/update-option-text-handler state question option)}]]
+        :on-change (update-option-text-handler state question option)}]]
      [:div
       [:input.form-control
        {:type "number"
         :placeholder "Numerical Weight"
         :default-value (option :question.option/weight)
-        :on-change (editor/update-option-weight-handler state question option)}]]
+        :on-change (update-option-weight-handler state question option)}]]
      [:div.ms-1
-      [remove-button {:on-click (editor/remove-option-handler state question option)}]]]))
+      [remove-button {:on-click (remove-option-handler state question option)}]]]))
 
 
-(defn choice-body
+(defn add-option-handler
   [ref question]
+  (dom/non-propagating-handler
+   (fn []
+    (swap! ref editor/assoc-option question (editor/new-option)))))
+
+
+(defmethod question-card-body :dragnet.core.type/choice [ref question]
   [:div
    [:div.question-options
     (for [option (->> (:question/options question) vals (remove :entity/_destroy))]
       ^{:key (utils/dom-id question option)} [choice-option ref question option])]
-   [:a.btn.btn-link {:href "#" :on-click (editor/add-option-handler ref question)} "Add Option"]])
+   [:a.btn.btn-link {:href "#" :on-click (add-option-handler ref question)} "Add Option"]])
 
-
-(defn text-body
-  [_ question]
-  (if (long-answer? question)
-    [:textarea.form-control {:rows 3}]
-    [:input.form-control {:type "text"}]))
-
-
-(defn number-body
-  [_ _question]
+(defmethod question-card-body :dragnet.core.type/number [_ _]
   [:input.form-control {:type "number"}])
 
+(defmethod question-card-body :dragnet.core.type/date-and-time [_ _]
+  [:input.form-control {:type "datetime-local"}])
 
-(defn time-body
-  [_ question]
-  (cond
-    (include-date-and-time? question) [:input.form-control {:type "datetime-local"}]
-    (include-date? question) [:input.form-control {:type "date"}]
-    (include-time? question) [:input.form-control {:type "time"}]
-    :else [:input.form-control {:type "datetime-local"}]))
+(defmethod question-card-body :dragnet.core.type/date [_ _]
+  [:input.form-control {:type "date"}])
 
-
-(def question-card-bodies
-  {"text"   text-body
-   "choice" choice-body
-   "number" number-body
-   "time"   time-body})
+(defmethod question-card-body :dragnet.core.type/time [_ _]
+  [:input.form-control {:type "time"}])
 
 
-(defn question-card-body
+(defn change-required-handler
   [ref question]
-  (when-let [body (question-card-bodies (question-type-slug @ref question))]
-    [body ref question]))
+  (dom/non-propagating-handler
+   (fn [event]
+     (let [checked (-> event .-target .-checked)]
+       (swap!
+        ref
+        assoc-in
+        [:survey :survey/questions (question :entity/id) :question/required]
+        checked)))))
 
 
 (defn question-card-footer
   [ref question]
   [:div.card-footer
    [:div.d-flex.justify-content-end
-    (when-let [type ((question-types @ref) (question :question_type_id))]
-      (for [[ident {text :text type :type default :default}] (type :question.type/settings)]
-        (let [form-id (str "option-" (question :id) "-" (name ident))]
-          ^{:key form-id}
-          [switch
-           {:id form-id
-            :checked (editor/question-setting question ident :default default)
-            :on-change (editor/change-setting-handler ref question ident)
-            :style {:margin-right "20px"}
-            :label text}])))
     (let [form-id (str "option-" (question :id) "-required")]
       ^{:key form-id}
       [switch
        {:id form-id
         :checked (question :question/required)
-        :on-change (editor/change-required-handler ref question)
+        :on-change (change-required-handler ref question)
         :style {:margin-right "20px"}
         :label "Required"}])]])
 
 
+(defn change-type-handler
+  [ref question]
+  (dom/non-propagating-handler
+   (fn [event]
+     (let [type-key (-> event .-target .-value)]
+       (swap!
+        ref
+        assoc-in
+        [:survey :survey/questions (question :entity/id) :question/type]
+        (core/->type type-key))))))
+
+
 (defn select-question-type
   [ref question]
-  (let [type-id (editor/question-type-id question)
+  (let [type (:question/type question)
         attrs {:aria-label "Select Question Type"
-               :on-change (editor/change-type-handler ref question)}]
+               :on-change (change-type-handler ref question)}
+        attrs (if type (assoc attrs :value type) attrs)]
     [:select.form-select.w-25
-     (if type-id (assoc attrs :value type-id) attrs)
-     (when-not type-id
-       [:option "Select Question Type"])
-     (for [type (question-type-list @ref)]
-       [:option
-        {:key (question-type-uid question type)
-         :value (type :entity/id)}
-        (type :question.type/name)])]))
+     attrs
+     (when-not type [:option "Select Question Type"])
+     (for [type (type-list @ref)]
+       [:option {:key (type :symbol) :value (type :slug)} (type :name)])]))
+
+
+(defn update-question-text-handler
+  [ref question]
+  (dom/non-propagating-handler
+   (fn [e]
+     (swap! ref editor/assoc-question-field question :question/text (-> e .-target .-value)))))
+
+
+(defn remove-question-handler
+  [ref question]
+  (dom/non-propagating-handler
+   (fn []
+     (swap! ref editor/remove-question question))))
 
 
 (defn question-card
@@ -142,10 +183,10 @@
         :title "Enter question text"
         :class "h5"
         :default-value (question :question/text)
-        :on-change (editor/update-question-text! ref question)}]
+        :on-change (update-question-text-handler ref question)}]
       (when (question :question/required) [:span {:title "Required"} "*"])]
      [select-question-type ref question]
-     [remove-button {:on-click (editor/remove-question-handler ref question)}]]
+     [remove-button {:on-click (remove-question-handler ref question)}]]
     [question-card-body ref question]]
    [question-card-footer ref question]])
 
@@ -176,10 +217,10 @@
 
 
 (defn map-table
-  [map]
+  [basis]
   [:table.table.table-sm
    [:tbody
-    (for [key (keys map)]
+    (for [key (keys basis)]
       (let [val (map key)]
         [:tr
          [:th key]
@@ -187,8 +228,36 @@
 
 
 (defn dev-info
-  [state]
-  [map-table state])
+  [basis]
+  [map-table basis])
+
+
+(defn save-survey-handler
+  [ref]
+  (dom/non-propagating-handler
+   (fn []
+     (go
+       (let [res
+             (<! (utils/http-request
+                  :method :post
+                  :url (editor/apply-survey-edits-url (@ref :survey))
+                  :error-fn (error-handler ref)))
+             t   (-> res :body :updated_at)]
+         (swap! ref assoc :edits nil :updated_at t))))))
+
+
+(defn update-survey-field-handler
+  [ref field]
+  (dom/non-propagating-handler
+   (fn [e]
+     (swap! ref editor/update-survey-field field (-> e .-target .-value)))))
+
+
+(defn add-question-handler
+  [ref]
+  (dom/non-propagating-handler
+   (fn []
+     (swap! ref editor/assoc-question (editor/new-question)))))
 
 
 (defn survey-editor
@@ -206,17 +275,17 @@
      [:button.btn.btn-sm.btn-primary.me-1
       {:type "button"
        :disabled (not (survey-edited? @ref))
-       :on-click (editor/save-survey-handler ref)}
+       :on-click (save-survey-handler ref)}
       "Save"]]]
    [survey-details
     {:id (survey @ref :entity/id)
      :name (survey @ref :survey/name)
      :description (survey @ref :survey/description)
-     :on-change-description (editor/update-survey-field-handler ref :survey/description)
-     :on-change-name (editor/update-survey-field-handler ref :survey/name)}]
+     :on-change-description (update-survey-field-handler ref :survey/description)
+     :on-change-name (update-survey-field-handler ref :survey/name)}]
    [:div.mb-3.d-flex.justify-content-end
     [:button.btn.btn-sm.btn-secondary
      {:type "button"
-      :on-click (editor/add-question-handler ref)}
+      :on-click (add-question-handler ref)}
      (icon "fa-solid" "plus" "Add Question")]]
    [survey-questions ref]])
