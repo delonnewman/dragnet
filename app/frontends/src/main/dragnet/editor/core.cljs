@@ -52,14 +52,12 @@
   (not= (::survey old) (::survey new)))
 
 
-(defn errors
-  [state]
+(defn errors [state]
   (state :errors))
 
 
-(defn errors?
-  [state]
-  (-> state errors seq))
+(defn errors? [basis]
+  (-> basis errors seq))
 
 
 (defn updated-at [basis]
