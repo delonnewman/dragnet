@@ -4,7 +4,8 @@
    [dragnet.common.utils
     :as utils
     :refer [->uuid map-values]]
-   [expound.alpha :refer [expound-str]]))
+   [expound.alpha :refer [expound-str]]
+   [dragnet.core :as core]))
 
 
 (s/def :number/natural (s/or :positive pos? :zero zero?))
@@ -82,7 +83,7 @@
          :question/required required
          :question/settings settings
          :question/options (map-values make-question-option options)
-         :question/type type}
+         :question/type (core/->type type)}
         validate-question!)))
 
 
