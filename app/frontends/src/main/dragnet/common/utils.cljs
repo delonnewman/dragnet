@@ -113,13 +113,18 @@
   [entity & args]
   (let [[{prefix :prefix} rest] (extract-options args)
         prefix (or prefix (-> entity :entity/type name))
-        root (if-let [id (entity :entity/id)]
+        root (if-let [id (or (:entity/id entity) entity)]
                (str prefix "-" id)
                prefix)]
     (if (empty? rest)
       root
       (str root "-" (s/join "-" (map dom-id rest))))))
 
+(comment
+  (= "question-1" (dom-id {:entity/id 1 :entity/type :question}))
+  (= "question-1" (dom-id {:entity/id 1} {:prefix "question"}))
+  (= "question-1" (dom-id 1 {:prefix "question"}))
+)
 
 ;; A naive plural inflection, but good enough for this
 (defn pluralize
@@ -243,4 +248,7 @@
 
 (defn map-values
   "Return a new map with the same keys and values computed by the given function."
-  [f map] (reduce (fn [m [k v]] (assoc m k (f v))) {} map))
+  [f map]
+  (reduce
+   (fn [m [k v]]
+     (assoc m k (f v))) {} map))
