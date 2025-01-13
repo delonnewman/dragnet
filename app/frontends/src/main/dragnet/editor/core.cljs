@@ -85,13 +85,13 @@
 
 
 (defn remove-question
-  [state question]
-  (assoc-in state [::survey :survey/questions (question :entity/id) :_destroy] true))
+  [basis question]
+  (assoc-in basis [::survey :survey/questions (question :entity/id) :_destroy] true))
 
 
 (defn update-survey-field
-  [state field value]
-  (assoc-in state [::survey field] value))
+  [basis field value]
+  (assoc-in basis [::survey field] value))
 
 
 (defn new-text-generator
