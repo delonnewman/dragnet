@@ -72,7 +72,7 @@ module Dragnet
           question = @query.question(sort_by)
           scope = sorting_scope(scope, question.id)
           join_name = join_aliases.fetch(:sorting, :answers)
-          question.type.send_action(:sort_data_grid, scope:, direction: sort_direction, join_name:)
+          question.type.dispatch(:sort_data_grid, scope:, direction: sort_direction, join_name:)
         end
       end
 
@@ -97,7 +97,7 @@ module Dragnet
           elsif @query.question?(field)
             join_name = join_alias(field)
             narrowed  = narrowed_scope(current_scope, field, join_name)
-            question.type.send_action(:filter_data_grid, relation: scope, table:, value:)
+            question.type.dispatch(:filter_data_grid, relation: narrowed, table:, value:)
           else
             current_scope
           end

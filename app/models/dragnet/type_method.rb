@@ -31,7 +31,7 @@ module Dragnet
       end
     end
 
-    def send_type(type)
+    def dispatch(type)
       type.tags.each do |tag|
         return public_send(tag) if respond_to?(tag)
       end

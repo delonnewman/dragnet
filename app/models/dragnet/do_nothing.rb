@@ -4,6 +4,6 @@ module Dragnet
       super(nil)
     end
 
-    def send_type(type); end
+    def dispatch(type); end
   end
 end

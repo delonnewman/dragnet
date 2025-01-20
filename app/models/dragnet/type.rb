@@ -64,8 +64,8 @@ module Dragnet
       @question = question
     end
 
-    def send_action(action_name, ...)
-      public_send(action_name, ...).send_type(self)
+    def dispatch(action_name, ...)
+      public_send(action_name, ...).dispatch(self)
     end
   end
 end

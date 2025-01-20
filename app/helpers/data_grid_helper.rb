@@ -59,7 +59,7 @@ module DataGridHelper
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
     answers = reply.answers_to(question)
-    question.type.send_action(:render_answers_text, context: self, answers:, question:, alt_text: alt) # rescue binding.pry
+    question.type.dispatch(:render_answers_text, context: self, answers:, question:, alt_text: alt) # rescue binding.pry
   end
 
   def fmt_date(date)
