@@ -14,9 +14,6 @@ require_relative 'dragnet/stats_utils'
 require_relative 'dragnet/class_meta_data'
 require_relative 'dragnet/memoizable'
 
-require_relative 'dragnet/type_method'
-require_relative 'dragnet/type'
-
 require_relative 'dragnet/composed'
 require_relative 'dragnet/advising'
 require_relative 'dragnet/advice'
