@@ -1,6 +1,10 @@
 module Dragnet
   class Type
     class << self
+      def encode(value)
+        value.to_s
+      end
+
       def slug
         name.demodulize.underscore
       end
