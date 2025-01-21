@@ -14,10 +14,6 @@ module Dragnet
           raise "Don't know how to decode #{value.inspect} to integer"
         end
       end
-
-      def self.encode(value)
-        value.to_s
-      end
     end
   end
 end
