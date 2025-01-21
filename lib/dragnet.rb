@@ -36,7 +36,6 @@ Dragnet::ParameterizedGenerator.include(Dragnet::Generators)
 # View Layer
 require_relative 'dragnet/view/presenter'
 require_relative 'dragnet/view/paged_presenter'
-require_relative 'dragnet/formlet'
 
 module Dragnet
   EMPTY_HASH   = {}.freeze
