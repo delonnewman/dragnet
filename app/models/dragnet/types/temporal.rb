@@ -10,7 +10,7 @@ module Dragnet
         when ::Date, ::Time, ::DateTime
           value
         else
-          raise "Don't know how to decode #{value.inspect} to #{tag}"
+          raise "Don't know how to decode #{value.inspect} to #{symbol}"
         end
       end
     end
