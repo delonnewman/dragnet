@@ -56,5 +56,24 @@ module Dragnet
 
       !!(string =~ UUID_PATTERN)
     end
+
+    def short_uuid
+      shorten_uuid(uuid)
+    end
+
+    def uuid
+      SecureRandom.uuid
+    end
+
+    ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_~'.chars.freeze
+    private_constant :ALPHABET
+
+    def shorten_uuid(uuid)
+      ShortUUID.shorten(uuid, ALPHABET)
+    end
+
+    def expand_short_uuid(short_uuid)
+      ShortUUID.expand(short_uuid, ALPHABET)
+    end
   end
 end
