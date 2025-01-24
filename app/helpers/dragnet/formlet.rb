@@ -1,10 +1,12 @@
-require 'securerandom'
-
 module Dragnet
   class Formlet
     attr_reader :id, :name
 
-    delegate :tag, to: :@view_context
+    def self.tag
+      string = name.demodulize
+      string.downcase!
+      string.to_sym
+    end
 
     def self.attributes
       return @attributes if defined?(@attributes)
@@ -29,10 +31,8 @@ module Dragnet
         instance_variable_set(:"@#{attribute}", attributes[attribute])
       end
 
-      @id = SecureRandom.uuid
-      @name = attributes.fetch(:name) do
-        "#{self.class.name.split('::').last.downcase}_#{ShortUUID.shorten(@id)}"
-      end
+      @id = Utils.tagged_uuid(self.class.tag)
+      @name = attributes.fetch(:name, @id)
     end
 
     def render_in(_context)
@@ -47,8 +47,8 @@ module Dragnet
       params[name]
     end
 
-    def compose(other)
-      ComposedFormlet.new(self, other)
+    def *(other)
+      ComposedFormlets.with(self, other)
     end
   end
 end
