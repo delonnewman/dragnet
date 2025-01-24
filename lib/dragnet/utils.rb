@@ -6,7 +6,6 @@ module Dragnet
     module_function
 
     # Generate a slug from string with all non safe and space characters replaced by the delimiter
-    # @api public
     #
     # @example
     #   Dragnet::Utils.slug("$%`Hey`there") # => "hey-there"
@@ -29,7 +28,6 @@ module Dragnet
     private_constant :HASH_CODE_SEED
 
     # Return a murmur string hash of the string
-    # @api public
     #
     # @param [String] string
     #
@@ -58,9 +56,13 @@ module Dragnet
     end
 
     # Generate a UUID with a tag
+    #
     # @example
     #  Dragnet::Utils.tagged_uuid("question") # => "question_P2c7p-lh3_mzskc7JE4SH"
+    #
     # @params [String] tag
+    #
+    # @return [String]
     def tagged_uuid(tag)
       "#{tag}_#{short_uuid}"
     end
@@ -73,7 +75,7 @@ module Dragnet
       SecureRandom.uuid
     end
 
-    ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_~'.chars.freeze
+    ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.chars.freeze
     private_constant :ALPHABET
 
     def shorten_uuid(uuid)
