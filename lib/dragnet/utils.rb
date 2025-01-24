@@ -57,6 +57,14 @@ module Dragnet
       !!(string =~ UUID_PATTERN)
     end
 
+    # Generate a UUID with a tag
+    # @example
+    #  Dragnet::Utils.tagged_uuid("question") # => "question_P2c7p-lh3_mzskc7JE4SH"
+    # @params [String] tag
+    def tagged_uuid(tag)
+      "#{tag}_#{short_uuid}"
+    end
+
     def short_uuid
       shorten_uuid(uuid)
     end
