@@ -2,7 +2,7 @@
 
 module Dragnet
   module Formlets
-    class BooleanInput < Formlet
+    class BooleanInput < InputFormlet
       value_type Types::Boolean
       attribute :label
 
