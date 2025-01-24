@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 module Dragnet
   class Formlet
     attr_reader :id, :name
 
     def self.tag
-      string = name.demodulize
-      string.downcase!
-      string.to_sym
+      name.demodulize.underscore.dasherize.to_sym
     end
 
     def self.attributes
