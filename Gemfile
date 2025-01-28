@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.2.2'
+ruby '3.4.1'
 
 gem 'rails', '~> 7.2.1'
 
@@ -20,21 +20,19 @@ gem 'font-awesome-sass'
 gem 'sprockets-rails'
 
 gem 'chartkick'
-# gem 'mapkick-rb' TODO: add location type
-
-gem 'pry'
-gem 'pry-rails'
+gem 'mapkick-rb'
 
 # Encoding / Data Format
 gem 'murmurhash3'
 gem 'rqrcode'
 gem 'shortuuid'
-gem 'transit-ruby', require: 'transit'
+gem 'transit-ruby', require: 'transit', path: '../transit-ruby'
 gem 'transit-rails'
 
 gem 'pagy'
 
 # User data formats
+gem 'csv'
 gem 'caxlsx'
 gem 'caxlsx_rails'
 gem 'csv_builder'
@@ -78,14 +76,8 @@ group :test do
 end
 
 group :development, :test do
-  gem 'debug', platforms: %i[mri]
-  gem 'pry-stack_explorer'
-
   gem 'rspec'
   gem 'rspec-rails'
-
-  gem 'guard', require: false
-  gem 'guard-rspec', require: false
 
   gem 'gen-test', github: 'delonnewman/gen-test'
 
@@ -97,9 +89,8 @@ end
 group :development do
   gem 'web-console'
 
-  gem 'rack-mini-profiler'
-
   gem "rails_live_reload"
+  gem 'rack-mini-profiler'
 
   gem 'yard'
   gem 'yard-activerecord'
