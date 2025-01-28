@@ -1,6 +1,6 @@
 module Dragnet
   module Formlets
-    class MultipleInputs < Formlet
+    class SingleChoice < Formlet
       attribute :inputs
 
       def html
