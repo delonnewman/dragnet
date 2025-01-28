@@ -36,7 +36,6 @@ module Dragnet
       MurmurHash3::V32.str_hash(string, HASH_CODE_SEED)
     end
 
-    # @api public
     # @param [Integer] seed
     # @param [Integer] hash
     #

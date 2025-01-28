@@ -24,13 +24,14 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
       (rand(100) + rand).round(rand(5))
     when :time, :date, :date_and_time
       time = Faker::Time.between(from: 3.months.ago, to: Time.zone.now)
+      return time if type == :time
       return time.to_date if type == :date
-      return time.to_datetime if type == :date_and_time
-      time
+
+      time.to_datetime
     when :boolean
       Faker::Boolean.boolean
     when :email
-      Email.generate
+      Email[].generate
     when :phone
       Phone.generate
     else
