@@ -13,8 +13,9 @@ GIT
       faker
       regexp-examples (~> 1.5.0)
 
-PATH
-  remote: ../transit-ruby
+GIT
+  remote: https://github.com/delonnewman/transit-ruby.git
+  revision: 8be0c683624178c885ade4a4277e623e6e82ee79
   specs:
     transit-ruby (0.8.603)
       addressable (~> 2.3)

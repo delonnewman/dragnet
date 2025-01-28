@@ -26,7 +26,7 @@ gem 'mapkick-rb'
 gem 'murmurhash3'
 gem 'rqrcode'
 gem 'shortuuid'
-gem 'transit-ruby', require: 'transit', path: '../transit-ruby'
+gem 'transit-ruby', github: 'delonnewman/transit-ruby'
 gem 'transit-rails'
 
 gem 'pagy'
