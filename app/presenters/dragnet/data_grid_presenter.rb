@@ -43,7 +43,7 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
       name: survey.name,
       records: record_data,
       offset: pager.offset,
-      items: pager.items,
+      items: pager.in,
     }
   end
 
@@ -58,7 +58,7 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   memoize :record_count
 
   def relation
-    query.relation(survey.replies, offset: pager.offset, items: pager.items)
+    query.relation(survey.replies, offset: pager.offset, items: pager.in)
   end
   memoize :relation
 
@@ -82,6 +82,6 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   # Pager object populated with record and parameter data.
   #
   # @return [Pagy]
-  def pager = Pagy.new(count: survey.replies.count, page:, items:)
+  def pager = Pagy.new(count: survey.replies.count, page:, limit: items)
   memoize :pager
 end
