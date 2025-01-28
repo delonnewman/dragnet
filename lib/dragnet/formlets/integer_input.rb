@@ -1,6 +1,6 @@
 module Dragnet
   module Formlets
-    class IntegerInput < Formlet
+    class IntegerInput < InputFormlet
       value_type Types::Integer
       attribute :label
 

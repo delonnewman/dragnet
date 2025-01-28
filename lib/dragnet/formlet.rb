@@ -5,6 +5,8 @@ module Dragnet
     attr_reader :id, :name
 
     def self.tag
+      return unless name
+
       name.demodulize.underscore.dasherize.to_sym
     end
 
