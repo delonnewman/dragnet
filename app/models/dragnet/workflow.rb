@@ -23,10 +23,10 @@ module Dragnet
 
     def resume_with(continuation)
       action =
-        if continuation.key?(:action_index)
-          @actions[continuation[:action_index]]
-        elsif continuation.key?(:action_name)
-          @actions_by_name[continuation[:action_name]]
+        if continuation.key?(:step)
+          @actions[continuation[:step]]
+        elsif continuation.key?(:action)
+          @actions_by_name[continuation[:action]]
         end
       raise 'Can not resume workflow without action' unless action
 

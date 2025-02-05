@@ -1,13 +1,26 @@
 module Dragnet
+  # A hash-like object that is used to store any state that is
+  # necessary to resume the activity of a resumable object.
   class Continuation
-    attr_reader :id, :params
+    include Resumable
 
-    delegate :[], :key?, to: :params
+    attr_reader :id, :data
 
-    def initialize(params)
+    delegate :[], :key?, to: :data
+
+    def initialize(action_class_name, data)
       @id = Utils.short_uuid
-      @params = params.to_h
+      @action_class_name = action_class_name
+      @data = data.to_h
       freeze
+    end
+
+    def resume_with(params)
+      action_class.new.resume_with(params)
+    end
+
+    def action_class
+      @action_class_name.constantize
     end
   end
 end
