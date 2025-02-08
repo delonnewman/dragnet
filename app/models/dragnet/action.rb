@@ -31,25 +31,37 @@ module Dragnet
     #
     # If all parameters have been provided (required and optional) the action
     # will be executed.
+    #
+    # @see #partial?, #call, #resume_with
     def invoke(params)
       initialize_parameters!(params)
 
-      if partial?
-        call_continuation
-      else
-        call
-      end
+      return call unless partial?
+
+      Continuation.new(self.class.name, params)
     end
 
+    # Resume the action with the supplied parameters.
+    # By default the action is just invoked again.
     def resume_with(params)
       invoke(params)
     end
 
+    # @abstract
+    # Return true if the action is partially executed, otherwise return false.
     def partial?
       raise NoMethodError, "must be implemented by subclasses"
     end
 
+    # @abstract
+    # Subclass implementation of the body of the action
     def call
+      raise NoMethodError, "must be implemented by subclasses"
+    end
+
+    # @abstract
+    # Return a formlet that can be used to collect the required information
+    def formlet
       raise NoMethodError, "must be implemented by subclasses"
     end
 
@@ -59,10 +71,6 @@ module Dragnet
 
     def initialize_parameters!(params)
       @params = @attributes.merge(params)
-    end
-
-    def call_continuation
-      Continuation.new(self.class.name, params)
     end
   end
 end
