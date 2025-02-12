@@ -3,7 +3,7 @@ module Dragnet
     class AskQuestion < Action
       attr_reader :question
 
-      def initialize(**attributes)
+      def initialize(attributes)
         super
 
         @question = attributes.fetch(:question) do
@@ -11,7 +11,7 @@ module Dragnet
         end
       end
 
-      def call
+      def invoke
         { question.id => answers }
       end
 

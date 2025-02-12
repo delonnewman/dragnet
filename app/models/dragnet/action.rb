@@ -20,7 +20,9 @@ module Dragnet
     attr_reader :name
 
     # At initialization all attributes are optional
-    def initialize(**attributes)
+    def initialize(attributes = EMPTY_HASH)
+      raise 'only subclasses of Action can be instantiated' if self.class == Dragnet::Action
+
       @name = Utils.tagged_uuid(self.class.tag)
       @attributes = attributes
     end
@@ -32,19 +34,19 @@ module Dragnet
     # If all parameters have been provided (required and optional) the action
     # will be executed.
     #
-    # @see #partial?, #call, #resume_with
-    def invoke(params)
-      initialize_parameters!(params)
+    # @see #partial?, #invoke, #resume_with
+    def call(params)
+      collected_params = initialize_parameters!(params)
 
-      return call unless partial?
+      return invoke unless partial?
 
-      Continuation.new(self.class.name, params)
+      Continuation.new(self.class.name, collected_params)
     end
 
     # Resume the action with the supplied parameters.
-    # By default the action is just invoked again.
+    # By default the action is just called again.
     def resume_with(params)
-      invoke(params)
+      call(params)
     end
 
     # @abstract
@@ -55,7 +57,7 @@ module Dragnet
 
     # @abstract
     # Subclass implementation of the body of the action
-    def call
+    def invoke
       raise NoMethodError, "must be implemented by subclasses"
     end
 
@@ -67,10 +69,11 @@ module Dragnet
 
     private
 
-    attr_reader :attributes, :params
+    attr_reader :attributes
+    attr_accessor :params
 
     def initialize_parameters!(params)
-      @params = @attributes.merge(params)
+      self.params = @attributes.merge(params)
     end
   end
 end

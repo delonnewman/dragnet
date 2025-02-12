@@ -1,6 +1,8 @@
 module Dragnet
   # A hash-like object that is used to store any state that is
   # necessary to resume the activity of a resumable object.
+  #
+  # It's also Resumeable. When resume_with is called
   class Continuation
     include Resumable
 
@@ -16,7 +18,7 @@ module Dragnet
     end
 
     def resume_with(params)
-      action_class.new.resume_with(params)
+      action_class.new(data).resume_with(params)
     end
 
     def action_class

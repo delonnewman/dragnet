@@ -4,5 +4,9 @@ module Dragnet
     def resume_with(_params)
       raise NoMethodError, "Resumable classes must implement resume_with"
     end
+
+    def call(params)
+      resume_with(params)
+    end
   end
 end

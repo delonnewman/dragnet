@@ -1,6 +1,6 @@
 module Dragnet
   # A resumable sequence of actions
-  class Workflow
+  class Workflow < Action
     include Resumable
 
     attr_reader :name
@@ -12,25 +12,39 @@ module Dragnet
     end
 
     def initialize(actions, name: nil)
+      raise 'only subclasses of Workflow can be instantiated' if self.class == Dragnet::Workflow
+
       @name = name || Utils.tagged_uuid(self.class.tag)
       @actions = actions
       @actions_by_name = actions.index_by(&:name)
     end
 
-    def invoke(params)
-      @actions.first.invoke(params)
+    def partial?
+      actions.any?(&:partial?)
     end
 
-    def resume_with(continuation)
-      action =
-        if continuation.key?(:step)
-          @actions[continuation[:step]]
-        elsif continuation.key?(:action)
-          @actions_by_name[continuation[:action]]
-        end
-      raise 'Can not resume workflow without action' unless action
+    def invoke
+      current_action.call(params)
+    end
 
-      action.resume_with(continuation.params)
+    private
+
+    attr_accessor :current_action
+    attr_reader :actions, :actions_by_name
+
+    def initialize_parameters!(params)
+      super
+
+      self.current_action =
+        if params.key?(:step)
+          actions[params[:step]]
+        elsif params.key?(:action)
+          actions_by_name[params[:action]]
+        else
+          actions.first
+        end
+
+      self.params = params
     end
   end
 end
