@@ -12,6 +12,8 @@ module Dragnet
     include Resumable
 
     def self.tag
+      return superclass.name unless name
+
       string = name.demodulize
       string.downcase!
       string.to_sym
