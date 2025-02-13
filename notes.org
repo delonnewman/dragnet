@@ -8,3 +8,9 @@ See listmonk
 
 ** Analytics
 See Ahoy and Ahoy.js
+
+** Instapaper-like Link aggregation
+*** Use ML to suggest articles based on data and tags
+
+* Ideas
+** SQL Tables as an alternate data source as a complement to "Surveys" which are user driven data sources
