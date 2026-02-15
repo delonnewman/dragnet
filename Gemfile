@@ -9,6 +9,7 @@ gem 'pg', '~> 1.1'
 gem 'activerecord-like'
 gem 'activerecord-pull-alpha'
 gem 'mini_sql'
+gem 'pstore'
 
 # HTTP
 gem 'puma'
