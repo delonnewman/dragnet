@@ -66,7 +66,7 @@ module Dragnet
     has_many :copies, foreign_key: 'copy_of_id', class_name: 'Dragnet::Survey', dependent: :nullify, inverse_of: :copy_of
 
     def copy?
-      !copy_of_id.nil?
+      !!copy_of_id
     end
 
     # @return [Survey, false]
