@@ -76,7 +76,7 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
   memoize :query
 
   def show_load_more?
-    pager.next && record_count > pager.items
+    pager.next && record_count > pager.limit
   end
 
   # Pager object populated with record and parameter data.
