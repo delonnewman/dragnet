@@ -36,14 +36,14 @@ jobs:
         run: bundle exec rails db:schema:load db:seed
       - name: Run tests
         run: bundle exec rake
-      - name: Publish code coverage
-        uses: paambaati/codeclimate-action@v9.0.0
-        env:
-          CC_TEST_REPORTER_ID: "7b61fa9ea465e19ec3d750aafc3622cba4bf8b257d61f9ea20c46900bbe03fda"
-        with:
-          coverageLocations: |
-            ${{github.workspace}}/coverage/lcov/dragnet.lcov:lcov
-          debug: true
+      # - name: Publish code coverage
+      #   uses: paambaati/codeclimate-action@v9.0.0
+      #   env:
+      #     CC_TEST_REPORTER_ID: "7b61fa9ea465e19ec3d750aafc3622cba4bf8b257d61f9ea20c46900bbe03fda"
+      #   with:
+      #     coverageLocations: |
+      #       ${{github.workspace}}/coverage/lcov/dragnet.lcov:lcov
+      #     debug: true
 
   lint:
     runs-on: ubuntu-latest
