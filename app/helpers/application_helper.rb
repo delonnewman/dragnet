@@ -88,8 +88,8 @@ module ApplicationHelper
     icon_link Dragnet.github_url.to_s, icon: 'github', icon_type: 'fab', class: 'text-muted fa-xl'
   end
 
-  def licence_link(label:)
-    url = Dragnet.github_url.join('blob/main/LICENCE.txt').to_s
+  def license_link(label:)
+    url = Dragnet.github_url.join('blob/main/LICENSE.txt').to_s
 
     link_to label, url, class: 'text-muted'
   end
