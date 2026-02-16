@@ -5,16 +5,12 @@ module Dragnet
     end
 
     def self.data(survey)
-      types      = Dragnet::Type.index
       attributes = Survey::AttributeProjection.new(survey.projection).to_h
       attributes.tap do |attrs|
-        # TODO: generate a new name with the pattern "Old Name (copy)"
+        # attrs[:name] = UniqueName.new(root_name: attrs[:name], record_class: Survey).to_s
         attrs[:copy_of_id] = attrs.delete(:id)
         attrs.fetch(:questions_attributes, EMPTY_ARRAY).each do |q|
           q.delete(:id)
-          q[:type_class] = types.fetch(q.delete(:type)) do |type| 
-            raise "can't map invalid type #{type} to a type class"
-          end
           q.fetch(:question_options_attributes, EMPTY_ARRAY).each do |opt|
             opt.delete(:id)
           end
