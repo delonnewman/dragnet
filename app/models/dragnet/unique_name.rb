@@ -2,7 +2,7 @@
 
 module Dragnet
   class UniqueName
-    def initialize(record: nil, scope: nil, record_class: nil, root_name: nil, name: nil)
+    def initialize(record: nil, scope: nil, record_class: nil, root_name: nil, name: '')
       @record          = record
       @scope_attribute = scope
       @record_class    = record_class || record.class
