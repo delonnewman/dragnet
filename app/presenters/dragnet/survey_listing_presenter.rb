@@ -6,7 +6,9 @@ class Dragnet::SurveyListingPresenter < Dragnet::View::PagedPresenter
 
   delegate :user, to: :space
 
-  def surveys = user.surveys.order(updated_at: :desc).offset(pager.offset).limit(pager.limit)
+  def surveys
+    user.surveys.order(updated_at: :desc).offset(pager.offset).limit(pager.limit)
+  end
   memoize :surveys
 
   # @return [Pagy]
