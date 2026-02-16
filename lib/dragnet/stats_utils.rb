@@ -22,6 +22,7 @@ module Dragnet
     #
     # @return [Array<Numeric>]
     def normalize_values(values)
+      # FIXME: Will return NaN for arrays with one number
       min = values.min.to_f
       max = values.max.to_f
 
