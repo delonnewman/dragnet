@@ -17,11 +17,11 @@ module Dragnet
 
       # @return [Pagy]
       def pager
-        raise NotImplementedError
+        raise NoMethodError
       end
 
       def records
-        raise NotImplementedError
+        raise NoMethodError
       end
 
       # @return [Integer]
