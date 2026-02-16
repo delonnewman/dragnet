@@ -16,6 +16,12 @@ describe Dragnet::Survey::Copy do
       end
     end
 
+    it 'includes type_class_name' do
+      data[:questions_attributes].each do |question|
+        expect(question).to have_key(:type_class_name)
+      end
+    end
+
     it 'removes question option ids' do
       data[:questions_attributes].each do |question|
         question[:question_options_attributes].each do |question_option|

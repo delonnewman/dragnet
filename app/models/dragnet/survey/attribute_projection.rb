@@ -19,8 +19,12 @@ module Dragnet
 
     # @return [Array]
     def question_attributes
+      types = Type.index
       question_data.map do |(_, q)|
+        type = q[:type]
         q.slice(*question_keys(q)).tap do |new|
+          new[:type_class_name] =
+            types.fetch(type) { raise "invalid type #{type.inspect}" }.name
           if q[:question_options].present?
             new[:question_options_attributes] = q[:question_options].map do |(_, opt)|
               opt.slice(*question_option_keys(opt))
@@ -39,7 +43,7 @@ module Dragnet
     #
     # @return [Array<Symbol>]
     def question_keys(question)
-      %i[text display_order required question_type_id settings type_class_name _destroy].tap do |keys|
+      %i[text display_order required question_type_id settings _destroy].tap do |keys|
         keys << :id unless question[:id].is_a?(Integer) && question[:id].negative?
       end
     end
