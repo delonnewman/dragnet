@@ -7,7 +7,7 @@ module Dragnet
       @scope_attribute = scope
       @record_class    = record_class || record.class
       @root_name       = root_name || "New #{@record_class.model_name.human}"
-      @name            = name || record.name
+      @name            = name.presence || record.name
     end
 
     def as_slug
@@ -50,7 +50,7 @@ module Dragnet
     end
 
     def auto_named?
-      @name.start_with?(@root_name)
+      @name && @name.start_with?(@root_name)
     end
 
     def duplicated_root?
