@@ -14,7 +14,8 @@
               <%= survey_public_indicator(survey) %>
             </span>
             <span class="badge bg-info">
-              <%= number_with_delimiter survey.replies.count %>&nbsp;<%= survey.replies.count == 1 ? 'record' : 'records' %>
+              <%= number_with_delimiter survey.replies.count %>
+                &nbsp;<%= survey.replies.count == 1 ? 'record' : 'records' %>
             </span>
           </div>
           <div>
