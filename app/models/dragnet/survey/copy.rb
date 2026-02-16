@@ -8,6 +8,7 @@ module Dragnet
       types      = Dragnet::Type.index
       attributes = Survey::AttributeProjection.new(survey.projection).to_h
       attributes.tap do |attrs|
+        # TODO: generate a new name with the pattern "Old Name (copy)"
         attrs[:copy_of_id] = attrs.delete(:id)
         attrs.fetch(:questions_attributes, EMPTY_ARRAY).each do |q|
           q.delete(:id)
