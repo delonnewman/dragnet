@@ -7,7 +7,7 @@ module Dragnet
     def self.data(survey)
       attributes = Survey::AttributeProjection.new(survey.projection).to_h
       attributes.tap do |attrs|
-        # attrs[:name] = UniqueName.new(root_name: attrs[:name], record_class: Survey).to_s
+        attrs[:name] = UniqueName.new(root_name: attrs[:name], record_class: Survey).to_s
         attrs[:copy_of_id] = attrs.delete(:id)
         attrs.fetch(:questions_attributes, EMPTY_ARRAY).each do |q|
           q.delete(:id)
