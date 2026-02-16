@@ -42,6 +42,27 @@ module Dragnet
         end
       end
 
+      def index
+        all.index_by(&:symbol)
+      end
+
+      def all(reference: :itself)
+        types = []
+        klasses = subclasses
+        current = klasses.shift
+
+        begin
+          unless current.subclasses.empty?
+            types.push(*current.subclasses.map(&reference).uniq)
+            klasses.push(*current.subclasses)
+            klasses.uniq!
+          end
+          current = klasses.shift
+        end until klasses.empty?
+
+        types
+      end
+
       def hierarchy(reference: :itself)
         hash = {}
         klasses = subclasses
