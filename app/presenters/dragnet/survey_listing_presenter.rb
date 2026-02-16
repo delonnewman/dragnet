@@ -18,7 +18,9 @@ class Dragnet::SurveyListingPresenter < Dragnet::View::PagedPresenter
   # @param [Survey] survey
   #
   # @return [Hash{String => Integer}]
-  def reply_counts_for(survey) = reply_counts.fetch(survey.id, EMPTY_HASH).transform_keys { |d| "Replies on #{d}" }
+  def reply_counts_for(survey)
+    reply_counts.fetch(survey.id, EMPTY_HASH).transform_keys { |d| "Replies on #{d}" }
+  end
 
   def reply_counts = space.replies_by_survey_and_date
   memoize :reply_counts
