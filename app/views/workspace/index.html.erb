@@ -1,7 +1,15 @@
 <%= render 'workspace/tabs', selected: :overview, survey_count: overview.survey_count %>
 
 <div>
-  <%= render 'shared/reportable_stats_table', report: overview.stats %>
+  <div class="d-flex justify-content-between align-items-top">
+    <%= render 'shared/reportable_stats_table', report: overview.stats %>
+    <div class="workspace-tools">
+      <%= link_to new_survey_path, class: 'btn btn-sm btn-primary' do %>
+        <%= icon 'fas', 'plus' %> Create Survey
+      <% end %>
+    </div>
+  </div>
+
   <div class="mt-4">
     <div id="survey-listing" class="d-flex flex-wrap justify-content-start align-items-top">
       <% overview.surveys.each do |survey| %>
