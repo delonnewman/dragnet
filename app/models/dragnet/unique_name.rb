@@ -2,20 +2,22 @@
 
 module Dragnet
   class UniqueName
-    def initialize(record, scope: nil)
-      @record = record
-      @root_name = "New #{record.class.model_name.human}"
+    def initialize(record: nil, scope: nil, record_class: nil, root_name: nil, name: nil)
+      @record          = record
       @scope_attribute = scope
+      @record_class    = record_class || record.class
+      @root_name       = root_name || "New #{@record_class.model_name.human}"
+      @name            = name || record.name
     end
 
     def as_slug
-      return @record.slug if @record.slug.present? && !generate?
+      return @record.slug if @record && @record.slug.present? && !generate?
 
       Utils.slug(as_name)
     end
 
     def as_name
-      return @record.name unless generate?
+      return @name unless generate?
 
       generate
     end
@@ -27,19 +29,28 @@ module Dragnet
     end
 
     def generate?
-      @record.name.blank? || auto_named? || duplicated_root? and @record.new_record? || scope_attribute_will_change?
+      !record_name? || auto_named? || duplicated_root? and
+        @record.nil? || record_new? || scope_attribute_will_change?
     end
 
     private
 
+    def record_name?
+      @record && @record.name.present?
+    end
+
+    def record_new?
+      @record && @record.new_record?
+    end
+    
     def scope_attribute_will_change?
-      return false unless @scope_attribute
+      return false unless @record && @scope_attribute
 
       @record.will_save_change_to_attribute?(@scope_attribute)
     end
 
     def auto_named?
-      @record.name.start_with?(@root_name)
+      @name.start_with?(@root_name)
     end
 
     def duplicated_root?
@@ -51,10 +62,9 @@ module Dragnet
     end
 
     def auto_named_count
-      model = @record.class
-      field = model.arel_table[:name]
-      query = model.where(name: @root_name).or(model.where(field.matches("#{@root_name} (%)")))
-      return query.count unless @scope_attribute
+      field = @record_class.arel_table[:name]
+      query = @record_class.where(name: @root_name).or(@record_class.where(field.matches("#{@root_name} (%)")))
+      return query.count unless @record && @scope_attribute
 
       query.where(@scope_attribute => record_scope_value).count
     end

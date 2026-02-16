@@ -7,7 +7,7 @@ module Dragnet
     end
 
     def self.unique_name(survey)
-      UniqueName.new(survey, scope: :author_id)
+      UniqueName.new(record: survey, scope: :author_id)
     end
 
     def self.assign_slug?(survey)
