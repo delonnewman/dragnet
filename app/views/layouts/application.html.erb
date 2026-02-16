@@ -54,9 +54,7 @@
           <% if Rails.env.production? %>
             <small>Release <%= release_link %></small>
           <% else %>
-            <small>
-              Version <%= version_link %>
-            </small>
+            <small>Version <%= version_link %></small>
             <small>&mdash; <%= Rails.env %></small>
             <small>&mdash; <%= ui_tests_link %></small>
           <% end %>
