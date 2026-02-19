@@ -10295,8 +10295,8 @@ class Grid extends GridMixin(ElementMixin(ThemableMixin(PolylitMixin(LumoInjecti
   }
 }
 defineCustomElement(Grid);
-export {
-  GridColumn,
-  Grid,
-  ColumnBaseMixin
-};
+// export {
+//   GridColumn,
+//   Grid,
+//   ColumnBaseMixin
+// };

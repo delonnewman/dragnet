@@ -24,7 +24,7 @@ module Dragnet
     def temporal
       return alt_text if answers.blank?
 
-      tag.div(class: 'text-nowrap text-end') do
+      # tag.div(class: 'text-nowrap text-end') do
         answers.map do |answer|
           if question.settings.include_date_and_time?
             context.format_datetime(answer.value)
@@ -34,20 +34,20 @@ module Dragnet
             context.format_date(answer.value)
           end
         end.join(', ')
-      end
+      # end
     end
 
     def basic
-      classes = %w[text-nowrap]
-      classes << 'text-end' if type.is_a?(Types::Number)
+      # classes = %w[text-nowrap]
+      # classes << 'text-end' if type.is_a?(Types::Number)
 
-      tag.div(class: classes) do
+      # tag.div(class: classes) do
         if answers.present?
           answers.join(', ')
         else
           alt_text
         end
-      end
+      # end
     end
   end
 end

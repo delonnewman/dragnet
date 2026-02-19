@@ -6,26 +6,14 @@
   <%= render 'data_grid/tools', grid: grid %>
 
   <div class="data-grid table-responsive">
-    <table class="table table-striped table-bordered">
-      <thead hx-boost="true">
-      <th>
-        <div class="d-flex justify-content-start align-items-center">
-          <%= column_sort_link(grid, :created_at, label: icon('fas', 'clock'), alt_label: 'Time Created') %>
-          <%= date_field_tag :created_at, params[:created_at], class: 'form-control' %>
-        </div>
-      </th>
+    <vaadin-grid>
       <% grid.questions.each do |question| %>
-        <th data-question-id="<%= question.id %>">
-          <div class="d-flex justify-content-start align-items-center">
-            <%= column_sort_link(grid, question, label: truncate(question.text), alt_label: question.text) %>
-            <%= column_filter(question, params.dig(:filter_by, question.id)) %>
-          </div>
-        </th>
+        <vaadin-grid-column header="<%= question.text %>" path="<%= question.form_name %>"></vaadin-grid-column>
       <% end %>
-      </thead>
-      <tbody>
-      <%= render 'data_grid/rows', grid: grid %>
-      </tbody>
-    </table>
+    </vaadin-grid>
+    <script>
+     const grid = document.querySelector('vaadin-grid');
+     grid.items = <%== grid.records.map { |record| grid.questions.map { |q| [q.form_name, answers_text(record, q)] }.to_h }.to_json %>
+    </script>
   </div>
 <% end %>
