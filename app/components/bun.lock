@@ -1,0 +1,65 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "dependencies": {
+        "@vaadin/grid": "^25.0.4",
+        "lit": "^3.3.2",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
+  },
+  "packages": {
+    "@lit-labs/ssr-dom-shim": ["@lit-labs/ssr-dom-shim@1.5.1", "", {}, "sha512-Aou5UdlSpr5whQe8AA/bZG0jMj96CoJIWbGfZ91qieWu5AWUMKw8VR/pAkQkJYvBNhmCcWnZlyyk5oze8JIqYA=="],
+
+    "@lit/reactive-element": ["@lit/reactive-element@2.1.2", "", { "dependencies": { "@lit-labs/ssr-dom-shim": "^1.5.0" } }, "sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A=="],
+
+    "@open-wc/dedupe-mixin": ["@open-wc/dedupe-mixin@1.4.0", "", {}, "sha512-Sj7gKl1TLcDbF7B6KUhtvr+1UCxdhMbNY5KxdU5IfMFWqL8oy1ZeAcCANjoB1TL0AJTcPmcCFsCbHf8X2jGDUA=="],
+
+    "@types/bun": ["@types/bun@1.3.9", "", { "dependencies": { "bun-types": "1.3.9" } }, "sha512-KQ571yULOdWJiMH+RIWIOZ7B2RXQGpL1YQrBtLIV3FqDcCu6FsbFUBwhdKUlCKUpS3PJDsHlJ1QKlpxoVR+xtw=="],
+
+    "@types/node": ["@types/node@25.2.3", "", { "dependencies": { "undici-types": "~7.16.0" } }, "sha512-m0jEgYlYz+mDJZ2+F4v8D1AyQb+QzsNqRuI7xg1VQX/KlKS0qT9r1Mo16yo5F/MtifXFgaofIFsdFMox2SxIbQ=="],
+
+    "@types/trusted-types": ["@types/trusted-types@2.0.7", "", {}, "sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw=="],
+
+    "@vaadin/a11y-base": ["@vaadin/a11y-base@25.0.4", "", { "dependencies": { "@open-wc/dedupe-mixin": "^1.3.0", "@vaadin/component-base": "~25.0.4", "lit": "^3.0.0" } }, "sha512-I3Qyw5JhdOzUs5rGcOcwMWj878VtRBB1feGGEzv8oNcftuzubehXu1FD6iHI/S+/ljjpNZ39FOQqR2JSi5P3pA=="],
+
+    "@vaadin/checkbox": ["@vaadin/checkbox@25.0.4", "", { "dependencies": { "@open-wc/dedupe-mixin": "^1.3.0", "@vaadin/a11y-base": "~25.0.4", "@vaadin/component-base": "~25.0.4", "@vaadin/field-base": "~25.0.4", "@vaadin/vaadin-themable-mixin": "~25.0.4", "lit": "^3.0.0" } }, "sha512-f6dRaJaOOok+O5g0RK7BoWdx75fYfE2R60FnAr8f8W1e+Fq/is5jtRjan8G6XvGZ+4M2xwsuab5muAZrpl3DOg=="],
+
+    "@vaadin/component-base": ["@vaadin/component-base@25.0.4", "", { "dependencies": { "@open-wc/dedupe-mixin": "^1.3.0", "@vaadin/vaadin-development-mode-detector": "^2.0.0", "@vaadin/vaadin-usage-statistics": "^2.1.0", "lit": "^3.0.0" } }, "sha512-SQ7+3y/DdEzfWancMaOKpQ3O6lwXnVGbmLVMEiVfYrLU+LM+AaFm6EXKlUvUf16C4FPhaOdJjzcswmXOjCLQjA=="],
+
+    "@vaadin/field-base": ["@vaadin/field-base@25.0.4", "", { "dependencies": { "@open-wc/dedupe-mixin": "^1.3.0", "@vaadin/a11y-base": "~25.0.4", "@vaadin/component-base": "~25.0.4", "lit": "^3.0.0" } }, "sha512-Uz0Yusz219uOxmYmznOvcr5JizAfCHKWYYN/hh8KgnvY2n4JUGrQ5kb9LIN1Z/aqxIQkCKECvNl4EsmlQ5Wi/w=="],
+
+    "@vaadin/grid": ["@vaadin/grid@25.0.4", "", { "dependencies": { "@open-wc/dedupe-mixin": "^1.3.0", "@vaadin/a11y-base": "~25.0.4", "@vaadin/checkbox": "~25.0.4", "@vaadin/component-base": "~25.0.4", "@vaadin/lit-renderer": "~25.0.4", "@vaadin/text-field": "~25.0.4", "@vaadin/vaadin-themable-mixin": "~25.0.4", "lit": "^3.0.0" } }, "sha512-FbG8c50fhJbB34dLvXg9cCcs9sYQK7ZHTVaZb6xCwY2sLoMtL76mVtKoeDwwpZEDcvB/uRXJc4xfPD47gLLb1g=="],
+
+    "@vaadin/input-container": ["@vaadin/input-container@25.0.4", "", { "dependencies": { "@vaadin/component-base": "~25.0.4", "@vaadin/vaadin-themable-mixin": "~25.0.4", "lit": "^3.0.0" } }, "sha512-yLV7Yr8hhWAUZYVkNgasr5b/v5UdBd0DKkYzgvbFo/Vz7Ew4au+st3ID/30xvLj4f84qoDB0wmtPw6PJZ10rEA=="],
+
+    "@vaadin/lit-renderer": ["@vaadin/lit-renderer@25.0.4", "", { "dependencies": { "lit": "^3.0.0" } }, "sha512-Kpc69Uv/TNTX3izdu8F9rI+h16znKrRZntvIr4Cs9PeG6hWWlszf2NZmcLJZGLFK7/OYGM50bELYWPiP3hhvyw=="],
+
+    "@vaadin/text-field": ["@vaadin/text-field@25.0.4", "", { "dependencies": { "@open-wc/dedupe-mixin": "^1.3.0", "@vaadin/a11y-base": "~25.0.4", "@vaadin/component-base": "~25.0.4", "@vaadin/field-base": "~25.0.4", "@vaadin/input-container": "~25.0.4", "@vaadin/vaadin-themable-mixin": "~25.0.4", "lit": "^3.0.0" } }, "sha512-c8ZLg8AwbUTYONUjI7WPTNs7YMY7gg6ofVTIoZcQSFMQ+bHD1v0ThjWWEsLvuPN2OHQLCxJln5m2CVUUGVDh2A=="],
+
+    "@vaadin/vaadin-development-mode-detector": ["@vaadin/vaadin-development-mode-detector@2.0.7", "", {}, "sha512-9FhVhr0ynSR3X2ao+vaIEttcNU5XfzCbxtmYOV8uIRnUCtNgbvMOIcyGBvntsX9I5kvIP2dV3cFAOG9SILJzEA=="],
+
+    "@vaadin/vaadin-themable-mixin": ["@vaadin/vaadin-themable-mixin@25.0.4", "", { "dependencies": { "@open-wc/dedupe-mixin": "^1.3.0", "@vaadin/component-base": "~25.0.4", "lit": "^3.0.0" } }, "sha512-4RxJy2Kj59Kqak+0cJtiLcpGfXJVumhnEOiZVyZM02wzDkj5hXfvNj0zYVtV2izvq2fsb6n5BJYaCJASiN0jdg=="],
+
+    "@vaadin/vaadin-usage-statistics": ["@vaadin/vaadin-usage-statistics@2.1.3", "", { "dependencies": { "@vaadin/vaadin-development-mode-detector": "^2.0.0" } }, "sha512-8r4TNknD7OJQADe3VygeofFR7UNAXZ2/jjBFP5dgI8+2uMfnuGYgbuHivasKr9WSQ64sPej6m8rDoM1uSllXjQ=="],
+
+    "bun-types": ["bun-types@1.3.9", "", { "dependencies": { "@types/node": "*" } }, "sha512-+UBWWOakIP4Tswh0Bt0QD0alpTY8cb5hvgiYeWCMet9YukHbzuruIEeXC2D7nMJPB12kbh8C7XJykSexEqGKJg=="],
+
+    "lit": ["lit@3.3.2", "", { "dependencies": { "@lit/reactive-element": "^2.1.0", "lit-element": "^4.2.0", "lit-html": "^3.3.0" } }, "sha512-NF9zbsP79l4ao2SNrH3NkfmFgN/hBYSQo90saIVI1o5GpjAdCPVstVzO1MrLOakHoEhYkrtRjPK6Ob521aoYWQ=="],
+
+    "lit-element": ["lit-element@4.2.2", "", { "dependencies": { "@lit-labs/ssr-dom-shim": "^1.5.0", "@lit/reactive-element": "^2.1.0", "lit-html": "^3.3.0" } }, "sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w=="],
+
+    "lit-html": ["lit-html@3.3.2", "", { "dependencies": { "@types/trusted-types": "^2.0.2" } }, "sha512-Qy9hU88zcmaxBXcc10ZpdK7cOLXvXpRoBxERdtqV9QOrfpMZZ6pSYP91LhpPtap3sFMUiL7Tw2RImbe0Al2/kw=="],
+
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "undici-types": ["undici-types@7.16.0", "", {}, "sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw=="],
+  }
+}

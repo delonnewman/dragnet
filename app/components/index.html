@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Test</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="module" src="build/dragnet-components.js"></script>
+</head>
+<body>
+    <vaadin-grid>
+        <vaadin-grid-column header="Name" path="name"></vaadin-grid-column>
+        <vaadin-grid-column header="Likes" path="likes"></vaadin-grid-column>
+    </vaadin-grid>
+    <script>
+     const grid = document.querySelector('vaadin-grid');
+     grid.items = [
+         { name: "Jackie", likes: "Blu" },
+         { name: "Delon", likes: "Jackie" },
+     ]
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@vaadin/grid": "^25.0.4",
+    "lit": "^3.3.2"
+  },
+  "name": "dragnet-components",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
