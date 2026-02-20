@@ -43,7 +43,7 @@ class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
       name: survey.name,
       records: record_data,
       offset: pager.offset,
-      items: pager.in,
+      limit: pager.in,
     }
   end
 
