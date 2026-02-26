@@ -49,3 +49,4 @@ app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 /coverage/lcov/
 /vendor/bundle/
 /app/frontends/.calva/
+/app/components/bun.lockb
