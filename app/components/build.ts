@@ -1,4 +1,4 @@
 await Bun.build({
-  entrypoints: ['./dragnet-components.ts'],
+  entrypoints: ['./components.ts'],
   outdir: './build',
 });

@@ -1,1463 +1,599 @@
-// node_modules/@lit/reactive-element/development/css-tag.js
-var NODE_MODE = false;
-var global = globalThis;
-var supportsAdoptingStyleSheets = global.ShadowRoot && (global.ShadyCSS === undefined || global.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype;
-var constructionToken = Symbol();
-var cssTagCache = new WeakMap;
+// app/components/node_modules/@lit/reactive-element/css-tag.js
+var t = globalThis;
+var e = t.ShadowRoot && (t.ShadyCSS === undefined || t.ShadyCSS.nativeShadow) && ("adoptedStyleSheets" in Document.prototype) && ("replace" in CSSStyleSheet.prototype);
+var s = Symbol();
+var o = new WeakMap;
 
-class CSSResult {
-  constructor(cssText, strings, safeToken) {
-    this["_$cssResult$"] = true;
-    if (safeToken !== constructionToken) {
-      throw new Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
-    }
-    this.cssText = cssText;
-    this._strings = strings;
+class n {
+  constructor(t2, e2, o2) {
+    if (this._$cssResult$ = true, o2 !== s)
+      throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+    this.cssText = t2, this.t = e2;
   }
   get styleSheet() {
-    let styleSheet = this._styleSheet;
-    const strings = this._strings;
-    if (supportsAdoptingStyleSheets && styleSheet === undefined) {
-      const cacheable = strings !== undefined && strings.length === 1;
-      if (cacheable) {
-        styleSheet = cssTagCache.get(strings);
-      }
-      if (styleSheet === undefined) {
-        (this._styleSheet = styleSheet = new CSSStyleSheet).replaceSync(this.cssText);
-        if (cacheable) {
-          cssTagCache.set(strings, styleSheet);
-        }
-      }
+    let t2 = this.o;
+    const s2 = this.t;
+    if (e && t2 === undefined) {
+      const e2 = s2 !== undefined && s2.length === 1;
+      e2 && (t2 = o.get(s2)), t2 === undefined && ((this.o = t2 = new CSSStyleSheet).replaceSync(this.cssText), e2 && o.set(s2, t2));
     }
-    return styleSheet;
+    return t2;
   }
   toString() {
     return this.cssText;
   }
 }
-var textFromCSSResult = (value) => {
-  if (value["_$cssResult$"] === true) {
-    return value.cssText;
-  } else if (typeof value === "number") {
-    return value;
-  } else {
-    throw new Error(`Value passed to 'css' function must be a 'css' function result: ` + `${value}. Use 'unsafeCSS' to pass non-literal values, but take care ` + `to ensure page security.`);
+var r = (t2) => new n(typeof t2 == "string" ? t2 : t2 + "", undefined, s);
+var i = (t2, ...e2) => {
+  const o2 = t2.length === 1 ? t2[0] : e2.reduce((e3, s2, o3) => e3 + ((t3) => {
+    if (t3._$cssResult$ === true)
+      return t3.cssText;
+    if (typeof t3 == "number")
+      return t3;
+    throw Error("Value passed to 'css' function must be a 'css' function result: " + t3 + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
+  })(s2) + t2[o3 + 1], t2[0]);
+  return new n(o2, t2, s);
+};
+var S = (s2, o2) => {
+  if (e)
+    s2.adoptedStyleSheets = o2.map((t2) => t2 instanceof CSSStyleSheet ? t2 : t2.styleSheet);
+  else
+    for (const e2 of o2) {
+      const o3 = document.createElement("style"), n2 = t.litNonce;
+      n2 !== undefined && o3.setAttribute("nonce", n2), o3.textContent = e2.cssText, s2.appendChild(o3);
+    }
+};
+var c = e ? (t2) => t2 : (t2) => t2 instanceof CSSStyleSheet ? ((t3) => {
+  let e2 = "";
+  for (const s2 of t3.cssRules)
+    e2 += s2.cssText;
+  return r(e2);
+})(t2) : t2;
+
+// app/components/node_modules/@lit/reactive-element/reactive-element.js
+var { is: i2, defineProperty: e2, getOwnPropertyDescriptor: h, getOwnPropertyNames: r2, getOwnPropertySymbols: o2, getPrototypeOf: n2 } = Object;
+var a = globalThis;
+var c2 = a.trustedTypes;
+var l = c2 ? c2.emptyScript : "";
+var p = a.reactiveElementPolyfillSupport;
+var d = (t2, s2) => t2;
+var u = { toAttribute(t2, s2) {
+  switch (s2) {
+    case Boolean:
+      t2 = t2 ? l : null;
+      break;
+    case Object:
+    case Array:
+      t2 = t2 == null ? t2 : JSON.stringify(t2);
   }
-};
-var unsafeCSS = (value) => new CSSResult(typeof value === "string" ? value : String(value), undefined, constructionToken);
-var css = (strings, ...values) => {
-  const cssText = strings.length === 1 ? strings[0] : values.reduce((acc, v, idx) => acc + textFromCSSResult(v) + strings[idx + 1], strings[0]);
-  return new CSSResult(cssText, strings, constructionToken);
-};
-var adoptStyles = (renderRoot, styles) => {
-  if (supportsAdoptingStyleSheets) {
-    renderRoot.adoptedStyleSheets = styles.map((s) => s instanceof CSSStyleSheet ? s : s.styleSheet);
-  } else {
-    for (const s of styles) {
-      const style = document.createElement("style");
-      const nonce = global["litNonce"];
-      if (nonce !== undefined) {
-        style.setAttribute("nonce", nonce);
+  return t2;
+}, fromAttribute(t2, s2) {
+  let i3 = t2;
+  switch (s2) {
+    case Boolean:
+      i3 = t2 !== null;
+      break;
+    case Number:
+      i3 = t2 === null ? null : Number(t2);
+      break;
+    case Object:
+    case Array:
+      try {
+        i3 = JSON.parse(t2);
+      } catch (t3) {
+        i3 = null;
       }
-      style.textContent = s.cssText;
-      renderRoot.appendChild(style);
-    }
   }
-};
-var cssResultFromStyleSheet = (sheet) => {
-  let cssText = "";
-  for (const rule of sheet.cssRules) {
-    cssText += rule.cssText;
-  }
-  return unsafeCSS(cssText);
-};
-var getCompatibleStyle = supportsAdoptingStyleSheets || NODE_MODE && global.CSSStyleSheet === undefined ? (s) => s : (s) => s instanceof CSSStyleSheet ? cssResultFromStyleSheet(s) : s;
+  return i3;
+} };
+var f = (t2, s2) => !i2(t2, s2);
+var b = { attribute: true, type: String, converter: u, reflect: false, useDefault: false, hasChanged: f };
+Symbol.metadata ??= Symbol("metadata"), a.litPropertyMetadata ??= new WeakMap;
 
-// node_modules/@lit/reactive-element/development/reactive-element.js
-var { is, defineProperty, getOwnPropertyDescriptor, getOwnPropertyNames, getOwnPropertySymbols, getPrototypeOf } = Object;
-var NODE_MODE2 = false;
-var global2 = globalThis;
-if (NODE_MODE2) {
-  global2.customElements ??= customElements;
-}
-var DEV_MODE = true;
-var issueWarning;
-var trustedTypes = global2.trustedTypes;
-var emptyStringForBooleanAttribute = trustedTypes ? trustedTypes.emptyScript : "";
-var polyfillSupport = DEV_MODE ? global2.reactiveElementPolyfillSupportDevMode : global2.reactiveElementPolyfillSupport;
-if (DEV_MODE) {
-  global2.litIssuedWarnings ??= new Set;
-  issueWarning = (code, warning) => {
-    warning += ` See https://lit.dev/msg/${code} for more information.`;
-    if (!global2.litIssuedWarnings.has(warning) && !global2.litIssuedWarnings.has(code)) {
-      console.warn(warning);
-      global2.litIssuedWarnings.add(warning);
-    }
-  };
-  queueMicrotask(() => {
-    issueWarning("dev-mode", `Lit is in dev mode. Not recommended for production!`);
-    if (global2.ShadyDOM?.inUse && polyfillSupport === undefined) {
-      issueWarning("polyfill-support-missing", `Shadow DOM is being polyfilled via \`ShadyDOM\` but ` + `the \`polyfill-support\` module has not been loaded.`);
-    }
-  });
-}
-var debugLogEvent = DEV_MODE ? (event) => {
-  const shouldEmit = global2.emitLitDebugLogEvents;
-  if (!shouldEmit) {
-    return;
-  }
-  global2.dispatchEvent(new CustomEvent("lit-debug", {
-    detail: event
-  }));
-} : undefined;
-var JSCompiler_renameProperty = (prop, _obj) => prop;
-var defaultConverter = {
-  toAttribute(value, type) {
-    switch (type) {
-      case Boolean:
-        value = value ? emptyStringForBooleanAttribute : null;
-        break;
-      case Object:
-      case Array:
-        value = value == null ? value : JSON.stringify(value);
-        break;
-    }
-    return value;
-  },
-  fromAttribute(value, type) {
-    let fromValue = value;
-    switch (type) {
-      case Boolean:
-        fromValue = value !== null;
-        break;
-      case Number:
-        fromValue = value === null ? null : Number(value);
-        break;
-      case Object:
-      case Array:
-        try {
-          fromValue = JSON.parse(value);
-        } catch (e) {
-          fromValue = null;
-        }
-        break;
-    }
-    return fromValue;
-  }
-};
-var notEqual = (value, old) => !is(value, old);
-var defaultPropertyDeclaration = {
-  attribute: true,
-  type: String,
-  converter: defaultConverter,
-  reflect: false,
-  useDefault: false,
-  hasChanged: notEqual
-};
-Symbol.metadata ??= Symbol("metadata");
-global2.litPropertyMetadata ??= new WeakMap;
-
-class ReactiveElement extends HTMLElement {
-  static addInitializer(initializer) {
-    this.__prepare();
-    (this._initializers ??= []).push(initializer);
+class y extends HTMLElement {
+  static addInitializer(t2) {
+    this._$Ei(), (this.l ??= []).push(t2);
   }
   static get observedAttributes() {
-    this.finalize();
-    return this.__attributeToPropertyMap && [...this.__attributeToPropertyMap.keys()];
+    return this.finalize(), this._$Eh && [...this._$Eh.keys()];
   }
-  static createProperty(name, options = defaultPropertyDeclaration) {
-    if (options.state) {
-      options.attribute = false;
-    }
-    this.__prepare();
-    if (this.prototype.hasOwnProperty(name)) {
-      options = Object.create(options);
-      options.wrapped = true;
-    }
-    this.elementProperties.set(name, options);
-    if (!options.noAccessor) {
-      const key = DEV_MODE ? Symbol.for(`${String(name)} (@property() cache)`) : Symbol();
-      const descriptor = this.getPropertyDescriptor(name, key, options);
-      if (descriptor !== undefined) {
-        defineProperty(this.prototype, name, descriptor);
-      }
+  static createProperty(t2, s2 = b) {
+    if (s2.state && (s2.attribute = false), this._$Ei(), this.prototype.hasOwnProperty(t2) && ((s2 = Object.create(s2)).wrapped = true), this.elementProperties.set(t2, s2), !s2.noAccessor) {
+      const i3 = Symbol(), h2 = this.getPropertyDescriptor(t2, i3, s2);
+      h2 !== undefined && e2(this.prototype, t2, h2);
     }
   }
-  static getPropertyDescriptor(name, key, options) {
-    const { get, set } = getOwnPropertyDescriptor(this.prototype, name) ?? {
-      get() {
-        return this[key];
-      },
-      set(v) {
-        this[key] = v;
-      }
-    };
-    if (DEV_MODE && get == null) {
-      if ("value" in (getOwnPropertyDescriptor(this.prototype, name) ?? {})) {
-        throw new Error(`Field ${JSON.stringify(String(name))} on ` + `${this.name} was declared as a reactive property ` + `but it's actually declared as a value on the prototype. ` + `Usually this is due to using @property or @state on a method.`);
-      }
-      issueWarning("reactive-property-without-getter", `Field ${JSON.stringify(String(name))} on ` + `${this.name} was declared as a reactive property ` + `but it does not have a getter. This will be an error in a ` + `future version of Lit.`);
-    }
-    return {
-      get,
-      set(value) {
-        const oldValue = get?.call(this);
-        set?.call(this, value);
-        this.requestUpdate(name, oldValue, options);
-      },
-      configurable: true,
-      enumerable: true
-    };
+  static getPropertyDescriptor(t2, s2, i3) {
+    const { get: e3, set: r3 } = h(this.prototype, t2) ?? { get() {
+      return this[s2];
+    }, set(t3) {
+      this[s2] = t3;
+    } };
+    return { get: e3, set(s3) {
+      const h2 = e3?.call(this);
+      r3?.call(this, s3), this.requestUpdate(t2, h2, i3);
+    }, configurable: true, enumerable: true };
   }
-  static getPropertyOptions(name) {
-    return this.elementProperties.get(name) ?? defaultPropertyDeclaration;
+  static getPropertyOptions(t2) {
+    return this.elementProperties.get(t2) ?? b;
   }
-  static __prepare() {
-    if (this.hasOwnProperty(JSCompiler_renameProperty("elementProperties", this))) {
+  static _$Ei() {
+    if (this.hasOwnProperty(d("elementProperties")))
       return;
-    }
-    const superCtor = getPrototypeOf(this);
-    superCtor.finalize();
-    if (superCtor._initializers !== undefined) {
-      this._initializers = [...superCtor._initializers];
-    }
-    this.elementProperties = new Map(superCtor.elementProperties);
+    const t2 = n2(this);
+    t2.finalize(), t2.l !== undefined && (this.l = [...t2.l]), this.elementProperties = new Map(t2.elementProperties);
   }
   static finalize() {
-    if (this.hasOwnProperty(JSCompiler_renameProperty("finalized", this))) {
+    if (this.hasOwnProperty(d("finalized")))
       return;
+    if (this.finalized = true, this._$Ei(), this.hasOwnProperty(d("properties"))) {
+      const t3 = this.properties, s2 = [...r2(t3), ...o2(t3)];
+      for (const i3 of s2)
+        this.createProperty(i3, t3[i3]);
     }
-    this.finalized = true;
-    this.__prepare();
-    if (this.hasOwnProperty(JSCompiler_renameProperty("properties", this))) {
-      const props = this.properties;
-      const propKeys = [
-        ...getOwnPropertyNames(props),
-        ...getOwnPropertySymbols(props)
-      ];
-      for (const p of propKeys) {
-        this.createProperty(p, props[p]);
-      }
+    const t2 = this[Symbol.metadata];
+    if (t2 !== null) {
+      const s2 = litPropertyMetadata.get(t2);
+      if (s2 !== undefined)
+        for (const [t3, i3] of s2)
+          this.elementProperties.set(t3, i3);
     }
-    const metadata = this[Symbol.metadata];
-    if (metadata !== null) {
-      const properties = litPropertyMetadata.get(metadata);
-      if (properties !== undefined) {
-        for (const [p, options] of properties) {
-          this.elementProperties.set(p, options);
-        }
-      }
-    }
-    this.__attributeToPropertyMap = new Map;
-    for (const [p, options] of this.elementProperties) {
-      const attr = this.__attributeNameForProperty(p, options);
-      if (attr !== undefined) {
-        this.__attributeToPropertyMap.set(attr, p);
-      }
+    this._$Eh = new Map;
+    for (const [t3, s2] of this.elementProperties) {
+      const i3 = this._$Eu(t3, s2);
+      i3 !== undefined && this._$Eh.set(i3, t3);
     }
     this.elementStyles = this.finalizeStyles(this.styles);
-    if (DEV_MODE) {
-      if (this.hasOwnProperty("createProperty")) {
-        issueWarning("no-override-create-property", "Overriding ReactiveElement.createProperty() is deprecated. " + "The override will not be called with standard decorators");
-      }
-      if (this.hasOwnProperty("getPropertyDescriptor")) {
-        issueWarning("no-override-get-property-descriptor", "Overriding ReactiveElement.getPropertyDescriptor() is deprecated. " + "The override will not be called with standard decorators");
-      }
-    }
   }
-  static finalizeStyles(styles) {
-    const elementStyles = [];
-    if (Array.isArray(styles)) {
-      const set = new Set(styles.flat(Infinity).reverse());
-      for (const s of set) {
-        elementStyles.unshift(getCompatibleStyle(s));
-      }
-    } else if (styles !== undefined) {
-      elementStyles.push(getCompatibleStyle(styles));
-    }
-    return elementStyles;
+  static finalizeStyles(s2) {
+    const i3 = [];
+    if (Array.isArray(s2)) {
+      const e3 = new Set(s2.flat(1 / 0).reverse());
+      for (const s3 of e3)
+        i3.unshift(c(s3));
+    } else
+      s2 !== undefined && i3.push(c(s2));
+    return i3;
   }
-  static __attributeNameForProperty(name, options) {
-    const attribute = options.attribute;
-    return attribute === false ? undefined : typeof attribute === "string" ? attribute : typeof name === "string" ? name.toLowerCase() : undefined;
+  static _$Eu(t2, s2) {
+    const i3 = s2.attribute;
+    return i3 === false ? undefined : typeof i3 == "string" ? i3 : typeof t2 == "string" ? t2.toLowerCase() : undefined;
   }
   constructor() {
-    super();
-    this.__instanceProperties = undefined;
-    this.isUpdatePending = false;
-    this.hasUpdated = false;
-    this.__reflectingProperty = null;
-    this.__initialize();
+    super(), this._$Ep = undefined, this.isUpdatePending = false, this.hasUpdated = false, this._$Em = null, this._$Ev();
   }
-  __initialize() {
-    this.__updatePromise = new Promise((res) => this.enableUpdating = res);
-    this._$changedProperties = new Map;
-    this.__saveInstanceProperties();
-    this.requestUpdate();
-    this.constructor._initializers?.forEach((i) => i(this));
+  _$Ev() {
+    this._$ES = new Promise((t2) => this.enableUpdating = t2), this._$AL = new Map, this._$E_(), this.requestUpdate(), this.constructor.l?.forEach((t2) => t2(this));
   }
-  addController(controller) {
-    (this.__controllers ??= new Set).add(controller);
-    if (this.renderRoot !== undefined && this.isConnected) {
-      controller.hostConnected?.();
-    }
+  addController(t2) {
+    (this._$EO ??= new Set).add(t2), this.renderRoot !== undefined && this.isConnected && t2.hostConnected?.();
   }
-  removeController(controller) {
-    this.__controllers?.delete(controller);
+  removeController(t2) {
+    this._$EO?.delete(t2);
   }
-  __saveInstanceProperties() {
-    const instanceProperties = new Map;
-    const elementProperties = this.constructor.elementProperties;
-    for (const p of elementProperties.keys()) {
-      if (this.hasOwnProperty(p)) {
-        instanceProperties.set(p, this[p]);
-        delete this[p];
-      }
-    }
-    if (instanceProperties.size > 0) {
-      this.__instanceProperties = instanceProperties;
-    }
+  _$E_() {
+    const t2 = new Map, s2 = this.constructor.elementProperties;
+    for (const i3 of s2.keys())
+      this.hasOwnProperty(i3) && (t2.set(i3, this[i3]), delete this[i3]);
+    t2.size > 0 && (this._$Ep = t2);
   }
   createRenderRoot() {
-    const renderRoot = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
-    adoptStyles(renderRoot, this.constructor.elementStyles);
-    return renderRoot;
+    const t2 = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
+    return S(t2, this.constructor.elementStyles), t2;
   }
   connectedCallback() {
-    this.renderRoot ??= this.createRenderRoot();
-    this.enableUpdating(true);
-    this.__controllers?.forEach((c) => c.hostConnected?.());
+    this.renderRoot ??= this.createRenderRoot(), this.enableUpdating(true), this._$EO?.forEach((t2) => t2.hostConnected?.());
   }
-  enableUpdating(_requestedUpdate) {}
+  enableUpdating(t2) {
+  }
   disconnectedCallback() {
-    this.__controllers?.forEach((c) => c.hostDisconnected?.());
+    this._$EO?.forEach((t2) => t2.hostDisconnected?.());
   }
-  attributeChangedCallback(name, _old, value) {
-    this._$attributeToProperty(name, value);
+  attributeChangedCallback(t2, s2, i3) {
+    this._$AK(t2, i3);
   }
-  __propertyToAttribute(name, value) {
-    const elemProperties = this.constructor.elementProperties;
-    const options = elemProperties.get(name);
-    const attr = this.constructor.__attributeNameForProperty(name, options);
-    if (attr !== undefined && options.reflect === true) {
-      const converter = options.converter?.toAttribute !== undefined ? options.converter : defaultConverter;
-      const attrValue = converter.toAttribute(value, options.type);
-      if (DEV_MODE && this.constructor.enabledWarnings.includes("migration") && attrValue === undefined) {
-        issueWarning("undefined-attribute-value", `The attribute value for the ${name} property is ` + `undefined on element ${this.localName}. The attribute will be ` + `removed, but in the previous version of \`ReactiveElement\`, ` + `the attribute would not have changed.`);
-      }
-      this.__reflectingProperty = name;
-      if (attrValue == null) {
-        this.removeAttribute(attr);
-      } else {
-        this.setAttribute(attr, attrValue);
-      }
-      this.__reflectingProperty = null;
+  _$ET(t2, s2) {
+    const i3 = this.constructor.elementProperties.get(t2), e3 = this.constructor._$Eu(t2, i3);
+    if (e3 !== undefined && i3.reflect === true) {
+      const h2 = (i3.converter?.toAttribute !== undefined ? i3.converter : u).toAttribute(s2, i3.type);
+      this._$Em = t2, h2 == null ? this.removeAttribute(e3) : this.setAttribute(e3, h2), this._$Em = null;
     }
   }
-  _$attributeToProperty(name, value) {
-    const ctor = this.constructor;
-    const propName = ctor.__attributeToPropertyMap.get(name);
-    if (propName !== undefined && this.__reflectingProperty !== propName) {
-      const options = ctor.getPropertyOptions(propName);
-      const converter = typeof options.converter === "function" ? { fromAttribute: options.converter } : options.converter?.fromAttribute !== undefined ? options.converter : defaultConverter;
-      this.__reflectingProperty = propName;
-      const convertedValue = converter.fromAttribute(value, options.type);
-      this[propName] = convertedValue ?? this.__defaultValues?.get(propName) ?? convertedValue;
-      this.__reflectingProperty = null;
+  _$AK(t2, s2) {
+    const i3 = this.constructor, e3 = i3._$Eh.get(t2);
+    if (e3 !== undefined && this._$Em !== e3) {
+      const t3 = i3.getPropertyOptions(e3), h2 = typeof t3.converter == "function" ? { fromAttribute: t3.converter } : t3.converter?.fromAttribute !== undefined ? t3.converter : u;
+      this._$Em = e3;
+      const r3 = h2.fromAttribute(s2, t3.type);
+      this[e3] = r3 ?? this._$Ej?.get(e3) ?? r3, this._$Em = null;
     }
   }
-  requestUpdate(name, oldValue, options, useNewValue = false, newValue) {
-    if (name !== undefined) {
-      if (DEV_MODE && name instanceof Event) {
-        issueWarning(``, `The requestUpdate() method was called with an Event as the property name. This is probably a mistake caused by binding this.requestUpdate as an event listener. Instead bind a function that will call it with no arguments: () => this.requestUpdate()`);
-      }
-      const ctor = this.constructor;
-      if (useNewValue === false) {
-        newValue = this[name];
-      }
-      options ??= ctor.getPropertyOptions(name);
-      const changed = (options.hasChanged ?? notEqual)(newValue, oldValue) || options.useDefault && options.reflect && newValue === this.__defaultValues?.get(name) && !this.hasAttribute(ctor.__attributeNameForProperty(name, options));
-      if (changed) {
-        this._$changeProperty(name, oldValue, options);
-      } else {
+  requestUpdate(t2, s2, i3, e3 = false, h2) {
+    if (t2 !== undefined) {
+      const r3 = this.constructor;
+      if (e3 === false && (h2 = this[t2]), i3 ??= r3.getPropertyOptions(t2), !((i3.hasChanged ?? f)(h2, s2) || i3.useDefault && i3.reflect && h2 === this._$Ej?.get(t2) && !this.hasAttribute(r3._$Eu(t2, i3))))
         return;
-      }
+      this.C(t2, s2, i3);
     }
-    if (this.isUpdatePending === false) {
-      this.__updatePromise = this.__enqueueUpdate();
-    }
+    this.isUpdatePending === false && (this._$ES = this._$EP());
   }
-  _$changeProperty(name, oldValue, { useDefault, reflect, wrapped }, initializeValue) {
-    if (useDefault && !(this.__defaultValues ??= new Map).has(name)) {
-      this.__defaultValues.set(name, initializeValue ?? oldValue ?? this[name]);
-      if (wrapped !== true || initializeValue !== undefined) {
-        return;
-      }
-    }
-    if (!this._$changedProperties.has(name)) {
-      if (!this.hasUpdated && !useDefault) {
-        oldValue = undefined;
-      }
-      this._$changedProperties.set(name, oldValue);
-    }
-    if (reflect === true && this.__reflectingProperty !== name) {
-      (this.__reflectingProperties ??= new Set).add(name);
-    }
+  C(t2, s2, { useDefault: i3, reflect: e3, wrapped: h2 }, r3) {
+    i3 && !(this._$Ej ??= new Map).has(t2) && (this._$Ej.set(t2, r3 ?? s2 ?? this[t2]), h2 !== true || r3 !== undefined) || (this._$AL.has(t2) || (this.hasUpdated || i3 || (s2 = undefined), this._$AL.set(t2, s2)), e3 === true && this._$Em !== t2 && (this._$Eq ??= new Set).add(t2));
   }
-  async __enqueueUpdate() {
+  async _$EP() {
     this.isUpdatePending = true;
     try {
-      await this.__updatePromise;
-    } catch (e) {
-      Promise.reject(e);
+      await this._$ES;
+    } catch (t3) {
+      Promise.reject(t3);
     }
-    const result = this.scheduleUpdate();
-    if (result != null) {
-      await result;
-    }
-    return !this.isUpdatePending;
+    const t2 = this.scheduleUpdate();
+    return t2 != null && await t2, !this.isUpdatePending;
   }
   scheduleUpdate() {
-    const result = this.performUpdate();
-    if (DEV_MODE && this.constructor.enabledWarnings.includes("async-perform-update") && typeof result?.then === "function") {
-      issueWarning("async-perform-update", `Element ${this.localName} returned a Promise from performUpdate(). ` + `This behavior is deprecated and will be removed in a future ` + `version of ReactiveElement.`);
-    }
-    return result;
+    return this.performUpdate();
   }
   performUpdate() {
-    if (!this.isUpdatePending) {
+    if (!this.isUpdatePending)
       return;
-    }
-    debugLogEvent?.({ kind: "update" });
     if (!this.hasUpdated) {
-      this.renderRoot ??= this.createRenderRoot();
-      if (DEV_MODE) {
-        const ctor = this.constructor;
-        const shadowedProperties = [...ctor.elementProperties.keys()].filter((p) => this.hasOwnProperty(p) && (p in getPrototypeOf(this)));
-        if (shadowedProperties.length) {
-          throw new Error(`The following properties on element ${this.localName} will not ` + `trigger updates as expected because they are set using class ` + `fields: ${shadowedProperties.join(", ")}. ` + `Native class fields and some compiled output will overwrite ` + `accessors used for detecting changes. See ` + `https://lit.dev/msg/class-field-shadowing ` + `for more information.`);
-        }
+      if (this.renderRoot ??= this.createRenderRoot(), this._$Ep) {
+        for (const [t4, s3] of this._$Ep)
+          this[t4] = s3;
+        this._$Ep = undefined;
       }
-      if (this.__instanceProperties) {
-        for (const [p, value] of this.__instanceProperties) {
-          this[p] = value;
+      const t3 = this.constructor.elementProperties;
+      if (t3.size > 0)
+        for (const [s3, i3] of t3) {
+          const { wrapped: t4 } = i3, e3 = this[s3];
+          t4 !== true || this._$AL.has(s3) || e3 === undefined || this.C(s3, undefined, i3, e3);
         }
-        this.__instanceProperties = undefined;
-      }
-      const elementProperties = this.constructor.elementProperties;
-      if (elementProperties.size > 0) {
-        for (const [p, options] of elementProperties) {
-          const { wrapped } = options;
-          const value = this[p];
-          if (wrapped === true && !this._$changedProperties.has(p) && value !== undefined) {
-            this._$changeProperty(p, undefined, options, value);
-          }
-        }
-      }
     }
-    let shouldUpdate = false;
-    const changedProperties = this._$changedProperties;
+    let t2 = false;
+    const s2 = this._$AL;
     try {
-      shouldUpdate = this.shouldUpdate(changedProperties);
-      if (shouldUpdate) {
-        this.willUpdate(changedProperties);
-        this.__controllers?.forEach((c) => c.hostUpdate?.());
-        this.update(changedProperties);
-      } else {
-        this.__markUpdated();
-      }
-    } catch (e) {
-      shouldUpdate = false;
-      this.__markUpdated();
-      throw e;
+      t2 = this.shouldUpdate(s2), t2 ? (this.willUpdate(s2), this._$EO?.forEach((t3) => t3.hostUpdate?.()), this.update(s2)) : this._$EM();
+    } catch (s3) {
+      throw t2 = false, this._$EM(), s3;
     }
-    if (shouldUpdate) {
-      this._$didUpdate(changedProperties);
-    }
+    t2 && this._$AE(s2);
   }
-  willUpdate(_changedProperties) {}
-  _$didUpdate(changedProperties) {
-    this.__controllers?.forEach((c) => c.hostUpdated?.());
-    if (!this.hasUpdated) {
-      this.hasUpdated = true;
-      this.firstUpdated(changedProperties);
-    }
-    this.updated(changedProperties);
-    if (DEV_MODE && this.isUpdatePending && this.constructor.enabledWarnings.includes("change-in-update")) {
-      issueWarning("change-in-update", `Element ${this.localName} scheduled an update ` + `(generally because a property was set) ` + `after an update completed, causing a new update to be scheduled. ` + `This is inefficient and should be avoided unless the next update ` + `can only be scheduled as a side effect of the previous update.`);
-    }
+  willUpdate(t2) {
   }
-  __markUpdated() {
-    this._$changedProperties = new Map;
-    this.isUpdatePending = false;
+  _$AE(t2) {
+    this._$EO?.forEach((t3) => t3.hostUpdated?.()), this.hasUpdated || (this.hasUpdated = true, this.firstUpdated(t2)), this.updated(t2);
+  }
+  _$EM() {
+    this._$AL = new Map, this.isUpdatePending = false;
   }
   get updateComplete() {
     return this.getUpdateComplete();
   }
   getUpdateComplete() {
-    return this.__updatePromise;
+    return this._$ES;
   }
-  shouldUpdate(_changedProperties) {
+  shouldUpdate(t2) {
     return true;
   }
-  update(_changedProperties) {
-    this.__reflectingProperties &&= this.__reflectingProperties.forEach((p) => this.__propertyToAttribute(p, this[p]));
-    this.__markUpdated();
+  update(t2) {
+    this._$Eq &&= this._$Eq.forEach((t3) => this._$ET(t3, this[t3])), this._$EM();
   }
-  updated(_changedProperties) {}
-  firstUpdated(_changedProperties) {}
+  updated(t2) {
+  }
+  firstUpdated(t2) {
+  }
 }
-ReactiveElement.elementStyles = [];
-ReactiveElement.shadowRootOptions = { mode: "open" };
-ReactiveElement[JSCompiler_renameProperty("elementProperties", ReactiveElement)] = new Map;
-ReactiveElement[JSCompiler_renameProperty("finalized", ReactiveElement)] = new Map;
-polyfillSupport?.({ ReactiveElement });
-if (DEV_MODE) {
-  ReactiveElement.enabledWarnings = [
-    "change-in-update",
-    "async-perform-update"
-  ];
-  const ensureOwnWarnings = function(ctor) {
-    if (!ctor.hasOwnProperty(JSCompiler_renameProperty("enabledWarnings", ctor))) {
-      ctor.enabledWarnings = ctor.enabledWarnings.slice();
-    }
-  };
-  ReactiveElement.enableWarning = function(warning) {
-    ensureOwnWarnings(this);
-    if (!this.enabledWarnings.includes(warning)) {
-      this.enabledWarnings.push(warning);
-    }
-  };
-  ReactiveElement.disableWarning = function(warning) {
-    ensureOwnWarnings(this);
-    const i = this.enabledWarnings.indexOf(warning);
-    if (i >= 0) {
-      this.enabledWarnings.splice(i, 1);
-    }
-  };
-}
-(global2.reactiveElementVersions ??= []).push("2.1.2");
-if (DEV_MODE && global2.reactiveElementVersions.length > 1) {
-  queueMicrotask(() => {
-    issueWarning("multiple-versions", `Multiple versions of Lit loaded. Loading multiple versions ` + `is not recommended.`);
-  });
-}
+y.elementStyles = [], y.shadowRootOptions = { mode: "open" }, y[d("elementProperties")] = new Map, y[d("finalized")] = new Map, p?.({ ReactiveElement: y }), (a.reactiveElementVersions ??= []).push("2.1.2");
 
-// node_modules/lit-html/development/lit-html.js
-var DEV_MODE2 = true;
-var ENABLE_EXTRA_SECURITY_HOOKS = true;
-var ENABLE_SHADYDOM_NOPATCH = true;
-var NODE_MODE3 = false;
-var global3 = globalThis;
-var debugLogEvent2 = DEV_MODE2 ? (event) => {
-  const shouldEmit = global3.emitLitDebugLogEvents;
-  if (!shouldEmit) {
-    return;
-  }
-  global3.dispatchEvent(new CustomEvent("lit-debug", {
-    detail: event
-  }));
-} : undefined;
-var debugLogRenderId = 0;
-var issueWarning2;
-if (DEV_MODE2) {
-  global3.litIssuedWarnings ??= new Set;
-  issueWarning2 = (code, warning) => {
-    warning += code ? ` See https://lit.dev/msg/${code} for more information.` : "";
-    if (!global3.litIssuedWarnings.has(warning) && !global3.litIssuedWarnings.has(code)) {
-      console.warn(warning);
-      global3.litIssuedWarnings.add(warning);
-    }
-  };
-  queueMicrotask(() => {
-    issueWarning2("dev-mode", `Lit is in dev mode. Not recommended for production!`);
-  });
-}
-var wrap = ENABLE_SHADYDOM_NOPATCH && global3.ShadyDOM?.inUse && global3.ShadyDOM?.noPatch === true ? global3.ShadyDOM.wrap : (node) => node;
-var trustedTypes2 = global3.trustedTypes;
-var policy = trustedTypes2 ? trustedTypes2.createPolicy("lit-html", {
-  createHTML: (s) => s
-}) : undefined;
-var identityFunction = (value) => value;
-var noopSanitizer = (_node, _name, _type) => identityFunction;
-var setSanitizer = (newSanitizer) => {
-  if (!ENABLE_EXTRA_SECURITY_HOOKS) {
-    return;
-  }
-  if (sanitizerFactoryInternal !== noopSanitizer) {
-    throw new Error(`Attempted to overwrite existing lit-html security policy.` + ` setSanitizeDOMValueFactory should be called at most once.`);
-  }
-  sanitizerFactoryInternal = newSanitizer;
+// app/components/node_modules/lit-html/lit-html.js
+var V = function(t2, i3) {
+  if (!u2(t2) || !t2.hasOwnProperty("raw"))
+    throw Error("invalid template strings array");
+  return e3 !== undefined ? e3.createHTML(i3) : i3;
 };
-var _testOnlyClearSanitizerFactoryDoNotCallOrElse = () => {
-  sanitizerFactoryInternal = noopSanitizer;
+var M = function(t2, i3, s2 = t2, e3) {
+  if (i3 === E)
+    return i3;
+  let h2 = e3 !== undefined ? s2._$Co?.[e3] : s2._$Cl;
+  const o3 = a2(i3) ? undefined : i3._$litDirective$;
+  return h2?.constructor !== o3 && (h2?._$AO?.(false), o3 === undefined ? h2 = undefined : (h2 = new o3(t2), h2._$AT(t2, s2, e3)), e3 !== undefined ? (s2._$Co ??= [])[e3] = h2 : s2._$Cl = h2), h2 !== undefined && (i3 = M(t2, h2._$AS(t2, i3.values), h2, e3)), i3;
 };
-var createSanitizer = (node, name, type) => {
-  return sanitizerFactoryInternal(node, name, type);
-};
-var boundAttributeSuffix = "$lit$";
-var marker = `lit$${Math.random().toFixed(9).slice(2)}$`;
-var markerMatch = "?" + marker;
-var nodeMarker = `<${markerMatch}>`;
-var d = NODE_MODE3 && global3.document === undefined ? {
-  createTreeWalker() {
-    return {};
+var t2 = globalThis;
+var i3 = (t3) => t3;
+var s2 = t2.trustedTypes;
+var e3 = s2 ? s2.createPolicy("lit-html", { createHTML: (t3) => t3 }) : undefined;
+var h2 = "$lit$";
+var o3 = `lit\$${Math.random().toFixed(9).slice(2)}\$`;
+var n3 = "?" + o3;
+var r3 = `<${n3}>`;
+var l2 = document;
+var c3 = () => l2.createComment("");
+var a2 = (t3) => t3 === null || typeof t3 != "object" && typeof t3 != "function";
+var u2 = Array.isArray;
+var d2 = (t3) => u2(t3) || typeof t3?.[Symbol.iterator] == "function";
+var f2 = "[ \t\n\f\r]";
+var v = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g;
+var _ = /-->/g;
+var m = />/g;
+var p2 = RegExp(`>|${f2}(?:([^\\s"'>=/]+)(${f2}*=${f2}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|\$)`, "g");
+var g = /'/g;
+var $ = /"/g;
+var y2 = /^(?:script|style|textarea|title)$/i;
+var x = (t3) => (i4, ...s3) => ({ _$litType$: t3, strings: i4, values: s3 });
+var b2 = x(1);
+var w = x(2);
+var T = x(3);
+var E = Symbol.for("lit-noChange");
+var A = Symbol.for("lit-nothing");
+var C = new WeakMap;
+var P = l2.createTreeWalker(l2, 129);
+var N = (t3, i4) => {
+  const s3 = t3.length - 1, e4 = [];
+  let n4, l3 = i4 === 2 ? "<svg>" : i4 === 3 ? "<math>" : "", c4 = v;
+  for (let i5 = 0;i5 < s3; i5++) {
+    const s4 = t3[i5];
+    let a3, u3, d3 = -1, f3 = 0;
+    for (;f3 < s4.length && (c4.lastIndex = f3, u3 = c4.exec(s4), u3 !== null); )
+      f3 = c4.lastIndex, c4 === v ? u3[1] === "!--" ? c4 = _ : u3[1] !== undefined ? c4 = m : u3[2] !== undefined ? (y2.test(u3[2]) && (n4 = RegExp("</" + u3[2], "g")), c4 = p2) : u3[3] !== undefined && (c4 = p2) : c4 === p2 ? u3[0] === ">" ? (c4 = n4 ?? v, d3 = -1) : u3[1] === undefined ? d3 = -2 : (d3 = c4.lastIndex - u3[2].length, a3 = u3[1], c4 = u3[3] === undefined ? p2 : u3[3] === '"' ? $ : g) : c4 === $ || c4 === g ? c4 = p2 : c4 === _ || c4 === m ? c4 = v : (c4 = p2, n4 = undefined);
+    const x2 = c4 === p2 && t3[i5 + 1].startsWith("/>") ? " " : "";
+    l3 += c4 === v ? s4 + r3 : d3 >= 0 ? (e4.push(a3), s4.slice(0, d3) + h2 + s4.slice(d3) + o3 + x2) : s4 + o3 + (d3 === -2 ? i5 : x2);
   }
-} : document;
-var createMarker = () => d.createComment("");
-var isPrimitive = (value) => value === null || typeof value != "object" && typeof value != "function";
-var isArray = Array.isArray;
-var isIterable = (value) => isArray(value) || typeof value?.[Symbol.iterator] === "function";
-var SPACE_CHAR = `[ 	
-\f\r]`;
-var ATTR_VALUE_CHAR = `[^ 	
-\f\r"'\`<>=]`;
-var NAME_CHAR = `[^\\s"'>=/]`;
-var textEndRegex = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g;
-var COMMENT_START = 1;
-var TAG_NAME = 2;
-var DYNAMIC_TAG_NAME = 3;
-var commentEndRegex = /-->/g;
-var comment2EndRegex = />/g;
-var tagEndRegex = new RegExp(`>|${SPACE_CHAR}(?:(${NAME_CHAR}+)(${SPACE_CHAR}*=${SPACE_CHAR}*(?:${ATTR_VALUE_CHAR}|("|')|))|$)`, "g");
-var ENTIRE_MATCH = 0;
-var ATTRIBUTE_NAME = 1;
-var SPACES_AND_EQUALS = 2;
-var QUOTE_CHAR = 3;
-var singleQuoteAttrEndRegex = /'/g;
-var doubleQuoteAttrEndRegex = /"/g;
-var rawTextElement = /^(?:script|style|textarea|title)$/i;
-var HTML_RESULT = 1;
-var SVG_RESULT = 2;
-var MATHML_RESULT = 3;
-var ATTRIBUTE_PART = 1;
-var CHILD_PART = 2;
-var PROPERTY_PART = 3;
-var BOOLEAN_ATTRIBUTE_PART = 4;
-var EVENT_PART = 5;
-var ELEMENT_PART = 6;
-var COMMENT_PART = 7;
-var tag = (type) => (strings, ...values) => {
-  if (DEV_MODE2 && strings.some((s) => s === undefined)) {
-    console.warn(`Some template strings are undefined.
-` + "This is probably caused by illegal octal escape sequences.");
-  }
-  if (DEV_MODE2) {
-    if (values.some((val) => val?.["_$litStatic$"])) {
-      issueWarning2("", `Static values 'literal' or 'unsafeStatic' cannot be used as values to non-static templates.
-` + `Please use the static 'html' tag function. See https://lit.dev/docs/templates/expressions/#static-expressions`);
-    }
-  }
-  return {
-    ["_$litType$"]: type,
-    strings,
-    values
-  };
-};
-var html = tag(HTML_RESULT);
-var svg = tag(SVG_RESULT);
-var mathml = tag(MATHML_RESULT);
-var noChange = Symbol.for("lit-noChange");
-var nothing = Symbol.for("lit-nothing");
-var templateCache = new WeakMap;
-var walker = d.createTreeWalker(d, 129);
-var sanitizerFactoryInternal = noopSanitizer;
-function trustFromTemplateString(tsa, stringFromTSA) {
-  if (!isArray(tsa) || !tsa.hasOwnProperty("raw")) {
-    let message = "invalid template strings array";
-    if (DEV_MODE2) {
-      message = `
-          Internal Error: expected template strings to be an array
-          with a 'raw' field. Faking a template strings array by
-          calling html or svg like an ordinary function is effectively
-          the same as calling unsafeHtml and can lead to major security
-          issues, e.g. opening your code up to XSS attacks.
-          If you're using the html or svg tagged template functions normally
-          and still seeing this error, please file a bug at
-          https://github.com/lit/lit/issues/new?template=bug_report.md
-          and include information about your build tooling, if any.
-        `.trim().replace(/\n */g, `
-`);
-    }
-    throw new Error(message);
-  }
-  return policy !== undefined ? policy.createHTML(stringFromTSA) : stringFromTSA;
-}
-var getTemplateHtml = (strings, type) => {
-  const l = strings.length - 1;
-  const attrNames = [];
-  let html2 = type === SVG_RESULT ? "<svg>" : type === MATHML_RESULT ? "<math>" : "";
-  let rawTextEndRegex;
-  let regex = textEndRegex;
-  for (let i = 0;i < l; i++) {
-    const s = strings[i];
-    let attrNameEndIndex = -1;
-    let attrName;
-    let lastIndex = 0;
-    let match;
-    while (lastIndex < s.length) {
-      regex.lastIndex = lastIndex;
-      match = regex.exec(s);
-      if (match === null) {
-        break;
-      }
-      lastIndex = regex.lastIndex;
-      if (regex === textEndRegex) {
-        if (match[COMMENT_START] === "!--") {
-          regex = commentEndRegex;
-        } else if (match[COMMENT_START] !== undefined) {
-          regex = comment2EndRegex;
-        } else if (match[TAG_NAME] !== undefined) {
-          if (rawTextElement.test(match[TAG_NAME])) {
-            rawTextEndRegex = new RegExp(`</${match[TAG_NAME]}`, "g");
-          }
-          regex = tagEndRegex;
-        } else if (match[DYNAMIC_TAG_NAME] !== undefined) {
-          if (DEV_MODE2) {
-            throw new Error("Bindings in tag names are not supported. Please use static templates instead. " + "See https://lit.dev/docs/templates/expressions/#static-expressions");
-          }
-          regex = tagEndRegex;
-        }
-      } else if (regex === tagEndRegex) {
-        if (match[ENTIRE_MATCH] === ">") {
-          regex = rawTextEndRegex ?? textEndRegex;
-          attrNameEndIndex = -1;
-        } else if (match[ATTRIBUTE_NAME] === undefined) {
-          attrNameEndIndex = -2;
-        } else {
-          attrNameEndIndex = regex.lastIndex - match[SPACES_AND_EQUALS].length;
-          attrName = match[ATTRIBUTE_NAME];
-          regex = match[QUOTE_CHAR] === undefined ? tagEndRegex : match[QUOTE_CHAR] === '"' ? doubleQuoteAttrEndRegex : singleQuoteAttrEndRegex;
-        }
-      } else if (regex === doubleQuoteAttrEndRegex || regex === singleQuoteAttrEndRegex) {
-        regex = tagEndRegex;
-      } else if (regex === commentEndRegex || regex === comment2EndRegex) {
-        regex = textEndRegex;
-      } else {
-        regex = tagEndRegex;
-        rawTextEndRegex = undefined;
-      }
-    }
-    if (DEV_MODE2) {
-      console.assert(attrNameEndIndex === -1 || regex === tagEndRegex || regex === singleQuoteAttrEndRegex || regex === doubleQuoteAttrEndRegex, "unexpected parse state B");
-    }
-    const end = regex === tagEndRegex && strings[i + 1].startsWith("/>") ? " " : "";
-    html2 += regex === textEndRegex ? s + nodeMarker : attrNameEndIndex >= 0 ? (attrNames.push(attrName), s.slice(0, attrNameEndIndex) + boundAttributeSuffix + s.slice(attrNameEndIndex)) + marker + end : s + marker + (attrNameEndIndex === -2 ? i : end);
-  }
-  const htmlResult = html2 + (strings[l] || "<?>") + (type === SVG_RESULT ? "</svg>" : type === MATHML_RESULT ? "</math>" : "");
-  return [trustFromTemplateString(strings, htmlResult), attrNames];
+  return [V(t3, l3 + (t3[s3] || "<?>") + (i4 === 2 ? "</svg>" : i4 === 3 ? "</math>" : "")), e4];
 };
 
-class Template {
-  constructor({ strings, ["_$litType$"]: type }, options) {
+class S2 {
+  constructor({ strings: t3, _$litType$: i4 }, e4) {
+    let r4;
     this.parts = [];
-    let node;
-    let nodeIndex = 0;
-    let attrNameIndex = 0;
-    const partCount = strings.length - 1;
-    const parts = this.parts;
-    const [html2, attrNames] = getTemplateHtml(strings, type);
-    this.el = Template.createElement(html2, options);
-    walker.currentNode = this.el.content;
-    if (type === SVG_RESULT || type === MATHML_RESULT) {
-      const wrapper = this.el.content.firstChild;
-      wrapper.replaceWith(...wrapper.childNodes);
+    let l3 = 0, a3 = 0;
+    const u3 = t3.length - 1, d3 = this.parts, [f3, v2] = N(t3, i4);
+    if (this.el = S2.createElement(f3, e4), P.currentNode = this.el.content, i4 === 2 || i4 === 3) {
+      const t4 = this.el.content.firstChild;
+      t4.replaceWith(...t4.childNodes);
     }
-    while ((node = walker.nextNode()) !== null && parts.length < partCount) {
-      if (node.nodeType === 1) {
-        if (DEV_MODE2) {
-          const tag2 = node.localName;
-          if (/^(?:textarea|template)$/i.test(tag2) && node.innerHTML.includes(marker)) {
-            const m = `Expressions are not supported inside \`${tag2}\` ` + `elements. See https://lit.dev/msg/expression-in-${tag2} for more ` + `information.`;
-            if (tag2 === "template") {
-              throw new Error(m);
+    for (;(r4 = P.nextNode()) !== null && d3.length < u3; ) {
+      if (r4.nodeType === 1) {
+        if (r4.hasAttributes())
+          for (const t4 of r4.getAttributeNames())
+            if (t4.endsWith(h2)) {
+              const i5 = v2[a3++], s3 = r4.getAttribute(t4).split(o3), e5 = /([.?@])?(.*)/.exec(i5);
+              d3.push({ type: 1, index: l3, name: e5[2], strings: s3, ctor: e5[1] === "." ? I : e5[1] === "?" ? L : e5[1] === "@" ? z : H }), r4.removeAttribute(t4);
             } else
-              issueWarning2("", m);
+              t4.startsWith(o3) && (d3.push({ type: 6, index: l3 }), r4.removeAttribute(t4));
+        if (y2.test(r4.tagName)) {
+          const t4 = r4.textContent.split(o3), i5 = t4.length - 1;
+          if (i5 > 0) {
+            r4.textContent = s2 ? s2.emptyScript : "";
+            for (let s3 = 0;s3 < i5; s3++)
+              r4.append(t4[s3], c3()), P.nextNode(), d3.push({ type: 2, index: ++l3 });
+            r4.append(t4[i5], c3());
           }
         }
-        if (node.hasAttributes()) {
-          for (const name of node.getAttributeNames()) {
-            if (name.endsWith(boundAttributeSuffix)) {
-              const realName = attrNames[attrNameIndex++];
-              const value = node.getAttribute(name);
-              const statics = value.split(marker);
-              const m = /([.?@])?(.*)/.exec(realName);
-              parts.push({
-                type: ATTRIBUTE_PART,
-                index: nodeIndex,
-                name: m[2],
-                strings: statics,
-                ctor: m[1] === "." ? PropertyPart : m[1] === "?" ? BooleanAttributePart : m[1] === "@" ? EventPart : AttributePart
-              });
-              node.removeAttribute(name);
-            } else if (name.startsWith(marker)) {
-              parts.push({
-                type: ELEMENT_PART,
-                index: nodeIndex
-              });
-              node.removeAttribute(name);
-            }
-          }
+      } else if (r4.nodeType === 8)
+        if (r4.data === n3)
+          d3.push({ type: 2, index: l3 });
+        else {
+          let t4 = -1;
+          for (;(t4 = r4.data.indexOf(o3, t4 + 1)) !== -1; )
+            d3.push({ type: 7, index: l3 }), t4 += o3.length - 1;
         }
-        if (rawTextElement.test(node.tagName)) {
-          const strings2 = node.textContent.split(marker);
-          const lastIndex = strings2.length - 1;
-          if (lastIndex > 0) {
-            node.textContent = trustedTypes2 ? trustedTypes2.emptyScript : "";
-            for (let i = 0;i < lastIndex; i++) {
-              node.append(strings2[i], createMarker());
-              walker.nextNode();
-              parts.push({ type: CHILD_PART, index: ++nodeIndex });
-            }
-            node.append(strings2[lastIndex], createMarker());
-          }
-        }
-      } else if (node.nodeType === 8) {
-        const data = node.data;
-        if (data === markerMatch) {
-          parts.push({ type: CHILD_PART, index: nodeIndex });
-        } else {
-          let i = -1;
-          while ((i = node.data.indexOf(marker, i + 1)) !== -1) {
-            parts.push({ type: COMMENT_PART, index: nodeIndex });
-            i += marker.length - 1;
-          }
-        }
-      }
-      nodeIndex++;
-    }
-    if (DEV_MODE2) {
-      if (attrNames.length !== attrNameIndex) {
-        throw new Error(`Detected duplicate attribute bindings. This occurs if your template ` + `has duplicate attributes on an element tag. For example ` + `"<input ?disabled=\${true} ?disabled=\${false}>" contains a ` + `duplicate "disabled" attribute. The error was detected in ` + `the following template: 
-` + "`" + strings.join("${...}") + "`");
-      }
-    }
-    debugLogEvent2 && debugLogEvent2({
-      kind: "template prep",
-      template: this,
-      clonableTemplate: this.el,
-      parts: this.parts,
-      strings
-    });
-  }
-  static createElement(html2, _options) {
-    const el = d.createElement("template");
-    el.innerHTML = html2;
-    return el;
-  }
-}
-function resolveDirective(part, value, parent = part, attributeIndex) {
-  if (value === noChange) {
-    return value;
-  }
-  let currentDirective = attributeIndex !== undefined ? parent.__directives?.[attributeIndex] : parent.__directive;
-  const nextDirectiveConstructor = isPrimitive(value) ? undefined : value["_$litDirective$"];
-  if (currentDirective?.constructor !== nextDirectiveConstructor) {
-    currentDirective?.["_$notifyDirectiveConnectionChanged"]?.(false);
-    if (nextDirectiveConstructor === undefined) {
-      currentDirective = undefined;
-    } else {
-      currentDirective = new nextDirectiveConstructor(part);
-      currentDirective._$initialize(part, parent, attributeIndex);
-    }
-    if (attributeIndex !== undefined) {
-      (parent.__directives ??= [])[attributeIndex] = currentDirective;
-    } else {
-      parent.__directive = currentDirective;
+      l3++;
     }
   }
-  if (currentDirective !== undefined) {
-    value = resolveDirective(part, currentDirective._$resolve(part, value.values), currentDirective, attributeIndex);
-  }
-  return value;
-}
-
-class TemplateInstance {
-  constructor(template, parent) {
-    this._$parts = [];
-    this._$disconnectableChildren = undefined;
-    this._$template = template;
-    this._$parent = parent;
-  }
-  get parentNode() {
-    return this._$parent.parentNode;
-  }
-  get _$isConnected() {
-    return this._$parent._$isConnected;
-  }
-  _clone(options) {
-    const { el: { content }, parts } = this._$template;
-    const fragment = (options?.creationScope ?? d).importNode(content, true);
-    walker.currentNode = fragment;
-    let node = walker.nextNode();
-    let nodeIndex = 0;
-    let partIndex = 0;
-    let templatePart = parts[0];
-    while (templatePart !== undefined) {
-      if (nodeIndex === templatePart.index) {
-        let part;
-        if (templatePart.type === CHILD_PART) {
-          part = new ChildPart(node, node.nextSibling, this, options);
-        } else if (templatePart.type === ATTRIBUTE_PART) {
-          part = new templatePart.ctor(node, templatePart.name, templatePart.strings, this, options);
-        } else if (templatePart.type === ELEMENT_PART) {
-          part = new ElementPart(node, this, options);
-        }
-        this._$parts.push(part);
-        templatePart = parts[++partIndex];
-      }
-      if (nodeIndex !== templatePart?.index) {
-        node = walker.nextNode();
-        nodeIndex++;
-      }
-    }
-    walker.currentNode = d;
-    return fragment;
-  }
-  _update(values) {
-    let i = 0;
-    for (const part of this._$parts) {
-      if (part !== undefined) {
-        debugLogEvent2 && debugLogEvent2({
-          kind: "set part",
-          part,
-          value: values[i],
-          valueIndex: i,
-          values,
-          templateInstance: this
-        });
-        if (part.strings !== undefined) {
-          part._$setValue(values, part, i);
-          i += part.strings.length - 2;
-        } else {
-          part._$setValue(values[i]);
-        }
-      }
-      i++;
-    }
+  static createElement(t3, i4) {
+    const s3 = l2.createElement("template");
+    return s3.innerHTML = t3, s3;
   }
 }
 
-class ChildPart {
-  get _$isConnected() {
-    return this._$parent?._$isConnected ?? this.__isConnected;
-  }
-  constructor(startNode, endNode, parent, options) {
-    this.type = CHILD_PART;
-    this._$committedValue = nothing;
-    this._$disconnectableChildren = undefined;
-    this._$startNode = startNode;
-    this._$endNode = endNode;
-    this._$parent = parent;
-    this.options = options;
-    this.__isConnected = options?.isConnected ?? true;
-    if (ENABLE_EXTRA_SECURITY_HOOKS) {
-      this._textSanitizer = undefined;
-    }
+class R {
+  constructor(t3, i4) {
+    this._$AV = [], this._$AN = undefined, this._$AD = t3, this._$AM = i4;
   }
   get parentNode() {
-    let parentNode = wrap(this._$startNode).parentNode;
-    const parent = this._$parent;
-    if (parent !== undefined && parentNode?.nodeType === 11) {
-      parentNode = parent.parentNode;
+    return this._$AM.parentNode;
+  }
+  get _$AU() {
+    return this._$AM._$AU;
+  }
+  u(t3) {
+    const { el: { content: i4 }, parts: s3 } = this._$AD, e4 = (t3?.creationScope ?? l2).importNode(i4, true);
+    P.currentNode = e4;
+    let h3 = P.nextNode(), o4 = 0, n4 = 0, r4 = s3[0];
+    for (;r4 !== undefined; ) {
+      if (o4 === r4.index) {
+        let i5;
+        r4.type === 2 ? i5 = new k(h3, h3.nextSibling, this, t3) : r4.type === 1 ? i5 = new r4.ctor(h3, r4.name, r4.strings, this, t3) : r4.type === 6 && (i5 = new Z(h3, this, t3)), this._$AV.push(i5), r4 = s3[++n4];
+      }
+      o4 !== r4?.index && (h3 = P.nextNode(), o4++);
     }
-    return parentNode;
+    return P.currentNode = l2, e4;
+  }
+  p(t3) {
+    let i4 = 0;
+    for (const s3 of this._$AV)
+      s3 !== undefined && (s3.strings !== undefined ? (s3._$AI(t3, s3, i4), i4 += s3.strings.length - 2) : s3._$AI(t3[i4])), i4++;
+  }
+}
+
+class k {
+  get _$AU() {
+    return this._$AM?._$AU ?? this._$Cv;
+  }
+  constructor(t3, i4, s3, e4) {
+    this.type = 2, this._$AH = A, this._$AN = undefined, this._$AA = t3, this._$AB = i4, this._$AM = s3, this.options = e4, this._$Cv = e4?.isConnected ?? true;
+  }
+  get parentNode() {
+    let t3 = this._$AA.parentNode;
+    const i4 = this._$AM;
+    return i4 !== undefined && t3?.nodeType === 11 && (t3 = i4.parentNode), t3;
   }
   get startNode() {
-    return this._$startNode;
+    return this._$AA;
   }
   get endNode() {
-    return this._$endNode;
+    return this._$AB;
   }
-  _$setValue(value, directiveParent = this) {
-    if (DEV_MODE2 && this.parentNode === null) {
-      throw new Error(`This \`ChildPart\` has no \`parentNode\` and therefore cannot accept a value. This likely means the element containing the part was manipulated in an unsupported way outside of Lit's control such that the part's marker nodes were ejected from DOM. For example, setting the element's \`innerHTML\` or \`textContent\` can do this.`);
-    }
-    value = resolveDirective(this, value, directiveParent);
-    if (isPrimitive(value)) {
-      if (value === nothing || value == null || value === "") {
-        if (this._$committedValue !== nothing) {
-          debugLogEvent2 && debugLogEvent2({
-            kind: "commit nothing to child",
-            start: this._$startNode,
-            end: this._$endNode,
-            parent: this._$parent,
-            options: this.options
-          });
-          this._$clear();
-        }
-        this._$committedValue = nothing;
-      } else if (value !== this._$committedValue && value !== noChange) {
-        this._commitText(value);
-      }
-    } else if (value["_$litType$"] !== undefined) {
-      this._commitTemplateResult(value);
-    } else if (value.nodeType !== undefined) {
-      if (DEV_MODE2 && this.options?.host === value) {
-        this._commitText(`[probable mistake: rendered a template's host in itself ` + `(commonly caused by writing \${this} in a template]`);
-        console.warn(`Attempted to render the template host`, value, `inside itself. This is almost always a mistake, and in dev mode `, `we render some warning text. In production however, we'll `, `render it, which will usually result in an error, and sometimes `, `in the element disappearing from the DOM.`);
-        return;
-      }
-      this._commitNode(value);
-    } else if (isIterable(value)) {
-      this._commitIterable(value);
-    } else {
-      this._commitText(value);
+  _$AI(t3, i4 = this) {
+    t3 = M(this, t3, i4), a2(t3) ? t3 === A || t3 == null || t3 === "" ? (this._$AH !== A && this._$AR(), this._$AH = A) : t3 !== this._$AH && t3 !== E && this._(t3) : t3._$litType$ !== undefined ? this.$(t3) : t3.nodeType !== undefined ? this.T(t3) : d2(t3) ? this.k(t3) : this._(t3);
+  }
+  O(t3) {
+    return this._$AA.parentNode.insertBefore(t3, this._$AB);
+  }
+  T(t3) {
+    this._$AH !== t3 && (this._$AR(), this._$AH = this.O(t3));
+  }
+  _(t3) {
+    this._$AH !== A && a2(this._$AH) ? this._$AA.nextSibling.data = t3 : this.T(l2.createTextNode(t3)), this._$AH = t3;
+  }
+  $(t3) {
+    const { values: i4, _$litType$: s3 } = t3, e4 = typeof s3 == "number" ? this._$AC(t3) : (s3.el === undefined && (s3.el = S2.createElement(V(s3.h, s3.h[0]), this.options)), s3);
+    if (this._$AH?._$AD === e4)
+      this._$AH.p(i4);
+    else {
+      const t4 = new R(e4, this), s4 = t4.u(this.options);
+      t4.p(i4), this.T(s4), this._$AH = t4;
     }
   }
-  _insert(node) {
-    return wrap(wrap(this._$startNode).parentNode).insertBefore(node, this._$endNode);
+  _$AC(t3) {
+    let i4 = C.get(t3.strings);
+    return i4 === undefined && C.set(t3.strings, i4 = new S2(t3)), i4;
   }
-  _commitNode(value) {
-    if (this._$committedValue !== value) {
-      this._$clear();
-      if (ENABLE_EXTRA_SECURITY_HOOKS && sanitizerFactoryInternal !== noopSanitizer) {
-        const parentNodeName = this._$startNode.parentNode?.nodeName;
-        if (parentNodeName === "STYLE" || parentNodeName === "SCRIPT") {
-          let message = "Forbidden";
-          if (DEV_MODE2) {
-            if (parentNodeName === "STYLE") {
-              message = `Lit does not support binding inside style nodes. ` + `This is a security risk, as style injection attacks can ` + `exfiltrate data and spoof UIs. ` + `Consider instead using css\`...\` literals ` + `to compose styles, and do dynamic styling with ` + `css custom properties, ::parts, <slot>s, ` + `and by mutating the DOM rather than stylesheets.`;
-            } else {
-              message = `Lit does not support binding inside script nodes. ` + `This is a security risk, as it could allow arbitrary ` + `code execution.`;
-            }
-          }
-          throw new Error(message);
-        }
-      }
-      debugLogEvent2 && debugLogEvent2({
-        kind: "commit node",
-        start: this._$startNode,
-        parent: this._$parent,
-        value,
-        options: this.options
-      });
-      this._$committedValue = this._insert(value);
+  k(t3) {
+    u2(this._$AH) || (this._$AH = [], this._$AR());
+    const i4 = this._$AH;
+    let s3, e4 = 0;
+    for (const h3 of t3)
+      e4 === i4.length ? i4.push(s3 = new k(this.O(c3()), this.O(c3()), this, this.options)) : s3 = i4[e4], s3._$AI(h3), e4++;
+    e4 < i4.length && (this._$AR(s3 && s3._$AB.nextSibling, e4), i4.length = e4);
+  }
+  _$AR(t3 = this._$AA.nextSibling, s3) {
+    for (this._$AP?.(false, true, s3);t3 !== this._$AB; ) {
+      const s4 = i3(t3).nextSibling;
+      i3(t3).remove(), t3 = s4;
     }
   }
-  _commitText(value) {
-    if (this._$committedValue !== nothing && isPrimitive(this._$committedValue)) {
-      const node = wrap(this._$startNode).nextSibling;
-      if (ENABLE_EXTRA_SECURITY_HOOKS) {
-        if (this._textSanitizer === undefined) {
-          this._textSanitizer = createSanitizer(node, "data", "property");
-        }
-        value = this._textSanitizer(value);
-      }
-      debugLogEvent2 && debugLogEvent2({
-        kind: "commit text",
-        node,
-        value,
-        options: this.options
-      });
-      node.data = value;
-    } else {
-      if (ENABLE_EXTRA_SECURITY_HOOKS) {
-        const textNode = d.createTextNode("");
-        this._commitNode(textNode);
-        if (this._textSanitizer === undefined) {
-          this._textSanitizer = createSanitizer(textNode, "data", "property");
-        }
-        value = this._textSanitizer(value);
-        debugLogEvent2 && debugLogEvent2({
-          kind: "commit text",
-          node: textNode,
-          value,
-          options: this.options
-        });
-        textNode.data = value;
-      } else {
-        this._commitNode(d.createTextNode(value));
-        debugLogEvent2 && debugLogEvent2({
-          kind: "commit text",
-          node: wrap(this._$startNode).nextSibling,
-          value,
-          options: this.options
-        });
-      }
-    }
-    this._$committedValue = value;
-  }
-  _commitTemplateResult(result) {
-    const { values, ["_$litType$"]: type } = result;
-    const template = typeof type === "number" ? this._$getTemplate(result) : (type.el === undefined && (type.el = Template.createElement(trustFromTemplateString(type.h, type.h[0]), this.options)), type);
-    if (this._$committedValue?._$template === template) {
-      debugLogEvent2 && debugLogEvent2({
-        kind: "template updating",
-        template,
-        instance: this._$committedValue,
-        parts: this._$committedValue._$parts,
-        options: this.options,
-        values
-      });
-      this._$committedValue._update(values);
-    } else {
-      const instance = new TemplateInstance(template, this);
-      const fragment = instance._clone(this.options);
-      debugLogEvent2 && debugLogEvent2({
-        kind: "template instantiated",
-        template,
-        instance,
-        parts: instance._$parts,
-        options: this.options,
-        fragment,
-        values
-      });
-      instance._update(values);
-      debugLogEvent2 && debugLogEvent2({
-        kind: "template instantiated and updated",
-        template,
-        instance,
-        parts: instance._$parts,
-        options: this.options,
-        fragment,
-        values
-      });
-      this._commitNode(fragment);
-      this._$committedValue = instance;
-    }
-  }
-  _$getTemplate(result) {
-    let template = templateCache.get(result.strings);
-    if (template === undefined) {
-      templateCache.set(result.strings, template = new Template(result));
-    }
-    return template;
-  }
-  _commitIterable(value) {
-    if (!isArray(this._$committedValue)) {
-      this._$committedValue = [];
-      this._$clear();
-    }
-    const itemParts = this._$committedValue;
-    let partIndex = 0;
-    let itemPart;
-    for (const item of value) {
-      if (partIndex === itemParts.length) {
-        itemParts.push(itemPart = new ChildPart(this._insert(createMarker()), this._insert(createMarker()), this, this.options));
-      } else {
-        itemPart = itemParts[partIndex];
-      }
-      itemPart._$setValue(item);
-      partIndex++;
-    }
-    if (partIndex < itemParts.length) {
-      this._$clear(itemPart && wrap(itemPart._$endNode).nextSibling, partIndex);
-      itemParts.length = partIndex;
-    }
-  }
-  _$clear(start = wrap(this._$startNode).nextSibling, from) {
-    this._$notifyConnectionChanged?.(false, true, from);
-    while (start !== this._$endNode) {
-      const n = wrap(start).nextSibling;
-      wrap(start).remove();
-      start = n;
-    }
-  }
-  setConnected(isConnected) {
-    if (this._$parent === undefined) {
-      this.__isConnected = isConnected;
-      this._$notifyConnectionChanged?.(isConnected);
-    } else if (DEV_MODE2) {
-      throw new Error("part.setConnected() may only be called on a " + "RootPart returned from render().");
-    }
+  setConnected(t3) {
+    this._$AM === undefined && (this._$Cv = t3, this._$AP?.(t3));
   }
 }
 
-class AttributePart {
+class H {
   get tagName() {
     return this.element.tagName;
   }
-  get _$isConnected() {
-    return this._$parent._$isConnected;
+  get _$AU() {
+    return this._$AM._$AU;
   }
-  constructor(element, name, strings, parent, options) {
-    this.type = ATTRIBUTE_PART;
-    this._$committedValue = nothing;
-    this._$disconnectableChildren = undefined;
-    this.element = element;
-    this.name = name;
-    this._$parent = parent;
-    this.options = options;
-    if (strings.length > 2 || strings[0] !== "" || strings[1] !== "") {
-      this._$committedValue = new Array(strings.length - 1).fill(new String);
-      this.strings = strings;
-    } else {
-      this._$committedValue = nothing;
-    }
-    if (ENABLE_EXTRA_SECURITY_HOOKS) {
-      this._sanitizer = undefined;
-    }
+  constructor(t3, i4, s3, e4, h3) {
+    this.type = 1, this._$AH = A, this._$AN = undefined, this.element = t3, this.name = i4, this._$AM = e4, this.options = h3, s3.length > 2 || s3[0] !== "" || s3[1] !== "" ? (this._$AH = Array(s3.length - 1).fill(new String), this.strings = s3) : this._$AH = A;
   }
-  _$setValue(value, directiveParent = this, valueIndex, noCommit) {
-    const strings = this.strings;
-    let change = false;
-    if (strings === undefined) {
-      value = resolveDirective(this, value, directiveParent, 0);
-      change = !isPrimitive(value) || value !== this._$committedValue && value !== noChange;
-      if (change) {
-        this._$committedValue = value;
-      }
-    } else {
-      const values = value;
-      value = strings[0];
-      let i, v;
-      for (i = 0;i < strings.length - 1; i++) {
-        v = resolveDirective(this, values[valueIndex + i], directiveParent, i);
-        if (v === noChange) {
-          v = this._$committedValue[i];
-        }
-        change ||= !isPrimitive(v) || v !== this._$committedValue[i];
-        if (v === nothing) {
-          value = nothing;
-        } else if (value !== nothing) {
-          value += (v ?? "") + strings[i + 1];
-        }
-        this._$committedValue[i] = v;
-      }
+  _$AI(t3, i4 = this, s3, e4) {
+    const h3 = this.strings;
+    let o4 = false;
+    if (h3 === undefined)
+      t3 = M(this, t3, i4, 0), o4 = !a2(t3) || t3 !== this._$AH && t3 !== E, o4 && (this._$AH = t3);
+    else {
+      const e5 = t3;
+      let n4, r4;
+      for (t3 = h3[0], n4 = 0;n4 < h3.length - 1; n4++)
+        r4 = M(this, e5[s3 + n4], i4, n4), r4 === E && (r4 = this._$AH[n4]), o4 ||= !a2(r4) || r4 !== this._$AH[n4], r4 === A ? t3 = A : t3 !== A && (t3 += (r4 ?? "") + h3[n4 + 1]), this._$AH[n4] = r4;
     }
-    if (change && !noCommit) {
-      this._commitValue(value);
-    }
+    o4 && !e4 && this.j(t3);
   }
-  _commitValue(value) {
-    if (value === nothing) {
-      wrap(this.element).removeAttribute(this.name);
-    } else {
-      if (ENABLE_EXTRA_SECURITY_HOOKS) {
-        if (this._sanitizer === undefined) {
-          this._sanitizer = sanitizerFactoryInternal(this.element, this.name, "attribute");
-        }
-        value = this._sanitizer(value ?? "");
-      }
-      debugLogEvent2 && debugLogEvent2({
-        kind: "commit attribute",
-        element: this.element,
-        name: this.name,
-        value,
-        options: this.options
-      });
-      wrap(this.element).setAttribute(this.name, value ?? "");
-    }
+  j(t3) {
+    t3 === A ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t3 ?? "");
   }
 }
 
-class PropertyPart extends AttributePart {
+class I extends H {
   constructor() {
-    super(...arguments);
-    this.type = PROPERTY_PART;
+    super(...arguments), this.type = 3;
   }
-  _commitValue(value) {
-    if (ENABLE_EXTRA_SECURITY_HOOKS) {
-      if (this._sanitizer === undefined) {
-        this._sanitizer = sanitizerFactoryInternal(this.element, this.name, "property");
-      }
-      value = this._sanitizer(value);
-    }
-    debugLogEvent2 && debugLogEvent2({
-      kind: "commit property",
-      element: this.element,
-      name: this.name,
-      value,
-      options: this.options
-    });
-    this.element[this.name] = value === nothing ? undefined : value;
+  j(t3) {
+    this.element[this.name] = t3 === A ? undefined : t3;
   }
 }
 
-class BooleanAttributePart extends AttributePart {
+class L extends H {
   constructor() {
-    super(...arguments);
-    this.type = BOOLEAN_ATTRIBUTE_PART;
+    super(...arguments), this.type = 4;
   }
-  _commitValue(value) {
-    debugLogEvent2 && debugLogEvent2({
-      kind: "commit boolean attribute",
-      element: this.element,
-      name: this.name,
-      value: !!(value && value !== nothing),
-      options: this.options
-    });
-    wrap(this.element).toggleAttribute(this.name, !!value && value !== nothing);
+  j(t3) {
+    this.element.toggleAttribute(this.name, !!t3 && t3 !== A);
   }
 }
 
-class EventPart extends AttributePart {
-  constructor(element, name, strings, parent, options) {
-    super(element, name, strings, parent, options);
-    this.type = EVENT_PART;
-    if (DEV_MODE2 && this.strings !== undefined) {
-      throw new Error(`A \`<${element.localName}>\` has a \`@${name}=...\` listener with ` + "invalid content. Event listeners in templates must have exactly " + "one expression and no surrounding text.");
-    }
+class z extends H {
+  constructor(t3, i4, s3, e4, h3) {
+    super(t3, i4, s3, e4, h3), this.type = 5;
   }
-  _$setValue(newListener, directiveParent = this) {
-    newListener = resolveDirective(this, newListener, directiveParent, 0) ?? nothing;
-    if (newListener === noChange) {
+  _$AI(t3, i4 = this) {
+    if ((t3 = M(this, t3, i4, 0) ?? A) === E)
       return;
-    }
-    const oldListener = this._$committedValue;
-    const shouldRemoveListener = newListener === nothing && oldListener !== nothing || newListener.capture !== oldListener.capture || newListener.once !== oldListener.once || newListener.passive !== oldListener.passive;
-    const shouldAddListener = newListener !== nothing && (oldListener === nothing || shouldRemoveListener);
-    debugLogEvent2 && debugLogEvent2({
-      kind: "commit event listener",
-      element: this.element,
-      name: this.name,
-      value: newListener,
-      options: this.options,
-      removeListener: shouldRemoveListener,
-      addListener: shouldAddListener,
-      oldListener
-    });
-    if (shouldRemoveListener) {
-      this.element.removeEventListener(this.name, this, oldListener);
-    }
-    if (shouldAddListener) {
-      this.element.addEventListener(this.name, this, newListener);
-    }
-    this._$committedValue = newListener;
+    const s3 = this._$AH, e4 = t3 === A && s3 !== A || t3.capture !== s3.capture || t3.once !== s3.once || t3.passive !== s3.passive, h3 = t3 !== A && (s3 === A || e4);
+    e4 && this.element.removeEventListener(this.name, this, s3), h3 && this.element.addEventListener(this.name, this, t3), this._$AH = t3;
   }
-  handleEvent(event) {
-    if (typeof this._$committedValue === "function") {
-      this._$committedValue.call(this.options?.host ?? this.element, event);
-    } else {
-      this._$committedValue.handleEvent(event);
-    }
+  handleEvent(t3) {
+    typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, t3) : this._$AH.handleEvent(t3);
   }
 }
 
-class ElementPart {
-  constructor(element, parent, options) {
-    this.element = element;
-    this.type = ELEMENT_PART;
-    this._$disconnectableChildren = undefined;
-    this._$parent = parent;
-    this.options = options;
+class Z {
+  constructor(t3, i4, s3) {
+    this.element = t3, this.type = 6, this._$AN = undefined, this._$AM = i4, this.options = s3;
   }
-  get _$isConnected() {
-    return this._$parent._$isConnected;
+  get _$AU() {
+    return this._$AM._$AU;
   }
-  _$setValue(value) {
-    debugLogEvent2 && debugLogEvent2({
-      kind: "commit to element binding",
-      element: this.element,
-      value,
-      options: this.options
-    });
-    resolveDirective(this, value);
+  _$AI(t3) {
+    M(this, t3);
   }
 }
-var polyfillSupport2 = DEV_MODE2 ? global3.litHtmlPolyfillSupportDevMode : global3.litHtmlPolyfillSupport;
-polyfillSupport2?.(Template, ChildPart);
-(global3.litHtmlVersions ??= []).push("3.3.2");
-if (DEV_MODE2 && global3.litHtmlVersions.length > 1) {
-  queueMicrotask(() => {
-    issueWarning2("multiple-versions", `Multiple versions of Lit loaded. ` + `Loading multiple versions is not recommended.`);
-  });
-}
-var render = (value, container, options) => {
-  if (DEV_MODE2 && container == null) {
-    throw new TypeError(`The container to render into may not be ${container}`);
+var B = t2.litHtmlPolyfillSupport;
+B?.(S2, k), (t2.litHtmlVersions ??= []).push("3.3.2");
+var D = (t3, i4, s3) => {
+  const e4 = s3?.renderBefore ?? i4;
+  let h3 = e4._$litPart$;
+  if (h3 === undefined) {
+    const t4 = s3?.renderBefore ?? null;
+    e4._$litPart$ = h3 = new k(i4.insertBefore(c3(), t4), t4, undefined, s3 ?? {});
   }
-  const renderId = DEV_MODE2 ? debugLogRenderId++ : 0;
-  const partOwnerNode = options?.renderBefore ?? container;
-  let part = partOwnerNode["_$litPart$"];
-  debugLogEvent2 && debugLogEvent2({
-    kind: "begin render",
-    id: renderId,
-    value,
-    container,
-    options,
-    part
-  });
-  if (part === undefined) {
-    const endNode = options?.renderBefore ?? null;
-    partOwnerNode["_$litPart$"] = part = new ChildPart(container.insertBefore(createMarker(), endNode), endNode, undefined, options ?? {});
-  }
-  part._$setValue(value);
-  debugLogEvent2 && debugLogEvent2({
-    kind: "end render",
-    id: renderId,
-    value,
-    container,
-    options,
-    part
-  });
-  return part;
+  return h3._$AI(t3), h3;
 };
-if (ENABLE_EXTRA_SECURITY_HOOKS) {
-  render.setSanitizer = setSanitizer;
-  render.createSanitizer = createSanitizer;
-  if (DEV_MODE2) {
-    render._testOnlyClearSanitizerFactoryDoNotCallOrElse = _testOnlyClearSanitizerFactoryDoNotCallOrElse;
-  }
-}
+// app/components/node_modules/lit-element/lit-element.js
+var s3 = globalThis;
 
-// node_modules/lit-element/development/lit-element.js
-var JSCompiler_renameProperty2 = (prop, _obj) => prop;
-var DEV_MODE3 = true;
-var global4 = globalThis;
-var issueWarning3;
-if (DEV_MODE3) {
-  global4.litIssuedWarnings ??= new Set;
-  issueWarning3 = (code, warning) => {
-    warning += ` See https://lit.dev/msg/${code} for more information.`;
-    if (!global4.litIssuedWarnings.has(warning) && !global4.litIssuedWarnings.has(code)) {
-      console.warn(warning);
-      global4.litIssuedWarnings.add(warning);
-    }
-  };
-}
-
-class LitElement extends ReactiveElement {
+class i4 extends y {
   constructor() {
-    super(...arguments);
-    this.renderOptions = { host: this };
-    this.__childPart = undefined;
+    super(...arguments), this.renderOptions = { host: this }, this._$Do = undefined;
   }
   createRenderRoot() {
-    const renderRoot = super.createRenderRoot();
-    this.renderOptions.renderBefore ??= renderRoot.firstChild;
-    return renderRoot;
+    const t3 = super.createRenderRoot();
+    return this.renderOptions.renderBefore ??= t3.firstChild, t3;
   }
-  update(changedProperties) {
-    const value = this.render();
-    if (!this.hasUpdated) {
-      this.renderOptions.isConnected = this.isConnected;
-    }
-    super.update(changedProperties);
-    this.__childPart = render(value, this.renderRoot, this.renderOptions);
+  update(t3) {
+    const r4 = this.render();
+    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t3), this._$Do = D(r4, this.renderRoot, this.renderOptions);
   }
   connectedCallback() {
-    super.connectedCallback();
-    this.__childPart?.setConnected(true);
+    super.connectedCallback(), this._$Do?.setConnected(true);
   }
   disconnectedCallback() {
-    super.disconnectedCallback();
-    this.__childPart?.setConnected(false);
+    super.disconnectedCallback(), this._$Do?.setConnected(false);
   }
   render() {
-    return noChange;
+    return E;
   }
 }
-LitElement["_$litElement$"] = true;
-LitElement[JSCompiler_renameProperty2("finalized", LitElement)] = true;
-global4.litElementHydrateSupport?.({ LitElement });
-var polyfillSupport3 = DEV_MODE3 ? global4.litElementPolyfillSupportDevMode : global4.litElementPolyfillSupport;
-polyfillSupport3?.({ LitElement });
-(global4.litElementVersions ??= []).push("4.2.2");
-if (DEV_MODE3 && global4.litElementVersions.length > 1) {
-  queueMicrotask(() => {
-    issueWarning3("multiple-versions", `Multiple versions of Lit loaded. Loading multiple versions ` + `is not recommended.`);
-  });
-}
-// node_modules/@vaadin/component-base/src/define.js
-window.Vaadin ||= {};
-window.Vaadin.featureFlags ||= {};
-function dashToCamelCase(dash) {
-  return dash.replace(/-[a-z]/gu, (m) => m[1].toUpperCase());
-}
-var experimentalMap = {};
+i4._$litElement$ = true, i4["finalized"] = true, s3.litElementHydrateSupport?.({ LitElement: i4 });
+var o4 = s3.litElementPolyfillSupport;
+o4?.({ LitElement: i4 });
+(s3.litElementVersions ??= []).push("4.2.2");
+// app/components/node_modules/@vaadin/component-base/src/define.js
+var dashToCamelCase = function(dash) {
+  return dash.replace(/-[a-z]/gu, (m2) => m2[1].toUpperCase());
+};
 function defineCustomElement(CustomElement, version = "25.0.4") {
   Object.defineProperty(CustomElement, "version", {
     get() {
@@ -1500,10 +636,12 @@ function defineCustomElement(CustomElement, version = "25.0.4") {
     }
   }
 }
+window.Vaadin ||= {};
+window.Vaadin.featureFlags ||= {};
+var experimentalMap = {};
 
-// node_modules/@open-wc/dedupe-mixin/src/dedupeMixin.js
-var appliedClassMixins = new WeakMap;
-function wasMixinPreviouslyApplied(mixin, superClass) {
+// app/components/node_modules/@open-wc/dedupe-mixin/src/dedupeMixin.js
+var wasMixinPreviouslyApplied = function(mixin, superClass) {
   let klass = superClass;
   while (klass) {
     if (appliedClassMixins.get(klass) === mixin) {
@@ -1512,7 +650,7 @@ function wasMixinPreviouslyApplied(mixin, superClass) {
     klass = Object.getPrototypeOf(klass);
   }
   return false;
-}
+};
 function dedupeMixin(mixin) {
   return (superClass) => {
     if (wasMixinPreviouslyApplied(mixin, superClass)) {
@@ -1523,7 +661,8 @@ function dedupeMixin(mixin) {
     return mixedClass;
   };
 }
-// node_modules/@vaadin/component-base/src/path-utils.js
+var appliedClassMixins = new WeakMap;
+// app/components/node_modules/@vaadin/component-base/src/path-utils.js
 function get(path, object) {
   return path.split(".").reduce((obj, property) => obj ? obj[property] : undefined, object);
 }
@@ -1534,32 +673,32 @@ function set(path, value, object) {
   target[lastPart] = value;
 }
 
-// node_modules/@vaadin/component-base/src/polylit-mixin.js
-var caseMap = {};
-var CAMEL_TO_DASH = /([A-Z])/gu;
-function camelToDash(camel) {
+// app/components/node_modules/@vaadin/component-base/src/polylit-mixin.js
+var camelToDash = function(camel) {
   if (!caseMap[camel]) {
     caseMap[camel] = camel.replace(CAMEL_TO_DASH, "-$1").toLowerCase();
   }
   return caseMap[camel];
-}
-function upper(name) {
+};
+var upper = function(name) {
   return name[0].toUpperCase() + name.substring(1);
-}
-function parseObserver(observerString) {
+};
+var parseObserver = function(observerString) {
   const [method, rest] = observerString.split("(");
   const observerProps = rest.replace(")", "").split(",").map((prop) => prop.trim());
   return {
     method,
     observerProps
   };
-}
-function getOrCreateMap(obj, name) {
+};
+var getOrCreateMap = function(obj, name) {
   if (!Object.prototype.hasOwnProperty.call(obj, name)) {
     obj[name] = new Map(obj[name]);
   }
   return obj[name];
-}
+};
+var caseMap = {};
+var CAMEL_TO_DASH = /([A-Z])/gu;
 var PolylitMixinImplementation = (superclass) => {
 
   class PolylitMixinClass extends superclass {
@@ -1608,7 +747,7 @@ var PolylitMixinImplementation = (superclass) => {
           get: defaultDescriptor.get,
           set(value) {
             const oldValue = this[name];
-            if (notEqual(value, oldValue)) {
+            if (f(value, oldValue)) {
               this[key] = value;
               this.requestUpdate(name, oldValue, options);
               if (this.hasUpdated) {
@@ -1629,7 +768,8 @@ var PolylitMixinImplementation = (superclass) => {
         });
         result = {
           get: result.get,
-          set() {},
+          set() {
+          },
           configurable: true,
           enumerable: true
         };
@@ -1696,7 +836,8 @@ var PolylitMixinImplementation = (superclass) => {
         this.$[node.id] = node;
       });
     }
-    ready() {}
+    ready() {
+    }
     willUpdate(props) {
       if (this.constructor.__computedObservers) {
         this.__runComplexObservers(props, this.constructor.__computedObservers);
@@ -1763,19 +904,19 @@ var PolylitMixinImplementation = (superclass) => {
       });
     }
     __runObservers(props, observers) {
-      props.forEach((v, k) => {
-        const observer = observers.get(k);
+      props.forEach((v2, k2) => {
+        const observer = observers.get(k2);
         if (observer !== undefined && this[observer]) {
-          this[observer](this[k], v);
+          this[observer](this[k2], v2);
         }
       });
     }
     __runNotifyProps(props, notifyProps) {
-      props.forEach((_, k) => {
-        if (notifyProps.has(k)) {
-          this.dispatchEvent(new CustomEvent(`${camelToDash(k)}-changed`, {
+      props.forEach((_2, k2) => {
+        if (notifyProps.has(k2)) {
+          this.dispatchEvent(new CustomEvent(`${camelToDash(k2)}-changed`, {
             detail: {
-              value: this[k]
+              value: this[k2]
             }
           }));
         }
@@ -1792,29 +933,29 @@ var PolylitMixinImplementation = (superclass) => {
 };
 var PolylitMixin = dedupeMixin(PolylitMixinImplementation);
 
-// node_modules/@vaadin/component-base/src/async.js
-var microtaskCurrHandle = 0;
-var microtaskLastHandle = 0;
-var microtaskCallbacks = [];
-var microtaskScheduled = false;
-function microtaskFlush() {
+// app/components/node_modules/@vaadin/component-base/src/async.js
+var microtaskFlush = function() {
   microtaskScheduled = false;
   const len = microtaskCallbacks.length;
-  for (let i = 0;i < len; i++) {
-    const cb = microtaskCallbacks[i];
+  for (let i5 = 0;i5 < len; i5++) {
+    const cb = microtaskCallbacks[i5];
     if (cb) {
       try {
         cb();
-      } catch (e) {
+      } catch (e4) {
         setTimeout(() => {
-          throw e;
+          throw e4;
         });
       }
     }
   }
   microtaskCallbacks.splice(0, len);
   microtaskLastHandle += len;
-}
+};
+var microtaskCurrHandle = 0;
+var microtaskLastHandle = 0;
+var microtaskCallbacks = [];
+var microtaskScheduled = false;
 var timeOut = {
   after(delay) {
     return {
@@ -1875,7 +1016,23 @@ var microTask = {
   }
 };
 
-// node_modules/@vaadin/component-base/src/debounce.js
+// app/components/node_modules/@vaadin/component-base/src/debounce.js
+function enqueueDebouncer(debouncer) {
+  debouncerQueue.add(debouncer);
+}
+function flushDebouncers() {
+  const didFlush = Boolean(debouncerQueue.size);
+  debouncerQueue.forEach((debouncer) => {
+    try {
+      debouncer.flush();
+    } catch (e4) {
+      setTimeout(() => {
+        throw e4;
+      });
+    }
+  });
+  return didFlush;
+}
 var debouncerQueue = new Set;
 
 class Debouncer {
@@ -1924,22 +1081,6 @@ class Debouncer {
     return this._timer != null;
   }
 }
-function enqueueDebouncer(debouncer) {
-  debouncerQueue.add(debouncer);
-}
-function flushDebouncers() {
-  const didFlush = Boolean(debouncerQueue.size);
-  debouncerQueue.forEach((debouncer) => {
-    try {
-      debouncer.flush();
-    } catch (e) {
-      setTimeout(() => {
-        throw e;
-      });
-    }
-  });
-  return didFlush;
-}
 var flush = () => {
   let debouncers;
   do {
@@ -1947,24 +1088,24 @@ var flush = () => {
   } while (debouncers);
 };
 
-// node_modules/@vaadin/component-base/src/dir-mixin.js
-var directionSubscribers = [];
-function alignDirs(element, documentDir, elementDir = element.getAttribute("dir")) {
+// app/components/node_modules/@vaadin/component-base/src/dir-mixin.js
+var alignDirs = function(element, documentDir, elementDir = element.getAttribute("dir")) {
   if (documentDir) {
     element.setAttribute("dir", documentDir);
   } else if (elementDir != null) {
     element.removeAttribute("dir");
   }
-}
-function getDocumentDir() {
+};
+var getDocumentDir = function() {
   return document.documentElement.getAttribute("dir");
-}
-function directionUpdater() {
+};
+var directionUpdater = function() {
   const documentDir = getDocumentDir();
   directionSubscribers.forEach((element) => {
     alignDirs(element, documentDir);
   });
-}
+};
+var directionSubscribers = [];
 var directionObserver = new MutationObserver(directionUpdater);
 directionObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["dir"] });
 var DirMixin = (superClass) => class VaadinDirMixin extends superClass {
@@ -2041,7 +1182,7 @@ var DirMixin = (superClass) => class VaadinDirMixin extends superClass {
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-helpers.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-helpers.js
 function getBodyRowCells(row) {
   return row.__cells || Array.from(row.querySelectorAll('[part~="cell"]:not([part~="details-cell"])'));
 }
@@ -2055,13 +1196,13 @@ function iterateRowCells(row, callback) {
   }
 }
 function updateColumnOrders(columns, scope, baseOrder) {
-  let c = 1;
+  let c4 = 1;
   columns.forEach((column) => {
-    if (c % 10 === 0) {
-      c += 1;
+    if (c4 % 10 === 0) {
+      c4 += 1;
     }
-    column._order = baseOrder + c * scope;
-    c += 1;
+    column._order = baseOrder + c4 * scope;
+    c4 += 1;
   });
 }
 function updateState(element, attribute, value) {
@@ -2186,7 +1327,7 @@ class ColumnObserver {
   }
 }
 
-// node_modules/@vaadin/grid/src/vaadin-grid-column-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-column-mixin.js
 var ColumnBaseMixin = (superClass) => class ColumnBaseMixin2 extends superClass {
   static get properties() {
     return {
@@ -2610,7 +1751,8 @@ var ColumnBaseMixin = (superClass) => class ColumnBaseMixin2 extends superClass 
     }
     this.__setTextContent(root, get(this.path, item));
   }
-  _defaultFooterRenderer() {}
+  _defaultFooterRenderer() {
+  }
   _computeHeaderRenderer(headerRenderer, header) {
     if (headerRenderer) {
       return headerRenderer;
@@ -2674,26 +1816,24 @@ var GridColumnMixin = (superClass) => class extends ColumnBaseMixin(DirMixin(sup
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-column.js
-class GridColumn extends GridColumnMixin(PolylitMixin(LitElement)) {
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-column.js
+class GridColumn extends GridColumnMixin(PolylitMixin(i4)) {
   static get is() {
     return "vaadin-grid-column";
   }
 }
 defineCustomElement(GridColumn);
 
-// node_modules/lit-html/development/directives/if-defined.js
-var ifDefined = (value) => value ?? nothing;
-// node_modules/@vaadin/vaadin-development-mode-detector/vaadin-development-mode-detector.js
-var DEV_MODE_CODE_REGEXP = /\/\*[\*!]\s+vaadin-dev-mode:start([\s\S]*)vaadin-dev-mode:end\s+\*\*\//i;
-var FlowClients = window.Vaadin && window.Vaadin.Flow && window.Vaadin.Flow.clients;
-function isMinified() {
+// app/components/node_modules/lit-html/directives/if-defined.js
+var o5 = (o6) => o6 ?? A;
+// app/components/node_modules/@vaadin/vaadin-development-mode-detector/vaadin-development-mode-detector.js
+var isMinified = function() {
   function test() {
     return true;
   }
   return uncommentAndRun(test);
-}
-function isDevelopmentMode() {
+};
+var isDevelopmentMode = function() {
   try {
     if (isForcedDevelopmentMode()) {
       return true;
@@ -2705,17 +1845,17 @@ function isDevelopmentMode() {
       return !isFlowProductionMode();
     }
     return !isMinified();
-  } catch (e) {
+  } catch (e4) {
     return false;
   }
-}
-function isForcedDevelopmentMode() {
+};
+var isForcedDevelopmentMode = function() {
   return localStorage.getItem("vaadin.developmentmode.force");
-}
-function isLocalhost() {
+};
+var isLocalhost = function() {
   return ["localhost", "127.0.0.1"].indexOf(window.location.hostname) >= 0;
-}
-function isFlowProductionMode() {
+};
+var isFlowProductionMode = function() {
   if (FlowClients) {
     const productionModeApps = Object.keys(FlowClients).map((key) => FlowClients[key]).filter((client) => client.productionMode);
     if (productionModeApps.length > 0) {
@@ -2723,8 +1863,8 @@ function isFlowProductionMode() {
     }
   }
   return false;
-}
-function uncommentAndRun(callback, args) {
+};
+var uncommentAndRun = function(callback, args) {
   if (typeof callback !== "function") {
     return;
   }
@@ -2732,12 +1872,14 @@ function uncommentAndRun(callback, args) {
   if (match) {
     try {
       callback = new Function(match[1]);
-    } catch (e) {
-      console.log("vaadin-development-mode-detector: uncommentAndRun() failed", e);
+    } catch (e4) {
+      console.log("vaadin-development-mode-detector: uncommentAndRun() failed", e4);
     }
   }
   return callback(args);
-}
+};
+var DEV_MODE_CODE_REGEXP = /\/\*[\*!]\s+vaadin-dev-mode:start([\s\S]*)vaadin-dev-mode:end\s+\*\*\//i;
+var FlowClients = window.Vaadin && window.Vaadin.Flow && window.Vaadin.Flow.clients;
 window["Vaadin"] = window["Vaadin"] || {};
 var runIfDevelopmentMode = function(callback, args) {
   if (window.Vaadin.developmentMode) {
@@ -2748,8 +1890,8 @@ if (window.Vaadin.developmentMode === undefined) {
   window.Vaadin.developmentMode = isDevelopmentMode();
 }
 
-// node_modules/@vaadin/vaadin-usage-statistics/vaadin-usage-statistics-collect.js
-function maybeGatherAndSendStats() {
+// app/components/node_modules/@vaadin/vaadin-usage-statistics/vaadin-usage-statistics-collect.js
+var maybeGatherAndSendStats = function() {
   /*! vaadin-dev-mode:start
     (function () {
   'use strict';
@@ -3229,13 +2371,13 @@ function maybeGatherAndSendStats() {
   }());
   
     vaadin-dev-mode:end **/
-}
+};
 var usageStatistics = function() {
   if (typeof runIfDevelopmentMode === "function") {
     return runIfDevelopmentMode(maybeGatherAndSendStats);
   }
 };
-// node_modules/@vaadin/component-base/src/element-mixin.js
+// app/components/node_modules/@vaadin/component-base/src/element-mixin.js
 if (!window.Vaadin) {
   window.Vaadin = {};
 }
@@ -3253,10 +2395,10 @@ var registered = new Set;
 var ElementMixin = (superClass) => class VaadinElementMixin extends DirMixin(superClass) {
   static finalize() {
     super.finalize();
-    const { is: is2 } = this;
-    if (is2 && !registered.has(is2)) {
+    const { is } = this;
+    if (is && !registered.has(is)) {
       window.Vaadin.registrations.push(this);
-      registered.add(is2);
+      registered.add(is);
       const callback = window.Vaadin.developmentModeCallback;
       if (callback) {
         statsJob = Debouncer.debounce(statsJob, idlePeriod, () => {
@@ -3274,7 +2416,7 @@ var ElementMixin = (superClass) => class VaadinElementMixin extends DirMixin(sup
   }
 };
 
-// node_modules/@vaadin/vaadin-themable-mixin/src/css-property-observer.js
+// app/components/node_modules/@vaadin/vaadin-themable-mixin/src/css-property-observer.js
 class CSSPropertyObserver extends EventTarget {
   #root;
   #properties = new Set;
@@ -3320,7 +2462,7 @@ class CSSPropertyObserver extends EventTarget {
   }
   disconnect() {
     this.#properties.clear();
-    this.#root.adoptedStyleSheets = this.#root.adoptedStyleSheets.filter((s) => s !== this.#styleSheet);
+    this.#root.adoptedStyleSheets = this.#root.adoptedStyleSheets.filter((s4) => s4 !== this.#styleSheet);
     this.#rootHost.removeEventListener("transitionstart", this.#handleTransitionEvent);
     this.#rootHost.removeEventListener("transitionend", this.#handleTransitionEvent);
     this.#isConnected = false;
@@ -3334,17 +2476,17 @@ class CSSPropertyObserver extends EventTarget {
   }
 }
 
-// node_modules/@vaadin/vaadin-themable-mixin/src/css-utils.js
-function getEffectiveStyles(component) {
+// app/components/node_modules/@vaadin/vaadin-themable-mixin/src/css-utils.js
+var getEffectiveStyles = function(component) {
   const { baseStyles, themeStyles, elementStyles, lumoInjector } = component.constructor;
   const lumoStyleSheet = component.__lumoStyleSheet;
   if (lumoStyleSheet && (baseStyles || themeStyles)) {
     return [...lumoInjector.includeBaseStyles ? baseStyles : [], lumoStyleSheet, ...themeStyles];
   }
   return [lumoStyleSheet, ...elementStyles].filter(Boolean);
-}
+};
 function applyInstanceStyles(component) {
-  adoptStyles(component.shadowRoot, getEffectiveStyles(component));
+  S(component.shadowRoot, getEffectiveStyles(component));
 }
 function injectLumoStyleSheet(component, styleSheet) {
   component.__lumoStyleSheet = styleSheet;
@@ -3355,35 +2497,34 @@ function removeLumoStyleSheet(component) {
   applyInstanceStyles(component);
 }
 
-// node_modules/@vaadin/component-base/src/warnings.js
-var issuedWarnings = new Set;
-function issueWarning4(warning) {
+// app/components/node_modules/@vaadin/component-base/src/warnings.js
+function issueWarning(warning) {
   if (issuedWarnings.has(warning)) {
     return;
   }
   issuedWarnings.add(warning);
   console.warn(warning);
 }
+var issuedWarnings = new Set;
 
-// node_modules/@vaadin/vaadin-themable-mixin/src/lumo-modules.js
-var cache = new WeakMap;
-function getRuleMediaText(rule) {
+// app/components/node_modules/@vaadin/vaadin-themable-mixin/src/lumo-modules.js
+var getRuleMediaText = function(rule) {
   try {
     return rule.media.mediaText;
   } catch {
-    issueWarning4('[LumoInjector] Browser denied to access property "mediaText" for some CSS rules, so they were skipped.');
+    issueWarning('[LumoInjector] Browser denied to access property "mediaText" for some CSS rules, so they were skipped.');
     return "";
   }
-}
-function getStyleSheetRules(styleSheet) {
+};
+var getStyleSheetRules = function(styleSheet) {
   try {
     return styleSheet.cssRules;
   } catch {
-    issueWarning4('[LumoInjector] Browser denied to access property "cssRules" for some CSS stylesheets, so they were skipped.');
+    issueWarning('[LumoInjector] Browser denied to access property "cssRules" for some CSS stylesheets, so they were skipped.');
     return [];
   }
-}
-function parseStyleSheet(styleSheet, result = {
+};
+var parseStyleSheet = function(styleSheet, result = {
   tags: new Map,
   modules: new Map
 }) {
@@ -3417,7 +2558,7 @@ function parseStyleSheet(styleSheet, result = {
     }
   }
   return result;
-}
+};
 function parseStyleSheets(styleSheets) {
   let tags = new Map;
   let modules = new Map;
@@ -3432,8 +2573,9 @@ function parseStyleSheets(styleSheets) {
   }
   return { tags, modules };
 }
+var cache = new WeakMap;
 
-// node_modules/@vaadin/vaadin-themable-mixin/src/lumo-injector.js
+// app/components/node_modules/@vaadin/vaadin-themable-mixin/src/lumo-injector.js
 function getLumoInjectorPropName(lumoInjector) {
   return `--_lumo-${lumoInjector.is}-inject`;
 }
@@ -3493,8 +2635,7 @@ class LumoInjector {
   }
   #updateStyleSheet(tagName) {
     const { tags, modules } = parseStyleSheets(this.#rootStyleSheets);
-    const cssText = (tags.get(tagName) ?? []).flatMap((moduleName) => modules.get(moduleName) ?? []).map((rule) => rule.cssText).join(`
-`);
+    const cssText = (tags.get(tagName) ?? []).flatMap((moduleName) => modules.get(moduleName) ?? []).map((rule) => rule.cssText).join("\n");
     const stylesheet = this.#styleSheetsByTag.get(tagName);
     stylesheet.replaceSync(cssText);
     this.#componentsByTag.get(tagName)?.forEach((component) => {
@@ -3515,8 +2656,7 @@ class LumoInjector {
   }
 }
 
-// node_modules/@vaadin/vaadin-themable-mixin/lumo-injection-mixin.js
-var registeredProperties = new Set;
+// app/components/node_modules/@vaadin/vaadin-themable-mixin/lumo-injection-mixin.js
 function findRoot(element) {
   const root = element.getRootNode();
   if (root.host && root.host.constructor.version) {
@@ -3524,6 +2664,7 @@ function findRoot(element) {
   }
   return root;
 }
+var registeredProperties = new Set;
 var LumoInjectionMixin = (superClass) => class LumoInjectionMixinClass extends superClass {
   static finalize() {
     super.finalize();
@@ -3565,7 +2706,7 @@ var LumoInjectionMixin = (superClass) => class LumoInjectionMixinClass extends s
   }
 };
 
-// node_modules/@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js
+// app/components/node_modules/@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js
 var ThemePropertyMixin = (superClass) => class VaadinThemePropertyMixin extends superClass {
   static get properties() {
     return {
@@ -3586,30 +2727,25 @@ var ThemePropertyMixin = (superClass) => class VaadinThemePropertyMixin extends 
   }
 };
 
-// node_modules/@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js
-var themeRegistry = [];
-var themableInstances = new Set;
-var themableTagNames = new Set;
-function classHasThemes(elementClass) {
+// app/components/node_modules/@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js
+var classHasThemes = function(elementClass) {
   return elementClass && Object.prototype.hasOwnProperty.call(elementClass, "__themes");
-}
-function matchesThemeFor(themeFor, tagName) {
+};
+var matchesThemeFor = function(themeFor, tagName) {
   return (themeFor || "").split(" ").some((themeForToken) => {
-    return new RegExp(`^${themeForToken.split("*").join(".*")}$`, "u").test(tagName);
+    return new RegExp(`^${themeForToken.split("*").join(".*")}\$`, "u").test(tagName);
   });
-}
-function getCssText(styles) {
-  return styles.map((style) => style.cssText).join(`
-`);
-}
-var STYLE_ID = "vaadin-themable-mixin-style";
-function addStylesToTemplate(styles, template) {
+};
+var getCssText = function(styles) {
+  return styles.map((style) => style.cssText).join("\n");
+};
+var addStylesToTemplate = function(styles, template) {
   const styleEl = document.createElement("style");
   styleEl.id = STYLE_ID;
   styleEl.textContent = getCssText(styles);
   template.content.appendChild(styleEl);
-}
-function getIncludePriority(moduleName = "") {
+};
+var getIncludePriority = function(moduleName = "") {
   let includePriority = 0;
   if (moduleName.startsWith("lumo-") || moduleName.startsWith("material-")) {
     includePriority = 1;
@@ -3617,12 +2753,12 @@ function getIncludePriority(moduleName = "") {
     includePriority = 2;
   }
   return includePriority;
-}
-function getIncludedStyles(theme) {
+};
+var getIncludedStyles = function(theme) {
   const includedStyles = [];
   if (theme.include) {
     [].concat(theme.include).forEach((includeModuleId) => {
-      const includedTheme = themeRegistry.find((s) => s.moduleId === includeModuleId);
+      const includedTheme = themeRegistry.find((s4) => s4.moduleId === includeModuleId);
       if (includedTheme) {
         includedStyles.push(...getIncludedStyles(includedTheme), ...includedTheme.styles);
       } else {
@@ -3631,8 +2767,8 @@ function getIncludedStyles(theme) {
     }, theme.styles);
   }
   return includedStyles;
-}
-function getThemes(tagName) {
+};
+var getThemes = function(tagName) {
   const defaultModuleName = `${tagName}-default-theme`;
   const themes = themeRegistry.filter((theme) => theme.moduleId !== defaultModuleName && matchesThemeFor(theme.themeFor, tagName)).map((theme) => ({
     ...theme,
@@ -3643,7 +2779,11 @@ function getThemes(tagName) {
     return themes;
   }
   return themeRegistry.filter((theme) => theme.moduleId === defaultModuleName);
-}
+};
+var themeRegistry = [];
+var themableInstances = new Set;
+var themableTagNames = new Set;
+var STYLE_ID = "vaadin-themable-mixin-style";
 var ThemableMixin = (superClass) => class VaadinThemableMixin extends ThemePropertyMixin(superClass) {
   constructor() {
     super();
@@ -3678,16 +2818,15 @@ var ThemableMixin = (superClass) => class VaadinThemableMixin extends ThemePrope
   }
 };
 
-// node_modules/@vaadin/component-base/src/styles/add-global-styles.js
+// app/components/node_modules/@vaadin/component-base/src/styles/add-global-styles.js
 var addGlobalStyles = (id, ...styles) => {
   const styleTag = document.createElement("style");
   styleTag.id = id;
-  styleTag.textContent = styles.map((style) => style.toString()).join(`
-`);
+  styleTag.textContent = styles.map((style) => style.toString()).join("\n");
   document.head.insertAdjacentElement("afterbegin", styleTag);
 };
 
-// node_modules/@vaadin/component-base/src/styles/style-props.js
+// app/components/node_modules/@vaadin/component-base/src/styles/style-props.js
 [
   "--vaadin-text-color",
   "--vaadin-text-color-disabled",
@@ -3703,7 +2842,7 @@ var addGlobalStyles = (id, ...styles) => {
     initialValue: "light-dark(black, white)"
   });
 });
-addGlobalStyles("vaadin-base", css`
+addGlobalStyles("vaadin-base", i`
     @layer vaadin.base {
       html {
         /* Background color */
@@ -3814,8 +2953,8 @@ addGlobalStyles("vaadin-base", css`
     }
   `);
 
-// node_modules/@vaadin/grid/src/styles/vaadin-grid-base-styles.js
-var gridStyles = css`
+// app/components/node_modules/@vaadin/grid/src/styles/vaadin-grid-base-styles.js
+var gridStyles = i`
   /* stylelint-disable no-duplicate-selectors */
   :host {
     display: flex;
@@ -4496,7 +3635,7 @@ var gridStyles = css`
   }
 `;
 
-// node_modules/@vaadin/a11y-base/src/disabled-mixin.js
+// app/components/node_modules/@vaadin/a11y-base/src/disabled-mixin.js
 var DisabledMixin = dedupeMixin((superclass) => class DisabledMixinClass extends superclass {
   static get properties() {
     return {
@@ -4526,7 +3665,7 @@ var DisabledMixin = dedupeMixin((superclass) => class DisabledMixinClass extends
   }
 });
 
-// node_modules/@vaadin/a11y-base/src/tabindex-mixin.js
+// app/components/node_modules/@vaadin/a11y-base/src/tabindex-mixin.js
 var TabindexMixin = (superclass) => class TabindexMixinClass extends DisabledMixin(superclass) {
   static get properties() {
     return {
@@ -4578,7 +3717,7 @@ var TabindexMixin = (superclass) => class TabindexMixinClass extends DisabledMix
   }
 };
 
-// node_modules/@vaadin/component-base/src/browser-utils.js
+// app/components/node_modules/@vaadin/component-base/src/browser-utils.js
 var testUserAgent = (regexp) => regexp.test(navigator.userAgent);
 var testPlatform = (regexp) => regexp.test(navigator.platform);
 var testVendor = (regexp) => regexp.test(navigator.vendor);
@@ -4593,23 +3732,46 @@ var isTouch = (() => {
   try {
     document.createEvent("TouchEvent");
     return true;
-  } catch (_) {
+  } catch (_2) {
     return false;
   }
 })();
 
-// node_modules/@vaadin/component-base/src/dom-utils.js
+// app/components/node_modules/@vaadin/component-base/src/dom-utils.js
 function getClosestElement(selector, node) {
   if (!node) {
     return null;
   }
   return node.closest(selector) || getClosestElement(selector, node.getRootNode().host);
 }
+function deserializeAttributeValue(value) {
+  if (!value) {
+    return new Set;
+  }
+  return new Set(value.split(" "));
+}
+function serializeAttributeValue(values) {
+  return values ? [...values].join(" ") : "";
+}
+function addValueToAttribute(element, attr, value) {
+  const values = deserializeAttributeValue(element.getAttribute(attr));
+  values.add(value);
+  element.setAttribute(attr, serializeAttributeValue(values));
+}
+function removeValueFromAttribute(element, attr, value) {
+  const values = deserializeAttributeValue(element.getAttribute(attr));
+  values.delete(value);
+  if (values.size === 0) {
+    element.removeAttribute(attr);
+    return;
+  }
+  element.setAttribute(attr, serializeAttributeValue(values));
+}
 function isEmptyTextNode(node) {
   return node.nodeType === Node.TEXT_NODE && node.textContent.trim() === "";
 }
 
-// node_modules/@vaadin/component-base/src/slot-observer.js
+// app/components/node_modules/@vaadin/component-base/src/slot-observer.js
 class SlotObserver {
   constructor(slot, callback) {
     this.slot = slot;
@@ -4671,13 +3833,13 @@ class SlotObserver {
   }
 }
 
-// node_modules/@vaadin/component-base/src/unique-id-utils.js
-var uniqueId = 0;
+// app/components/node_modules/@vaadin/component-base/src/unique-id-utils.js
 function generateUniqueId() {
   return uniqueId++;
 }
+var uniqueId = 0;
 
-// node_modules/@vaadin/component-base/src/slot-controller.js
+// app/components/node_modules/@vaadin/component-base/src/slot-controller.js
 class SlotController extends EventTarget {
   static generateId(host, prefix = "default") {
     return `${prefix}-${host.localName}-${generateUniqueId()}`;
@@ -4772,8 +3934,10 @@ class SlotController extends EventTarget {
       slotInitializer(node, this.host);
     }
   }
-  initCustomNode(_node) {}
-  teardownNode(_node) {}
+  initCustomNode(_node) {
+  }
+  teardownNode(_node) {
+  }
   initAddedNode(node) {
     if (node !== this.defaultNode) {
       this.initCustomNode(node);
@@ -4814,7 +3978,7 @@ class SlotController extends EventTarget {
   }
 }
 
-// node_modules/@vaadin/component-base/src/tooltip-controller.js
+// app/components/node_modules/@vaadin/component-base/src/tooltip-controller.js
 class TooltipController extends SlotController {
   constructor(host) {
     super(host, "tooltip");
@@ -4911,7 +4075,7 @@ class TooltipController extends SlotController {
   }
 }
 
-// node_modules/@vaadin/component-base/src/iron-list-core.js
+// app/components/node_modules/@vaadin/component-base/src/iron-list-core.js
 var IOS = navigator.userAgent.match(/iP(?:hone|ad;(?: U;)? CPU) OS (\d+)/u);
 var IOS_TOUCH_SCROLLING = IOS && IOS[1] >= 8;
 var DEFAULT_PHYSICAL_COUNT = 3;
@@ -5120,7 +4284,7 @@ var ironList = {
     if (delta > 0) {
       const ts = window.performance.now();
       [].push.apply(this._physicalItems, this._createPool(delta));
-      for (let i = 0;i < delta; i++) {
+      for (let i5 = 0;i5 < delta; i5++) {
         this._physicalSizes.push(0);
       }
       this._physicalCount += delta;
@@ -5131,7 +4295,8 @@ var ironList = {
       this._templateCost = (window.performance.now() - ts) / delta;
       nextIncrease = Math.round(this._physicalCount * 0.5);
     }
-    if (this._virtualEnd >= this._virtualCount - 1 || nextIncrease === 0) {} else if (!this._isClientFull()) {
+    if (this._virtualEnd >= this._virtualCount - 1 || nextIncrease === 0) {
+    } else if (!this._isClientFull()) {
       this._debounce("_increasePoolIfNeeded", this._increasePoolIfNeeded.bind(this, nextIncrease), microTask);
     } else if (this._physicalSize < this._optPhysicalSize) {
       this._debounce("_increasePoolIfNeeded", this._increasePoolIfNeeded.bind(this, this._clamp(Math.round(50 / this._templateCost), 1, nextIncrease)), idlePeriod);
@@ -5176,10 +4341,10 @@ var ironList = {
     }
   },
   _iterateItems(fn, itemSet) {
-    let pidx, vidx, rtn, i;
+    let pidx, vidx, rtn, i5;
     if (arguments.length === 2 && itemSet) {
-      for (i = 0;i < itemSet.length; i++) {
-        pidx = itemSet[i];
+      for (i5 = 0;i5 < itemSet.length; i5++) {
+        pidx = itemSet[i5];
         vidx = this._computeVidx(pidx);
         if ((rtn = fn.call(this, pidx, vidx)) != null) {
           return rtn;
@@ -5208,10 +4373,10 @@ var ironList = {
   },
   _positionItems() {
     this._adjustScrollPosition();
-    let y = this._physicalTop;
+    let y3 = this._physicalTop;
     this._iterateItems((pidx) => {
-      this.translate3d(0, `${y}px`, 0, this._physicalItems[pidx]);
-      y += this._physicalSizes[pidx];
+      this.translate3d(0, `${y3}px`, 0, this._physicalItems[pidx]);
+      y3 += this._physicalSizes[pidx];
     });
   },
   _getPhysicalSizeIncrement(pidx) {
@@ -5296,8 +4461,8 @@ var ironList = {
   _getPhysicalIndex(vidx) {
     return (this._physicalStart + (vidx - this._virtualStart)) % this._physicalCount;
   },
-  _clamp(v, min, max) {
-    return Math.min(max, Math.max(min, v));
+  _clamp(v2, min, max) {
+    return Math.min(max, Math.max(min, v2));
   },
   _debounce(name, cb, asyncModule) {
     if (!this._debouncers) {
@@ -5308,7 +4473,7 @@ var ironList = {
   }
 };
 
-// node_modules/@vaadin/component-base/src/virtualizer-iron-list-adapter.js
+// app/components/node_modules/@vaadin/component-base/src/virtualizer-iron-list-adapter.js
 var MAX_VIRTUAL_COUNT = 1e5;
 var OFFSET_ADJUST_MIN_THRESHOLD = 1000;
 
@@ -5357,7 +4522,7 @@ class IronListAdapter {
     });
     attachObserver.observe(this.scrollTarget);
     this._scrollLineHeight = this._getScrollLineHeight();
-    this.scrollTarget.addEventListener("virtualizer-element-focused", (e) => this.__onElementFocused(e));
+    this.scrollTarget.addEventListener("virtualizer-element-focused", (e4) => this.__onElementFocused(e4));
     this.elementsContainer.addEventListener("focusin", () => {
       this.scrollTarget.dispatchEvent(new CustomEvent("virtualizer-element-focused", { detail: { element: this.__getFocusedElement() } }));
     });
@@ -5512,8 +4677,8 @@ class IronListAdapter {
         } else {
           this.__elementHeightQueue.push(elementHeight);
           this.__elementHeightQueue.shift();
-          const filteredHeights = this.__elementHeightQueue.filter((h) => h !== undefined);
-          this.__placeholderHeight = Math.round(filteredHeights.reduce((a, b) => a + b, 0) / filteredHeights.length);
+          const filteredHeights = this.__elementHeightQueue.filter((h3) => h3 !== undefined);
+          this.__placeholderHeight = Math.round(filteredHeights.reduce((a3, b3) => a3 + b3, 0) / filteredHeights.length);
         }
       });
     }
@@ -5599,7 +4764,8 @@ class IronListAdapter {
       this._updateGridMetrics();
     }
   }
-  setAttribute() {}
+  setAttribute() {
+  }
   _createPool(size) {
     const physicalItems = this.createElements(size);
     const fragment = document.createDocumentFragment();
@@ -5632,10 +4798,11 @@ class IronListAdapter {
     });
     return this.__clientFull || super._isClientFull();
   }
-  translate3d(_x, y, _z, el) {
-    el.style.transform = `translateY(${y})`;
+  translate3d(_x, y3, _z, el) {
+    el.style.transform = `translateY(${y3})`;
   }
-  toggleScrollListener() {}
+  toggleScrollListener() {
+  }
   __getFocusedElement(visibleElements = this.__getVisibleElements()) {
     return visibleElements.find((element) => element.contains(this.elementsContainer.getRootNode().activeElement) || element.contains(this.scrollTarget.getRootNode().activeElement));
   }
@@ -5645,11 +4812,11 @@ class IronListAdapter {
   __previousFocusableSiblingMissing(focusedElement, visibleElements) {
     return visibleElements.indexOf(focusedElement) === 0 && focusedElement.__virtualIndex > 0;
   }
-  __onElementFocused(e) {
+  __onElementFocused(e4) {
     if (!this.reorderElements) {
       return;
     }
-    const focusedElement = e.detail.element;
+    const focusedElement = e4.detail.element;
     if (!focusedElement) {
       return;
     }
@@ -5787,12 +4954,12 @@ class IronListAdapter {
     const targetPhysicalIndex = targetElement.__virtualIndex - adjustedVirtualStart;
     const delta = visibleElements.indexOf(targetElement) - targetPhysicalIndex;
     if (delta > 0) {
-      for (let i = 0;i < delta; i++) {
-        this.elementsContainer.appendChild(visibleElements[i]);
+      for (let i5 = 0;i5 < delta; i5++) {
+        this.elementsContainer.appendChild(visibleElements[i5]);
       }
     } else if (delta < 0) {
-      for (let i = visibleElements.length + delta;i < visibleElements.length; i++) {
-        this.elementsContainer.insertBefore(visibleElements[i], visibleElements[0]);
+      for (let i5 = visibleElements.length + delta;i5 < visibleElements.length; i5++) {
+        this.elementsContainer.insertBefore(visibleElements[i5], visibleElements[0]);
       }
     }
     if (isSafari) {
@@ -5839,7 +5006,7 @@ class IronListAdapter {
 }
 Object.setPrototypeOf(IronListAdapter.prototype, ironList);
 
-// node_modules/@vaadin/component-base/src/virtualizer.js
+// app/components/node_modules/@vaadin/component-base/src/virtualizer.js
 class Virtualizer {
   constructor(config) {
     this.__adapter = new IronListAdapter(config);
@@ -5870,7 +5037,7 @@ class Virtualizer {
   }
 }
 
-// node_modules/@vaadin/grid/src/vaadin-grid-a11y-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-a11y-mixin.js
 var A11yMixin = (superClass) => class A11yMixin2 extends superClass {
   static get properties() {
     return {
@@ -5975,18 +5142,11 @@ var A11yMixin = (superClass) => class A11yMixin2 extends superClass {
   }
 };
 
-// node_modules/@vaadin/a11y-base/src/focus-utils.js
-var keyboardActive = false;
-window.addEventListener("keydown", () => {
-  keyboardActive = true;
-}, { capture: true });
-window.addEventListener("mousedown", () => {
-  keyboardActive = false;
-}, { capture: true });
+// app/components/node_modules/@vaadin/a11y-base/src/focus-utils.js
 function isKeyboardActive() {
   return keyboardActive;
 }
-function isElementHiddenDirectly(element) {
+var isElementHiddenDirectly = function(element) {
   const style = element.style;
   if (style.visibility === "hidden" || style.display === "none") {
     return true;
@@ -5996,7 +5156,7 @@ function isElementHiddenDirectly(element) {
     return true;
   }
   return false;
-}
+};
 function isElementHidden(element) {
   if (element.checkVisibility) {
     return !element.checkVisibility({ visibilityProperty: true });
@@ -6015,8 +5175,18 @@ function isElementFocusable(element) {
   }
   return element.matches("a[href], area[href], iframe, [tabindex], [contentEditable]");
 }
+function isElementFocused(element) {
+  return element.getRootNode().activeElement === element;
+}
+var keyboardActive = false;
+window.addEventListener("keydown", () => {
+  keyboardActive = true;
+}, { capture: true });
+window.addEventListener("mousedown", () => {
+  keyboardActive = false;
+}, { capture: true });
 
-// node_modules/@vaadin/grid/src/vaadin-grid-active-item-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-active-item-mixin.js
 var isFocusable = (target) => {
   return target.offsetParent && !target.part.contains("body-cell") && isElementFocusable(target) && getComputedStyle(target).visibility !== "hidden";
 };
@@ -6037,22 +5207,22 @@ var ActiveItemMixin = (superClass) => class ActiveItemMixin2 extends superClass 
     this.addEventListener("cell-activate", this._activateItem.bind(this));
     this.addEventListener("row-activate", this._activateItem.bind(this));
   }
-  _activateItem(e) {
-    const model = e.detail.model;
+  _activateItem(e4) {
+    const model = e4.detail.model;
     const clickedItem = model ? model.item : null;
     if (clickedItem) {
       this.activeItem = !this._itemsEqual(this.activeItem, clickedItem) ? clickedItem : null;
     }
   }
-  _shouldPreventCellActivationOnClick(e) {
-    const { cell } = this._getGridEventLocation(e);
-    return e.defaultPrevented || !cell || cell.part.contains("details-cell") || cell === this.$.emptystatecell || cell._content.contains(this.getRootNode().activeElement) || this._isFocusable(e.target) || e.target instanceof HTMLLabelElement;
+  _shouldPreventCellActivationOnClick(e4) {
+    const { cell } = this._getGridEventLocation(e4);
+    return e4.defaultPrevented || !cell || cell.part.contains("details-cell") || cell === this.$.emptystatecell || cell._content.contains(this.getRootNode().activeElement) || this._isFocusable(e4.target) || e4.target instanceof HTMLLabelElement;
   }
-  _onClick(e) {
-    if (this._shouldPreventCellActivationOnClick(e)) {
+  _onClick(e4) {
+    if (this._shouldPreventCellActivationOnClick(e4)) {
       return;
     }
-    const { cell } = this._getGridEventLocation(e);
+    const { cell } = this._getGridEventLocation(e4);
     if (cell) {
       this.dispatchEvent(new CustomEvent("cell-activate", {
         detail: {
@@ -6066,11 +5236,11 @@ var ActiveItemMixin = (superClass) => class ActiveItemMixin2 extends superClass 
   }
 };
 
-// node_modules/@vaadin/grid/src/array-data-provider.js
-function get2(path, object) {
+// app/components/node_modules/@vaadin/grid/src/array-data-provider.js
+var get2 = function(path, object) {
   return path.split(".").reduce((obj, property) => obj[property], object);
-}
-function checkPaths(arrayToCheck, action, items) {
+};
+var checkPaths = function(arrayToCheck, action, items) {
   if (items.length === 0) {
     return false;
   }
@@ -6086,41 +5256,41 @@ function checkPaths(arrayToCheck, action, items) {
     }
   });
   return result;
-}
-function normalizeEmptyValue(value) {
+};
+var normalizeEmptyValue = function(value) {
   if ([undefined, null].indexOf(value) >= 0) {
     return "";
   } else if (isNaN(value)) {
     return value.toString();
   }
   return value;
-}
-function compare(a, b) {
-  a = normalizeEmptyValue(a);
-  b = normalizeEmptyValue(b);
-  if (a < b) {
+};
+var compare = function(a3, b3) {
+  a3 = normalizeEmptyValue(a3);
+  b3 = normalizeEmptyValue(b3);
+  if (a3 < b3) {
     return -1;
   }
-  if (a > b) {
+  if (a3 > b3) {
     return 1;
   }
   return 0;
-}
-function multiSort(items, sortOrders) {
-  return items.sort((a, b) => {
+};
+var multiSort = function(items, sortOrders) {
+  return items.sort((a3, b3) => {
     return sortOrders.map((sortOrder) => {
       if (sortOrder.direction === "asc") {
-        return compare(get2(sortOrder.path, a), get2(sortOrder.path, b));
+        return compare(get2(sortOrder.path, a3), get2(sortOrder.path, b3));
       } else if (sortOrder.direction === "desc") {
-        return compare(get2(sortOrder.path, b), get2(sortOrder.path, a));
+        return compare(get2(sortOrder.path, b3), get2(sortOrder.path, a3));
       }
       return 0;
-    }).reduce((p, n) => {
-      return p !== 0 ? p : n;
+    }).reduce((p3, n4) => {
+      return p3 !== 0 ? p3 : n4;
     }, 0);
   });
-}
-function filter(items, filters) {
+};
+var filter = function(items, filters) {
   return items.filter((item) => {
     return filters.every((filter2) => {
       const value = normalizeEmptyValue(get2(filter2.path, item));
@@ -6128,7 +5298,7 @@ function filter(items, filters) {
       return value.toString().toLowerCase().includes(filterValueLowercase);
     });
   });
-}
+};
 var createArrayDataProvider = (allItems) => {
   return (params, callback) => {
     let items = allItems ? [...allItems] : [];
@@ -6146,7 +5316,7 @@ var createArrayDataProvider = (allItems) => {
   };
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-array-data-provider-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-array-data-provider-mixin.js
 var ArrayDataProviderMixin = (superClass) => class ArrayDataProviderMixin2 extends superClass {
   static get properties() {
     return {
@@ -6196,7 +5366,7 @@ var ArrayDataProviderMixin = (superClass) => class ArrayDataProviderMixin2 exten
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-column-auto-width-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-column-auto-width-mixin.js
 var ColumnAutoWidthMixin = (superClass) => class extends superClass {
   static get properties() {
     return {
@@ -6371,61 +5541,19 @@ var ColumnAutoWidthMixin = (superClass) => class extends superClass {
   }
 };
 
-// node_modules/@vaadin/component-base/src/gestures.js
-var passiveTouchGestures = false;
-var wrap2 = (node) => node;
-var HAS_NATIVE_TA = typeof document.head.style.touchAction === "string";
-var GESTURE_KEY = "__polymerGestures";
-var HANDLED_OBJ = "__polymerGesturesHandled";
-var TOUCH_ACTION = "__polymerGesturesTouchAction";
-var TAP_DISTANCE = 25;
-var TRACK_DISTANCE = 5;
-var TRACK_LENGTH = 2;
-var MOUSE_EVENTS = ["mousedown", "mousemove", "mouseup", "click"];
-var MOUSE_WHICH_TO_BUTTONS = [0, 1, 4, 2];
-var MOUSE_HAS_BUTTONS = function() {
-  try {
-    return new MouseEvent("test", { buttons: 1 }).buttons === 1;
-  } catch (_) {
-    return false;
-  }
-}();
-function isMouseEvent(name) {
+// app/components/node_modules/@vaadin/component-base/src/gestures.js
+var isMouseEvent = function(name) {
   return MOUSE_EVENTS.indexOf(name) > -1;
-}
-var supportsPassive = false;
-(function() {
-  try {
-    const opts = Object.defineProperty({}, "passive", {
-      get() {
-        supportsPassive = true;
-      }
-    });
-    window.addEventListener("test", null, opts);
-    window.removeEventListener("test", null, opts);
-  } catch (_) {}
-})();
-function PASSIVE_TOUCH(eventName) {
+};
+var PASSIVE_TOUCH = function(eventName) {
   if (isMouseEvent(eventName) || eventName === "touchend") {
     return;
   }
   if (HAS_NATIVE_TA && supportsPassive && passiveTouchGestures) {
     return { passive: true };
   }
-}
-var IS_TOUCH_ONLY = navigator.userAgent.match(/iP(?:[oa]d|hone)|Android/u);
-var canBeDisabled = {
-  button: true,
-  command: true,
-  fieldset: true,
-  input: true,
-  keygen: true,
-  optgroup: true,
-  option: true,
-  select: true,
-  textarea: true
 };
-function hasLeftMouseButton(ev) {
+var hasLeftMouseButton = function(ev) {
   const type = ev.type;
   if (!isMouseEvent(type)) {
     return false;
@@ -6439,67 +5567,52 @@ function hasLeftMouseButton(ev) {
   }
   const button = ev.button === undefined ? 0 : ev.button;
   return button === 0;
-}
-function isSyntheticClick(ev) {
+};
+var isSyntheticClick = function(ev) {
   if (ev.type === "click") {
     if (ev.detail === 0) {
       return true;
     }
-    const t = _findOriginalTarget(ev);
-    if (!t.nodeType || t.nodeType !== Node.ELEMENT_NODE) {
+    const t3 = _findOriginalTarget(ev);
+    if (!t3.nodeType || t3.nodeType !== Node.ELEMENT_NODE) {
       return true;
     }
-    const bcr = t.getBoundingClientRect();
-    const { pageX: x, pageY: y } = ev;
-    return !(x >= bcr.left && x <= bcr.right && y >= bcr.top && y <= bcr.bottom);
+    const bcr = t3.getBoundingClientRect();
+    const { pageX: x2, pageY: y3 } = ev;
+    return !(x2 >= bcr.left && x2 <= bcr.right && y3 >= bcr.top && y3 <= bcr.bottom);
   }
   return false;
-}
-var POINTERSTATE = {
-  mouse: {
-    target: null,
-    mouseIgnoreJob: null
-  },
-  touch: {
-    x: 0,
-    y: 0,
-    id: -1,
-    scrollDecided: false
-  }
 };
-function firstTouchAction(ev) {
+var firstTouchAction = function(ev) {
   let ta = "auto";
   const path = getComposedPath(ev);
-  for (let i = 0, n;i < path.length; i++) {
-    n = path[i];
-    if (n[TOUCH_ACTION]) {
-      ta = n[TOUCH_ACTION];
+  for (let i5 = 0, n4;i5 < path.length; i5++) {
+    n4 = path[i5];
+    if (n4[TOUCH_ACTION]) {
+      ta = n4[TOUCH_ACTION];
       break;
     }
   }
   return ta;
-}
-function trackDocument(stateObj, movefn, upfn) {
+};
+var trackDocument = function(stateObj, movefn, upfn) {
   stateObj.movefn = movefn;
   stateObj.upfn = upfn;
   document.addEventListener("mousemove", movefn);
   document.addEventListener("mouseup", upfn);
-}
-function untrackDocument(stateObj) {
+};
+var untrackDocument = function(stateObj) {
   document.removeEventListener("mousemove", stateObj.movefn);
   document.removeEventListener("mouseup", stateObj.upfn);
   stateObj.movefn = null;
   stateObj.upfn = null;
-}
-var getComposedPath = window.ShadyDOM && window.ShadyDOM.noPatch ? window.ShadyDOM.composedPath : (event) => event.composedPath && event.composedPath() || [];
-var gestures = {};
-var recognizers = [];
-function deepTargetFind(x, y) {
-  let node = document.elementFromPoint(x, y);
+};
+function deepTargetFind(x2, y3) {
+  let node = document.elementFromPoint(x2, y3);
   let next = node;
   while (next && next.shadowRoot && !window.ShadyDOM) {
     const oldNext = next;
-    next = next.shadowRoot.elementFromPoint(x, y);
+    next = next.shadowRoot.elementFromPoint(x2, y3);
     if (oldNext === next) {
       break;
     }
@@ -6509,11 +5622,11 @@ function deepTargetFind(x, y) {
   }
   return node;
 }
-function _findOriginalTarget(ev) {
+var _findOriginalTarget = function(ev) {
   const path = getComposedPath(ev);
   return path.length > 0 ? path[0] : ev.target;
-}
-function _handleNative(ev) {
+};
+var _handleNative = function(ev) {
   const type = ev.type;
   const node = ev.currentTarget;
   const gobj = node[GESTURE_KEY];
@@ -6527,13 +5640,13 @@ function _handleNative(ev) {
   if (!ev[HANDLED_OBJ]) {
     ev[HANDLED_OBJ] = {};
     if (type.startsWith("touch")) {
-      const t = ev.changedTouches[0];
+      const t3 = ev.changedTouches[0];
       if (type === "touchstart") {
         if (ev.touches.length === 1) {
-          POINTERSTATE.touch.id = t.identifier;
+          POINTERSTATE.touch.id = t3.identifier;
         }
       }
-      if (POINTERSTATE.touch.id !== t.identifier) {
+      if (POINTERSTATE.touch.id !== t3.identifier) {
         return;
       }
       if (!HAS_NATIVE_TA) {
@@ -6547,28 +5660,28 @@ function _handleNative(ev) {
   if (handled.skip) {
     return;
   }
-  for (let i = 0, r;i < recognizers.length; i++) {
-    r = recognizers[i];
-    if (gs[r.name] && !handled[r.name]) {
-      if (r.flow && r.flow.start.indexOf(ev.type) > -1 && r.reset) {
-        r.reset();
+  for (let i5 = 0, r4;i5 < recognizers.length; i5++) {
+    r4 = recognizers[i5];
+    if (gs[r4.name] && !handled[r4.name]) {
+      if (r4.flow && r4.flow.start.indexOf(ev.type) > -1 && r4.reset) {
+        r4.reset();
       }
     }
   }
-  for (let i = 0, r;i < recognizers.length; i++) {
-    r = recognizers[i];
-    if (gs[r.name] && !handled[r.name]) {
-      handled[r.name] = true;
-      r[type](ev);
+  for (let i5 = 0, r4;i5 < recognizers.length; i5++) {
+    r4 = recognizers[i5];
+    if (gs[r4.name] && !handled[r4.name]) {
+      handled[r4.name] = true;
+      r4[type](ev);
     }
   }
-}
-function _handleTouchAction(ev) {
-  const t = ev.changedTouches[0];
+};
+var _handleTouchAction = function(ev) {
+  const t3 = ev.changedTouches[0];
   const type = ev.type;
   if (type === "touchstart") {
-    POINTERSTATE.touch.x = t.clientX;
-    POINTERSTATE.touch.y = t.clientY;
+    POINTERSTATE.touch.x = t3.clientX;
+    POINTERSTATE.touch.y = t3.clientY;
     POINTERSTATE.touch.scrollDecided = false;
   } else if (type === "touchmove") {
     if (POINTERSTATE.touch.scrollDecided) {
@@ -6577,9 +5690,10 @@ function _handleTouchAction(ev) {
     POINTERSTATE.touch.scrollDecided = true;
     const ta = firstTouchAction(ev);
     let shouldPrevent = false;
-    const dx = Math.abs(POINTERSTATE.touch.x - t.clientX);
-    const dy = Math.abs(POINTERSTATE.touch.y - t.clientY);
-    if (!ev.cancelable) {} else if (ta === "none") {
+    const dx = Math.abs(POINTERSTATE.touch.x - t3.clientX);
+    const dy = Math.abs(POINTERSTATE.touch.y - t3.clientY);
+    if (!ev.cancelable) {
+    } else if (ta === "none") {
       shouldPrevent = true;
     } else if (ta === "pan-x") {
       shouldPrevent = dy > dx;
@@ -6592,7 +5706,7 @@ function _handleTouchAction(ev) {
       prevent("track");
     }
   }
-}
+};
 function addListener(node, evType, handler) {
   if (gestures[evType]) {
     _add(node, evType, handler);
@@ -6600,7 +5714,7 @@ function addListener(node, evType, handler) {
   }
   return false;
 }
-function _add(node, evType, handler) {
+var _add = function(node, evType, handler) {
   const recognizer = gestures[evType];
   const deps = recognizer.deps;
   const name = recognizer.name;
@@ -6608,8 +5722,8 @@ function _add(node, evType, handler) {
   if (!gobj) {
     node[GESTURE_KEY] = gobj = {};
   }
-  for (let i = 0, dep, gd;i < deps.length; i++) {
-    dep = deps[i];
+  for (let i5 = 0, dep, gd;i5 < deps.length; i5++) {
+    dep = deps[i5];
     if (IS_TOUCH_ONLY && isMouseEvent(dep) && dep !== "click") {
       continue;
     }
@@ -6627,25 +5741,25 @@ function _add(node, evType, handler) {
   if (recognizer.touchAction) {
     setTouchAction(node, recognizer.touchAction);
   }
-}
+};
 function register(recog) {
   recognizers.push(recog);
   recog.emits.forEach((emit) => {
     gestures[emit] = recog;
   });
 }
-function _findRecognizerByEvent(evName) {
-  for (let i = 0, r;i < recognizers.length; i++) {
-    r = recognizers[i];
-    for (let j = 0, n;j < r.emits.length; j++) {
-      n = r.emits[j];
-      if (n === evName) {
-        return r;
+var _findRecognizerByEvent = function(evName) {
+  for (let i5 = 0, r4;i5 < recognizers.length; i5++) {
+    r4 = recognizers[i5];
+    for (let j = 0, n4;j < r4.emits.length; j++) {
+      n4 = r4.emits[j];
+      if (n4 === evName) {
+        return r4;
       }
     }
   }
   return null;
-}
+};
 function setTouchAction(node, value) {
   if (HAS_NATIVE_TA && node instanceof HTMLElement) {
     microTask.run(() => {
@@ -6654,23 +5768,151 @@ function setTouchAction(node, value) {
   }
   node[TOUCH_ACTION] = value;
 }
-function _fire(target, type, detail) {
+var _fire = function(target, type, detail) {
   const ev = new Event(type, { bubbles: true, cancelable: true, composed: true });
   ev.detail = detail;
-  wrap2(target).dispatchEvent(ev);
+  wrap(target).dispatchEvent(ev);
   if (ev.defaultPrevented) {
     const preventer = detail.preventer || detail.sourceEvent;
     if (preventer && preventer.preventDefault) {
       preventer.preventDefault();
     }
   }
-}
+};
 function prevent(evName) {
   const recognizer = _findRecognizerByEvent(evName);
   if (recognizer.info) {
     recognizer.info.prevent = true;
   }
 }
+var downupFire = function(type, target, event, preventer) {
+  if (!target) {
+    return;
+  }
+  _fire(target, type, {
+    x: event.clientX,
+    y: event.clientY,
+    sourceEvent: event,
+    preventer,
+    prevent(e4) {
+      return prevent(e4);
+    }
+  });
+};
+var trackHasMovedEnough = function(info, x2, y3) {
+  if (info.prevent) {
+    return false;
+  }
+  if (info.started) {
+    return true;
+  }
+  const dx = Math.abs(info.x - x2);
+  const dy = Math.abs(info.y - y3);
+  return dx >= TRACK_DISTANCE || dy >= TRACK_DISTANCE;
+};
+var trackFire = function(info, target, touch) {
+  if (!target) {
+    return;
+  }
+  const secondlast = info.moves[info.moves.length - 2];
+  const lastmove = info.moves[info.moves.length - 1];
+  const dx = lastmove.x - info.x;
+  const dy = lastmove.y - info.y;
+  let ddx, ddy = 0;
+  if (secondlast) {
+    ddx = lastmove.x - secondlast.x;
+    ddy = lastmove.y - secondlast.y;
+  }
+  _fire(target, "track", {
+    state: info.state,
+    x: touch.clientX,
+    y: touch.clientY,
+    dx,
+    dy,
+    ddx,
+    ddy,
+    sourceEvent: touch,
+    hover() {
+      return deepTargetFind(touch.clientX, touch.clientY);
+    }
+  });
+};
+var trackForward = function(info, e4, preventer) {
+  const dx = Math.abs(e4.clientX - info.x);
+  const dy = Math.abs(e4.clientY - info.y);
+  const t3 = _findOriginalTarget(preventer || e4);
+  if (!t3 || canBeDisabled[t3.localName] && t3.hasAttribute("disabled")) {
+    return;
+  }
+  if (isNaN(dx) || isNaN(dy) || dx <= TAP_DISTANCE && dy <= TAP_DISTANCE || isSyntheticClick(e4)) {
+    if (!info.prevent) {
+      _fire(t3, "tap", {
+        x: e4.clientX,
+        y: e4.clientY,
+        sourceEvent: e4,
+        preventer
+      });
+    }
+  }
+};
+var passiveTouchGestures = false;
+var wrap = (node) => node;
+var HAS_NATIVE_TA = typeof document.head.style.touchAction === "string";
+var GESTURE_KEY = "__polymerGestures";
+var HANDLED_OBJ = "__polymerGesturesHandled";
+var TOUCH_ACTION = "__polymerGesturesTouchAction";
+var TAP_DISTANCE = 25;
+var TRACK_DISTANCE = 5;
+var TRACK_LENGTH = 2;
+var MOUSE_EVENTS = ["mousedown", "mousemove", "mouseup", "click"];
+var MOUSE_WHICH_TO_BUTTONS = [0, 1, 4, 2];
+var MOUSE_HAS_BUTTONS = function() {
+  try {
+    return new MouseEvent("test", { buttons: 1 }).buttons === 1;
+  } catch (_2) {
+    return false;
+  }
+}();
+var supportsPassive = false;
+(function() {
+  try {
+    const opts = Object.defineProperty({}, "passive", {
+      get() {
+        supportsPassive = true;
+      }
+    });
+    window.addEventListener("test", null, opts);
+    window.removeEventListener("test", null, opts);
+  } catch (_2) {
+  }
+})();
+var IS_TOUCH_ONLY = navigator.userAgent.match(/iP(?:[oa]d|hone)|Android/u);
+var canBeDisabled = {
+  button: true,
+  command: true,
+  fieldset: true,
+  input: true,
+  keygen: true,
+  optgroup: true,
+  option: true,
+  select: true,
+  textarea: true
+};
+var POINTERSTATE = {
+  mouse: {
+    target: null,
+    mouseIgnoreJob: null
+  },
+  touch: {
+    x: 0,
+    y: 0,
+    id: -1,
+    scrollDecided: false
+  }
+};
+var getComposedPath = window.ShadyDOM && window.ShadyDOM.noPatch ? window.ShadyDOM.composedPath : (event) => event.composedPath && event.composedPath() || [];
+var gestures = {};
+var recognizers = [];
 register({
   name: "downup",
   deps: ["mousedown", "touchstart", "touchend"],
@@ -6686,48 +5928,34 @@ register({
   reset() {
     untrackDocument(this.info);
   },
-  mousedown(e) {
-    if (!hasLeftMouseButton(e)) {
+  mousedown(e4) {
+    if (!hasLeftMouseButton(e4)) {
       return;
     }
-    const t = _findOriginalTarget(e);
+    const t3 = _findOriginalTarget(e4);
     const self = this;
-    const movefn = (e2) => {
-      if (!hasLeftMouseButton(e2)) {
-        downupFire("up", t, e2);
+    const movefn = (e5) => {
+      if (!hasLeftMouseButton(e5)) {
+        downupFire("up", t3, e5);
         untrackDocument(self.info);
       }
     };
-    const upfn = (e2) => {
-      if (hasLeftMouseButton(e2)) {
-        downupFire("up", t, e2);
+    const upfn = (e5) => {
+      if (hasLeftMouseButton(e5)) {
+        downupFire("up", t3, e5);
       }
       untrackDocument(self.info);
     };
     trackDocument(this.info, movefn, upfn);
-    downupFire("down", t, e);
+    downupFire("down", t3, e4);
   },
-  touchstart(e) {
-    downupFire("down", _findOriginalTarget(e), e.changedTouches[0], e);
+  touchstart(e4) {
+    downupFire("down", _findOriginalTarget(e4), e4.changedTouches[0], e4);
   },
-  touchend(e) {
-    downupFire("up", _findOriginalTarget(e), e.changedTouches[0], e);
+  touchend(e4) {
+    downupFire("up", _findOriginalTarget(e4), e4.changedTouches[0], e4);
   }
 });
-function downupFire(type, target, event, preventer) {
-  if (!target) {
-    return;
-  }
-  _fire(target, type, {
-    x: event.clientX,
-    y: event.clientY,
-    sourceEvent: event,
-    preventer,
-    prevent(e) {
-      return prevent(e);
-    }
-  });
-}
 register({
   name: "track",
   touchAction: "none",
@@ -6762,107 +5990,69 @@ register({
     this.info.prevent = false;
     untrackDocument(this.info);
   },
-  mousedown(e) {
-    if (!hasLeftMouseButton(e)) {
+  mousedown(e4) {
+    if (!hasLeftMouseButton(e4)) {
       return;
     }
-    const t = _findOriginalTarget(e);
+    const t3 = _findOriginalTarget(e4);
     const self = this;
-    const movefn = (e2) => {
-      const { clientX: x, clientY: y } = e2;
-      if (trackHasMovedEnough(self.info, x, y)) {
-        self.info.state = self.info.started ? e2.type === "mouseup" ? "end" : "track" : "start";
+    const movefn = (e5) => {
+      const { clientX: x2, clientY: y3 } = e5;
+      if (trackHasMovedEnough(self.info, x2, y3)) {
+        self.info.state = self.info.started ? e5.type === "mouseup" ? "end" : "track" : "start";
         if (self.info.state === "start") {
           prevent("tap");
         }
-        self.info.addMove({ x, y });
-        if (!hasLeftMouseButton(e2)) {
+        self.info.addMove({ x: x2, y: y3 });
+        if (!hasLeftMouseButton(e5)) {
           self.info.state = "end";
           untrackDocument(self.info);
         }
-        if (t) {
-          trackFire(self.info, t, e2);
+        if (t3) {
+          trackFire(self.info, t3, e5);
         }
         self.info.started = true;
       }
     };
-    const upfn = (e2) => {
+    const upfn = (e5) => {
       if (self.info.started) {
-        movefn(e2);
+        movefn(e5);
       }
       untrackDocument(self.info);
     };
     trackDocument(this.info, movefn, upfn);
-    this.info.x = e.clientX;
-    this.info.y = e.clientY;
+    this.info.x = e4.clientX;
+    this.info.y = e4.clientY;
   },
-  touchstart(e) {
-    const ct = e.changedTouches[0];
+  touchstart(e4) {
+    const ct = e4.changedTouches[0];
     this.info.x = ct.clientX;
     this.info.y = ct.clientY;
   },
-  touchmove(e) {
-    const t = _findOriginalTarget(e);
-    const ct = e.changedTouches[0];
-    const { clientX: x, clientY: y } = ct;
-    if (trackHasMovedEnough(this.info, x, y)) {
+  touchmove(e4) {
+    const t3 = _findOriginalTarget(e4);
+    const ct = e4.changedTouches[0];
+    const { clientX: x2, clientY: y3 } = ct;
+    if (trackHasMovedEnough(this.info, x2, y3)) {
       if (this.info.state === "start") {
         prevent("tap");
       }
-      this.info.addMove({ x, y });
-      trackFire(this.info, t, ct);
+      this.info.addMove({ x: x2, y: y3 });
+      trackFire(this.info, t3, ct);
       this.info.state = "track";
       this.info.started = true;
     }
   },
-  touchend(e) {
-    const t = _findOriginalTarget(e);
-    const ct = e.changedTouches[0];
+  touchend(e4) {
+    const t3 = _findOriginalTarget(e4);
+    const ct = e4.changedTouches[0];
     if (this.info.started) {
       this.info.state = "end";
       this.info.addMove({ x: ct.clientX, y: ct.clientY });
-      trackFire(this.info, t, ct);
+      trackFire(this.info, t3, ct);
     }
   }
 });
-function trackHasMovedEnough(info, x, y) {
-  if (info.prevent) {
-    return false;
-  }
-  if (info.started) {
-    return true;
-  }
-  const dx = Math.abs(info.x - x);
-  const dy = Math.abs(info.y - y);
-  return dx >= TRACK_DISTANCE || dy >= TRACK_DISTANCE;
-}
-function trackFire(info, target, touch) {
-  if (!target) {
-    return;
-  }
-  const secondlast = info.moves[info.moves.length - 2];
-  const lastmove = info.moves[info.moves.length - 1];
-  const dx = lastmove.x - info.x;
-  const dy = lastmove.y - info.y;
-  let ddx, ddy = 0;
-  if (secondlast) {
-    ddx = lastmove.x - secondlast.x;
-    ddy = lastmove.y - secondlast.y;
-  }
-  _fire(target, "track", {
-    state: info.state,
-    x: touch.clientX,
-    y: touch.clientY,
-    dx,
-    dy,
-    ddx,
-    ddy,
-    sourceEvent: touch,
-    hover() {
-      return deepTargetFind(touch.clientX, touch.clientY);
-    }
-  });
-}
 register({
   name: "tap",
   deps: ["mousedown", "click", "touchstart", "touchend"],
@@ -6881,46 +6071,28 @@ register({
     this.info.y = NaN;
     this.info.prevent = false;
   },
-  mousedown(e) {
-    if (hasLeftMouseButton(e)) {
-      this.info.x = e.clientX;
-      this.info.y = e.clientY;
+  mousedown(e4) {
+    if (hasLeftMouseButton(e4)) {
+      this.info.x = e4.clientX;
+      this.info.y = e4.clientY;
     }
   },
-  click(e) {
-    if (hasLeftMouseButton(e)) {
-      trackForward(this.info, e);
+  click(e4) {
+    if (hasLeftMouseButton(e4)) {
+      trackForward(this.info, e4);
     }
   },
-  touchstart(e) {
-    const touch = e.changedTouches[0];
+  touchstart(e4) {
+    const touch = e4.changedTouches[0];
     this.info.x = touch.clientX;
     this.info.y = touch.clientY;
   },
-  touchend(e) {
-    trackForward(this.info, e.changedTouches[0], e);
+  touchend(e4) {
+    trackForward(this.info, e4.changedTouches[0], e4);
   }
 });
-function trackForward(info, e, preventer) {
-  const dx = Math.abs(e.clientX - info.x);
-  const dy = Math.abs(e.clientY - info.y);
-  const t = _findOriginalTarget(preventer || e);
-  if (!t || canBeDisabled[t.localName] && t.hasAttribute("disabled")) {
-    return;
-  }
-  if (isNaN(dx) || isNaN(dy) || dx <= TAP_DISTANCE && dy <= TAP_DISTANCE || isSyntheticClick(e)) {
-    if (!info.prevent) {
-      _fire(t, "tap", {
-        x: e.clientX,
-        y: e.clientY,
-        sourceEvent: e,
-        preventer
-      });
-    }
-  }
-}
 
-// node_modules/@vaadin/grid/src/vaadin-grid-column-reordering-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-column-reordering-mixin.js
 var ColumnReorderingMixin = (superClass) => class ColumnReorderingMixin2 extends superClass {
   static get properties() {
     return {
@@ -6946,27 +6118,27 @@ var ColumnReorderingMixin = (superClass) => class ColumnReorderingMixin2 extends
     this.addEventListener("touchend", this._onTouchEnd.bind(this));
     this.addEventListener("contextmenu", this._onContextMenu.bind(this));
   }
-  _onContextMenu(e) {
+  _onContextMenu(e4) {
     if (this.hasAttribute("reordering")) {
-      e.preventDefault();
+      e4.preventDefault();
       if (!isTouch) {
         this._onTrackEnd();
       }
     }
   }
-  _onTouchStart(e) {
+  _onTouchStart(e4) {
     this._startTouchReorderTimeout = setTimeout(() => {
       this._onTrackStart({
         detail: {
-          x: e.touches[0].clientX,
-          y: e.touches[0].clientY
+          x: e4.touches[0].clientX,
+          y: e4.touches[0].clientY
         }
       });
     }, 100);
   }
-  _onTouchMove(e) {
+  _onTouchMove(e4) {
     if (this._draggedColumn) {
-      e.preventDefault();
+      e4.preventDefault();
     }
     clearTimeout(this._startTouchReorderTimeout);
   }
@@ -6974,9 +6146,9 @@ var ColumnReorderingMixin = (superClass) => class ColumnReorderingMixin2 extends
     clearTimeout(this._startTouchReorderTimeout);
     this._onTrackEnd();
   }
-  _onTrackEvent(e) {
-    if (e.detail.state === "start") {
-      const path = e.composedPath();
+  _onTrackEvent(e4) {
+    if (e4.detail.state === "start") {
+      const path = e4.composedPath();
       const headerCell = path[path.indexOf(this.$.header) - 2];
       if (!headerCell || !headerCell._content) {
         return;
@@ -6988,23 +6160,23 @@ var ColumnReorderingMixin = (superClass) => class ColumnReorderingMixin2 extends
         return;
       }
       if (!this._touchDevice) {
-        this._onTrackStart(e);
+        this._onTrackStart(e4);
       }
-    } else if (e.detail.state === "track") {
-      this._onTrack(e);
-    } else if (e.detail.state === "end") {
-      this._onTrackEnd(e);
+    } else if (e4.detail.state === "track") {
+      this._onTrack(e4);
+    } else if (e4.detail.state === "end") {
+      this._onTrackEnd(e4);
     }
   }
-  _onTrackStart(e) {
+  _onTrackStart(e4) {
     if (!this.columnReorderingAllowed) {
       return;
     }
-    const path = e.composedPath && e.composedPath();
+    const path = e4.composedPath && e4.composedPath();
     if (path && path.slice(0, Math.max(0, path.indexOf(this))).some((node) => node.draggable)) {
       return;
     }
-    const headerCell = this._cellFromPoint(e.detail.x, e.detail.y);
+    const headerCell = this._cellFromPoint(e4.detail.x, e4.detail.y);
     if (!headerCell || !headerCell.part.contains("header-cell")) {
       return;
     }
@@ -7017,30 +6189,30 @@ var ColumnReorderingMixin = (superClass) => class ColumnReorderingMixin2 extends
     this._draggedColumn._reorderStatus = "dragging";
     this._updateGhost(headerCell);
     this._reorderGhost.style.visibility = "visible";
-    this._updateGhostPosition(e.detail.x, this._touchDevice ? e.detail.y - 50 : e.detail.y);
+    this._updateGhostPosition(e4.detail.x, this._touchDevice ? e4.detail.y - 50 : e4.detail.y);
     this._autoScroller();
   }
-  _onTrack(e) {
+  _onTrack(e4) {
     if (!this._draggedColumn) {
       return;
     }
-    const targetCell = this._cellFromPoint(e.detail.x, e.detail.y);
+    const targetCell = this._cellFromPoint(e4.detail.x, e4.detail.y);
     if (!targetCell) {
       return;
     }
     const targetColumn = this._getTargetColumn(targetCell, this._draggedColumn);
-    if (this._isSwapAllowed(this._draggedColumn, targetColumn) && this._isSwappableByPosition(targetColumn, e.detail.x)) {
+    if (this._isSwapAllowed(this._draggedColumn, targetColumn) && this._isSwappableByPosition(targetColumn, e4.detail.x)) {
       const columnTreeLevel = this._columnTree.findIndex((level) => level.includes(targetColumn));
       const levelColumnsInOrder = this._getColumnsInOrder(columnTreeLevel);
       const startIndex = levelColumnsInOrder.indexOf(this._draggedColumn);
       const endIndex = levelColumnsInOrder.indexOf(targetColumn);
       const direction = startIndex < endIndex ? 1 : -1;
-      for (let i = startIndex;i !== endIndex; i += direction) {
-        this._swapColumnOrders(this._draggedColumn, levelColumnsInOrder[i + direction]);
+      for (let i5 = startIndex;i5 !== endIndex; i5 += direction) {
+        this._swapColumnOrders(this._draggedColumn, levelColumnsInOrder[i5 + direction]);
       }
     }
-    this._updateGhostPosition(e.detail.x, this._touchDevice ? e.detail.y - 50 : e.detail.y);
-    this._lastDragClientX = e.detail.x;
+    this._updateGhostPosition(e4.detail.x, this._touchDevice ? e4.detail.y - 50 : e4.detail.y);
+    this._lastDragClientX = e4.detail.x;
   }
   _onTrackEnd() {
     if (!this._draggedColumn) {
@@ -7059,13 +6231,13 @@ var ColumnReorderingMixin = (superClass) => class ColumnReorderingMixin2 extends
     }));
   }
   _getColumnsInOrder(headerLevel = this._columnTree.length - 1) {
-    return this._columnTree[headerLevel].filter((c) => !c.hidden).sort((b, a) => b._order - a._order);
+    return this._columnTree[headerLevel].filter((c4) => !c4.hidden).sort((b3, a3) => b3._order - a3._order);
   }
-  _cellFromPoint(x = 0, y = 0) {
+  _cellFromPoint(x2 = 0, y3 = 0) {
     if (!this._draggedColumn) {
       this.$.scroller.toggleAttribute("no-content-pointer-events", true);
     }
-    const elementFromPoint = this.shadowRoot.elementFromPoint(x, y);
+    const elementFromPoint = this.shadowRoot.elementFromPoint(x2, y3);
     this.$.scroller.toggleAttribute("no-content-pointer-events", false);
     return this._getCellFromElement(elementFromPoint);
   }
@@ -7177,27 +6349,27 @@ var ColumnReorderingMixin = (superClass) => class ColumnReorderingMixin2 extends
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-column-resizing-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-column-resizing-mixin.js
 var ColumnResizingMixin = (superClass) => class ColumnResizingMixin2 extends superClass {
   ready() {
     super.ready();
     const scroller = this.$.scroller;
     addListener(scroller, "track", this._onHeaderTrack.bind(this));
-    scroller.addEventListener("touchmove", (e) => scroller.hasAttribute("column-resizing") && e.preventDefault());
-    scroller.addEventListener("contextmenu", (e) => e.target.part.contains("resize-handle") && e.preventDefault());
-    scroller.addEventListener("mousedown", (e) => e.target.part.contains("resize-handle") && e.preventDefault());
+    scroller.addEventListener("touchmove", (e4) => scroller.hasAttribute("column-resizing") && e4.preventDefault());
+    scroller.addEventListener("contextmenu", (e4) => e4.target.part.contains("resize-handle") && e4.preventDefault());
+    scroller.addEventListener("mousedown", (e4) => e4.target.part.contains("resize-handle") && e4.preventDefault());
   }
-  _onHeaderTrack(e) {
-    const handle = e.target;
+  _onHeaderTrack(e4) {
+    const handle = e4.target;
     if (handle.part.contains("resize-handle")) {
       const cell = handle.parentElement;
       let column = cell._column;
       this.$.scroller.toggleAttribute("column-resizing", true);
       while (column.localName === "vaadin-grid-column-group") {
-        column = column._childColumns.slice(0).sort((a, b) => a._order - b._order).filter((column2) => !column2.hidden).pop();
+        column = column._childColumns.slice(0).sort((a3, b3) => a3._order - b3._order).filter((column2) => !column2.hidden).pop();
       }
       const isRTL = this.__isRTL;
-      const eventX = e.detail.x;
+      const eventX = e4.detail.x;
       const columnRowCells = Array.from(this.$.header.querySelectorAll('[part~="row"]:last-child [part~="cell"]'));
       const targetCell = columnRowCells.find((cell2) => cell2._column === column);
       if (targetCell.offsetWidth) {
@@ -7214,7 +6386,7 @@ var ColumnResizingMixin = (superClass) => class ColumnResizingMixin2 extends sup
         column.width = `${Math.max(minWidth, maxWidth)}px`;
         column.flexGrow = 0;
       }
-      columnRowCells.sort((a, b) => a._column._order - b._column._order).forEach((cell2, index, array) => {
+      columnRowCells.sort((a3, b3) => a3._column._order - b3._column._order).forEach((cell2, index, array) => {
         if (index < array.indexOf(targetCell)) {
           cell2._column.width = `${cell2.offsetWidth}px`;
           cell2._column.flexGrow = 0;
@@ -7228,7 +6400,7 @@ var ColumnResizingMixin = (superClass) => class ColumnResizingMixin2 extends sup
           this.$.table.scrollLeft += offset;
         }
       }
-      if (e.detail.state === "end") {
+      if (e4.detail.state === "end") {
         this.$.scroller.toggleAttribute("column-resizing", false);
         this.dispatchEvent(new CustomEvent("column-resize", {
           detail: { resizedColumn: column }
@@ -7239,7 +6411,7 @@ var ColumnResizingMixin = (superClass) => class ColumnResizingMixin2 extends sup
   }
 };
 
-// node_modules/@vaadin/component-base/src/data-provider-controller/cache.js
+// app/components/node_modules/@vaadin/component-base/src/data-provider-controller/cache.js
 class Cache {
   context;
   pageSize;
@@ -7282,8 +6454,8 @@ class Cache {
     this.#size = size;
     if (this.context.placeholder !== undefined) {
       this.items.length = size || 0;
-      for (let i = 0;i < size; i++) {
-        this.items[i] ||= this.context.placeholder;
+      for (let i5 = 0;i5 < size; i5++) {
+        this.items[i5] ||= this.context.placeholder;
       }
     }
     if (this.items.length > size) {
@@ -7304,8 +6476,8 @@ class Cache {
   }
   setPage(page, items) {
     const startIndex = page * this.pageSize;
-    items.forEach((item, i) => {
-      const itemIndex = startIndex + i;
+    items.forEach((item, i5) => {
+      const itemIndex = startIndex + i5;
       if (this.size === undefined || itemIndex < this.size) {
         this.items[itemIndex] = item;
       }
@@ -7334,7 +6506,7 @@ class Cache {
   }
 }
 
-// node_modules/@vaadin/component-base/src/data-provider-controller/helpers.js
+// app/components/node_modules/@vaadin/component-base/src/data-provider-controller/helpers.js
 function getFlatIndexContext(cache2, flatIndex, level = 0) {
   let levelIndex = flatIndex;
   for (const subCache of cache2.subCaches) {
@@ -7389,7 +6561,7 @@ function getFlatIndexByPath(cache2, [levelIndex, ...subIndexes], flatIndex = 0) 
   return flatIndex + flatIndexOnLevel;
 }
 
-// node_modules/@vaadin/component-base/src/data-provider-controller/data-provider-controller.js
+// app/components/node_modules/@vaadin/component-base/src/data-provider-controller/data-provider-controller.js
 class DataProviderController extends EventTarget {
   host;
   dataProvider;
@@ -7448,15 +6620,15 @@ class DataProviderController extends EventTarget {
     return getFlatIndexByPath(this.rootCache, path);
   }
   ensureFlatIndexLoaded(flatIndex) {
-    const { cache: cache2, page, item } = this.getFlatIndexContext(flatIndex);
+    const { cache: cache3, page, item } = this.getFlatIndexContext(flatIndex);
     if (!this.#isItemLoaded(item)) {
-      this.#loadCachePage(cache2, page);
+      this.#loadCachePage(cache3, page);
     }
   }
   ensureFlatIndexHierarchy(flatIndex) {
-    const { cache: cache2, item, index } = this.getFlatIndexContext(flatIndex);
-    if (this.#isItemLoaded(item) && this.isExpanded(item) && !cache2.getSubCache(index)) {
-      const subCache = cache2.createSubCache(index);
+    const { cache: cache3, item, index } = this.getFlatIndexContext(flatIndex);
+    if (this.#isItemLoaded(item) && this.isExpanded(item) && !cache3.getSubCache(index)) {
+      const subCache = cache3.createSubCache(index);
       this.#loadCachePage(subCache, 0);
     }
   }
@@ -7469,34 +6641,34 @@ class DataProviderController extends EventTarget {
   #createRootCache(size) {
     return new Cache(this.#cacheContext, this.pageSize, size);
   }
-  #loadCachePage(cache2, page) {
-    if (!this.dataProvider || cache2.pendingRequests[page] || !this._shouldLoadCachePage(cache2, page)) {
+  #loadCachePage(cache3, page) {
+    if (!this.dataProvider || cache3.pendingRequests[page] || !this._shouldLoadCachePage(cache3, page)) {
       return;
     }
     let params = {
       page,
       pageSize: this.pageSize,
-      parentItem: cache2.parentItem
+      parentItem: cache3.parentItem
     };
     if (this.dataProviderParams) {
       params = { ...params, ...this.dataProviderParams() };
     }
     const callback = (items, size) => {
-      if (cache2.pendingRequests[page] !== callback) {
+      if (cache3.pendingRequests[page] !== callback) {
         return;
       }
       if (size !== undefined) {
-        cache2.size = size;
+        cache3.size = size;
       } else if (params.parentItem) {
-        cache2.size = items.length;
+        cache3.size = items.length;
       }
-      cache2.setPage(page, items);
+      cache3.setPage(page, items);
       this.recalculateFlatSize();
       this.dispatchEvent(new CustomEvent("page-received"));
-      delete cache2.pendingRequests[page];
+      delete cache3.pendingRequests[page];
       this.dispatchEvent(new CustomEvent("page-loaded"));
     };
-    cache2.pendingRequests[page] = callback;
+    cache3.pendingRequests[page] = callback;
     this.dispatchEvent(new CustomEvent("page-requested"));
     this.dataProvider(params, callback);
   }
@@ -7510,7 +6682,7 @@ class DataProviderController extends EventTarget {
   }
 }
 
-// node_modules/@vaadin/grid/src/vaadin-grid-data-provider-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-data-provider-mixin.js
 var DataProviderMixin = (superClass) => class DataProviderMixin2 extends superClass {
   static get properties() {
     return {
@@ -7645,7 +6817,7 @@ var DataProviderMixin = (superClass) => class DataProviderMixin2 extends superCl
   }
   collapseItem(item) {
     if (this._isExpanded(item)) {
-      this.expandedItems = this.expandedItems.filter((i) => !this._itemsEqual(i, item));
+      this.expandedItems = this.expandedItems.filter((i5) => !this._itemsEqual(i5, item));
     }
   }
   _onDataProviderPageRequested() {
@@ -7698,7 +6870,7 @@ var DataProviderMixin = (superClass) => class DataProviderMixin2 extends superCl
   }
   _checkSize() {
     if (this.size === undefined && this._flatSize === 0) {
-      console.warn("The <vaadin-grid> needs the total number of items in" + " order to display rows, which you can specify either by setting" + " the `size` property, or by providing it to the second argument" + " of the `dataProvider` function `callback` call.");
+      console.warn("The <vaadin-grid> needs the total number of items in order to display rows, which you can specify either by setting the `size` property, or by providing it to the second argument of the `dataProvider` function `callback` call.");
     }
   }
   _dataProviderChanged(dataProvider, oldDataProvider) {
@@ -7719,8 +6891,8 @@ var DataProviderMixin = (superClass) => class DataProviderMixin2 extends superCl
   }
   _getItemIndexInArray(item, array) {
     let result = -1;
-    array.forEach((i, idx) => {
-      if (this._itemsEqual(i, item)) {
+    array.forEach((i5, idx) => {
+      if (this._itemsEqual(i5, item)) {
         result = idx;
       }
     });
@@ -7748,7 +6920,7 @@ var DataProviderMixin = (superClass) => class DataProviderMixin2 extends superCl
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-drag-and-drop-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-drag-and-drop-mixin.js
 var DropMode = {
   BETWEEN: "between",
   ON_TOP: "on-top",
@@ -7802,10 +6974,10 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
     this.$.table.addEventListener("dragover", this._onDragOver.bind(this));
     this.$.table.addEventListener("dragleave", this._onDragLeave.bind(this));
     this.$.table.addEventListener("drop", this._onDrop.bind(this));
-    this.$.table.addEventListener("dragenter", (e) => {
+    this.$.table.addEventListener("dragenter", (e4) => {
       if (this.dropMode) {
-        e.preventDefault();
-        e.stopPropagation();
+        e4.preventDefault();
+        e4.stopPropagation();
       }
     });
   }
@@ -7817,16 +6989,16 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
     super.disconnectedCallback();
     document.removeEventListener("dragstart", this.__onDocumentDragStart, { capture: true });
   }
-  _onDragStart(e) {
+  _onDragStart(e4) {
     if (this.rowsDraggable) {
-      let row = e.target;
+      let row = e4.target;
       if (row.localName === "vaadin-grid-cell-content") {
         row = row.assignedSlot.parentNode.parentNode;
       }
       if (row.parentNode !== this.$.items) {
         return;
       }
-      e.stopPropagation();
+      e4.stopPropagation();
       this.toggleAttribute("dragging-rows", true);
       if (this._safari) {
         const transform = row.style.transform;
@@ -7838,16 +7010,16 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
         });
       }
       const rowRect = row.getBoundingClientRect();
-      e.dataTransfer.setDragImage(row, e.clientX - rowRect.left, e.clientY - rowRect.top);
+      e4.dataTransfer.setDragImage(row, e4.clientX - rowRect.left, e4.clientY - rowRect.top);
       let rows = [row];
       if (this._isSelected(row._item)) {
         rows = this.__getViewportRows().filter((row2) => this._isSelected(row2._item)).filter((row2) => !this.dragFilter || this.dragFilter(this.__getRowModel(row2)));
       }
       this.__draggedItems = rows.map((row2) => row2._item);
-      e.dataTransfer.setData("text", this.__formatDefaultTransferData(rows));
+      e4.dataTransfer.setData("text", this.__formatDefaultTransferData(rows));
       updateBooleanRowStates(row, { dragstart: rows.length > 1 ? `${rows.length}` : "" });
-      this.style.setProperty("--_grid-drag-start-x", `${e.clientX - rowRect.left + 20}px`);
-      this.style.setProperty("--_grid-drag-start-y", `${e.clientY - rowRect.top + 10}px`);
+      this.style.setProperty("--_grid-drag-start-x", `${e4.clientX - rowRect.left + 20}px`);
+      this.style.setProperty("--_grid-drag-start-y", `${e4.clientY - rowRect.top + 10}px`);
       requestAnimationFrame(() => {
         updateBooleanRowStates(row, { dragstart: false });
         this.style.setProperty("--_grid-drag-start-x", "");
@@ -7857,39 +7029,39 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
       const event = new CustomEvent("grid-dragstart", {
         detail: {
           draggedItems: [...this.__draggedItems],
-          setDragData: (type, data) => e.dataTransfer.setData(type, data),
+          setDragData: (type, data) => e4.dataTransfer.setData(type, data),
           setDraggedItemsCount: (count) => row.setAttribute("dragstart", count)
         }
       });
-      event.originalEvent = e;
+      event.originalEvent = e4;
       this.dispatchEvent(event);
     }
   }
-  _onDragEnd(e) {
+  _onDragEnd(e4) {
     this.toggleAttribute("dragging-rows", false);
-    e.stopPropagation();
+    e4.stopPropagation();
     const event = new CustomEvent("grid-dragend");
-    event.originalEvent = e;
+    event.originalEvent = e4;
     this.dispatchEvent(event);
     this.__draggedItems = [];
     this.requestContentUpdate();
   }
-  _onDragLeave(e) {
+  _onDragLeave(e4) {
     if (!this.dropMode) {
       return;
     }
-    e.stopPropagation();
+    e4.stopPropagation();
     this._clearDragStyles();
   }
-  _onDragOver(e) {
+  _onDragOver(e4) {
     if (this.dropMode) {
       this._dropLocation = undefined;
       this._dragOverItem = undefined;
-      if (this.__dndAutoScroll(e.clientY)) {
+      if (this.__dndAutoScroll(e4.clientY)) {
         this._clearDragStyles();
         return;
       }
-      let row = e.composedPath().find((node) => node.localName === "tr");
+      let row = e4.composedPath().find((node) => node.localName === "tr");
       this.__updateRowScrollPositionProperty(row);
       if (!this._flatSize || this.dropMode === DropMode.ON_GRID) {
         this._dropLocation = DropLocation.EMPTY;
@@ -7906,12 +7078,12 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
         const rowRect = row.getBoundingClientRect();
         this._dropLocation = DropLocation.ON_TOP;
         if (this.dropMode === DropMode.BETWEEN) {
-          const dropAbove = e.clientY - rowRect.top < rowRect.bottom - e.clientY;
+          const dropAbove = e4.clientY - rowRect.top < rowRect.bottom - e4.clientY;
           this._dropLocation = dropAbove ? DropLocation.ABOVE : DropLocation.BELOW;
         } else if (this.dropMode === DropMode.ON_TOP_OR_BETWEEN) {
-          if (e.clientY - rowRect.top < rowRect.height / 3) {
+          if (e4.clientY - rowRect.top < rowRect.height / 3) {
             this._dropLocation = DropLocation.ABOVE;
-          } else if (e.clientY - rowRect.top > rowRect.height / 3 * 2) {
+          } else if (e4.clientY - rowRect.top > rowRect.height / 3 * 2) {
             this._dropLocation = DropLocation.BELOW;
           }
         }
@@ -7920,8 +7092,8 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
         this._dropLocation = undefined;
         return;
       }
-      e.stopPropagation();
-      e.preventDefault();
+      e4.stopPropagation();
+      e4.preventDefault();
       if (this._dropLocation === DropLocation.EMPTY) {
         this.toggleAttribute("dragover", true);
       } else if (row) {
@@ -7934,15 +7106,15 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
       }
     }
   }
-  __onDocumentDragStart(e) {
-    if (e.target.contains(this)) {
-      const elements = [e.target, this.$.items, this.$.scroller];
+  __onDocumentDragStart(e4) {
+    if (e4.target.contains(this)) {
+      const elements = [e4.target, this.$.items, this.$.scroller];
       const originalInlineStyles = elements.map((element) => element.style.cssText);
       if (this.$.table.scrollHeight > 20000) {
         this.$.scroller.style.display = "none";
       }
       if (isChrome) {
-        e.target.style.willChange = "transform";
+        e4.target.style.willChange = "transform";
       }
       if (isSafari) {
         this.$.items.style.flexShrink = 1;
@@ -7998,37 +7170,36 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
   __updateDragSourceParts(row, model) {
     updateBooleanRowStates(row, { "drag-source": this.__draggedItems.includes(model.item) });
   }
-  _onDrop(e) {
+  _onDrop(e4) {
     if (this.dropMode && this._dropLocation) {
-      e.stopPropagation();
-      e.preventDefault();
-      const dragData = e.dataTransfer.types && Array.from(e.dataTransfer.types).map((type) => {
+      e4.stopPropagation();
+      e4.preventDefault();
+      const dragData = e4.dataTransfer.types && Array.from(e4.dataTransfer.types).map((type) => {
         return {
           type,
-          data: e.dataTransfer.getData(type)
+          data: e4.dataTransfer.getData(type)
         };
       });
       this._clearDragStyles();
       const event = new CustomEvent("grid-drop", {
-        bubbles: e.bubbles,
-        cancelable: e.cancelable,
+        bubbles: e4.bubbles,
+        cancelable: e4.cancelable,
         detail: {
           dropTargetItem: this._dragOverItem,
           dropLocation: this._dropLocation,
           dragData
         }
       });
-      event.originalEvent = e;
+      event.originalEvent = e4;
       this.dispatchEvent(event);
     }
   }
   __formatDefaultTransferData(rows) {
     return rows.map((row) => {
-      return Array.from(row.children).filter((cell) => !cell.hidden && !cell.part.contains("details-cell")).sort((a, b) => {
-        return a._column._order > b._column._order ? 1 : -1;
+      return Array.from(row.children).filter((cell) => !cell.hidden && !cell.part.contains("details-cell")).sort((a3, b3) => {
+        return a3._column._order > b3._column._order ? 1 : -1;
       }).map((cell) => cell._content.textContent.trim()).filter((content) => content).join("\t");
-    }).join(`
-`);
+    }).join("\n");
   }
   _dragDropAccessChanged() {
     this.filterDragAndDrop();
@@ -8058,22 +7229,22 @@ var DragAndDropMixin = (superClass) => class DragAndDropMixin2 extends superClas
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-dynamic-columns-mixin.js
-function arrayEquals(arr1, arr2) {
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-dynamic-columns-mixin.js
+var arrayEquals = function(arr1, arr2) {
   if (!arr1 || !arr2 || arr1.length !== arr2.length) {
     return false;
   }
-  for (let i = 0, l = arr1.length;i < l; i++) {
-    if (arr1[i] instanceof Array && arr2[i] instanceof Array) {
-      if (!arrayEquals(arr1[i], arr2[i])) {
+  for (let i5 = 0, l3 = arr1.length;i5 < l3; i5++) {
+    if (arr1[i5] instanceof Array && arr2[i5] instanceof Array) {
+      if (!arrayEquals(arr1[i5], arr2[i5])) {
         return false;
       }
-    } else if (arr1[i] !== arr2[i]) {
+    } else if (arr1[i5] !== arr2[i5]) {
       return false;
     }
   }
   return true;
-}
+};
 var DynamicColumnsMixin = (superClass) => class DynamicColumnsMixin2 extends superClass {
   static get properties() {
     return {
@@ -8106,10 +7277,10 @@ var DynamicColumnsMixin = (superClass) => class DynamicColumnsMixin2 extends sup
   _getColumnTree() {
     const rootColumns = ColumnObserver.getColumns(this);
     const columnTree = [rootColumns];
-    let c = rootColumns;
-    while (this._hasColumnGroups(c)) {
-      c = this._flattenColumnGroups(c);
-      columnTree.push(c);
+    let c4 = rootColumns;
+    while (this._hasColumnGroups(c4)) {
+      c4 = this._flattenColumnGroups(c4);
+      columnTree.push(c4);
     }
     return columnTree;
   }
@@ -8124,7 +7295,7 @@ var DynamicColumnsMixin = (superClass) => class DynamicColumnsMixin2 extends sup
   }
   _addNodeObserver() {
     this._observer = new ColumnObserver(this, (_addedColumns, removedColumns) => {
-      const allRemovedCells = removedColumns.flatMap((c) => c._allCells);
+      const allRemovedCells = removedColumns.flatMap((c4) => c4._allCells);
       const filterNotConnected = (element) => allRemovedCells.filter((cell) => cell && cell._content.contains(element)).length;
       this.__removeSorters(this._sorters.filter(filterNotConnected));
       this.__removeFilters(this._filters.filter(filterNotConnected));
@@ -8153,8 +7324,8 @@ var DynamicColumnsMixin = (superClass) => class DynamicColumnsMixin2 extends sup
     Array.from(this.shadowRoot.querySelectorAll("tr")).forEach((row) => this._updateFirstAndLastColumnForRow(row));
   }
   _updateFirstAndLastColumnForRow(row) {
-    Array.from(row.querySelectorAll('[part~="cell"]:not([part~="details-cell"])')).sort((a, b) => {
-      return a._column._order - b._column._order;
+    Array.from(row.querySelectorAll('[part~="cell"]:not([part~="details-cell"])')).sort((a3, b3) => {
+      return a3._column._order - b3._column._order;
     }).forEach((cell, cellIndex, children) => {
       updateCellState(cell, "first-column", cellIndex === 0);
       updateCellState(cell, "last-column", cellIndex === children.length - 1);
@@ -8165,7 +7336,7 @@ var DynamicColumnsMixin = (superClass) => class DynamicColumnsMixin2 extends sup
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-event-context-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-event-context-mixin.js
 var EventContextMixin = (superClass) => class EventContextMixin2 extends superClass {
   getEventContext(event) {
     const context = {};
@@ -8184,7 +7355,7 @@ var EventContextMixin = (superClass) => class EventContextMixin2 extends superCl
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-filter-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-filter-mixin.js
 var FilterMixin = (superClass) => class FilterMixin2 extends superClass {
   static get properties() {
     return {
@@ -8199,9 +7370,9 @@ var FilterMixin = (superClass) => class FilterMixin2 extends superClass {
     this._filterChanged = this._filterChanged.bind(this);
     this.addEventListener("filter-changed", this._filterChanged);
   }
-  _filterChanged(e) {
-    e.stopPropagation();
-    this.__addFilter(e.target);
+  _filterChanged(e4) {
+    e4.stopPropagation();
+    this.__addFilter(e4.target);
     this.__applyFilters();
   }
   __removeFilters(filtersToRemove) {
@@ -8232,16 +7403,16 @@ var FilterMixin = (superClass) => class FilterMixin2 extends superClass {
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-keyboard-navigation-mixin.js
-function isRow(element) {
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-keyboard-navigation-mixin.js
+var isRow = function(element) {
   return element instanceof HTMLTableRowElement;
-}
-function isCell(element) {
+};
+var isCell = function(element) {
   return element instanceof HTMLTableCellElement;
-}
-function isDetailsCell(element) {
+};
+var isDetailsCell = function(element) {
   return element.matches('[part~="details-cell"]');
-}
+};
 var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 extends superClass {
   static get properties() {
     return {
@@ -8369,8 +7540,8 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       this._itemsFocusable.focus();
     }
   }
-  _onKeyDown(e) {
-    const key = e.key;
+  _onKeyDown(e4) {
+    const key = e4.key;
     let keyGroup;
     switch (key) {
       case "ArrowUp":
@@ -8397,12 +7568,12 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       default:
         break;
     }
-    this._detectInteracting(e);
+    this._detectInteracting(e4);
     if (this.interacting && keyGroup !== "Interaction") {
       keyGroup = undefined;
     }
     if (keyGroup) {
-      this[`_on${keyGroup}KeyDown`](e, key);
+      this[`_on${keyGroup}KeyDown`](e4, key);
     }
   }
   __ensureFlatIndexInViewport(index) {
@@ -8419,11 +7590,11 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
   __isRowCollapsible(row) {
     return this._isExpanded(row._item);
   }
-  _onNavigationKeyDown(e, key) {
-    e.preventDefault();
+  _onNavigationKeyDown(e4, key) {
+    e4.preventDefault();
     const isRTL = this.__isRTL;
-    const activeRow = e.composedPath().find(isRow);
-    const activeCell = e.composedPath().find(isCell);
+    const activeRow = e4.composedPath().find(isRow);
+    const activeCell = e4.composedPath().find(isCell);
     let dx = 0, dy = 0;
     switch (key) {
       case "ArrowRight":
@@ -8434,17 +7605,17 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
         break;
       case "Home":
         if (this.__rowFocusMode) {
-          dy = -Infinity;
-        } else if (e.ctrlKey) {
-          dy = -Infinity;
+          dy = (-Infinity);
+        } else if (e4.ctrlKey) {
+          dy = (-Infinity);
         } else {
-          dx = -Infinity;
+          dx = (-Infinity);
         }
         break;
       case "End":
         if (this.__rowFocusMode) {
           dy = Infinity;
-        } else if (e.ctrlKey) {
+        } else if (e4.ctrlKey) {
           dy = Infinity;
         } else {
           dx = Infinity;
@@ -8491,7 +7662,7 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
           return;
         }
       } else {
-        const activeRowCells = [...activeRow.children].sort((a, b) => a._order - b._order);
+        const activeRowCells = [...activeRow.children].sort((a3, b3) => a3._order - b3._order);
         if (activeCell === activeRowCells[0] || isDetailsCell(activeCell)) {
           this.__rowFocusMode = true;
           this._onRowNavigation(activeRow, 0);
@@ -8577,7 +7748,7 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       if (isCurrentCellRowDetails) {
         this._focusedColumnOrder = 0;
       } else {
-        this._focusedColumnOrder = this._getColumns(activeRowGroup, currentRowIndex).filter((c) => !c.hidden)[columnIndex]._order;
+        this._focusedColumnOrder = this._getColumns(activeRowGroup, currentRowIndex).filter((c4) => !c4.hidden)[columnIndex]._order;
       }
     }
     if (dstIsRowDetails) {
@@ -8585,16 +7756,16 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       dstCell.focus();
     } else {
       const dstRowIndex = this.__getIndexInGroup(dstRow, this._focusedItemIndex);
-      const dstColumns = this._getColumns(activeRowGroup, dstRowIndex).filter((c) => !c.hidden);
-      const dstSortedColumnOrders = dstColumns.map((c) => c._order).sort((b, a) => b - a);
+      const dstColumns = this._getColumns(activeRowGroup, dstRowIndex).filter((c4) => !c4.hidden);
+      const dstSortedColumnOrders = dstColumns.map((c4) => c4._order).sort((b3, a3) => b3 - a3);
       const maxOrderedColumnIndex = dstSortedColumnOrders.length - 1;
-      const orderedColumnIndex = dstSortedColumnOrders.indexOf(dstSortedColumnOrders.slice(0).sort((b, a) => Math.abs(b - this._focusedColumnOrder) - Math.abs(a - this._focusedColumnOrder))[0]);
+      const orderedColumnIndex = dstSortedColumnOrders.indexOf(dstSortedColumnOrders.slice(0).sort((b3, a3) => Math.abs(b3 - this._focusedColumnOrder) - Math.abs(a3 - this._focusedColumnOrder))[0]);
       const dstOrderedColumnIndex = dy === 0 && isCurrentCellRowDetails ? orderedColumnIndex : Math.max(0, Math.min(orderedColumnIndex + dx, maxOrderedColumnIndex));
       if (dstOrderedColumnIndex !== orderedColumnIndex) {
         this._focusedColumnOrder = undefined;
       }
-      const columnIndexByOrder = dstColumns.reduce((acc, col, i) => {
-        acc[col._order] = i;
+      const columnIndexByOrder = dstColumns.reduce((acc, col, i5) => {
+        acc[col._order] = i5;
         return acc;
       }, {});
       const dstColumnIndex = columnIndexByOrder[dstSortedColumnOrders[dstOrderedColumnIndex]];
@@ -8617,8 +7788,8 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       dstCell.focus({ preventScroll: true });
     }
   }
-  _onInteractionKeyDown(e, key) {
-    const localTarget = e.composedPath()[0];
+  _onInteractionKeyDown(e4, key) {
+    const localTarget = e4.composedPath()[0];
     const localTargetIsTextInput = localTarget.localName === "input" && !/^(button|checkbox|color|file|image|radio|range|reset|submit)$/iu.test(localTarget.type);
     let wantInteracting;
     switch (key) {
@@ -8634,18 +7805,18 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       default:
         break;
     }
-    const { cell } = this._getGridEventLocation(e);
+    const { cell } = this._getGridEventLocation(e4);
     if (this.interacting !== wantInteracting && cell !== null) {
       if (wantInteracting) {
         const focusTarget = cell._content.querySelector("[focus-target]") || [...cell._content.querySelectorAll("*")].find((node) => this._isFocusable(node));
         if (focusTarget) {
-          e.preventDefault();
+          e4.preventDefault();
           focusTarget.focus();
           this._setInteracting(true);
           this.toggleAttribute("navigating", false);
         }
       } else {
-        e.preventDefault();
+        e4.preventDefault();
         this._focusedColumnOrder = undefined;
         cell.focus();
         this._setInteracting(false);
@@ -8693,12 +7864,12 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
     }
     return focusStepTarget;
   }
-  _onTabKeyDown(e) {
-    let focusTarget = this._predictFocusStepTarget(e.composedPath()[0], e.shiftKey ? -1 : 1);
+  _onTabKeyDown(e4) {
+    let focusTarget = this._predictFocusStepTarget(e4.composedPath()[0], e4.shiftKey ? -1 : 1);
     if (!focusTarget) {
       return;
     }
-    e.stopPropagation();
+    e4.stopPropagation();
     if (focusTarget === this._itemsFocusable) {
       this.__ensureFlatIndexInViewport(this._focusedItemIndex);
       this.__updateItemsFocusable();
@@ -8706,13 +7877,13 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
     }
     focusTarget.focus();
     if (focusTarget !== this.$.table && focusTarget !== this.$.focusexit) {
-      e.preventDefault();
+      e4.preventDefault();
     }
     this.toggleAttribute("navigating", true);
   }
-  _onSpaceKeyDown(e) {
-    e.preventDefault();
-    const element = e.composedPath()[0];
+  _onSpaceKeyDown(e4) {
+    e4.preventDefault();
+    const element = e4.composedPath()[0];
     const isElementRow = isRow(element);
     if (isElementRow || !element._content || !element._content.firstElementChild) {
       this.dispatchEvent(new CustomEvent(isElementRow ? "row-activate" : "cell-activate", {
@@ -8722,16 +7893,16 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       }));
     }
   }
-  _onKeyUp(e) {
-    if (!/^( |SpaceBar)$/u.test(e.key) || this.interacting) {
+  _onKeyUp(e4) {
+    if (!/^( |SpaceBar)$/u.test(e4.key) || this.interacting) {
       return;
     }
-    e.preventDefault();
-    const cell = e.composedPath()[0];
+    e4.preventDefault();
+    const cell = e4.composedPath()[0];
     if (cell._content && cell._content.firstElementChild) {
       const wasNavigating = this.hasAttribute("navigating");
       cell._content.firstElementChild.dispatchEvent(new MouseEvent("click", {
-        shiftKey: e.shiftKey,
+        shiftKey: e4.shiftKey,
         bubbles: true,
         composed: true,
         cancelable: true
@@ -8739,32 +7910,32 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       this.toggleAttribute("navigating", wasNavigating);
     }
   }
-  _onFocusIn(e) {
+  _onFocusIn(e4) {
     if (!this._isMousedown) {
       this.toggleAttribute("navigating", true);
     }
-    const rootTarget = e.composedPath()[0];
+    const rootTarget = e4.composedPath()[0];
     if (rootTarget === this.$.table || rootTarget === this.$.focusexit) {
       if (!this._isMousedown) {
         this._predictFocusStepTarget(rootTarget, rootTarget === this.$.table ? 1 : -1).focus();
       }
       this._setInteracting(false);
     } else {
-      this._detectInteracting(e);
+      this._detectInteracting(e4);
     }
   }
-  _onFocusOut(e) {
+  _onFocusOut(e4) {
     this.toggleAttribute("navigating", false);
-    this._detectInteracting(e);
+    this._detectInteracting(e4);
     this._hideTooltip();
     this._focusedCell = null;
   }
-  _onContentFocusIn(e) {
-    const { section, cell, row } = this._getGridEventLocation(e);
+  _onContentFocusIn(e4) {
+    const { section, cell, row } = this._getGridEventLocation(e4);
     if (!cell && !this.__rowFocusMode) {
       return;
     }
-    this._detectInteracting(e);
+    this._detectInteracting(e4);
     if (section && (cell || row)) {
       this._activeRowGroup = section;
       if (section === this.$.header) {
@@ -8776,14 +7947,14 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
         this._footerFocusable = this.__getFocusable(row, cell);
       }
       if (cell) {
-        const context = this.getEventContext(e);
+        const context = this.getEventContext(e4);
         this.__pendingBodyCellFocus = this.loading && context.section === "body";
         if (!this.__pendingBodyCellFocus && cell !== this.$.emptystatecell) {
           cell.dispatchEvent(new CustomEvent("cell-focus", { bubbles: true, composed: true, detail: { context } }));
         }
         this._focusedCell = cell._focusButton || cell;
-        if (isKeyboardActive() && e.target === cell) {
-          this._showTooltip(e);
+        if (isKeyboardActive() && e4.target === cell) {
+          this._showTooltip(e4);
         }
       } else {
         this._focusedCell = null;
@@ -8798,8 +7969,8 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
   __getFocusable(row, cell) {
     return this.__rowFocusMode ? row : cell._focusButton || cell;
   }
-  _detectInteracting(e) {
-    const isInteracting = e.composedPath().some((el) => el.localName === "slot" && this.shadowRoot.contains(el));
+  _detectInteracting(e4) {
+    const isInteracting = e4.composedPath().some((el) => el.localName === "slot" && this.shadowRoot.contains(el));
     this._setInteracting(isInteracting);
     this.__updateHorizontalScrollPosition();
   }
@@ -8883,8 +8054,8 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
     const scrollbarWidth = this.$.table.clientWidth - this.$.table.offsetWidth;
     let leftBoundary = tableRect.left - (this.__isRTL ? scrollbarWidth : 0);
     let rightBoundary = tableRect.right + (this.__isRTL ? 0 : scrollbarWidth);
-    for (let i = dstCellIndex - 1;i >= 0; i--) {
-      const cell = dstRow.children[i];
+    for (let i5 = dstCellIndex - 1;i5 >= 0; i5--) {
+      const cell = dstRow.children[i5];
       if (cell.hasAttribute("hidden") || isDetailsCell(cell)) {
         continue;
       }
@@ -8893,8 +8064,8 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
         break;
       }
     }
-    for (let i = dstCellIndex + 1;i < dstRow.children.length; i++) {
-      const cell = dstRow.children[i];
+    for (let i5 = dstCellIndex + 1;i5 < dstRow.children.length; i5++) {
+      const cell = dstRow.children[i5];
       if (cell.hasAttribute("hidden") || isDetailsCell(cell)) {
         continue;
       }
@@ -8910,8 +8081,8 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
       this.$.table.scrollLeft += dstCellRect.right - rightBoundary;
     }
   }
-  _getGridEventLocation(e) {
-    const path = e.__composedPath || e.composedPath();
+  _getGridEventLocation(e4) {
+    const path = e4.__composedPath || e4.composedPath();
     const tableIndex = path.indexOf(this.$.table);
     const section = tableIndex >= 1 ? path[tableIndex - 1] : null;
     const row = tableIndex >= 2 ? path[tableIndex - 2] : null;
@@ -8936,7 +8107,7 @@ var KeyboardNavigationMixin = (superClass) => class KeyboardNavigationMixin2 ext
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-resize-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-resize-mixin.js
 var ResizeMixin = (superClass) => class extends superClass {
   static get properties() {
     return {
@@ -8982,7 +8153,7 @@ var ResizeMixin = (superClass) => class extends superClass {
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-row-details-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-row-details-mixin.js
 var RowDetailsMixin = (superClass) => class RowDetailsMixin2 extends superClass {
   static get properties() {
     return {
@@ -9087,12 +8258,12 @@ var RowDetailsMixin = (superClass) => class RowDetailsMixin2 extends superClass 
   }
   closeItemDetails(item) {
     if (this._isDetailsOpened(item)) {
-      this.detailsOpenedItems = this.detailsOpenedItems.filter((i) => !this._itemsEqual(i, item));
+      this.detailsOpenedItems = this.detailsOpenedItems.filter((i5) => !this._itemsEqual(i5, item));
     }
   }
 };
 
-// node_modules/@vaadin/component-base/src/dir-utils.js
+// app/components/node_modules/@vaadin/component-base/src/dir-utils.js
 function getNormalizedScrollLeft(element, direction) {
   const { scrollLeft } = element;
   if (direction !== "rtl") {
@@ -9101,7 +8272,7 @@ function getNormalizedScrollLeft(element, direction) {
   return element.scrollWidth - element.clientWidth + scrollLeft;
 }
 
-// node_modules/@vaadin/component-base/src/overflow-controller.js
+// app/components/node_modules/@vaadin/component-base/src/overflow-controller.js
 class OverflowController {
   constructor(host, scrollTarget) {
     this.host = host;
@@ -9172,7 +8343,7 @@ class OverflowController {
   }
 }
 
-// node_modules/@vaadin/grid/src/vaadin-grid-scroll-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-scroll-mixin.js
 var timeouts = {
   SCROLLING: 500,
   UPDATE_CONTENT_VISIBILITY: 100
@@ -9213,8 +8384,8 @@ var ScrollMixin = (superClass) => class ScrollMixin2 extends superClass {
   ready() {
     super.ready();
     this.scrollTarget = this.$.table;
-    this.$.items.addEventListener("focusin", (e) => {
-      const composedPath = e.composedPath();
+    this.$.items.addEventListener("focusin", (e4) => {
+      const composedPath = e4.composedPath();
       const row = composedPath[composedPath.indexOf(this.$.items) - 1];
       if (row) {
         if (!this._isMousedown) {
@@ -9223,10 +8394,10 @@ var ScrollMixin = (superClass) => class ScrollMixin2 extends superClass {
           const footerHeight = this.$.footer.clientHeight;
           const viewportHeight = tableHeight - headerHeight - footerHeight;
           const isRowLargerThanViewport = row.clientHeight > viewportHeight;
-          const scrollTarget = isRowLargerThanViewport ? e.target : row;
+          const scrollTarget = isRowLargerThanViewport ? e4.target : row;
           this.__scrollIntoViewport(scrollTarget);
         }
-        if (!this.$.table.contains(e.relatedTarget)) {
+        if (!this.$.table.contains(e4.relatedTarget)) {
           this.$.table.dispatchEvent(new CustomEvent("virtualizer-element-focused", { detail: { element: row } }));
         }
       }
@@ -9365,20 +8536,20 @@ var ScrollMixin = (superClass) => class ScrollMixin2 extends superClass {
       return;
     }
     const columnsRow = this._columnTree[this._columnTree.length - 1].slice(0);
-    columnsRow.sort((a, b) => {
-      return a._order - b._order;
+    columnsRow.sort((a3, b3) => {
+      return a3._order - b3._order;
     });
     let lastFrozen;
     let firstFrozenToEnd;
-    for (let i = 0;i < columnsRow.length; i++) {
-      const col = columnsRow[i];
+    for (let i5 = 0;i5 < columnsRow.length; i5++) {
+      const col = columnsRow[i5];
       col._lastFrozen = false;
       col._firstFrozenToEnd = false;
       if (firstFrozenToEnd === undefined && col.frozenToEnd && !col.hidden) {
-        firstFrozenToEnd = i;
+        firstFrozenToEnd = i5;
       }
       if (col.frozen && !col.hidden) {
-        lastFrozen = i;
+        lastFrozen = i5;
       }
     }
     if (lastFrozen !== undefined) {
@@ -9401,9 +8572,9 @@ var ScrollMixin = (superClass) => class ScrollMixin2 extends superClass {
     this.$.header.style.transform = transform;
     this.$.footer.style.transform = transform;
     this.$.items.style.transform = transform;
-    const x = this.__isRTL ? normalizedScrollLeft + clientWidth - scrollWidth : scrollLeft;
-    this.__horizontalScrollPosition = x;
-    const transformFrozen = `translate(${x}px, 0)`;
+    const x2 = this.__isRTL ? normalizedScrollLeft + clientWidth - scrollWidth : scrollLeft;
+    this.__horizontalScrollPosition = x2;
+    const transformFrozen = `translate(${x2}px, 0)`;
     this._frozenCells.forEach((cell) => {
       cell.style.transform = transformFrozen;
     });
@@ -9453,7 +8624,7 @@ var ScrollMixin = (superClass) => class ScrollMixin2 extends superClass {
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-selection-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-selection-mixin.js
 var SelectionMixin = (superClass) => class SelectionMixin2 extends superClass {
   static get properties() {
     return {
@@ -9492,7 +8663,7 @@ var SelectionMixin = (superClass) => class SelectionMixin2 extends superClass {
   }
   deselectItem(item) {
     if (this._isSelected(item)) {
-      this.selectedItems = this.selectedItems.filter((i) => !this._itemsEqual(i, item));
+      this.selectedItems = this.selectedItems.filter((i5) => !this._itemsEqual(i5, item));
     }
   }
   __selectedItemsChanged() {
@@ -9508,7 +8679,7 @@ var SelectionMixin = (superClass) => class SelectionMixin2 extends superClass {
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-sort-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-sort-mixin.js
 var defaultMultiSortPriority = "prepend";
 var SortMixin = (superClass) => class SortMixin2 extends superClass {
   static get properties() {
@@ -9542,11 +8713,11 @@ var SortMixin = (superClass) => class SortMixin2 extends superClass {
     super.ready();
     this.addEventListener("sorter-changed", this._onSorterChanged);
   }
-  _onSorterChanged(e) {
-    const sorter = e.target;
-    e.stopPropagation();
+  _onSorterChanged(e4) {
+    const sorter = e4.target;
+    e4.stopPropagation();
     sorter._grid = this;
-    this.__updateSorter(sorter, e.detail.shiftClick, e.detail.fromSorterClick);
+    this.__updateSorter(sorter, e4.detail.shiftClick, e4.detail.fromSorterClick);
     this.__applySorters();
   }
   __removeSorters(sortersToRemove) {
@@ -9572,7 +8743,7 @@ var SortMixin = (superClass) => class SortMixin2 extends superClass {
       return;
     }
     sorter._order = null;
-    const restSorters = this._sorters.filter((s) => s !== sorter);
+    const restSorters = this._sorters.filter((s4) => s4 !== sorter);
     if (this.multiSort && (!this.multiSortOnShiftClick || !fromSorterClick) || this.multiSortOnShiftClick && shiftClick) {
       if (this.multiSortPriority === "append") {
         this._sorters = [...restSorters, sorter];
@@ -9608,7 +8779,7 @@ var SortMixin = (superClass) => class SortMixin2 extends superClass {
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-styling-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-styling-mixin.js
 var StylingMixin = (superClass) => class StylingMixin2 extends superClass {
   static get properties() {
     return {
@@ -9651,7 +8822,7 @@ var StylingMixin = (superClass) => class StylingMixin2 extends superClass {
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid-mixin.js
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-mixin.js
 var GridMixin = (superClass) => class extends ColumnAutoWidthMixin(ArrayDataProviderMixin(DataProviderMixin(DynamicColumnsMixin(ActiveItemMixin(ScrollMixin(SelectionMixin(SortMixin(RowDetailsMixin(KeyboardNavigationMixin(A11yMixin(FilterMixin(ColumnReorderingMixin(ColumnResizingMixin(EventContextMixin(DragAndDropMixin(StylingMixin(TabindexMixin(ResizeMixin(superClass))))))))))))))))))) {
   static get observers() {
     return ["_columnTreeChanged(_columnTree)", "_flatSizeChanged(_flatSize, __virtualizer, _hasData, _columnTree)"];
@@ -9732,7 +8903,7 @@ var GridMixin = (superClass) => class extends ColumnAutoWidthMixin(ArrayDataProv
     return itemRect.bottom > scrollTargetRect.top + headerHeight && itemRect.top < scrollTargetRect.bottom - footerHeight;
   }
   _getRenderedRows() {
-    return Array.from(this.$.items.children).filter((item) => !item.hidden).sort((a, b) => a.index - b.index);
+    return Array.from(this.$.items.children).filter((item) => !item.hidden).sort((a3, b3) => a3.index - b3.index);
   }
   _getRowContainingNode(node) {
     const content = getClosestElement("vaadin-grid-cell-content", node);
@@ -9798,15 +8969,15 @@ var GridMixin = (superClass) => class extends ColumnAutoWidthMixin(ArrayDataProv
     this.__rowFocusMode = true;
     row.focus();
   }
-  _flatSizeChanged(flatSize, virtualizer, hasData, columnTree) {
-    if (virtualizer && hasData && columnTree) {
+  _flatSizeChanged(flatSize, virtualizer2, hasData, columnTree) {
+    if (virtualizer2 && hasData && columnTree) {
       const cell = this.shadowRoot.activeElement;
       const cellCoordinates = this.__getBodyCellCoordinates(cell);
-      const previousSize = virtualizer.size || 0;
-      virtualizer.size = flatSize;
-      virtualizer.update(previousSize - 1, previousSize - 1);
+      const previousSize = virtualizer2.size || 0;
+      virtualizer2.size = flatSize;
+      virtualizer2.update(previousSize - 1, previousSize - 1);
       if (flatSize < previousSize) {
-        virtualizer.update(flatSize - 1, flatSize - 1);
+        virtualizer2.update(flatSize - 1, flatSize - 1);
       }
       if (cellCoordinates && cell.parentElement.hidden) {
         this.__focusBodyCell(cellCoordinates);
@@ -9816,7 +8987,7 @@ var GridMixin = (superClass) => class extends ColumnAutoWidthMixin(ArrayDataProv
   }
   _createScrollerRows(count) {
     const rows = [];
-    for (let i = 0;i < count; i++) {
+    for (let i5 = 0;i5 < count; i5++) {
       const row = document.createElement("tr");
       row.setAttribute("role", "row");
       row.setAttribute("tabindex", "-1");
@@ -9828,9 +8999,9 @@ var GridMixin = (superClass) => class extends ColumnAutoWidthMixin(ArrayDataProv
       rows.push(row);
     }
     if (this._columnTree) {
-      this._columnTree[this._columnTree.length - 1].forEach((c) => {
-        if (c.isConnected && c._cells) {
-          c._cells = [...c._cells];
+      this._columnTree[this._columnTree.length - 1].forEach((c4) => {
+        if (c4.isConnected && c4._cells) {
+          c4._cells = [...c4._cells];
         }
       });
     }
@@ -10247,8 +9418,8 @@ var GridMixin = (superClass) => class extends ColumnAutoWidthMixin(ArrayDataProv
   }
 };
 
-// node_modules/@vaadin/grid/src/vaadin-grid.js
-class Grid extends GridMixin(ElementMixin(ThemableMixin(PolylitMixin(LumoInjectionMixin(LitElement))))) {
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid.js
+class Grid extends GridMixin(ElementMixin(ThemableMixin(PolylitMixin(LumoInjectionMixin(i4))))) {
   static get is() {
     return "vaadin-grid";
   }
@@ -10256,7 +9427,7 @@ class Grid extends GridMixin(ElementMixin(ThemableMixin(PolylitMixin(LumoInjecti
     return gridStyles;
   }
   render() {
-    return html`
+    return b2`
       <div
         id="scroller"
         ?safari="${this._safari}"
@@ -10270,7 +9441,7 @@ class Grid extends GridMixin(ElementMixin(ThemableMixin(PolylitMixin(LumoInjecti
           role="treegrid"
           aria-multiselectable="true"
           tabindex="0"
-          aria-label="${ifDefined(this.accessibleName)}"
+          aria-label="${o5(this.accessibleName)}"
         >
           <caption id="sizer" part="row"></caption>
           <thead id="header" role="rowgroup"></thead>
@@ -10295,8 +9466,3403 @@ class Grid extends GridMixin(ElementMixin(ThemableMixin(PolylitMixin(LumoInjecti
   }
 }
 defineCustomElement(Grid);
-// export {
-//   GridColumn,
-//   Grid,
-//   ColumnBaseMixin
-// };
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-column-group-mixin.js
+var GridColumnGroupMixin = (superClass) => class extends ColumnBaseMixin(superClass) {
+  static get properties() {
+    return {
+      _childColumns: {
+        value() {
+          return this._getChildColumns(this);
+        }
+      },
+      flexGrow: {
+        type: Number,
+        readOnly: true,
+        sync: true
+      },
+      width: {
+        type: String,
+        readOnly: true,
+        sync: true
+      },
+      _visibleChildColumns: Array,
+      _colSpan: Number,
+      _rootColumns: Array
+    };
+  }
+  static get observers() {
+    return [
+      "_groupFrozenChanged(frozen, _rootColumns)",
+      "_groupFrozenToEndChanged(frozenToEnd, _rootColumns)",
+      "_groupHiddenChanged(hidden)",
+      "_colSpanChanged(_colSpan, _headerCell, _footerCell)",
+      "_groupOrderChanged(_order, _rootColumns)",
+      "_groupReorderStatusChanged(_reorderStatus, _rootColumns)",
+      "_groupResizableChanged(resizable, _rootColumns)"
+    ];
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    this._addNodeObserver();
+    this._updateFlexAndWidth();
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._observer) {
+      this._observer.disconnect();
+    }
+  }
+  _columnPropChanged(path, value) {
+    if (path === "hidden") {
+      this._preventHiddenSynchronization = true;
+      this._updateVisibleChildColumns(this._childColumns);
+      this._preventHiddenSynchronization = false;
+    }
+    if (/flexGrow|width|hidden|_childColumns/u.test(path)) {
+      this._updateFlexAndWidth();
+    }
+    if (path === "frozen" && !this.frozen) {
+      this.frozen = value;
+    }
+    if (path === "lastFrozen" && !this._lastFrozen) {
+      this._lastFrozen = value;
+    }
+    if (path === "frozenToEnd" && !this.frozenToEnd) {
+      this.frozenToEnd = value;
+    }
+    if (path === "firstFrozenToEnd" && !this._firstFrozenToEnd) {
+      this._firstFrozenToEnd = value;
+    }
+  }
+  _groupOrderChanged(order, rootColumns) {
+    if (rootColumns) {
+      const _rootColumns = rootColumns.slice(0);
+      if (!order) {
+        _rootColumns.forEach((column) => {
+          column._order = 0;
+        });
+        return;
+      }
+      const trailingZeros = /(0+)$/u.exec(order).pop().length;
+      const childCountDigits = ~~(Math.log(rootColumns.length) / Math.LN10) + 1;
+      const scope = 10 ** (trailingZeros - childCountDigits);
+      if (_rootColumns[0] && _rootColumns[0]._order) {
+        _rootColumns.sort((a3, b3) => a3._order - b3._order);
+      }
+      updateColumnOrders(_rootColumns, scope, order);
+    }
+  }
+  _groupReorderStatusChanged(reorderStatus, rootColumns) {
+    if (reorderStatus === undefined || rootColumns === undefined) {
+      return;
+    }
+    rootColumns.forEach((column) => {
+      column._reorderStatus = reorderStatus;
+    });
+  }
+  _groupResizableChanged(resizable, rootColumns) {
+    if (resizable === undefined || rootColumns === undefined) {
+      return;
+    }
+    rootColumns.forEach((column) => {
+      column.resizable = resizable;
+    });
+  }
+  _updateVisibleChildColumns(childColumns) {
+    this._visibleChildColumns = Array.prototype.filter.call(childColumns, (col) => !col.hidden);
+    this._colSpan = this._visibleChildColumns.length;
+    this._updateAutoHidden();
+  }
+  _updateFlexAndWidth() {
+    if (!this._visibleChildColumns) {
+      return;
+    }
+    if (this._visibleChildColumns.length > 0) {
+      const width = this._visibleChildColumns.reduce((prev, curr) => {
+        prev += ` + ${(curr.width || "0px").replace("calc", "")}`;
+        return prev;
+      }, "").substring(3);
+      this._setWidth(`calc(${width})`);
+    } else {
+      this._setWidth("0px");
+    }
+    this._setFlexGrow(Array.prototype.reduce.call(this._visibleChildColumns, (prev, curr) => prev + curr.flexGrow, 0));
+  }
+  __scheduleAutoFreezeWarning(columns, frozenProp) {
+    if (this._grid) {
+      const frozenAttr = frozenProp.replace(/([A-Z])/gu, "-$1").toLowerCase();
+      const firstColumnFrozen = columns[0][frozenProp] || columns[0].hasAttribute(frozenAttr);
+      const allSameFrozen = columns.every((column) => {
+        return (column[frozenProp] || column.hasAttribute(frozenAttr)) === firstColumnFrozen;
+      });
+      if (!allSameFrozen) {
+        this._grid.__autoFreezeWarningDebouncer = Debouncer.debounce(this._grid.__autoFreezeWarningDebouncer, animationFrame, () => {
+          console.warn(`WARNING: Joining ${frozenProp} and non-${frozenProp} Grid columns inside the same column group! ` + `This will automatically freeze all the joined columns to avoid rendering issues. ` + `If this was intentional, consider marking each joined column explicitly as ${frozenProp}. ` + `Otherwise, exclude the ${frozenProp} columns from the joined group.`);
+        });
+      }
+    }
+  }
+  _groupFrozenChanged(frozen, rootColumns) {
+    if (rootColumns === undefined || frozen === undefined) {
+      return;
+    }
+    if (frozen !== false) {
+      this.__scheduleAutoFreezeWarning(rootColumns, "frozen");
+      Array.from(rootColumns).forEach((col) => {
+        col.frozen = frozen;
+      });
+    }
+  }
+  _groupFrozenToEndChanged(frozenToEnd, rootColumns) {
+    if (rootColumns === undefined || frozenToEnd === undefined) {
+      return;
+    }
+    if (frozenToEnd !== false) {
+      this.__scheduleAutoFreezeWarning(rootColumns, "frozenToEnd");
+      Array.from(rootColumns).forEach((col) => {
+        col.frozenToEnd = frozenToEnd;
+      });
+    }
+  }
+  _groupHiddenChanged(hidden) {
+    if (hidden || this.__groupHiddenInitialized) {
+      this._synchronizeHidden();
+    }
+    this.__groupHiddenInitialized = true;
+  }
+  _updateAutoHidden() {
+    const wasAutoHidden = this._autoHidden;
+    this._autoHidden = (this._visibleChildColumns || []).length === 0;
+    if (wasAutoHidden || this._autoHidden) {
+      this.hidden = this._autoHidden;
+    }
+  }
+  _synchronizeHidden() {
+    if (this._childColumns && !this._preventHiddenSynchronization) {
+      this._childColumns.forEach((column) => {
+        column.hidden = this.hidden;
+      });
+    }
+  }
+  _colSpanChanged(colSpan, headerCell, footerCell) {
+    if (headerCell) {
+      headerCell.setAttribute("colspan", colSpan);
+      if (this._grid) {
+        this._grid.__a11yUpdateCellColspan(headerCell, colSpan);
+      }
+    }
+    if (footerCell) {
+      footerCell.setAttribute("colspan", colSpan);
+      if (this._grid) {
+        this._grid.__a11yUpdateCellColspan(footerCell, colSpan);
+      }
+    }
+  }
+  _getChildColumns(el) {
+    return ColumnObserver.getColumns(el);
+  }
+  _addNodeObserver() {
+    this._observer = new ColumnObserver(this, () => {
+      this._preventHiddenSynchronization = true;
+      this._rootColumns = this._getChildColumns(this);
+      this._childColumns = this._rootColumns;
+      this._updateVisibleChildColumns(this._childColumns);
+      this._preventHiddenSynchronization = false;
+      if (this._grid && this._grid._debounceUpdateColumnTree) {
+        this._grid._debounceUpdateColumnTree();
+      }
+    });
+    this._observer.flush();
+  }
+  _isColumnElement(node) {
+    return node.nodeType === Node.ELEMENT_NODE && /\bcolumn\b/u.test(node.localName);
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-column-group.js
+class GridColumnGroup extends GridColumnGroupMixin(PolylitMixin(i4)) {
+  static get is() {
+    return "vaadin-grid-column-group";
+  }
+}
+defineCustomElement(GridColumnGroup);
+// app/components/node_modules/@vaadin/input-container/src/styles/vaadin-input-container-base-styles.js
+var inputContainerStyles = i`
+  :host {
+    display: flex;
+    align-items: center;
+    --_radius: var(--vaadin-input-field-border-radius, var(--vaadin-radius-m));
+    border-radius:
+      /* See https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius */
+      var(--vaadin-input-field-top-start-radius, var(--_radius))
+      var(--vaadin-input-field-top-end-radius, var(--_radius))
+      var(--vaadin-input-field-bottom-end-radius, var(--_radius))
+      var(--vaadin-input-field-bottom-start-radius, var(--_radius));
+    border: var(--vaadin-input-field-border-width, 1px) solid
+      var(--vaadin-input-field-border-color, var(--vaadin-border-color));
+    box-sizing: border-box;
+    cursor: text;
+    padding: var(
+      --vaadin-input-field-padding,
+      var(--vaadin-padding-block-container) var(--vaadin-padding-inline-container)
+    );
+    gap: var(--vaadin-input-field-gap, var(--vaadin-gap-s));
+    background: var(--vaadin-input-field-background, var(--vaadin-background-color));
+    color: var(--vaadin-input-field-value-color, var(--vaadin-text-color));
+    font-size: var(--vaadin-input-field-value-font-size, inherit);
+    line-height: var(--vaadin-input-field-value-line-height, inherit);
+    font-weight: var(--vaadin-input-field-value-font-weight, 400);
+  }
+
+  :host([dir='rtl']) {
+    --_radius: var(--vaadin-input-field-border-radius, var(--vaadin-radius-m));
+    border-radius:
+      /* Don't use logical props, see https://github.com/vaadin/vaadin-time-picker/issues/145 */
+      var(--vaadin-input-field-top-end-radius, var(--_radius))
+      var(--vaadin-input-field-top-start-radius, var(--_radius))
+      var(--vaadin-input-field-bottom-start-radius, var(--_radius))
+      var(--vaadin-input-field-bottom-end-radius, var(--_radius));
+  }
+
+  :host([hidden]) {
+    display: none !important;
+  }
+
+  /* Reset the native input styles */
+  ::slotted(:is(input, textarea)) {
+    appearance: none;
+    align-self: stretch;
+    box-sizing: border-box;
+    flex: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    min-width: 0;
+    font: inherit;
+    font-size: 1em;
+    color: inherit;
+    background: transparent;
+    cursor: inherit;
+    text-align: inherit;
+    caret-color: var(--vaadin-input-field-value-color);
+  }
+
+  ::slotted(*) {
+    flex: none;
+  }
+
+  slot[name$='fix'] {
+    cursor: auto;
+  }
+
+  ::slotted(:is(input, textarea))::placeholder {
+    /* Use ::slotted(:is(input, textarea):placeholder-shown) to style the placeholder */
+    /* because ::slotted(...)::placeholder does not work in Safari. */
+    font: inherit;
+    color: inherit;
+  }
+
+  ::slotted(:is(input, textarea):placeholder-shown) {
+    color: var(--vaadin-input-field-placeholder-color, var(--vaadin-text-color-secondary));
+  }
+
+  :host(:focus-within) {
+    outline: var(--vaadin-focus-ring-width) solid var(--vaadin-focus-ring-color);
+    outline-offset: calc(var(--vaadin-input-field-border-width, 1px) * -1);
+  }
+
+  :host([invalid]) {
+    --vaadin-input-field-border-color: var(--vaadin-input-field-error-color, var(--vaadin-text-color));
+  }
+
+  :host([readonly]) {
+    border-style: dashed;
+  }
+
+  :host([readonly]:focus-within) {
+    outline-style: dashed;
+    --vaadin-input-field-border-color: transparent;
+  }
+
+  :host([disabled]) {
+    --vaadin-input-field-value-color: var(--vaadin-input-field-disabled-text-color, var(--vaadin-text-color-disabled));
+    --vaadin-input-field-background: var(
+      --vaadin-input-field-disabled-background,
+      var(--vaadin-background-container-strong)
+    );
+    --vaadin-input-field-border-color: transparent;
+  }
+
+  :host([theme~='align-start']) slot:not([name])::slotted(*) {
+    text-align: start;
+  }
+
+  :host([theme~='align-center']) slot:not([name])::slotted(*) {
+    text-align: center;
+  }
+
+  :host([theme~='align-end']) slot:not([name])::slotted(*) {
+    text-align: end;
+  }
+
+  :host([theme~='align-left']) slot:not([name])::slotted(*) {
+    text-align: left;
+  }
+
+  :host([theme~='align-right']) slot:not([name])::slotted(*) {
+    text-align: right;
+  }
+
+  @media (forced-colors: active) {
+    :host {
+      --vaadin-input-field-background: Field;
+      --vaadin-input-field-value-color: FieldText;
+      --vaadin-input-field-placeholder-color: GrayText;
+    }
+
+    :host([disabled]) {
+      --vaadin-input-field-value-color: GrayText;
+      --vaadin-icon-color: GrayText;
+    }
+  }
+`;
+
+// app/components/node_modules/@vaadin/input-container/src/vaadin-input-container.js
+class InputContainer extends ThemableMixin(DirMixin(PolylitMixin(LumoInjectionMixin(i4)))) {
+  static get is() {
+    return "vaadin-input-container";
+  }
+  static get styles() {
+    return inputContainerStyles;
+  }
+  static get properties() {
+    return {
+      disabled: {
+        type: Boolean,
+        reflectToAttribute: true
+      },
+      readonly: {
+        type: Boolean,
+        reflectToAttribute: true
+      },
+      invalid: {
+        type: Boolean,
+        reflectToAttribute: true
+      }
+    };
+  }
+  render() {
+    return b2`
+      <slot name="prefix"></slot>
+      <slot></slot>
+      <slot name="suffix"></slot>
+    `;
+  }
+  ready() {
+    super.ready();
+    this.addEventListener("pointerdown", (event) => {
+      if (event.target === this) {
+        event.preventDefault();
+      }
+    });
+    this.addEventListener("click", (event) => {
+      if (event.target === this) {
+        this.shadowRoot.querySelector("slot:not([name])").assignedNodes({ flatten: true }).forEach((node) => node.focus && node.focus());
+      }
+    });
+  }
+}
+defineCustomElement(InputContainer);
+
+// app/components/node_modules/@vaadin/field-base/src/styles/button-base-styles.js
+var button = i`
+  [part$='button'] {
+    color: var(--vaadin-input-field-button-text-color, var(--vaadin-text-color-secondary));
+    cursor: var(--vaadin-clickable-cursor);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    /* Ensure minimum click target (WCAG) */
+    padding: max(0px, (24px - 1lh) / 2);
+    margin: min(0px, (24px - 1lh) / -2);
+  }
+
+  /* Icon */
+  [part$='button']::before {
+    background: currentColor;
+    content: '';
+    display: block;
+    height: var(--vaadin-icon-size, 1lh);
+    width: var(--vaadin-icon-size, 1lh);
+    mask-size: var(--vaadin-icon-visual-size, 100%);
+    mask-position: 50%;
+    mask-repeat: no-repeat;
+  }
+
+  :host(:is(:not([clear-button-visible][has-value]), [disabled], [readonly])) [part~='clear-button'] {
+    display: none;
+  }
+
+  [part~='clear-button']::before {
+    mask-image: var(--_vaadin-icon-cross);
+  }
+
+  :host(:is([readonly], [disabled])) [part$='button'] {
+    color: var(--vaadin-text-color-disabled);
+    cursor: var(--vaadin-disabled-cursor);
+  }
+
+  @media (forced-colors: active) {
+    [part$='button']::before {
+      background: CanvasText;
+    }
+
+    :host([disabled]) [part$='button'] {
+      color: GrayText;
+    }
+
+    :host([disabled]) [part$='button']::before {
+      background: GrayText;
+    }
+  }
+`;
+
+// app/components/node_modules/@vaadin/field-base/src/styles/field-base-styles.js
+var field = i`
+  :host {
+    --_helper-below-field: initial;
+    --_helper-above-field: ;
+    --_no-label: initial;
+    --_has-label: ;
+    --_no-helper: initial;
+    --_has-helper: ;
+    --_no-error: initial;
+    --_has-error: ;
+    --_gap: var(--vaadin-input-field-container-gap, var(--vaadin-gap-xs));
+    --_gap-s: round(var(--_gap) / 3, 2px);
+    display: inline-grid;
+    grid-template:
+      'label' auto var(--_helper-above-field, 'helper' auto) 'baseline' 0 'input' 1fr var(
+        --_helper-below-field,
+        'helper' auto
+      )
+      'error' auto / 100%;
+    outline: none;
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :host([has-label]) {
+    --_has-label: initial;
+    --_no-label: ;
+  }
+
+  :host([has-helper]) {
+    --_has-helper: initial;
+    --_no-helper: ;
+  }
+
+  :host([has-error-message]) {
+    --_has-error: initial;
+    --_no-error: ;
+  }
+
+  :host([hidden]) {
+    display: none !important;
+  }
+
+  :host(:not([has-label])) [part='label'],
+  :host(:not([has-helper])) [part='helper-text'],
+  :host(:not([has-error-message])) [part='error-message'] {
+    display: none;
+  }
+
+  /* Baseline alignment guide */
+  :host::before {
+    content: '\\2003' / '';
+    grid-column: 1;
+    grid-row: var(--_has-label, label / baseline) var(--_no-label, label / input);
+    align-self: var(--_has-label, end) var(--_no-label, start);
+    font-size: var(--vaadin-input-field-value-font-size, inherit);
+    line-height: var(--vaadin-input-field-value-line-height, inherit);
+    padding: var(
+      --vaadin-input-field-padding,
+      var(--vaadin-padding-block-container) var(--vaadin-padding-inline-container)
+    );
+    border: var(--vaadin-input-field-border-width, 1px) solid transparent;
+    pointer-events: none;
+    margin-bottom: var(--_no-label, 0)
+      var(
+        --_has-label,
+        calc(
+          var(
+              --vaadin-field-baseline-input-height,
+              (1lh + var(--vaadin-padding-block-container) * 2 + var(--vaadin-input-field-border-width, 1px) * 2)
+            ) *
+            -1
+        )
+      );
+  }
+
+  [class$='container'] {
+    display: contents;
+  }
+
+  [part] {
+    grid-column: 1;
+  }
+
+  [part='label'] {
+    font-size: var(--vaadin-input-field-label-font-size, inherit);
+    line-height: var(--vaadin-input-field-label-line-height, inherit);
+    font-weight: var(--vaadin-input-field-label-font-weight, 500);
+    color: var(--vaadin-input-field-label-color, var(--vaadin-text-color));
+    word-break: break-word;
+    position: relative;
+    grid-area: label;
+    margin-bottom: var(--_helper-below-field, var(--_gap)) var(--_helper-above-field, var(--_no-helper, var(--_gap)));
+  }
+
+  ::slotted(label) {
+    cursor: inherit;
+  }
+
+  :host([disabled]) [part='label'],
+  :host([disabled]) ::slotted(label) {
+    opacity: 0.5;
+  }
+
+  :host([disabled]) [part='label'] ::slotted(label) {
+    opacity: 1;
+  }
+
+  :host([required]) [part='label'] {
+    padding-inline-end: 1em;
+  }
+
+  [part='required-indicator'] {
+    display: inline-block;
+    position: absolute;
+    width: 1em;
+    text-align: center;
+    color: var(--vaadin-input-field-required-indicator-color, var(--vaadin-text-color-secondary));
+  }
+
+  [part='required-indicator']::after {
+    content: var(--vaadin-input-field-required-indicator, '*');
+  }
+
+  :host(:not([required])) [part='required-indicator'] {
+    display: none;
+  }
+
+  [part='label'],
+  [part='helper-text'],
+  [part='error-message'] {
+    width: min-content;
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+
+  [part='input-field'],
+  [part='group-field'],
+  [part='input-fields'] {
+    grid-area: input;
+  }
+
+  [part='input-field'] {
+    width: var(--vaadin-field-default-width, 12em);
+    max-width: 100%;
+    min-width: 100%;
+  }
+
+  :host([readonly]) [part='input-field'] {
+    cursor: default;
+  }
+
+  :host([disabled]) [part='input-field'] {
+    cursor: var(--vaadin-disabled-cursor);
+  }
+
+  [part='helper-text'] {
+    font-size: var(--vaadin-input-field-helper-font-size, inherit);
+    line-height: var(--vaadin-input-field-helper-line-height, inherit);
+    font-weight: var(--vaadin-input-field-helper-font-weight, 400);
+    color: var(--vaadin-input-field-helper-color, var(--vaadin-text-color-secondary));
+    grid-area: helper;
+    margin-top: var(--_helper-above-field, var(--_gap-s)) var(--_helper-below-field, var(--_gap));
+    margin-bottom: var(--_helper-above-field, var(--_gap));
+  }
+
+  [part='error-message'] {
+    font-size: var(--vaadin-input-field-error-font-size, inherit);
+    line-height: var(--vaadin-input-field-error-line-height, inherit);
+    font-weight: var(--vaadin-input-field-error-font-weight, 400);
+    color: var(--vaadin-input-field-error-color, var(--vaadin-text-color));
+    display: flex;
+    gap: var(--vaadin-gap-xs);
+    grid-area: error;
+    margin-top: var(--_has-helper, var(--_helper-below-field, var(--_gap-s)) var(--_helper-above-field, var(--_gap)))
+      var(--_no-helper, var(--_gap));
+  }
+
+  [part='error-message']::before {
+    content: '';
+    display: inline-block;
+    flex: none;
+    width: var(--vaadin-icon-size, 1lh);
+    height: var(--vaadin-icon-size, 1lh);
+    mask: var(--_vaadin-icon-warn) 50% / var(--vaadin-icon-visual-size, 100%) no-repeat;
+    background: currentColor;
+  }
+
+  :host([theme~='helper-above-field']) {
+    --_helper-above-field: initial;
+    --_helper-below-field: ;
+  }
+
+  @media (forced-colors: active) {
+    [part='error-message']::before {
+      background: CanvasText;
+    }
+  }
+`;
+
+// app/components/node_modules/@vaadin/field-base/src/styles/input-field-shared-styles.js
+var inputFieldShared = [field, button];
+
+// app/components/node_modules/@vaadin/field-base/src/input-controller.js
+class InputController extends SlotController {
+  constructor(host, callback, options = {}) {
+    const { uniqueIdPrefix } = options;
+    super(host, "input", "input", {
+      initializer: (node, host2) => {
+        if (host2.value) {
+          node.value = host2.value;
+        }
+        if (host2.type) {
+          node.setAttribute("type", host2.type);
+        }
+        node.id = this.defaultId;
+        if (typeof callback === "function") {
+          callback(node);
+        }
+      },
+      useUniqueId: true,
+      uniqueIdPrefix
+    });
+  }
+}
+
+// app/components/node_modules/@vaadin/a11y-base/src/focus-mixin.js
+var FocusMixin = dedupeMixin((superclass) => class FocusMixinClass extends superclass {
+  get _keyboardActive() {
+    return isKeyboardActive();
+  }
+  ready() {
+    this.addEventListener("focusin", (e4) => {
+      if (this._shouldSetFocus(e4)) {
+        this._setFocused(true);
+      }
+    });
+    this.addEventListener("focusout", (e4) => {
+      if (this._shouldRemoveFocus(e4)) {
+        this._setFocused(false);
+      }
+    });
+    super.ready();
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.hasAttribute("focused")) {
+      this._setFocused(false);
+    }
+  }
+  focus(options) {
+    super.focus(options);
+    if (!(options && options.focusVisible === false)) {
+      this.setAttribute("focus-ring", "");
+    }
+  }
+  _setFocused(focused) {
+    this.toggleAttribute("focused", focused);
+    this.toggleAttribute("focus-ring", focused && this._keyboardActive);
+  }
+  _shouldSetFocus(_event) {
+    return true;
+  }
+  _shouldRemoveFocus(_event) {
+    return true;
+  }
+});
+
+// app/components/node_modules/@vaadin/a11y-base/src/delegate-focus-mixin.js
+var DelegateFocusMixin = dedupeMixin((superclass) => class DelegateFocusMixinClass extends FocusMixin(TabindexMixin(superclass)) {
+  static get properties() {
+    return {
+      autofocus: {
+        type: Boolean
+      },
+      focusElement: {
+        type: Object,
+        readOnly: true,
+        observer: "_focusElementChanged",
+        sync: true
+      },
+      _lastTabIndex: {
+        value: 0
+      }
+    };
+  }
+  constructor() {
+    super();
+    this._boundOnBlur = this._onBlur.bind(this);
+    this._boundOnFocus = this._onFocus.bind(this);
+  }
+  ready() {
+    super.ready();
+    if (this.autofocus && !this.disabled) {
+      requestAnimationFrame(() => {
+        this.focus();
+      });
+    }
+  }
+  focus(options) {
+    if (this.focusElement && !this.disabled) {
+      this.focusElement.focus();
+      if (!(options && options.focusVisible === false)) {
+        this.setAttribute("focus-ring", "");
+      }
+    }
+  }
+  blur() {
+    if (this.focusElement) {
+      this.focusElement.blur();
+    }
+  }
+  click() {
+    if (this.focusElement && !this.disabled) {
+      this.focusElement.click();
+    }
+  }
+  _focusElementChanged(element, oldElement) {
+    if (element) {
+      element.disabled = this.disabled;
+      this._addFocusListeners(element);
+      this.__forwardTabIndex(this.tabindex);
+    } else if (oldElement) {
+      this._removeFocusListeners(oldElement);
+    }
+  }
+  _addFocusListeners(element) {
+    element.addEventListener("blur", this._boundOnBlur);
+    element.addEventListener("focus", this._boundOnFocus);
+  }
+  _removeFocusListeners(element) {
+    element.removeEventListener("blur", this._boundOnBlur);
+    element.removeEventListener("focus", this._boundOnFocus);
+  }
+  _onFocus(event) {
+    event.stopPropagation();
+    this.dispatchEvent(new Event("focus"));
+  }
+  _onBlur(event) {
+    event.stopPropagation();
+    this.dispatchEvent(new Event("blur"));
+  }
+  _shouldSetFocus(event) {
+    return event.target === this.focusElement;
+  }
+  _shouldRemoveFocus(event) {
+    return event.target === this.focusElement;
+  }
+  _disabledChanged(disabled, oldDisabled) {
+    super._disabledChanged(disabled, oldDisabled);
+    if (this.focusElement) {
+      this.focusElement.disabled = disabled;
+    }
+    if (disabled) {
+      this.blur();
+    }
+  }
+  _tabindexChanged(tabindex) {
+    this.__forwardTabIndex(tabindex);
+  }
+  __forwardTabIndex(tabindex) {
+    if (tabindex !== undefined && this.focusElement) {
+      this.focusElement.tabIndex = tabindex;
+      if (tabindex !== -1) {
+        this.tabindex = undefined;
+      }
+    }
+    if (this.disabled && tabindex) {
+      if (tabindex !== -1) {
+        this._lastTabIndex = tabindex;
+      }
+      this.tabindex = undefined;
+    }
+    if (tabindex === undefined && this.hasAttribute("tabindex")) {
+      this.removeAttribute("tabindex");
+    }
+  }
+});
+
+// app/components/node_modules/@vaadin/a11y-base/src/keyboard-mixin.js
+var KeyboardMixin = dedupeMixin((superclass) => class KeyboardMixinClass extends superclass {
+  ready() {
+    super.ready();
+    this.addEventListener("keydown", (event) => {
+      this._onKeyDown(event);
+    });
+    this.addEventListener("keyup", (event) => {
+      this._onKeyUp(event);
+    });
+  }
+  _onKeyDown(event) {
+    switch (event.key) {
+      case "Enter":
+        this._onEnter(event);
+        break;
+      case "Escape":
+        this._onEscape(event);
+        break;
+      default:
+        break;
+    }
+  }
+  _onKeyUp(_event) {
+  }
+  _onEnter(_event) {
+  }
+  _onEscape(_event) {
+  }
+});
+
+// app/components/node_modules/@vaadin/component-base/src/slot-styles-mixin.js
+var getRootStyles = function(root) {
+  if (!stylesMap.has(root)) {
+    stylesMap.set(root, new Set);
+  }
+  return stylesMap.get(root);
+};
+var insertStyles = function(styles, root) {
+  const style = document.createElement("style");
+  style.textContent = styles;
+  if (root === document) {
+    document.head.appendChild(style);
+  } else {
+    root.insertBefore(style, root.firstChild);
+  }
+};
+var stylesMap = new WeakMap;
+var SlotStylesMixin = dedupeMixin((superclass) => class SlotStylesMixinClass extends superclass {
+  get slotStyles() {
+    return [];
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    this.__applySlotStyles();
+  }
+  __applySlotStyles() {
+    const root = this.getRootNode();
+    const rootStyles = getRootStyles(root);
+    this.slotStyles.forEach((styles) => {
+      if (!rootStyles.has(styles)) {
+        insertStyles(styles, root);
+        rootStyles.add(styles);
+      }
+    });
+  }
+});
+
+// app/components/node_modules/@vaadin/field-base/src/input-mixin.js
+var InputMixin = dedupeMixin((superclass) => class InputMixinClass extends superclass {
+  static get properties() {
+    return {
+      inputElement: {
+        type: Object,
+        readOnly: true,
+        observer: "_inputElementChanged",
+        sync: true
+      },
+      type: {
+        type: String,
+        readOnly: true
+      },
+      value: {
+        type: String,
+        value: "",
+        observer: "_valueChanged",
+        notify: true,
+        sync: true
+      }
+    };
+  }
+  constructor() {
+    super();
+    this._boundOnInput = this._onInput.bind(this);
+    this._boundOnChange = this._onChange.bind(this);
+  }
+  get _hasValue() {
+    return this.value != null && this.value !== "";
+  }
+  get _inputElementValueProperty() {
+    return "value";
+  }
+  get _inputElementValue() {
+    return this.inputElement ? this.inputElement[this._inputElementValueProperty] : undefined;
+  }
+  set _inputElementValue(value) {
+    if (this.inputElement) {
+      this.inputElement[this._inputElementValueProperty] = value;
+    }
+  }
+  clear() {
+    this.value = "";
+    this._inputElementValue = "";
+  }
+  _addInputListeners(input) {
+    input.addEventListener("input", this._boundOnInput);
+    input.addEventListener("change", this._boundOnChange);
+  }
+  _removeInputListeners(input) {
+    input.removeEventListener("input", this._boundOnInput);
+    input.removeEventListener("change", this._boundOnChange);
+  }
+  _forwardInputValue(value) {
+    if (!this.inputElement) {
+      return;
+    }
+    this._inputElementValue = value != null ? value : "";
+  }
+  _inputElementChanged(input, oldInput) {
+    if (input) {
+      this._addInputListeners(input);
+    } else if (oldInput) {
+      this._removeInputListeners(oldInput);
+    }
+  }
+  _onInput(event) {
+    const target = event.composedPath()[0];
+    this.__userInput = event.isTrusted;
+    this.value = target.value;
+    this.__userInput = false;
+  }
+  _onChange(_event) {
+  }
+  _toggleHasValue(hasValue) {
+    this.toggleAttribute("has-value", hasValue);
+  }
+  _valueChanged(newVal, oldVal) {
+    this._toggleHasValue(this._hasValue);
+    if (newVal === "" && oldVal === undefined) {
+      return;
+    }
+    if (this.__userInput) {
+      return;
+    }
+    this._forwardInputValue(newVal);
+  }
+});
+
+// app/components/node_modules/@vaadin/field-base/src/clear-button-mixin.js
+var ClearButtonMixin = (superclass) => class ClearButtonMixinClass extends InputMixin(KeyboardMixin(superclass)) {
+  static get properties() {
+    return {
+      clearButtonVisible: {
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      }
+    };
+  }
+  get clearElement() {
+    console.warn(`Please implement the 'clearElement' property in <${this.localName}>`);
+    return null;
+  }
+  ready() {
+    super.ready();
+    if (this.clearElement) {
+      this.clearElement.addEventListener("mousedown", (event) => this._onClearButtonMouseDown(event));
+      this.clearElement.addEventListener("click", (event) => this._onClearButtonClick(event));
+    }
+  }
+  _onClearButtonClick(event) {
+    event.preventDefault();
+    this._onClearAction();
+  }
+  _onClearButtonMouseDown(event) {
+    if (this._shouldKeepFocusOnClearMousedown()) {
+      event.preventDefault();
+    }
+    if (!isTouch) {
+      this.inputElement.focus();
+    }
+  }
+  _onEscape(event) {
+    super._onEscape(event);
+    if (this.clearButtonVisible && !!this.value && !this.readonly) {
+      event.stopPropagation();
+      this._onClearAction();
+    }
+  }
+  _onClearAction() {
+    this._inputElementValue = "";
+    this.inputElement.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
+    this.inputElement.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+  _shouldKeepFocusOnClearMousedown() {
+    return isElementFocused(this.inputElement);
+  }
+};
+
+// app/components/node_modules/@vaadin/a11y-base/src/aria-id-reference.js
+var getAttrMap = function(attr) {
+  if (!attributeToTargets.has(attr)) {
+    attributeToTargets.set(attr, new WeakMap);
+  }
+  return attributeToTargets.get(attr);
+};
+var cleanAriaIDReference = function(target, attr) {
+  if (!target) {
+    return;
+  }
+  target.removeAttribute(attr);
+};
+var storeAriaIDReference = function(target, attr) {
+  if (!target || !attr) {
+    return;
+  }
+  const attributeMap = getAttrMap(attr);
+  if (attributeMap.has(target)) {
+    return;
+  }
+  const values = deserializeAttributeValue(target.getAttribute(attr));
+  attributeMap.set(target, new Set(values));
+};
+function restoreGeneratedAriaIDReference(target, attr) {
+  if (!target || !attr) {
+    return;
+  }
+  const attributeMap = getAttrMap(attr);
+  const values = attributeMap.get(target);
+  if (!values || values.size === 0) {
+    target.removeAttribute(attr);
+  } else {
+    addValueToAttribute(target, attr, serializeAttributeValue(values));
+  }
+  attributeMap.delete(target);
+}
+function setAriaIDReference(target, attr, config = { newId: null, oldId: null, fromUser: false }) {
+  if (!target || !attr) {
+    return;
+  }
+  const { newId, oldId, fromUser } = config;
+  const attributeMap = getAttrMap(attr);
+  const storedValues = attributeMap.get(target);
+  if (!fromUser && !!storedValues) {
+    oldId && storedValues.delete(oldId);
+    newId && storedValues.add(newId);
+    return;
+  }
+  if (fromUser) {
+    if (!storedValues) {
+      storeAriaIDReference(target, attr);
+    } else if (!newId) {
+      attributeMap.delete(target);
+    }
+    cleanAriaIDReference(target, attr);
+  }
+  removeValueFromAttribute(target, attr, oldId);
+  const attributeValue = !newId ? serializeAttributeValue(storedValues) : newId;
+  if (attributeValue) {
+    addValueToAttribute(target, attr, attributeValue);
+  }
+}
+function removeAriaIDReference(target, attr) {
+  storeAriaIDReference(target, attr);
+  cleanAriaIDReference(target, attr);
+}
+var attributeToTargets = new Map;
+
+// app/components/node_modules/@vaadin/a11y-base/src/field-aria-controller.js
+class FieldAriaController {
+  constructor(host) {
+    this.host = host;
+    this.__required = false;
+  }
+  setTarget(target) {
+    this.__target = target;
+    this.__setAriaRequiredAttribute(this.__required);
+    this.__setLabelIdToAriaAttribute(this.__labelId, this.__labelId);
+    if (this.__labelIdFromUser != null) {
+      this.__setLabelIdToAriaAttribute(this.__labelIdFromUser, this.__labelIdFromUser, true);
+    }
+    this.__setErrorIdToAriaAttribute(this.__errorId);
+    this.__setHelperIdToAriaAttribute(this.__helperId);
+    this.setAriaLabel(this.__label);
+  }
+  setRequired(required) {
+    this.__setAriaRequiredAttribute(required);
+    this.__required = required;
+  }
+  setAriaLabel(label) {
+    this.__setAriaLabelToAttribute(label);
+    this.__label = label;
+  }
+  setLabelId(labelId, fromUser = false) {
+    const oldLabelId = fromUser ? this.__labelIdFromUser : this.__labelId;
+    this.__setLabelIdToAriaAttribute(labelId, oldLabelId, fromUser);
+    if (fromUser) {
+      this.__labelIdFromUser = labelId;
+    } else {
+      this.__labelId = labelId;
+    }
+  }
+  setErrorId(errorId) {
+    this.__setErrorIdToAriaAttribute(errorId, this.__errorId);
+    this.__errorId = errorId;
+  }
+  setHelperId(helperId) {
+    this.__setHelperIdToAriaAttribute(helperId, this.__helperId);
+    this.__helperId = helperId;
+  }
+  __setAriaLabelToAttribute(label) {
+    if (!this.__target) {
+      return;
+    }
+    if (label) {
+      removeAriaIDReference(this.__target, "aria-labelledby");
+      this.__target.setAttribute("aria-label", label);
+    } else if (this.__label) {
+      restoreGeneratedAriaIDReference(this.__target, "aria-labelledby");
+      this.__target.removeAttribute("aria-label");
+    }
+  }
+  __setLabelIdToAriaAttribute(labelId, oldLabelId, fromUser) {
+    setAriaIDReference(this.__target, "aria-labelledby", { newId: labelId, oldId: oldLabelId, fromUser });
+  }
+  __setErrorIdToAriaAttribute(errorId, oldErrorId) {
+    setAriaIDReference(this.__target, "aria-describedby", { newId: errorId, oldId: oldErrorId, fromUser: false });
+  }
+  __setHelperIdToAriaAttribute(helperId, oldHelperId) {
+    setAriaIDReference(this.__target, "aria-describedby", { newId: helperId, oldId: oldHelperId, fromUser: false });
+  }
+  __setAriaRequiredAttribute(required) {
+    if (!this.__target) {
+      return;
+    }
+    if (["input", "textarea"].includes(this.__target.localName)) {
+      return;
+    }
+    if (required) {
+      this.__target.setAttribute("aria-required", "true");
+    } else {
+      this.__target.removeAttribute("aria-required");
+    }
+  }
+}
+
+// app/components/node_modules/@vaadin/a11y-base/src/announce.js
+function announce(text, options = {}) {
+  const mode = options.mode || "polite";
+  const timeout = options.timeout === undefined ? 150 : options.timeout;
+  if (mode === "alert") {
+    region.removeAttribute("aria-live");
+    region.removeAttribute("role");
+    alertDebouncer = Debouncer.debounce(alertDebouncer, animationFrame, () => {
+      region.setAttribute("role", "alert");
+    });
+  } else {
+    if (alertDebouncer) {
+      alertDebouncer.cancel();
+    }
+    region.removeAttribute("role");
+    region.setAttribute("aria-live", mode);
+  }
+  region.textContent = "";
+  setTimeout(() => {
+    region.textContent = text;
+  }, timeout);
+}
+var region = document.createElement("div");
+region.style.position = "fixed";
+region.style.clip = "rect(0px, 0px, 0px, 0px)";
+region.setAttribute("aria-live", "polite");
+document.body.appendChild(region);
+var alertDebouncer;
+
+// app/components/node_modules/@vaadin/component-base/src/slot-child-observe-controller.js
+class SlotChildObserveController extends SlotController {
+  constructor(host, slot, tagName, config = {}) {
+    super(host, slot, tagName, { ...config, useUniqueId: true });
+  }
+  initCustomNode(node) {
+    this.__updateNodeId(node);
+    this.__notifyChange(node);
+  }
+  teardownNode(_node) {
+    const node = this.getSlotChild();
+    if (node && node !== this.defaultNode) {
+      this.__notifyChange(node);
+    } else {
+      this.restoreDefaultNode();
+      this.updateDefaultNode(this.node);
+    }
+  }
+  attachDefaultNode() {
+    const node = super.attachDefaultNode();
+    if (node) {
+      this.__updateNodeId(node);
+    }
+    return node;
+  }
+  restoreDefaultNode() {
+  }
+  updateDefaultNode(node) {
+    this.__notifyChange(node);
+  }
+  observeNode(node) {
+    if (this.__nodeObserver) {
+      this.__nodeObserver.disconnect();
+    }
+    this.__nodeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        const target = mutation.target;
+        const isCurrentNodeMutation = target === this.node;
+        if (mutation.type === "attributes") {
+          if (isCurrentNodeMutation) {
+            this.__updateNodeId(target);
+          }
+        } else if (isCurrentNodeMutation || target.parentElement === this.node) {
+          this.__notifyChange(this.node);
+        }
+      });
+    });
+    this.__nodeObserver.observe(node, {
+      attributes: true,
+      attributeFilter: ["id"],
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+  __hasContent(node) {
+    if (!node) {
+      return false;
+    }
+    return node.nodeType === Node.ELEMENT_NODE && (customElements.get(node.localName) || node.children.length > 0) || node.textContent && node.textContent.trim() !== "";
+  }
+  __notifyChange(node) {
+    this.dispatchEvent(new CustomEvent("slot-content-changed", {
+      detail: { hasContent: this.__hasContent(node), node }
+    }));
+  }
+  __updateNodeId(node) {
+    const isFirstNode = !this.nodes || node === this.nodes[0];
+    if (node.nodeType === Node.ELEMENT_NODE && (!this.multiple || isFirstNode) && !node.id) {
+      node.id = this.defaultId;
+    }
+  }
+}
+
+// app/components/node_modules/@vaadin/field-base/src/error-controller.js
+class ErrorController extends SlotChildObserveController {
+  constructor(host) {
+    super(host, "error-message", "div");
+  }
+  setErrorMessage(errorMessage) {
+    this.errorMessage = errorMessage;
+    this.updateDefaultNode(this.node);
+  }
+  setInvalid(invalid) {
+    this.invalid = invalid;
+    this.updateDefaultNode(this.node);
+  }
+  initAddedNode(node) {
+    if (node !== this.defaultNode) {
+      this.initCustomNode(node);
+    }
+  }
+  initNode(errorNode) {
+    this.updateDefaultNode(errorNode);
+  }
+  initCustomNode(errorNode) {
+    if (errorNode.textContent && !this.errorMessage) {
+      this.errorMessage = errorNode.textContent.trim();
+    }
+    super.initCustomNode(errorNode);
+  }
+  restoreDefaultNode() {
+    this.attachDefaultNode();
+  }
+  updateDefaultNode(errorNode) {
+    const { errorMessage, invalid } = this;
+    const hasError = Boolean(invalid && errorMessage && errorMessage.trim() !== "");
+    if (errorNode) {
+      errorNode.textContent = hasError ? errorMessage : "";
+      errorNode.hidden = !hasError;
+      if (hasError) {
+        announce(errorMessage, { mode: "assertive" });
+      }
+    }
+    super.updateDefaultNode(errorNode);
+  }
+}
+
+// app/components/node_modules/@vaadin/field-base/src/helper-controller.js
+class HelperController extends SlotChildObserveController {
+  constructor(host) {
+    super(host, "helper", null);
+  }
+  setHelperText(helperText) {
+    this.helperText = helperText;
+    const helperNode = this.getSlotChild();
+    if (!helperNode) {
+      this.restoreDefaultNode();
+    }
+    if (this.node === this.defaultNode) {
+      this.updateDefaultNode(this.node);
+    }
+  }
+  restoreDefaultNode() {
+    const { helperText } = this;
+    if (helperText && helperText.trim() !== "") {
+      this.tagName = "div";
+      const helperNode = this.attachDefaultNode();
+      this.observeNode(helperNode);
+    }
+  }
+  updateDefaultNode(node) {
+    if (node) {
+      node.textContent = this.helperText;
+    }
+    super.updateDefaultNode(node);
+  }
+  initCustomNode(node) {
+    super.initCustomNode(node);
+    this.observeNode(node);
+  }
+}
+
+// app/components/node_modules/@vaadin/field-base/src/label-controller.js
+class LabelController extends SlotChildObserveController {
+  constructor(host) {
+    super(host, "label", "label");
+  }
+  setLabel(label) {
+    this.label = label;
+    const labelNode = this.getSlotChild();
+    if (!labelNode) {
+      this.restoreDefaultNode();
+    }
+    if (this.node === this.defaultNode) {
+      this.updateDefaultNode(this.node);
+    }
+  }
+  restoreDefaultNode() {
+    const { label } = this;
+    if (label && label.trim() !== "") {
+      const labelNode = this.attachDefaultNode();
+      this.observeNode(labelNode);
+    }
+  }
+  updateDefaultNode(node) {
+    if (node) {
+      node.textContent = this.label;
+    }
+    super.updateDefaultNode(node);
+  }
+  initCustomNode(node) {
+    super.initCustomNode(node);
+    this.observeNode(node);
+  }
+}
+
+// app/components/node_modules/@vaadin/field-base/src/label-mixin.js
+var LabelMixin = dedupeMixin((superclass) => class LabelMixinClass extends superclass {
+  static get properties() {
+    return {
+      label: {
+        type: String,
+        observer: "_labelChanged"
+      }
+    };
+  }
+  constructor() {
+    super();
+    this._labelController = new LabelController(this);
+    this._labelController.addEventListener("slot-content-changed", (event) => {
+      this.toggleAttribute("has-label", event.detail.hasContent);
+    });
+  }
+  get _labelId() {
+    const node = this._labelNode;
+    return node && node.id;
+  }
+  get _labelNode() {
+    return this._labelController.node;
+  }
+  ready() {
+    super.ready();
+    this.addController(this._labelController);
+  }
+  _labelChanged(label) {
+    this._labelController.setLabel(label);
+  }
+});
+
+// app/components/node_modules/@vaadin/field-base/src/validate-mixin.js
+var ValidateMixin = dedupeMixin((superclass) => class ValidateMixinClass extends superclass {
+  static get properties() {
+    return {
+      invalid: {
+        type: Boolean,
+        reflectToAttribute: true,
+        notify: true,
+        value: false,
+        sync: true
+      },
+      manualValidation: {
+        type: Boolean,
+        value: false
+      },
+      required: {
+        type: Boolean,
+        reflectToAttribute: true,
+        sync: true
+      }
+    };
+  }
+  validate() {
+    const isValid = this.checkValidity();
+    this._setInvalid(!isValid);
+    this.dispatchEvent(new CustomEvent("validated", { detail: { valid: isValid } }));
+    return isValid;
+  }
+  checkValidity() {
+    return !this.required || !!this.value;
+  }
+  _setInvalid(invalid) {
+    if (this._shouldSetInvalid(invalid)) {
+      this.invalid = invalid;
+    }
+  }
+  _shouldSetInvalid(_invalid) {
+    return true;
+  }
+  _requestValidation() {
+    if (!this.manualValidation) {
+      this.validate();
+    }
+  }
+});
+
+// app/components/node_modules/@vaadin/field-base/src/field-mixin.js
+var FieldMixin = (superclass) => class FieldMixinClass extends ValidateMixin(LabelMixin(superclass)) {
+  static get properties() {
+    return {
+      ariaTarget: {
+        type: Object,
+        observer: "_ariaTargetChanged"
+      },
+      errorMessage: {
+        type: String,
+        observer: "_errorMessageChanged"
+      },
+      helperText: {
+        type: String,
+        observer: "_helperTextChanged"
+      },
+      accessibleName: {
+        type: String,
+        observer: "_accessibleNameChanged"
+      },
+      accessibleNameRef: {
+        type: String,
+        observer: "_accessibleNameRefChanged"
+      }
+    };
+  }
+  static get observers() {
+    return ["_invalidChanged(invalid)", "_requiredChanged(required)"];
+  }
+  constructor() {
+    super();
+    this._fieldAriaController = new FieldAriaController(this);
+    this._helperController = new HelperController(this);
+    this._errorController = new ErrorController(this);
+    this._errorController.addEventListener("slot-content-changed", (event) => {
+      this.toggleAttribute("has-error-message", event.detail.hasContent);
+    });
+    this._labelController.addEventListener("slot-content-changed", (event) => {
+      const { hasContent, node } = event.detail;
+      this.__labelChanged(hasContent, node);
+    });
+    this._helperController.addEventListener("slot-content-changed", (event) => {
+      const { hasContent, node } = event.detail;
+      this.toggleAttribute("has-helper", hasContent);
+      this.__helperChanged(hasContent, node);
+    });
+  }
+  get _errorNode() {
+    return this._errorController.node;
+  }
+  get _helperNode() {
+    return this._helperController.node;
+  }
+  ready() {
+    super.ready();
+    this.addController(this._fieldAriaController);
+    this.addController(this._helperController);
+    this.addController(this._errorController);
+  }
+  __helperChanged(hasHelper, helperNode) {
+    if (hasHelper) {
+      this._fieldAriaController.setHelperId(helperNode.id);
+    } else {
+      this._fieldAriaController.setHelperId(null);
+    }
+  }
+  _accessibleNameChanged(accessibleName) {
+    this._fieldAriaController.setAriaLabel(accessibleName);
+  }
+  _accessibleNameRefChanged(accessibleNameRef) {
+    this._fieldAriaController.setLabelId(accessibleNameRef, true);
+  }
+  __labelChanged(hasLabel, labelNode) {
+    if (hasLabel) {
+      this._fieldAriaController.setLabelId(labelNode.id);
+    } else {
+      this._fieldAriaController.setLabelId(null);
+    }
+  }
+  _errorMessageChanged(errorMessage) {
+    this._errorController.setErrorMessage(errorMessage);
+  }
+  _helperTextChanged(helperText) {
+    this._helperController.setHelperText(helperText);
+  }
+  _ariaTargetChanged(target) {
+    if (target) {
+      this._fieldAriaController.setTarget(target);
+    }
+  }
+  _requiredChanged(required) {
+    this._fieldAriaController.setRequired(required);
+  }
+  _invalidChanged(invalid) {
+    this._errorController.setInvalid(invalid);
+    setTimeout(() => {
+      if (invalid) {
+        const node = this._errorNode;
+        this._fieldAriaController.setErrorId(node && node.id);
+      } else {
+        this._fieldAriaController.setErrorId(null);
+      }
+    });
+  }
+};
+
+// app/components/node_modules/@vaadin/component-base/src/delegate-state-mixin.js
+var DelegateStateMixin = dedupeMixin((superclass) => class DelegateStateMixinClass extends superclass {
+  static get properties() {
+    return {
+      stateTarget: {
+        type: Object,
+        observer: "_stateTargetChanged"
+      }
+    };
+  }
+  static get delegateAttrs() {
+    return [];
+  }
+  static get delegateProps() {
+    return [];
+  }
+  ready() {
+    super.ready();
+    this._createDelegateAttrsObserver();
+    this._createDelegatePropsObserver();
+  }
+  _stateTargetChanged(target) {
+    if (target) {
+      this._ensureAttrsDelegated();
+      this._ensurePropsDelegated();
+    }
+  }
+  _createDelegateAttrsObserver() {
+    this._createMethodObserver(`_delegateAttrsChanged(${this.constructor.delegateAttrs.join(", ")})`);
+  }
+  _createDelegatePropsObserver() {
+    this._createMethodObserver(`_delegatePropsChanged(${this.constructor.delegateProps.join(", ")})`);
+  }
+  _ensureAttrsDelegated() {
+    this.constructor.delegateAttrs.forEach((name) => {
+      this._delegateAttribute(name, this[name]);
+    });
+  }
+  _ensurePropsDelegated() {
+    this.constructor.delegateProps.forEach((name) => {
+      this._delegateProperty(name, this[name]);
+    });
+  }
+  _delegateAttrsChanged(...values) {
+    this.constructor.delegateAttrs.forEach((name, index) => {
+      this._delegateAttribute(name, values[index]);
+    });
+  }
+  _delegatePropsChanged(...values) {
+    this.constructor.delegateProps.forEach((name, index) => {
+      this._delegateProperty(name, values[index]);
+    });
+  }
+  _delegateAttribute(name, value) {
+    if (!this.stateTarget) {
+      return;
+    }
+    if (name === "invalid") {
+      this._delegateAttribute("aria-invalid", value ? "true" : false);
+    }
+    if (typeof value === "boolean") {
+      this.stateTarget.toggleAttribute(name, value);
+    } else if (value) {
+      this.stateTarget.setAttribute(name, value);
+    } else {
+      this.stateTarget.removeAttribute(name);
+    }
+  }
+  _delegateProperty(name, value) {
+    if (!this.stateTarget) {
+      return;
+    }
+    this.stateTarget[name] = value;
+  }
+});
+
+// app/components/node_modules/@vaadin/field-base/src/input-constraints-mixin.js
+var InputConstraintsMixin = dedupeMixin((superclass) => class InputConstraintsMixinClass extends DelegateStateMixin(ValidateMixin(InputMixin(superclass))) {
+  static get constraints() {
+    return ["required"];
+  }
+  static get delegateAttrs() {
+    return [...super.delegateAttrs, "required"];
+  }
+  ready() {
+    super.ready();
+    this._createConstraintsObserver();
+  }
+  checkValidity() {
+    if (this.inputElement && this._hasValidConstraints(this.constructor.constraints.map((c4) => this[c4]))) {
+      return this.inputElement.checkValidity();
+    }
+    return !this.invalid;
+  }
+  _hasValidConstraints(constraints) {
+    return constraints.some((c4) => this.__isValidConstraint(c4));
+  }
+  _createConstraintsObserver() {
+    this._createMethodObserver(`_constraintsChanged(stateTarget, ${this.constructor.constraints.join(", ")})`);
+  }
+  _constraintsChanged(stateTarget, ...constraints) {
+    if (!stateTarget) {
+      return;
+    }
+    const hasConstraints = this._hasValidConstraints(constraints);
+    const isLastConstraintRemoved = this.__previousHasConstraints && !hasConstraints;
+    if ((this._hasValue || this.invalid) && hasConstraints) {
+      this._requestValidation();
+    } else if (isLastConstraintRemoved && !this.manualValidation) {
+      this._setInvalid(false);
+    }
+    this.__previousHasConstraints = hasConstraints;
+  }
+  _onChange(event) {
+    event.stopPropagation();
+    this._requestValidation();
+    this.dispatchEvent(new CustomEvent("change", {
+      detail: {
+        sourceEvent: event
+      },
+      bubbles: event.bubbles,
+      cancelable: event.cancelable
+    }));
+  }
+  __isValidConstraint(constraint) {
+    return Boolean(constraint) || constraint === 0;
+  }
+});
+
+// app/components/node_modules/@vaadin/field-base/src/input-control-mixin.js
+var InputControlMixin = (superclass) => class InputControlMixinClass extends SlotStylesMixin(DelegateFocusMixin(InputConstraintsMixin(FieldMixin(ClearButtonMixin(KeyboardMixin(superclass)))))) {
+  static get properties() {
+    return {
+      allowedCharPattern: {
+        type: String,
+        observer: "_allowedCharPatternChanged"
+      },
+      autoselect: {
+        type: Boolean,
+        value: false
+      },
+      name: {
+        type: String,
+        reflectToAttribute: true
+      },
+      placeholder: {
+        type: String,
+        reflectToAttribute: true
+      },
+      readonly: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      title: {
+        type: String,
+        reflectToAttribute: true
+      }
+    };
+  }
+  static get delegateAttrs() {
+    return [...super.delegateAttrs, "name", "type", "placeholder", "readonly", "invalid", "title"];
+  }
+  constructor() {
+    super();
+    this._boundOnPaste = this._onPaste.bind(this);
+    this._boundOnDrop = this._onDrop.bind(this);
+    this._boundOnBeforeInput = this._onBeforeInput.bind(this);
+  }
+  get slotStyles() {
+    const tag = this.localName;
+    return [
+      `
+          /* Needed for Safari, where ::slotted(...)::placeholder does not work */
+          ${tag} > :is(input[slot='input'], textarea[slot='textarea'])::placeholder {
+            font: inherit;
+            color: inherit;
+          }
+
+          /* Override built-in autofill styles */
+          ${tag} > input[slot='input']:autofill {
+            -webkit-text-fill-color: var(--vaadin-input-field-autofill-color, black) !important;
+            background-clip: text !important;
+          }
+
+          ${tag}:has(> input[slot='input']:autofill)::part(input-field) {
+            --vaadin-input-field-background: var(--vaadin-input-field-autofill-background, lightyellow) !important;
+            --vaadin-input-field-value-color: var(--vaadin-input-field-autofill-color, black) !important;
+            --vaadin-input-field-button-text-color: var(--vaadin-input-field-autofill-color, black) !important;
+          }
+        `
+    ];
+  }
+  _onFocus(event) {
+    super._onFocus(event);
+    if (this.autoselect && this.inputElement) {
+      this.inputElement.select();
+    }
+  }
+  _addInputListeners(input) {
+    super._addInputListeners(input);
+    input.addEventListener("paste", this._boundOnPaste);
+    input.addEventListener("drop", this._boundOnDrop);
+    input.addEventListener("beforeinput", this._boundOnBeforeInput);
+  }
+  _removeInputListeners(input) {
+    super._removeInputListeners(input);
+    input.removeEventListener("paste", this._boundOnPaste);
+    input.removeEventListener("drop", this._boundOnDrop);
+    input.removeEventListener("beforeinput", this._boundOnBeforeInput);
+  }
+  _onKeyDown(event) {
+    super._onKeyDown(event);
+    if (this.allowedCharPattern && !this.__shouldAcceptKey(event) && event.target === this.inputElement) {
+      event.preventDefault();
+      this._markInputPrevented();
+    }
+  }
+  _markInputPrevented() {
+    this.setAttribute("input-prevented", "");
+    this._preventInputDebouncer = Debouncer.debounce(this._preventInputDebouncer, timeOut.after(200), () => {
+      this.removeAttribute("input-prevented");
+    });
+  }
+  __shouldAcceptKey(event) {
+    return event.metaKey || event.ctrlKey || !event.key || event.key.length !== 1 || this.__allowedCharRegExp.test(event.key);
+  }
+  _onPaste(e4) {
+    if (this.allowedCharPattern) {
+      const pastedText = e4.clipboardData.getData("text");
+      if (!this.__allowedTextRegExp.test(pastedText)) {
+        e4.preventDefault();
+        this._markInputPrevented();
+      }
+    }
+  }
+  _onDrop(e4) {
+    if (this.allowedCharPattern) {
+      const draggedText = e4.dataTransfer.getData("text");
+      if (!this.__allowedTextRegExp.test(draggedText)) {
+        e4.preventDefault();
+        this._markInputPrevented();
+      }
+    }
+  }
+  _onBeforeInput(e4) {
+    if (this.allowedCharPattern && e4.data && !this.__allowedTextRegExp.test(e4.data)) {
+      e4.preventDefault();
+      this._markInputPrevented();
+    }
+  }
+  _allowedCharPatternChanged(charPattern) {
+    if (charPattern) {
+      try {
+        this.__allowedCharRegExp = new RegExp(`^${charPattern}\$`, "u");
+        this.__allowedTextRegExp = new RegExp(`^${charPattern}*\$`, "u");
+      } catch (e4) {
+        console.error(e4);
+      }
+    }
+  }
+};
+
+// app/components/node_modules/@vaadin/field-base/src/input-field-mixin.js
+var InputFieldMixin = (superclass) => class InputFieldMixinClass extends InputControlMixin(superclass) {
+  static get properties() {
+    return {
+      autocomplete: {
+        type: String
+      },
+      autocorrect: {
+        type: String,
+        reflectToAttribute: true
+      },
+      autocapitalize: {
+        type: String,
+        reflectToAttribute: true
+      }
+    };
+  }
+  static get delegateAttrs() {
+    return [...super.delegateAttrs, "autocapitalize", "autocomplete", "autocorrect"];
+  }
+  _inputElementChanged(input) {
+    super._inputElementChanged(input);
+    if (input) {
+      if (input.value && input.value !== this.value) {
+        console.warn(`Please define value on the <${this.localName}> component!`);
+        input.value = "";
+      }
+      if (this.value) {
+        input.value = this.value;
+      }
+    }
+  }
+  _setFocused(focused) {
+    super._setFocused(focused);
+    if (!focused && document.hasFocus()) {
+      this._requestValidation();
+    }
+  }
+  _onInput(event) {
+    super._onInput(event);
+    if (this.invalid) {
+      this._requestValidation();
+    }
+  }
+  _valueChanged(newValue, oldValue) {
+    super._valueChanged(newValue, oldValue);
+    if (oldValue === undefined) {
+      return;
+    }
+    if (this.invalid) {
+      this._requestValidation();
+    }
+  }
+};
+
+// app/components/node_modules/@vaadin/field-base/src/labelled-input-controller.js
+class LabelledInputController {
+  constructor(input, labelController) {
+    this.input = input;
+    this.__preventDuplicateLabelClick = this.__preventDuplicateLabelClick.bind(this);
+    labelController.addEventListener("slot-content-changed", (event) => {
+      this.__initLabel(event.detail.node);
+    });
+    this.__initLabel(labelController.node);
+  }
+  __initLabel(label) {
+    if (label) {
+      label.addEventListener("click", this.__preventDuplicateLabelClick);
+      if (this.input) {
+        label.setAttribute("for", this.input.id);
+      }
+    }
+  }
+  __preventDuplicateLabelClick() {
+    const inputClickHandler = (e4) => {
+      e4.stopImmediatePropagation();
+      this.input.removeEventListener("click", inputClickHandler);
+    };
+    this.input.addEventListener("click", inputClickHandler);
+  }
+}
+
+// app/components/node_modules/@vaadin/text-field/src/vaadin-text-field-mixin.js
+var TextFieldMixin = (superClass) => class TextFieldMixinClass extends InputFieldMixin(superClass) {
+  static get properties() {
+    return {
+      maxlength: {
+        type: Number
+      },
+      minlength: {
+        type: Number
+      },
+      pattern: {
+        type: String
+      }
+    };
+  }
+  static get delegateAttrs() {
+    return [...super.delegateAttrs, "maxlength", "minlength", "pattern"];
+  }
+  static get constraints() {
+    return [...super.constraints, "maxlength", "minlength", "pattern"];
+  }
+  constructor() {
+    super();
+    this._setType("text");
+  }
+  get clearElement() {
+    return this.$.clearButton;
+  }
+  ready() {
+    super.ready();
+    this.addController(new InputController(this, (input) => {
+      this._setInputElement(input);
+      this._setFocusElement(input);
+      this.stateTarget = input;
+      this.ariaTarget = input;
+    }));
+    this.addController(new LabelledInputController(this.inputElement, this._labelController));
+  }
+};
+
+// app/components/node_modules/@vaadin/text-field/src/vaadin-text-field.js
+class TextField extends TextFieldMixin(ThemableMixin(ElementMixin(PolylitMixin(LumoInjectionMixin(i4))))) {
+  static get is() {
+    return "vaadin-text-field";
+  }
+  static get styles() {
+    return [inputFieldShared];
+  }
+  render() {
+    return b2`
+      <div class="vaadin-field-container">
+        <div part="label">
+          <slot name="label"></slot>
+          <span part="required-indicator" aria-hidden="true" @click="${this.focus}"></span>
+        </div>
+
+        <vaadin-input-container
+          part="input-field"
+          .readonly="${this.readonly}"
+          .disabled="${this.disabled}"
+          .invalid="${this.invalid}"
+          theme="${o5(this._theme)}"
+        >
+          <slot name="prefix" slot="prefix"></slot>
+          <slot name="input"></slot>
+          ${this._renderSuffix()}
+        </vaadin-input-container>
+
+        <div part="helper-text">
+          <slot name="helper"></slot>
+        </div>
+
+        <div part="error-message">
+          <slot name="error-message"></slot>
+        </div>
+        <slot name="tooltip"></slot>
+      </div>
+    `;
+  }
+  ready() {
+    super.ready();
+    this._tooltipController = new TooltipController(this);
+    this._tooltipController.setPosition("top");
+    this._tooltipController.setAriaTarget(this.inputElement);
+    this.addController(this._tooltipController);
+  }
+  _renderSuffix() {
+    return b2`
+      <slot name="suffix" slot="suffix"></slot>
+      <div id="clearButton" part="field-button clear-button" slot="suffix" aria-hidden="true"></div>
+    `;
+  }
+}
+defineCustomElement(TextField);
+
+// app/components/node_modules/@vaadin/grid/src/styles/vaadin-grid-filter-base-styles.js
+var gridFilterStyles = i`
+  :host {
+    display: inline-flex;
+    max-width: 100%;
+  }
+
+  ::slotted(*) {
+    width: 100%;
+    box-sizing: border-box;
+  }
+`;
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-filter-element-mixin.js
+var GridFilterElementMixin = (superClass) => class extends superClass {
+  static get properties() {
+    return {
+      path: {
+        type: String,
+        sync: true
+      },
+      value: {
+        type: String,
+        notify: true,
+        sync: true
+      },
+      _textField: {
+        type: Object,
+        sync: true
+      }
+    };
+  }
+  static get observers() {
+    return ["_filterChanged(path, value, _textField)"];
+  }
+  ready() {
+    super.ready();
+    this._filterController = new SlotController(this, "", "vaadin-text-field", {
+      initializer: (field2) => {
+        field2.addEventListener("input", (e4) => {
+          this.value = e4.target.value;
+        });
+        this._textField = field2;
+      }
+    });
+    this.addController(this._filterController);
+  }
+  _filterChanged(path, value, textField) {
+    if (path === undefined || value === undefined || !textField) {
+      return;
+    }
+    textField.value = value;
+    this._debouncerFilterChanged = Debouncer.debounce(this._debouncerFilterChanged, timeOut.after(200), () => {
+      this.dispatchEvent(new CustomEvent("filter-changed", { bubbles: true }));
+    });
+  }
+  focus() {
+    if (this._textField) {
+      this._textField.focus();
+    }
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-filter.js
+class GridFilter extends GridFilterElementMixin(ThemableMixin(PolylitMixin(LumoInjectionMixin(i4)))) {
+  static get is() {
+    return "vaadin-grid-filter";
+  }
+  static get styles() {
+    return gridFilterStyles;
+  }
+  render() {
+    return b2`<slot></slot>`;
+  }
+}
+defineCustomElement(GridFilter);
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-filter-column-mixin.js
+var GridFilterColumnMixin = (superClass) => class extends superClass {
+  static get properties() {
+    return {
+      path: {
+        type: String,
+        sync: true
+      },
+      header: {
+        type: String,
+        sync: true
+      }
+    };
+  }
+  static get observers() {
+    return ["_onHeaderRendererOrBindingChanged(_headerRenderer, _headerCell, path, header)"];
+  }
+  _defaultHeaderRenderer(root, _column) {
+    let filter2 = root.firstElementChild;
+    let textField = filter2 ? filter2.firstElementChild : undefined;
+    if (!filter2) {
+      filter2 = document.createElement("vaadin-grid-filter");
+      textField = document.createElement("vaadin-text-field");
+      textField.setAttribute("theme", "small");
+      textField.setAttribute("style", "max-width: 100%;");
+      textField.setAttribute("focus-target", "");
+      filter2.appendChild(textField);
+      root.appendChild(filter2);
+    }
+    filter2.path = this.path;
+    textField.label = this.__getHeader(this.header, this.path);
+  }
+  _computeHeaderRenderer() {
+    return this._defaultHeaderRenderer;
+  }
+  __getHeader(header, path) {
+    if (header) {
+      return header;
+    }
+    if (path) {
+      return this._generateHeader(path);
+    }
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-filter-column.js
+class GridFilterColumn extends GridFilterColumnMixin(GridColumn) {
+  static get is() {
+    return "vaadin-grid-filter-column";
+  }
+}
+defineCustomElement(GridFilterColumn);
+// app/components/node_modules/@vaadin/field-base/src/styles/checkable-base-styles.js
+var checkable = (part, propName = part) => i`
+  :host {
+    align-items: baseline;
+    column-gap: var(--vaadin-${r(propName)}-gap, var(--vaadin-gap-s));
+    grid-template: none;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: repeat(auto-fill, minmax(0, max-content));
+    -webkit-tap-highlight-color: transparent;
+    --_cursor: var(--vaadin-clickable-cursor);
+  }
+
+  :host([disabled]) {
+    --_cursor: var(--vaadin-disabled-cursor);
+  }
+
+  :host(:not([has-label])) {
+    column-gap: 0;
+  }
+
+  [part='${r(part)}'],
+  ::slotted(input),
+  [part='label'],
+  ::slotted(label) {
+    grid-row: 1;
+  }
+
+  [part='label'],
+  ::slotted(label) {
+    font-size: var(--vaadin-${r(propName)}-label-font-size, var(--vaadin-input-field-label-font-size, inherit));
+    line-height: var(--vaadin-${r(propName)}-label-line-height, var(--vaadin-input-field-label-line-height, inherit));
+    font-weight: var(--vaadin-${r(propName)}-font-weight, var(--vaadin-input-field-label-font-weight, 500));
+    color: var(--vaadin-${r(propName)}-label-color, var(--vaadin-input-field-label-color, var(--vaadin-text-color)));
+    word-break: break-word;
+    cursor: var(--_cursor);
+    /* TODO clicking the label part doesn't toggle the checked state, even though it triggers the active state */
+  }
+
+  [part='${r(part)}'],
+  ::slotted(input) {
+    grid-column: 1;
+  }
+
+  [part='label'],
+  [part='helper-text'],
+  [part='error-message'] {
+    margin-bottom: 0;
+    grid-column: 2;
+    width: auto;
+    min-width: auto;
+  }
+
+  [part='helper-text'],
+  [part='error-message'] {
+    margin-top: var(--_gap-s);
+    grid-row: auto;
+  }
+
+  /* Baseline vertical alignment */
+  :host::before {
+    grid-row: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* visually hidden */
+  ::slotted(input) {
+    cursor: inherit;
+    align-self: stretch;
+    appearance: none;
+    cursor: var(--_cursor);
+    /* Ensure minimum click target (WCAG) */
+    width: 2px;
+    height: 2px;
+    scale: 12;
+    margin: auto !important;
+  }
+
+  /* Control container (checkbox, radio button) */
+  [part='${r(part)}'] {
+    background: var(--vaadin-${r(propName)}-background, var(--vaadin-background-color));
+    border-color: var(--vaadin-${r(propName)}-border-color, var(--vaadin-input-field-border-color, var(--vaadin-border-color)));
+    border-radius: var(--vaadin-${r(propName)}-border-radius, var(--vaadin-radius-s));
+    border-style: var(--_border-style, solid);
+    --_border-width: var(--vaadin-${r(propName)}-border-width, var(--vaadin-input-field-border-width, 1px));
+    border-width: var(--_border-width);
+    box-sizing: border-box;
+    --_color: var(--vaadin-${r(propName)}-marker-color, var(--vaadin-${r(propName)}-background, var(--vaadin-background-color)));
+    color: var(--_color);
+    height: var(--vaadin-${r(propName)}-size, 1lh);
+    width: var(--vaadin-${r(propName)}-size, 1lh);
+    position: relative;
+    cursor: var(--_cursor);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :host(:is([checked], [indeterminate])) {
+    --vaadin-${r(propName)}-background: var(--vaadin-text-color);
+    --vaadin-${r(propName)}-border-color: transparent;
+  }
+
+  :host([disabled]) {
+    --vaadin-${r(propName)}-background: var(--vaadin-input-field-disabled-background, var(--vaadin-background-container-strong));
+    --vaadin-${r(propName)}-border-color: transparent;
+    --vaadin-${r(propName)}-marker-color: var(--vaadin-text-color-disabled);
+  }
+
+  /* Focus ring */
+  :host([focus-ring]) [part='${r(part)}'] {
+    outline: var(--vaadin-focus-ring-width) solid var(--vaadin-focus-ring-color);
+    outline-offset: calc(var(--_border-width) * -1);
+  }
+
+  :host([focus-ring]:is([checked], [indeterminate])) [part='${r(part)}'] {
+    outline-offset: 1px;
+  }
+
+  :host([readonly][focus-ring]) [part='${r(part)}'] {
+    --vaadin-${r(propName)}-border-color: transparent;
+    outline-offset: calc(var(--_border-width) * -1);
+    outline-style: dashed;
+  }
+
+  /* Checked indicator (checkmark, dot) */
+  [part='${r(part)}']::after {
+    content: '\\2003' / '';
+    background: currentColor;
+    border-radius: inherit;
+    display: flex;
+    align-items: center;
+    --_filter: var(--vaadin-${r(propName)}-marker-color, saturate(0) invert(1) hue-rotate(180deg) contrast(100) brightness(100));
+    filter: var(--_filter);
+  }
+
+  :host(:not([checked], [indeterminate])) [part='${r(part)}']::after {
+    opacity: 0;
+  }
+
+  @media (forced-colors: active) {
+    :host(:is([checked], [indeterminate])) {
+      --vaadin-${r(propName)}-border-color: CanvasText !important;
+    }
+
+    :host(:is([checked], [indeterminate])) [part='${r(part)}'] {
+      background: SelectedItem !important;
+    }
+
+    :host(:is([checked], [indeterminate])) [part='${r(part)}']::after {
+      background: SelectedItemText !important;
+    }
+
+    :host([readonly]) [part='${r(part)}']::after {
+      background: CanvasText !important;
+    }
+
+    :host([disabled]) {
+      --vaadin-${r(propName)}-border-color: GrayText !important;
+    }
+
+    :host([disabled]) [part='${r(part)}']::after {
+      background: GrayText !important;
+    }
+  }
+`;
+
+// app/components/node_modules/@vaadin/checkbox/src/styles/vaadin-checkbox-base-styles.js
+var checkbox = i`
+  [part='checkbox'] {
+    color: var(--vaadin-checkbox-checkmark-color, var(--_color));
+  }
+
+  [part='checkbox']::after {
+    inset: 0;
+    mask: var(--_vaadin-icon-checkmark) 50% /
+      var(--vaadin-checkbox-checkmark-size, var(--vaadin-checkbox-marker-size, 100%)) no-repeat;
+    filter: var(--vaadin-checkbox-checkmark-color, var(--_filter));
+  }
+
+  :host([readonly]) {
+    --vaadin-checkbox-background: transparent;
+    --vaadin-checkbox-border-color: var(--vaadin-border-color);
+    --vaadin-checkbox-marker-color: var(--vaadin-text-color);
+    --_border-style: dashed;
+  }
+
+  :host([indeterminate]) [part='checkbox']::after {
+    mask-image: var(--_vaadin-icon-minus);
+  }
+`;
+var checkboxStyles = [field, checkable("checkbox"), checkbox];
+
+// app/components/node_modules/@vaadin/a11y-base/src/active-mixin.js
+var ActiveMixin = (superclass) => class ActiveMixinClass extends DisabledMixin(KeyboardMixin(superclass)) {
+  get _activeKeys() {
+    return [" "];
+  }
+  ready() {
+    super.ready();
+    addListener(this, "down", (event) => {
+      if (this._shouldSetActive(event)) {
+        this._setActive(true);
+      }
+    });
+    addListener(this, "up", () => {
+      this._setActive(false);
+    });
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._setActive(false);
+  }
+  _shouldSetActive(_event) {
+    return !this.disabled;
+  }
+  _onKeyDown(event) {
+    super._onKeyDown(event);
+    if (this._shouldSetActive(event) && this._activeKeys.includes(event.key)) {
+      this._setActive(true);
+      document.addEventListener("keyup", (e4) => {
+        if (this._activeKeys.includes(e4.key)) {
+          this._setActive(false);
+        }
+      }, { once: true });
+    }
+  }
+  _setActive(active) {
+    this.toggleAttribute("active", active);
+  }
+};
+
+// app/components/node_modules/@vaadin/field-base/src/checked-mixin.js
+var CheckedMixin = dedupeMixin((superclass) => class CheckedMixinClass extends DelegateStateMixin(DisabledMixin(InputMixin(superclass))) {
+  static get properties() {
+    return {
+      checked: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        reflectToAttribute: true,
+        sync: true
+      }
+    };
+  }
+  static get delegateProps() {
+    return [...super.delegateProps, "checked"];
+  }
+  _onChange(event) {
+    const input = event.target;
+    this._toggleChecked(input.checked);
+  }
+  _toggleChecked(checked) {
+    this.checked = checked;
+  }
+});
+
+// app/components/node_modules/@vaadin/checkbox/src/vaadin-checkbox-mixin.js
+var CheckboxMixin = (superclass) => class CheckboxMixinClass extends SlotStylesMixin(FieldMixin(CheckedMixin(DelegateFocusMixin(ActiveMixin(superclass))))) {
+  static get properties() {
+    return {
+      indeterminate: {
+        type: Boolean,
+        notify: true,
+        value: false,
+        reflectToAttribute: true
+      },
+      name: {
+        type: String,
+        value: ""
+      },
+      readonly: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      }
+    };
+  }
+  static get observers() {
+    return ["__readonlyChanged(readonly, inputElement)"];
+  }
+  static get delegateProps() {
+    return [...super.delegateProps, "indeterminate"];
+  }
+  static get delegateAttrs() {
+    return [...super.delegateAttrs, "name", "invalid", "required"];
+  }
+  constructor() {
+    super();
+    this._setType("checkbox");
+    this._boundOnInputClick = this._onInputClick.bind(this);
+    this.value = "on";
+    this.tabindex = 0;
+  }
+  get slotStyles() {
+    const tag = this.localName;
+    return [
+      `
+          ${tag} > input[slot='input'] {
+            opacity: 0;
+          }
+        `
+    ];
+  }
+  ready() {
+    super.ready();
+    this.addController(new InputController(this, (input) => {
+      this._setInputElement(input);
+      this._setFocusElement(input);
+      this.stateTarget = input;
+      this.ariaTarget = input;
+    }));
+    this.addController(new LabelledInputController(this.inputElement, this._labelController));
+    this._createMethodObserver("_checkedChanged(checked)");
+  }
+  _shouldSetActive(event) {
+    if (this.readonly || event.target.localName === "a" || event.target === this._helperNode || event.target === this._errorNode) {
+      return false;
+    }
+    return super._shouldSetActive(event);
+  }
+  _addInputListeners(input) {
+    super._addInputListeners(input);
+    input.addEventListener("click", this._boundOnInputClick);
+  }
+  _removeInputListeners(input) {
+    super._removeInputListeners(input);
+    input.removeEventListener("click", this._boundOnInputClick);
+  }
+  _onInputClick(event) {
+    if (this.readonly) {
+      event.preventDefault();
+    }
+  }
+  __readonlyChanged(readonly, inputElement) {
+    if (!inputElement) {
+      return;
+    }
+    if (readonly) {
+      inputElement.setAttribute("aria-readonly", "true");
+    } else {
+      inputElement.removeAttribute("aria-readonly");
+    }
+  }
+  _toggleChecked(checked) {
+    if (this.indeterminate) {
+      this.indeterminate = false;
+    }
+    super._toggleChecked(checked);
+  }
+  checkValidity() {
+    return !this.required || !!this.checked;
+  }
+  _setFocused(focused) {
+    super._setFocused(focused);
+    if (!focused && document.hasFocus()) {
+      this._requestValidation();
+    }
+  }
+  _checkedChanged(checked) {
+    if (checked || this.__oldChecked) {
+      this._requestValidation();
+    }
+    this.__oldChecked = checked;
+  }
+  _requiredChanged(required) {
+    super._requiredChanged(required);
+    if (required === false) {
+      this._requestValidation();
+    }
+  }
+  _onRequiredIndicatorClick() {
+    this._labelNode.click();
+  }
+};
+
+// app/components/node_modules/@vaadin/checkbox/src/vaadin-checkbox.js
+class Checkbox extends CheckboxMixin(ElementMixin(ThemableMixin(PolylitMixin(LumoInjectionMixin(i4))))) {
+  static get is() {
+    return "vaadin-checkbox";
+  }
+  static get styles() {
+    return checkboxStyles;
+  }
+  render() {
+    return b2`
+      <div class="vaadin-checkbox-container">
+        <div part="checkbox" aria-hidden="true"></div>
+        <slot name="input"></slot>
+        <div part="label">
+          <slot name="label"></slot>
+          <div part="required-indicator" @click="${this._onRequiredIndicatorClick}"></div>
+        </div>
+        <div part="helper-text">
+          <slot name="helper"></slot>
+        </div>
+        <div part="error-message">
+          <slot name="error-message"></slot>
+        </div>
+      </div>
+      <slot name="tooltip"></slot>
+    `;
+  }
+  ready() {
+    super.ready();
+    this._tooltipController = new TooltipController(this);
+    this._tooltipController.setAriaTarget(this.inputElement);
+    this.addController(this._tooltipController);
+  }
+}
+defineCustomElement(Checkbox);
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-selection-column-base-mixin.js
+var GridSelectionColumnBaseMixin = (superClass) => class GridSelectionColumnBaseMixin2 extends superClass {
+  static get properties() {
+    return {
+      width: {
+        type: String,
+        value: "58px",
+        sync: true
+      },
+      autoWidth: {
+        type: Boolean,
+        value: true
+      },
+      flexGrow: {
+        type: Number,
+        value: 0,
+        sync: true
+      },
+      selectAll: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        sync: true
+      },
+      autoSelect: {
+        type: Boolean,
+        value: false,
+        sync: true
+      },
+      dragSelect: {
+        type: Boolean,
+        value: false,
+        sync: true
+      },
+      _indeterminate: {
+        type: Boolean,
+        sync: true
+      },
+      _selectAllHidden: Boolean,
+      _shiftKeyDown: {
+        type: Boolean,
+        value: false
+      }
+    };
+  }
+  static get observers() {
+    return [
+      "_onHeaderRendererOrBindingChanged(_headerRenderer, _headerCell, path, header, selectAll, _indeterminate, _selectAllHidden)"
+    ];
+  }
+  constructor() {
+    super();
+    this.__onCellTrack = this.__onCellTrack.bind(this);
+    this.__onCellClick = this.__onCellClick.bind(this);
+    this.__onCellMouseDown = this.__onCellMouseDown.bind(this);
+    this.__onGridInteraction = this.__onGridInteraction.bind(this);
+    this.__onActiveItemChanged = this.__onActiveItemChanged.bind(this);
+    this.__onSelectRowCheckboxChange = this.__onSelectRowCheckboxChange.bind(this);
+    this.__onSelectAllCheckboxChange = this.__onSelectAllCheckboxChange.bind(this);
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    if (this._grid) {
+      this._grid.addEventListener("keyup", this.__onGridInteraction);
+      this._grid.addEventListener("keydown", this.__onGridInteraction, { capture: true });
+      this._grid.addEventListener("mousedown", this.__onGridInteraction);
+      this._grid.addEventListener("active-item-changed", this.__onActiveItemChanged);
+    }
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._grid) {
+      this._grid.removeEventListener("keyup", this.__onGridInteraction);
+      this._grid.removeEventListener("keydown", this.__onGridInteraction, { capture: true });
+      this._grid.removeEventListener("mousedown", this.__onGridInteraction);
+      this._grid.removeEventListener("active-item-changed", this.__onActiveItemChanged);
+    }
+  }
+  _defaultHeaderRenderer(root, _column) {
+    let checkbox2 = root.firstElementChild;
+    if (!checkbox2) {
+      checkbox2 = document.createElement("vaadin-checkbox");
+      checkbox2.accessibleName = "Select All";
+      checkbox2.classList.add("vaadin-grid-select-all-checkbox");
+      checkbox2.addEventListener("change", this.__onSelectAllCheckboxChange);
+      root.appendChild(checkbox2);
+    }
+    const checked = this.__isChecked(this.selectAll, this._indeterminate);
+    checkbox2.checked = checked;
+    checkbox2.indeterminate = this._indeterminate;
+    checkbox2.style.visibility = this._selectAllHidden ? "hidden" : "";
+  }
+  _defaultRenderer(root, _column, { item, selected }) {
+    let checkbox2 = root.firstElementChild;
+    if (!checkbox2) {
+      checkbox2 = document.createElement("vaadin-checkbox");
+      checkbox2.accessibleName = "Select Row";
+      checkbox2.addEventListener("change", this.__onSelectRowCheckboxChange);
+      root.appendChild(checkbox2);
+      addListener(root, "track", this.__onCellTrack);
+      root.addEventListener("mousedown", this.__onCellMouseDown);
+      root.addEventListener("click", this.__onCellClick);
+    }
+    checkbox2.__item = item;
+    checkbox2.checked = selected;
+    const isSelectable = this._grid.__isItemSelectable(item);
+    checkbox2.readonly = !isSelectable;
+    const isHidden = !isSelectable && !selected;
+    checkbox2.style.visibility = isHidden ? "hidden" : "";
+  }
+  __onSelectAllCheckboxChange(e4) {
+    if (this._indeterminate || e4.currentTarget.checked) {
+      this._selectAll();
+    } else {
+      this._deselectAll();
+    }
+  }
+  __onGridInteraction(e4) {
+    this._shiftKeyDown = e4.shiftKey;
+    if (this.autoSelect) {
+      this._grid.$.scroller.toggleAttribute("range-selecting", this._shiftKeyDown);
+    }
+  }
+  __onSelectRowCheckboxChange(e4) {
+    this.__toggleItem(e4.currentTarget.__item, e4.currentTarget.checked);
+  }
+  __onCellTrack(event) {
+    if (!this.dragSelect) {
+      return;
+    }
+    this.__dragCurrentY = event.detail.y;
+    this.__dragDy = event.detail.dy;
+    if (event.detail.state === "start") {
+      const renderedRows = this._grid._getRenderedRows();
+      const dragStartRow = renderedRows.find((row) => row.contains(event.currentTarget.assignedSlot));
+      this.__selectOnDrag = !this._grid._isSelected(dragStartRow._item);
+      this.__dragStartIndex = dragStartRow.index;
+      this.__dragStartItem = dragStartRow._item;
+      this.__dragAutoScroller();
+    } else if (event.detail.state === "end") {
+      if (this.__dragStartItem) {
+        this.__toggleItem(this.__dragStartItem, this.__selectOnDrag);
+      }
+      setTimeout(() => {
+        this.__dragStartIndex = undefined;
+      });
+    }
+  }
+  __onCellMouseDown(e4) {
+    if (this.dragSelect) {
+      e4.preventDefault();
+    }
+  }
+  __onCellClick(e4) {
+    if (this.__dragStartIndex !== undefined) {
+      e4.preventDefault();
+    }
+  }
+  _onCellKeyDown(e4) {
+    const target = e4.composedPath()[0];
+    if (e4.keyCode !== 32) {
+      return;
+    }
+    if (target === this._headerCell) {
+      if (this.selectAll) {
+        this._deselectAll();
+      } else {
+        this._selectAll();
+      }
+    } else if (this._cells.includes(target) && !this.autoSelect) {
+      const checkbox2 = target._content.firstElementChild;
+      this.__toggleItem(checkbox2.__item);
+    }
+  }
+  __onActiveItemChanged(e4) {
+    const activeItem = e4.detail.value;
+    if (this.autoSelect) {
+      const item = activeItem || this.__previousActiveItem;
+      if (item) {
+        this.__toggleItem(item);
+      }
+    }
+    this.__previousActiveItem = activeItem;
+  }
+  __dragAutoScroller() {
+    if (this.__dragStartIndex === undefined) {
+      return;
+    }
+    const renderedRows = this._grid._getRenderedRows();
+    const hoveredRow = renderedRows.find((row) => {
+      const rowRect = row.getBoundingClientRect();
+      return this.__dragCurrentY >= rowRect.top && this.__dragCurrentY <= rowRect.bottom;
+    });
+    let hoveredIndex = hoveredRow ? hoveredRow.index : undefined;
+    const scrollableArea = this.__getScrollableArea();
+    if (this.__dragCurrentY < scrollableArea.top) {
+      hoveredIndex = this._grid._firstVisibleIndex;
+    } else if (this.__dragCurrentY > scrollableArea.bottom) {
+      hoveredIndex = this._grid._lastVisibleIndex;
+    }
+    if (hoveredIndex !== undefined) {
+      renderedRows.forEach((row) => {
+        if (hoveredIndex > this.__dragStartIndex && row.index >= this.__dragStartIndex && row.index <= hoveredIndex || hoveredIndex < this.__dragStartIndex && row.index <= this.__dragStartIndex && row.index >= hoveredIndex) {
+          this.__toggleItem(row._item, this.__selectOnDrag);
+          this.__dragStartItem = undefined;
+        }
+      });
+    }
+    const scrollTriggerArea = scrollableArea.height * 0.15;
+    const maxScrollAmount = 10;
+    if (this.__dragDy < 0 && this.__dragCurrentY < scrollableArea.top + scrollTriggerArea) {
+      const dy = scrollableArea.top + scrollTriggerArea - this.__dragCurrentY;
+      const percentage = Math.min(1, dy / scrollTriggerArea);
+      this._grid.$.table.scrollTop -= percentage * maxScrollAmount;
+    }
+    if (this.__dragDy > 0 && this.__dragCurrentY > scrollableArea.bottom - scrollTriggerArea) {
+      const dy = this.__dragCurrentY - (scrollableArea.bottom - scrollTriggerArea);
+      const percentage = Math.min(1, dy / scrollTriggerArea);
+      this._grid.$.table.scrollTop += percentage * maxScrollAmount;
+    }
+    setTimeout(() => this.__dragAutoScroller(), 10);
+  }
+  __getScrollableArea() {
+    const gridRect = this._grid.$.table.getBoundingClientRect();
+    const headerRect = this._grid.$.header.getBoundingClientRect();
+    const footerRect = this._grid.$.footer.getBoundingClientRect();
+    return {
+      top: gridRect.top + headerRect.height,
+      bottom: gridRect.bottom - footerRect.height,
+      left: gridRect.left,
+      right: gridRect.right,
+      height: gridRect.height - headerRect.height - footerRect.height,
+      width: gridRect.width
+    };
+  }
+  _selectAll() {
+  }
+  _deselectAll() {
+  }
+  _selectItem(_item) {
+  }
+  _deselectItem(_item) {
+  }
+  __toggleItem(item, selected = !this._grid._isSelected(item)) {
+    if (selected === this._grid._isSelected(item)) {
+      return;
+    }
+    if (selected) {
+      this._selectItem(item);
+    } else {
+      this._deselectItem(item);
+    }
+  }
+  __isChecked(selectAll, indeterminate) {
+    return indeterminate || selectAll;
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-selection-column-mixin.js
+var GridSelectionColumnMixin = (superClass) => class extends GridSelectionColumnBaseMixin(superClass) {
+  static get properties() {
+    return {
+      __previousActiveItem: Object
+    };
+  }
+  static get observers() {
+    return ["__onSelectAllChanged(selectAll)"];
+  }
+  constructor() {
+    super();
+    this.__boundUpdateSelectAllVisibility = this.__updateSelectAllVisibility.bind(this);
+    this.__boundOnSelectedItemsChanged = this.__onSelectedItemsChanged.bind(this);
+  }
+  disconnectedCallback() {
+    this._grid.removeEventListener("data-provider-changed", this.__boundUpdateSelectAllVisibility);
+    this._grid.removeEventListener("is-item-selectable-changed", this.__boundUpdateSelectAllVisibility);
+    this._grid.removeEventListener("filter-changed", this.__boundOnSelectedItemsChanged);
+    this._grid.removeEventListener("selected-items-changed", this.__boundOnSelectedItemsChanged);
+    super.disconnectedCallback();
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    if (this._grid) {
+      this._grid.addEventListener("data-provider-changed", this.__boundUpdateSelectAllVisibility);
+      this._grid.addEventListener("is-item-selectable-changed", this.__boundUpdateSelectAllVisibility);
+      this._grid.addEventListener("filter-changed", this.__boundOnSelectedItemsChanged);
+      this._grid.addEventListener("selected-items-changed", this.__boundOnSelectedItemsChanged);
+      this.__updateSelectAllVisibility();
+    }
+  }
+  __onSelectAllChanged(selectAll) {
+    if (selectAll === undefined || !this._grid) {
+      return;
+    }
+    if (!this.__selectAllInitialized) {
+      this.__selectAllInitialized = true;
+      return;
+    }
+    if (this._selectAllChangeLock) {
+      return;
+    }
+    if (selectAll && this.__hasArrayDataProvider()) {
+      this.__withFilteredItemsArray((items) => {
+        this._grid.selectedItems = items;
+      });
+    } else {
+      this._grid.selectedItems = [];
+    }
+  }
+  _selectAll() {
+    this.selectAll = true;
+  }
+  _deselectAll() {
+    this.selectAll = false;
+  }
+  _selectItem(item) {
+    if (this._grid.__isItemSelectable(item)) {
+      this._grid.selectItem(item);
+      this._grid.dispatchEvent(new CustomEvent("item-toggle", {
+        detail: {
+          item,
+          selected: true,
+          shiftKey: this._shiftKeyDown
+        }
+      }));
+    }
+  }
+  _deselectItem(item) {
+    if (this._grid.__isItemSelectable(item)) {
+      this._grid.deselectItem(item);
+      this._grid.dispatchEvent(new CustomEvent("item-toggle", {
+        detail: {
+          item,
+          selected: false,
+          shiftKey: this._shiftKeyDown
+        }
+      }));
+    }
+  }
+  __hasArrayDataProvider() {
+    return Array.isArray(this._grid.items) && !!this._grid.dataProvider;
+  }
+  __onSelectedItemsChanged() {
+    this._selectAllChangeLock = true;
+    if (this.__hasArrayDataProvider()) {
+      this.__withFilteredItemsArray((items) => {
+        if (!this._grid.selectedItems.length) {
+          this.selectAll = false;
+          this._indeterminate = false;
+        } else if (items.every((item) => this._grid._isSelected(item))) {
+          this.selectAll = true;
+          this._indeterminate = false;
+        } else {
+          this.selectAll = false;
+          this._indeterminate = true;
+        }
+      });
+    }
+    this._selectAllChangeLock = false;
+  }
+  __updateSelectAllVisibility() {
+    this._selectAllHidden = !Array.isArray(this._grid.items) || !!this._grid.isItemSelectable;
+  }
+  __withFilteredItemsArray(callback) {
+    const params = {
+      page: 0,
+      pageSize: Infinity,
+      sortOrders: [],
+      filters: this._grid._mapFilters()
+    };
+    this._grid.dataProvider(params, (items) => callback(items));
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-selection-column.js
+class GridSelectionColumn extends GridSelectionColumnMixin(GridColumn) {
+  static get is() {
+    return "vaadin-grid-selection-column";
+  }
+}
+defineCustomElement(GridSelectionColumn);
+// app/components/node_modules/@vaadin/grid/src/styles/vaadin-grid-sorter-base-styles.js
+var gridSorterStyles = i`
+  :host {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    max-width: 100%;
+    gap: var(--vaadin-gap-s);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [part='content'] {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  [part='indicators'] {
+    position: relative;
+    flex: none;
+    height: 1lh;
+    color: var(--vaadin-text-color-disabled);
+  }
+
+  [part='order'] {
+    display: inline;
+    vertical-align: super;
+    font-size: 0.75em;
+    line-height: 1;
+    color: var(--vaadin-text-color-secondary);
+  }
+
+  [part='indicators']::before {
+    content: '';
+    display: inline-block;
+    height: 12px;
+    width: 8px;
+    mask-image: var(--_vaadin-icon-sort);
+    background: currentColor;
+  }
+
+  :host([direction]) [part='indicators']::before {
+    padding-bottom: 6px;
+    height: 6px;
+    mask-clip: content-box;
+  }
+
+  :host([direction='desc']) [part='indicators']::before {
+    padding-block: 6px 0;
+  }
+
+  :host([direction]) [part='indicators'] {
+    color: var(--vaadin-text-color-secondary);
+  }
+
+  @media (any-hover: hover) {
+    :host(:hover) [part='indicators'] {
+      color: var(--vaadin-text-color);
+    }
+  }
+
+  @media (forced-colors: active) {
+    [part='indicators']::before {
+      background: CanvasText;
+    }
+  }
+`;
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-sorter-mixin.js
+var GridSorterMixin = (superClass) => class GridSorterMixinClass extends superClass {
+  static get properties() {
+    return {
+      path: String,
+      direction: {
+        type: String,
+        reflectToAttribute: true,
+        notify: true,
+        value: null,
+        sync: true
+      },
+      _order: {
+        type: Number,
+        value: null,
+        sync: true
+      }
+    };
+  }
+  static get observers() {
+    return ["_pathOrDirectionChanged(path, direction)"];
+  }
+  ready() {
+    super.ready();
+    this.addEventListener("click", this._onClick.bind(this));
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    if (this._grid) {
+      this._grid.__applySorters();
+    } else {
+      this.__dispatchSorterChangedEvenIfPossible();
+    }
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (!this.parentNode && this._grid) {
+      this._grid.__removeSorters([this]);
+    } else if (this._grid) {
+      this._grid.__applySorters();
+    }
+  }
+  _pathOrDirectionChanged() {
+    this.__dispatchSorterChangedEvenIfPossible();
+  }
+  __dispatchSorterChangedEvenIfPossible() {
+    if (this.path === undefined || this.direction === undefined || !this.isConnected) {
+      return;
+    }
+    this.dispatchEvent(new CustomEvent("sorter-changed", {
+      detail: { shiftClick: Boolean(this._shiftClick), fromSorterClick: Boolean(this._fromSorterClick) },
+      bubbles: true,
+      composed: true
+    }));
+    this._fromSorterClick = false;
+    this._shiftClick = false;
+  }
+  _getDisplayOrder(order) {
+    return order === null ? "" : order + 1;
+  }
+  _onClick(e4) {
+    if (e4.defaultPrevented) {
+      return;
+    }
+    const activeElement = this.getRootNode().activeElement;
+    if (this !== activeElement && this.contains(activeElement)) {
+      return;
+    }
+    e4.preventDefault();
+    this._shiftClick = e4.shiftKey;
+    this._fromSorterClick = true;
+    if (this.direction === "asc") {
+      this.direction = "desc";
+    } else if (this.direction === "desc") {
+      this.direction = null;
+    } else {
+      this.direction = "asc";
+    }
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-sorter.js
+class GridSorter extends GridSorterMixin(ThemableMixin(DirMixin(PolylitMixin(LumoInjectionMixin(i4))))) {
+  static get is() {
+    return "vaadin-grid-sorter";
+  }
+  static get styles() {
+    return gridSorterStyles;
+  }
+  render() {
+    return b2`
+      <div part="content">
+        <slot></slot>
+      </div>
+      <div part="indicators">
+        <span part="order">${this._getDisplayOrder(this._order)}</span>
+      </div>
+    `;
+  }
+}
+defineCustomElement(GridSorter);
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-sort-column-mixin.js
+var GridSortColumnMixin = (superClass) => class extends superClass {
+  static get properties() {
+    return {
+      path: {
+        type: String,
+        sync: true
+      },
+      direction: {
+        type: String,
+        notify: true,
+        sync: true
+      }
+    };
+  }
+  static get observers() {
+    return ["_onHeaderRendererOrBindingChanged(_headerRenderer, _headerCell, path, header, direction)"];
+  }
+  constructor() {
+    super();
+    this.__boundOnDirectionChanged = this.__onDirectionChanged.bind(this);
+  }
+  _defaultHeaderRenderer(root, _column) {
+    let sorter = root.firstElementChild;
+    if (!sorter) {
+      sorter = document.createElement("vaadin-grid-sorter");
+      sorter.addEventListener("direction-changed", this.__boundOnDirectionChanged);
+      root.appendChild(sorter);
+    }
+    sorter.path = this.path;
+    sorter.__rendererDirection = this.direction;
+    sorter.direction = this.direction;
+    sorter.textContent = this.__getHeader(this.header, this.path);
+  }
+  _computeHeaderRenderer() {
+    return this._defaultHeaderRenderer;
+  }
+  __onDirectionChanged(e4) {
+    if (e4.detail.value === e4.target.__rendererDirection) {
+      return;
+    }
+    this.direction = e4.detail.value;
+  }
+  __getHeader(header, path) {
+    if (header) {
+      return header;
+    }
+    if (path) {
+      return this._generateHeader(path);
+    }
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-sort-column.js
+class GridSortColumn extends GridSortColumnMixin(GridColumn) {
+  static get is() {
+    return "vaadin-grid-sort-column";
+  }
+}
+defineCustomElement(GridSortColumn);
+// app/components/node_modules/@vaadin/grid/src/styles/vaadin-grid-tree-toggle-base-styles.js
+var gridTreeToggleStyles = i`
+  :host {
+    display: inline-flex;
+    max-width: 100%;
+    pointer-events: none;
+  }
+
+  /* Don't expand/collapse when clicking #level-spacer */
+  [part],
+  slot {
+    pointer-events: auto;
+  }
+
+  :host([hidden]) {
+    display: none !important;
+  }
+
+  :host(:not([leaf])) {
+    cursor: var(--vaadin-clickable-cursor);
+  }
+
+  #level-spacer,
+  [part='toggle'] {
+    flex: none;
+  }
+
+  #level-spacer {
+    width: calc(var(--_level, 0) * var(--vaadin-grid-tree-toggle-level-offset, 16px));
+  }
+
+  /* Baseline alignment */
+  #level-spacer::before {
+    content: '\\2003' / '';
+    display: inline-block;
+    width: 0;
+  }
+
+  [part='toggle'] {
+    margin-inline-end: var(--vaadin-gap-s);
+  }
+
+  [part='toggle']::before {
+    content: '';
+    display: block;
+    width: var(--vaadin-icon-size, 1lh);
+    height: var(--vaadin-icon-size, 1lh);
+    background: currentColor;
+    mask: var(--_vaadin-icon-chevron-down) 50% / var(--vaadin-icon-visual-size, 100%) no-repeat;
+  }
+
+  :host(:not([expanded])) [part='toggle']::before {
+    rotate: -90deg;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [part='toggle']::before {
+      transition: var(--_non-focused-row-none, rotate 120ms);
+    }
+  }
+
+  :host([leaf]) [part='toggle'] {
+    visibility: hidden;
+  }
+
+  slot {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  @media (forced-colors: active) {
+    [part='toggle']::before {
+      background: CanvasText;
+    }
+  }
+`;
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-tree-toggle-mixin.js
+var GridTreeToggleMixin = (superClass) => class extends superClass {
+  static get properties() {
+    return {
+      level: {
+        type: Number,
+        value: 0,
+        observer: "_levelChanged",
+        sync: true
+      },
+      leaf: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      expanded: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+        notify: true,
+        sync: true
+      }
+    };
+  }
+  constructor() {
+    super();
+    this.addEventListener("click", (e4) => this._onClick(e4));
+  }
+  _onClick(e4) {
+    if (this.leaf) {
+      return;
+    }
+    if (isFocusable(e4.target) || e4.target instanceof HTMLLabelElement) {
+      return;
+    }
+    e4.preventDefault();
+    this.expanded = !this.expanded;
+  }
+  _levelChanged(level) {
+    const value = Number(level).toString();
+    this.style.setProperty("--_level", value);
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-tree-toggle.js
+class GridTreeToggle extends GridTreeToggleMixin(ThemableMixin(DirMixin(PolylitMixin(LumoInjectionMixin(i4))))) {
+  static get is() {
+    return "vaadin-grid-tree-toggle";
+  }
+  static get styles() {
+    return gridTreeToggleStyles;
+  }
+  render() {
+    return b2`
+      <span id="level-spacer"></span>
+      <span part="toggle"></span>
+      <slot></slot>
+    `;
+  }
+}
+defineCustomElement(GridTreeToggle);
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-tree-column-mixin.js
+var GridTreeColumnMixin = (superClass) => class extends superClass {
+  static get properties() {
+    return {
+      path: {
+        type: String,
+        sync: true
+      }
+    };
+  }
+  static get observers() {
+    return ["_onRendererOrBindingChanged(_renderer, _cells, _bodyContentHidden, _cells.*, path)"];
+  }
+  constructor() {
+    super();
+    this.__boundOnExpandedChanged = this.__onExpandedChanged.bind(this);
+  }
+  __defaultRenderer(root, _column, { item, expanded, level, hasChildren }) {
+    let toggle = root.firstElementChild;
+    if (!toggle) {
+      toggle = document.createElement("vaadin-grid-tree-toggle");
+      toggle.addEventListener("expanded-changed", this.__boundOnExpandedChanged);
+      root.appendChild(toggle);
+    }
+    toggle.__item = item;
+    toggle.__rendererExpanded = expanded;
+    toggle.expanded = expanded;
+    toggle.leaf = !hasChildren;
+    const content = this.__getToggleContent(this.path, item);
+    if (toggle.textContent !== content) {
+      toggle.textContent = content;
+    }
+    toggle.level = level;
+  }
+  _computeRenderer() {
+    return this.__defaultRenderer;
+  }
+  __onExpandedChanged(e4) {
+    if (e4.detail.value === e4.target.__rendererExpanded) {
+      return;
+    }
+    if (e4.detail.value) {
+      this._grid.expandItem(e4.target.__item);
+    } else {
+      this._grid.collapseItem(e4.target.__item);
+    }
+  }
+  __getToggleContent(path, item) {
+    return path && get(path, item);
+  }
+};
+
+// app/components/node_modules/@vaadin/grid/src/vaadin-grid-tree-column.js
+class GridTreeColumn extends GridTreeColumnMixin(GridColumn) {
+  static get is() {
+    return "vaadin-grid-tree-column";
+  }
+}
+defineCustomElement(GridTreeColumn);

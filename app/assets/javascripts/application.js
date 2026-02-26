@@ -6,6 +6,6 @@
 //= require popper
 //= require bootstrap
 //= require ahoy
-//= require dragnet-components
 
+//= require components
 //= require workspace

@@ -5,15 +5,22 @@
 <% else %>
   <%= render 'data_grid/tools', grid: grid %>
 
-  <div class="data-grid table-responsive">
-    <vaadin-grid>
+  <div class="data-grid mb-5">
+    <vaadin-grid column-reordering-allowed multi-sort>
       <% grid.questions.each do |question| %>
-        <vaadin-grid-column header="<%= question.text %>" path="<%= question.form_name %>"></vaadin-grid-column>
+        <vaadin-grid-sort-column resizable auto-width header="<%= question.text %>" text-align="<%= question.type.dispatch(:get_text_alignment, context: self) %>" path="<%= question.form_name %>"></vaadin-grid-sort-column>
       <% end %>
+      <span slot="empty-state">No data found.</span>
     </vaadin-grid>
     <script>
      const grid = document.querySelector('vaadin-grid');
-     grid.items = <%== grid.records.map { |record| grid.questions.map { |q| [q.form_name, answers_text(record, q)] }.to_h }.to_json %>
+     grid.size = <%= grid.items %>;
+     grid.items = <%== grid.records.map { |record| grid.questions.map { |q| [q.form_name, answers_text(record, q)] }.to_h }.to_json %>;
+     grid.dataPresenter = ({ page, pageSize }, callback) => {
+       fetch(`<%= survey_data_path(grid.survey, format: :json) %>?page=${page}&items=${pageSize}`)
+         .then((res) => res.json())
+         .then((items) => callback(items.records));
+     };
     </script>
   </div>
 <% end %>

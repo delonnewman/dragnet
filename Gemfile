@@ -37,6 +37,7 @@ gem 'csv'
 gem 'caxlsx'
 gem 'caxlsx_rails'
 gem 'csv_builder'
+gem 'jbuilder'
 
 # Authentication
 gem 'devise'

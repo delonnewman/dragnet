@@ -1,1 +1,2 @@
 web: env RUBY_DEBUG_OPEN=true bin/rails server
+components: bun build ./app/components/components --outdir ./app/assets/javascripts --watch

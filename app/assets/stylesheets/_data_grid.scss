@@ -1,19 +1,18 @@
 .data-grid {
-  table thead th {
-    padding: 0 !important;
-    white-space: nowrap;
-    .btn {
-      border: none;
-      border-radius: 0;
-      padding-right: 0.25rem;
-      padding-left: 0.375rem;
-    }
-    .form-control, .form-select {
-      border: none;
-      border-radius: 0;
-      border-left: var(--bs-border-color) solid var(--bs-border-width);
-      padding: 0.375rem 0.375rem 0.375rem 0.25rem;
-      min-width: 200px;
-    }
+  vaadin-grid::part(even-row) {
+    background-color: var(--bs-light);
+  }
+  vaadin-grid::part(cell) {
+    padding: 0.2em;
+    border: none;
+    border-right: var(--bs-border-color) solid 1px;
+  }
+  vaadin-grid::part(row) {
+    border: none;
+    border-bottom: var(--bs-border-color) solid 1px;
+  }
+  vaadin-grid::part(header-row) {
+    border: none;
+    border-bottom: var(--bs-border-color) solid 1px;
   }
 }
