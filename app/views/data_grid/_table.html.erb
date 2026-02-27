@@ -14,9 +14,9 @@
     </vaadin-grid>
     <script>
      const grid = document.querySelector('vaadin-grid');
-     grid.size = <%= grid.items %>;
-     grid.items = <%== grid.records.map { |record| grid.questions.map { |q| [q.form_name, answers_text(record, q)] }.to_h }.to_json %>;
-     grid.dataPresenter = ({ page, pageSize }, callback) => {
+     grid.size = <%= grid.record_count %>;
+     grid.dataProvider = ({ page, pageSize }, callback) => {
+       console.log({ page, pageSize });
        fetch(`<%= survey_data_path(grid.survey, format: :json) %>?page=${page}&items=${pageSize}`)
          .then((res) => res.json())
          .then((items) => callback(items.records));
