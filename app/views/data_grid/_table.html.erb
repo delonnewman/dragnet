@@ -6,18 +6,29 @@
   <%= render 'data_grid/tools', grid: grid %>
 
   <div class="data-grid mb-5">
-    <vaadin-grid column-reordering-allowed multi-sort>
+    <vaadin-grid column-reordering-allowed>
       <% grid.questions.each do |question| %>
-        <vaadin-grid-sort-column resizable auto-width header="<%= question.text %>" text-align="<%= question.type.dispatch(:get_text_alignment, context: self) %>" path="<%= question.form_name %>"></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column resizable auto-width header="<%= question.text %>" text-align="<%= question.type.dispatch(:get_text_alignment, context: self) %>" path="<%= question.id %>"></vaadin-grid-sort-column>
       <% end %>
       <span slot="empty-state">No data found.</span>
     </vaadin-grid>
     <script>
      const grid = document.querySelector('vaadin-grid');
      grid.size = <%= grid.record_count %>;
-     grid.dataProvider = ({ page, pageSize }, callback) => {
-       console.log({ page, pageSize });
-       fetch(`<%= survey_data_path(grid.survey, format: :json) %>?page=${page}&items=${pageSize}`)
+     grid.dataProvider = (params, callback) => {
+       const { page, pageSize, sortOrders } = params;
+
+       const url = new URL("<%= survey_data_url(grid.survey, format: :json) %>");
+       url.searchParams.set('page', page);
+       url.searchParams.set('items', pageSize);
+
+       const ordering = sortOrders[0];
+       if (ordering) {
+         url.searchParams.set('sort_by', ordering.path)
+         url.searchParams.set('sort_direction', ordering.direction);
+       }
+
+       fetch(url)
          .then((res) => res.json())
          .then((items) => callback(items.records));
      };
