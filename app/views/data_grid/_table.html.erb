@@ -4,11 +4,16 @@
   <%= render 'shared/survey_no_replies', survey: grid.survey %>
 <% else %>
   <%= render 'data_grid/tools', grid: grid %>
-
-  <div class="data-grid mb-5">
+  <div class="data-grid mb-5 d-flex flex-column flex-grow vh-100">
     <vaadin-grid column-reordering-allowed>
       <% grid.questions.each do |question| %>
-        <vaadin-grid-sort-column resizable auto-width header="<%= question.text %>" text-align="<%= question.type.dispatch(:get_text_alignment, context: self) %>" path="<%= question.id %>"></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column
+          resizable
+          auto-width
+          header="<%= question.text %>"
+          text-align="<%= question.type.dispatch(:get_text_alignment, context: self) %>"
+          path="<%= question.id %>">
+        </vaadin-grid-sort-column>
       <% end %>
       <span slot="empty-state">No data found.</span>
     </vaadin-grid>
