@@ -13,7 +13,7 @@ class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
     Dragnet::SurveyEdit.latest(survey)
   end
 
-  def new_edit(data)
-    Dragnet::SurveyEdit.create_with!(survey, data:)
+  def new_edit
+    Dragnet::SurveyEdit.create_with!(survey)
   end
 end
