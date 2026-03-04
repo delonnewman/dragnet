@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SurveyEditorController < ApplicationController
+  layout false
+
   private
 
   def survey

@@ -1,0 +1,8 @@
+<div class="card survey-details mb-5">
+  <div class="card-body">
+    <div class="card-title pb-3">
+      <%= text_field_tag field_name(:survey, :name), survey.name, class: 'h3 border-0 w-100 border-bottom' %>
+      <%= text_area_tag field_name(:survey, :description), survey.description, rows: 1, placeholder: "Description", class: 'form-control'  %>
+    </div>
+  </div>
+</div>
