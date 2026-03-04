@@ -21,7 +21,9 @@ class SurveysController < ApplicationController
   end
 
   def edit
-    render :edit, locals: { survey: }
+    editor = Dragnet::SurveyEditorPresenter.new(survey)
+
+    render :edit, locals: { editor: }
   end
 
   def destroy

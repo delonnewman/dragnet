@@ -1,6 +1,6 @@
 class SurveyEditor::DetailsController < SurveyEditorController
   def index
-    render :index, locals: { survey: }
+    render :index, locals: { editor: }
   end
 
   def create

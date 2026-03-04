@@ -1,5 +1,6 @@
-<%= render 'tabs', survey: survey, selected: :edit %>
+<%= render 'tabs', survey: editor.survey, selected: :edit %>
 
 <div class="container">
-  <%= render 'survey_editor/details', survey: survey %>
+  <%= render 'survey_editor/tools', editor: %>
+  <%= render 'survey_editor/details', survey: editor.survey %>
 </div>
