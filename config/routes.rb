@@ -45,6 +45,11 @@ Rails.application.routes.draw do
   post '/r/:survey_id', to: 'submission_request#submit'
   post '/r/:survey_id/:survey_name', to: 'submission_request#submit'
 
+  scope '/survey_editor/:survey_id' do
+    resources :details, only: %i[index create], controller: 'survey_editor/details'
+    resources :questions, controller: 'survey_editor/questions'
+  end
+
   scope '/api/v1', defaults: { format: :transit } do
     scope '/editing' do
       resources :survey_editor, path: '/surveys', only: %i[show update]
