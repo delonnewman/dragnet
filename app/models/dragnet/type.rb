@@ -83,7 +83,7 @@ module Dragnet
 
     attr_reader :question
     delegate :meta, :meta=, to: :question
-    delegate :tags, to: 'self.class'
+    delegate :tags, :slug, :symbol, to: 'self.class'
 
     def initialize(question)
       @question = question

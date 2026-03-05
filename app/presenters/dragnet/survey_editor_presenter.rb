@@ -16,4 +16,8 @@ class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
   def new_edit
     Dragnet::SurveyEdit.create_with!(survey)
   end
+
+  def types
+    TypeRegistration.where(abstract: false)
+  end
 end

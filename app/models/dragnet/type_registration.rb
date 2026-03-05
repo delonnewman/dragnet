@@ -12,5 +12,9 @@ module Dragnet
     def type_class
       type_class_name.constantize
     end
+
+    def fa_icon_class
+      meta_data.fetch('fa_icon_class', 'far fa-question')
+    end
   end
 end
