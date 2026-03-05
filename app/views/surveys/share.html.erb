@@ -4,7 +4,7 @@
   <% if survey.not_ready_for_replies? %>
     <%= render 'shared/survey_no_questions', survey: survey %>
   <% else %>
-    <ul class="nav nav-pills mb-3">
+    <ul class="nav nav-pills mb-3" hx-boost="true">
       <li class="nav-item">
         <%= nav_link share_survey_path(survey, method: 'email'), active: survey.share_email? do %>
           <%= icon 'far', 'envelope' %>
