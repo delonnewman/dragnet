@@ -14,7 +14,7 @@ module Dragnet
     end
 
     def fa_icon_class
-      meta_data.fetch('fa_icon_class', 'far fa-question')
+      meta.fetch(:fa_icon_class, 'far fa-question')
     end
   end
 end
