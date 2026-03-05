@@ -1,42 +1,67 @@
+<style>
+ @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+ }
+
+ .fadeIn {
+    animation: fadeIn 0.3s ease-in;
+ }
+</style>
+
 <% if grid.not_ready_for_replies? %>
   <%= render 'shared/survey_no_questions', survey: grid.survey %>
 <% elsif grid.no_data? %>
   <%= render 'shared/survey_no_replies', survey: grid.survey %>
 <% else %>
   <%= render 'data_grid/tools', grid: grid %>
-  <div class="data-grid mb-5 d-flex flex-column flex-grow vh-100">
-    <vaadin-grid column-reordering-allowed>
-      <% grid.questions.each do |question| %>
-        <vaadin-grid-sort-column
-          resizable
-          auto-width
-          header="<%= question.text %>"
-          text-align="<%= question.type.dispatch(:get_text_alignment, context: self) %>"
-          path="<%= question.id %>">
-        </vaadin-grid-sort-column>
-      <% end %>
-      <span slot="empty-state">No data found.</span>
-    </vaadin-grid>
-    <script>
-     const grid = document.querySelector('vaadin-grid');
-     grid.size = <%= grid.record_count %>;
-     grid.dataProvider = (params, callback) => {
-       const { page, pageSize, sortOrders } = params;
+  <div id="grid-spinner" class="d-flex align-items-center">
+    <div class="spinner-border text-primary m-5 mx-auto" style="width: 7rem; height: 7rem;" aria-hidden="true"></div>
+  </div>
 
-       const url = new URL("<%= survey_data_url(grid.survey, format: :json) %>");
-       url.searchParams.set('page', page);
-       url.searchParams.set('items', pageSize);
+  <div id="grid-wrapper" class="visually-hidden">
+    <div class="data-grid mb-5 d-flex flex-column flex-grow vh-100">
+      <vaadin-grid column-reordering-allowed class="visuually-hidden">
+        <% grid.questions.each do |question| %>
+          <vaadin-grid-sort-column
+            resizable
+            auto-width
+            header="<%= question.text %>"
+            text-align="<%= question.type.dispatch(:get_text_alignment, context: self) %>"
+            path="<%= question.id %>">
+          </vaadin-grid-sort-column>
+        <% end %>
+        <span slot="empty-state">No data found.</span>
+      </vaadin-grid>
+      <script>
+       const spinner = document.getElementById('grid-spinner');
+       const wrapper = document.getElementById('grid-wrapper');
 
-       const ordering = sortOrders[0];
-       if (ordering) {
-         url.searchParams.set('sort_by', ordering.path)
-         url.searchParams.set('sort_direction', ordering.direction);
-       }
+       const grid = document.querySelector('vaadin-grid');
+       grid.size = <%= grid.record_count %>;
+       grid.dataProvider = (params, callback) => {
+         const { page, pageSize, sortOrders } = params;
 
-       fetch(url)
-         .then((res) => res.json())
-         .then((items) => callback(items.records));
-     };
-    </script>
+         const url = new URL("<%= survey_data_url(grid.survey, format: :json) %>");
+         url.searchParams.set('page', page);
+         url.searchParams.set('items', pageSize);
+
+         const ordering = sortOrders[0];
+         if (ordering) {
+           url.searchParams.set('sort_by', ordering.path)
+           url.searchParams.set('sort_direction', ordering.direction);
+         }
+
+         fetch(url)
+           .then((res) => res.json())
+           .then((items) => callback(items.records))
+           .then(() => {
+              spinner.classList.add('visually-hidden');
+              wrapper.classList.remove('visually-hidden');
+              wrapper.classList.add('fadeIn');
+           });
+       };
+      </script>
+    </div>
   </div>
 <% end %>
