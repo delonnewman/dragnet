@@ -1,9 +1,10 @@
 module Dragnet
   module Types
     class LongText < Text
-      def calculate_sentiment?(question)
+      def countable?
         question.settings.countable?
       end
+      alias calculate_sentiment? countable?
     end
   end
 end

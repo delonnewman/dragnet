@@ -92,5 +92,9 @@ module Dragnet
     def dispatch(action_name, ...)
       public_send(action_name, ...).dispatch(self)
     end
+
+    def countable?
+      is_a?(Types::Countable)
+    end
   end
 end

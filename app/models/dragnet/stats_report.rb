@@ -16,7 +16,7 @@ module Dragnet
 
     # @return [ActiveRecord::Relation<Question>]
     def countable_questions
-      questions.select { _1.settings.countable? }
+      questions.select { _1.type.countable? }
     end
 
     # @return [Integer]
