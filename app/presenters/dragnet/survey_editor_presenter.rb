@@ -1,10 +1,10 @@
 class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
   presents Survey, as: :survey
 
-  delegate :edited?, to: :survey
+  delegate :edited?, to: :survey, prefix: :survey
 
   def last_updated_at
-    return survey.updated_at unless edited?
+    return survey.updated_at unless survey_edited?
 
     latest_edit.updated_at
   end

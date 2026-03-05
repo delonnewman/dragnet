@@ -1,11 +1,14 @@
-<div class="mb-3 d-flex justify-content">
+<div class="mb-3 d-flex justify-content-between">
   <div>
     <small class="me-1 text-muted">
-      <% if editor.edited? %>
+      <% if editor.survey_edited? %>
         Last saved <%= time_ago_in_words editor.last_updated_at %> ago
       <% else %>
         Up to date. Saved <%= time_ago_in_words editor.last_updated_at %> ago
       <% end %>
     </small>
+  </div>
+  <div>
+    <%= button_tag 'Save', type: 'button', class: 'btn btn-sm btn-primary me-1', disabled: editor.survey_edited? %>
   </div>
 </div>
