@@ -9,6 +9,9 @@
     </small>
   </div>
   <div>
-    <%= button_tag 'Publish', type: 'button', class: 'btn btn-dark me-1', disabled: editor.survey_edited? %>
+    <%= button_tag type: 'button', class: 'btn btn-dark me-1 d-flex alignt-items-start', disabled: !editor.survey_edited? do %>
+      Publish&nbsp;
+      <%= survey_status_indicator(editor.survey) %>
+    <% end %>
   </div>
 </div>
