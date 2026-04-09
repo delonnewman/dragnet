@@ -1,5 +1,5 @@
 <%= render 'survey_editor/tools', editor: %>
-<%= render 'survey_editor/details', survey: editor.survey %>
+<%= render 'survey_editor/details', survey: editor.current_edit.edited_survey %>
 
 <div class="mb-3 d-flex justify-content-end">
   <%= button_tag type: 'button', class: 'btn btn-dark' do %>

@@ -1,5 +1,5 @@
 <div class="questions">
-  <% editor.survey.questions.each do |question| %>
+  <% editor.current_edit.edited_survey.questions.each do |question| %>
     <div class="card question mb-4 shadow-sm-hover" id="<%= dom_id question %>">
       <div class="card-body">
         <div class="card-title d-flex justify-content-between">
