@@ -28,6 +28,15 @@ module Dragnet
       survey.edits.where(applied: false).order(created_at: :desc).first
     end
 
+    def survey_attributes
+      Survey::AttributeProjection.new(survey_data).to_h
+    end
+
+    # @return [Survey]
+    def edited_survey
+      Survey.new(survey_attributes)
+    end
+
     # @param [Time] timestamp
     # @return [SurveyEdit]
     def applied(timestamp = Time.zone.now)
@@ -41,7 +50,7 @@ module Dragnet
     # @param [Time] timestamp
     # @return [SurveyEdit]
     def applied!(timestamp = Time.zone.now)
-      validating_survey.validate!(:application)
+      edited_survey.validate!(:application)
       applied(timestamp)
     end
 
@@ -77,7 +86,7 @@ module Dragnet
     def mark_as_published(timestamp)
       return unless applied(timestamp)
 
-      errors.merge!(validating_survey.errors)
+      errors.merge!(edited_survey.errors)
       raise ActiveRecord::RecordInvalid, self
     end
 
@@ -90,15 +99,6 @@ module Dragnet
 
     def clean_up_old_drafts
       survey.edits.where.not(id:).delete_all
-    end
-
-    def survey_attributes
-      Survey::AttributeProjection.new(survey_data).to_h
-    end
-
-    # @return [Survey]
-    def validating_survey
-      Survey.new(survey_attributes)
     end
   end
 end

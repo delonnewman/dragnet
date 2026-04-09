@@ -11,7 +11,7 @@ module Dragnet
     def self.update!(edit)
       return if edit.applied?
 
-      if edit.validating_survey.valid?
+      if edit.edited_survey.valid?
         edit.survey.update(edits_status: :unsaved)
       else
         edit.survey.update(edits_status: :cannot_save)
