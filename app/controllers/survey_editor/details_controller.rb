@@ -1,8 +1,8 @@
 class SurveyEditor::DetailsController < SurveyEditorController
-  def index
-    render :index, locals: { editor: }
+  def show
+    render partial: 'details', locals: { survey: editor.survey }
   end
 
-  def create
+  def update
   end
 end
