@@ -76,7 +76,7 @@ module Dragnet
 
     # Mark as published and validate without saving
     def mark_as_published(timestamp)
-      return unless applied(timestamp)
+      return unless applied!(timestamp)
 
       errors.merge!(edited_survey.errors)
       raise ActiveRecord::RecordInvalid, self
