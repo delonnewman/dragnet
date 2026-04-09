@@ -1,8 +1,12 @@
 <div id="survey-card-<%= survey.id %>" class="survey-card card d-inline-block mb-3 me-3 shadow-sm-hover" style="width: 280px; display: flex !important; align-content: flex-end">
   <div class="card-body position-relative">
     <div class="card-title d-flex justify-content-between align-items-start">
-      <div class="text-overflow-ellipsis">
-        <%= link_to survey.name, survey_path(survey), class: 'stretched-link', title: survey.name %>
+        <div class="text-overflow-ellipsis">
+        <% if survey.edits_saved? %>
+          <%= link_to survey.name, survey_path(survey), class: 'stretched-link', title: survey.name %>
+        <% else %>
+          <%= link_to survey.name, edit_survey_path(survey), class: 'stretched-link', title: survey.name %>
+        <% end %>
       </div>
       <%= survey_status_indicator(survey) %>
     </div>
