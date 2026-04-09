@@ -6,7 +6,7 @@ class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
   def last_updated_at
     return survey.updated_at unless survey_edited?
 
-    latest_edit.updated_at
+    latest_edit.created_at
   end
 
   def latest_edit
