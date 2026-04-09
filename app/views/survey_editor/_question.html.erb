@@ -8,9 +8,18 @@
         <% end %>
       </div>
       <%= select_tag field_name(:survey, :question, question.id, :type), options_from_collection_for_select(editor.types, :slug, :name, question.type.slug), class: 'form-select w-25' %>
-      <%= button_tag type: 'button', title: 'Remove', class: 'btn btn-light text-muted' do %>
-        <%= icon 'fa-solid', 'xmark' %>
-      <% end %>
+      <form
+        hx-delete="<%= survey_editor_question_path(editor.survey, question) %>"
+        hx-target="#questions"
+        hx-swap="outerHTML">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <button
+          type="submit"
+          title="Remove"
+          class="btn btn-light text-muted">
+          <%= icon 'fa-solid', 'xmark' %>
+        </button>
+      </form>
     </div>
   </div>
 </div>
