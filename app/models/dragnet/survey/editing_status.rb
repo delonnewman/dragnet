@@ -1,5 +1,17 @@
 module Dragnet
-  class Survey::EditingStatus
+  class Survey::EditingStatus < Enum
+    member :Published, value: 0 do
+      def color_class = 'bg-green'
+    end
+
+    member :Unpublished, value: 1 do
+      def color_class = 'bg-warning'
+    end
+
+    member :CannotPublish, value: -1 do
+      def color_class = 'bg-danger'
+    end
+
     def self.assign_default!(survey)
       saved!(survey) unless survey.edits_status?
     end
