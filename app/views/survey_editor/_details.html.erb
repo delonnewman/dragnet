@@ -1,10 +1,10 @@
 <div id="survey-details" class="card mb-4 shadow-sm-hover">
   <div class="card-body">
     <div class="card-title pb-3">
-      <form hx-put="<%= survey_editor_details_path(survey) %>" hx-trigger="input change" hx-target="#survey-details">
+      <form hx-put="<%= survey_editor_details_path(survey) %>" hx-trigger="input change delay:1s" hx-target="#survey-details" hx-swap="outerHTML">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <%= text_field_tag field_name(:survey, :name), survey.name, class: 'h3 border-0 w-100 border-bottom' %>
-        <%= text_area_tag field_name(:survey, :description), survey.description, rows: 1, placeholder: "Description", class: 'form-control'  %>
+        <%= text_area_tag field_name(:survey, :description), survey.description, rows: 1, placeholder: "Description", class: 'form-control', rows: 3  %>
       </form>
     </div>
   </div>
