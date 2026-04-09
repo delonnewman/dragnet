@@ -57,7 +57,6 @@ gem 'erubi'
 gem 'invokable'
 gem 'memo_wise'
 gem 'rails-pattern_matching'
-gem 'literal_enums-rails'
 
 # Data
 gem 'faker'

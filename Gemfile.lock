@@ -215,11 +215,6 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    literal_enums (1.1.1)
-      activesupport (>= 7.0)
-    literal_enums-rails (1.0.0)
-      literal_enums (~> 1.0)
-      rails (~> 7.0)
     logger (1.7.0)
     loofah (2.25.0)
       crass (~> 1.0.2)
@@ -539,7 +534,6 @@ DEPENDENCIES
   gen-test!
   invokable
   jbuilder
-  literal_enums-rails
   mail
   mapkick-rb
   memo_wise
