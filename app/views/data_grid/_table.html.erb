@@ -21,7 +21,9 @@
 
   <div id="grid-wrapper" class="visually-hidden">
     <div class="data-grid mb-5 d-flex flex-column flex-grow vh-100">
-      <vaadin-grid column-reordering-allowed class="visuually-hidden">
+      <vaadin-grid column-reordering-allowed>
+        <vaadin-grid-sort-column resizeable auto-width header="Created At" path="created_at" direction="desc"></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column resizeable auto-width header="User" path="user_id"></vaadin-grid-sort-column>
         <% grid.questions.each do |question| %>
           <vaadin-grid-sort-column
             resizable
