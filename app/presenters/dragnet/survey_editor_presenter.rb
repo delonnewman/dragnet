@@ -9,6 +9,10 @@ class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
     latest_edit.created_at
   end
 
+  def current_edit
+    Dragnet::SurveyEdit.current(survey)
+  end
+
   def latest_edit
     Dragnet::SurveyEdit.latest(survey)
   end
