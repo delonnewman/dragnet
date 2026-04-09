@@ -42,6 +42,12 @@ module Dragnet
         end
       end
 
+      def find(symbol)
+        index.fetch(symbol) do
+          raise TypeError, "#{symbol.inspect} is not a valid #{self}"
+        end
+      end
+
       def index
         all.index_by(&:symbol)
       end
