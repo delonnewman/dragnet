@@ -1,15 +1,5 @@
 <%= render 'tabs', survey: editor.survey, selected: :edit %>
 
-<div class="container">
-  <%= render 'survey_editor/tools', editor: %>
-  <%= render 'survey_editor/details', survey: editor.survey %>
-
-  <div class="mb-3 d-flex justify-content-end">
-    <%= button_tag type: 'button', class: 'btn btn-sm btn-secondary' do %>
-      <%= icon 'fa-solid', 'plus' %>
-      Add Question
-    <% end %>
-  </div>
-
-  <%= render 'survey_editor/questions', editor: %>
+<div class="container editor">
+   <%= render 'survey_editor/editor', editor: %>
 </div>

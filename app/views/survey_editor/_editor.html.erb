@@ -1,0 +1,11 @@
+<%= render 'survey_editor/tools', editor: %>
+<%= render 'survey_editor/details', survey: editor.survey %>
+
+<div class="mb-3 d-flex justify-content-end">
+  <%= button_tag type: 'button', class: 'btn btn-dark' do %>
+    <%= icon 'fa-solid', 'plus' %>
+    Add Question
+  <% end %>
+</div>
+
+<%= render 'survey_editor/questions', editor: %>
