@@ -39,19 +39,11 @@ module Dragnet
 
     # @param [Time] timestamp
     # @return [SurveyEdit]
-    def applied(timestamp = Time.zone.now)
-      return false unless valid?(:application)
-
+    def applied!(timestamp = Time.zone.now)
+      edited_survey.validate!(:application)
       self.applied    = true
       self.applied_at = timestamp
       self
-    end
-
-    # @param [Time] timestamp
-    # @return [SurveyEdit]
-    def applied!(timestamp = Time.zone.now)
-      edited_survey.validate!(:application)
-      applied(timestamp)
     end
 
     # @param [Time] timestamp
