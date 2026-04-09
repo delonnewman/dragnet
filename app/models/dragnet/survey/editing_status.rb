@@ -13,21 +13,18 @@ module Dragnet
     end
 
     def self.assign_default!(survey)
-      saved!(survey) unless survey.edits_status?
+      saved!(survey) unless survey.editing_status?
     end
 
     def self.saved!(survey)
-      survey.edits_status = :saved
+      survey.editing_status = published
     end
 
     def self.update!(edit)
       return if edit.applied?
+      return edit.survey.update(editing_status: unpublished) if edit.edited_survey.valid?
 
-      if edit.edited_survey.valid?
-        edit.survey.update(edits_status: :unsaved)
-      else
-        edit.survey.update(edits_status: :cannot_save)
-      end
+      edit.survey.update(editing_status: cannot_publish)
     end
   end
 end

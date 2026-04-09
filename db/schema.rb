@@ -184,6 +184,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
 
   create_table "survey_edits", force: :cascade do |t|
     t.uuid "survey_id", null: false
+    t.integer "op", null: false
     t.binary "survey_data"
     t.boolean "applied", default: false, null: false
     t.datetime "applied_at", precision: nil
@@ -191,6 +192,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["applied"], name: "index_survey_edits_on_applied"
     t.index ["applied_at"], name: "index_survey_edits_on_applied_at"
     t.index ["created_at"], name: "index_survey_edits_on_created_at"
+    t.index ["op"], name: "index_survey_edits_on_op"
     t.index ["survey_id"], name: "index_survey_edits_on_survey_id"
   end
 
@@ -200,7 +202,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.string "description"
     t.uuid "author_id", null: false
     t.uuid "copy_of_id"
-    t.integer "edits_status"
+    t.integer "editing_status"
     t.integer "record_changes_status"
     t.boolean "open", default: false, null: false
     t.boolean "public", default: false, null: false
@@ -213,7 +215,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["author_id"], name: "index_surveys_on_author_id"
     t.index ["copy_of_id"], name: "index_surveys_on_copy_of_id"
     t.index ["created_at"], name: "index_surveys_on_created_at"
-    t.index ["edits_status"], name: "index_surveys_on_edits_status"
+    t.index ["editing_status"], name: "index_surveys_on_editing_status"
     t.index ["latest_submission_at"], name: "index_surveys_on_latest_submission_at"
     t.index ["name", "author_id"], name: "index_surveys_on_name_and_author_id", unique: true
     t.index ["name"], name: "index_surveys_on_name"

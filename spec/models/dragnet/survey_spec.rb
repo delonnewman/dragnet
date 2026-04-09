@@ -32,10 +32,10 @@ describe Dragnet::Survey do
       expect(survey).to be_edits_saved
     end
 
-    it 'sets the edit status to the given status when an edit staqtus is given' do
-      survey = described_class.create!(name:, edits_status: 'unsaved', author:)
+    it 'sets the edit status to the given status when an edit status is given' do
+      survey = described_class.create!(name:, editing_status: Dragnet::Survey::EditingStatus.unpublished, author:)
 
-      expect(survey.edits_status).to eq('unsaved')
+      expect(survey.editing_status).to be(Dragnet::Survey::EditingStatus.unpublished)
     end
   end
 

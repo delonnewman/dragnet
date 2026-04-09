@@ -48,7 +48,7 @@ module Dragnet
     has_many :records, -> { where(submitted: true) }, class_name: 'Dragnet::Reply', dependent: :restrict_with_error, inverse_of: :survey
 
     # Editing
-    enum :edits_status, { saved: 0, unsaved: 1, cannot_save: -1 }, prefix: :edits
+    composed_of :status, mapping: { editing_status: :value }, constructor: ->(x) { x && EditingStatus.of(x) }, class_name: 'Dragnet::Survey::EditingStatus'
     has_many :edits, -> { where(applied: false) }, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
     before_validation { EditingStatus.assign_default!(self) }
 

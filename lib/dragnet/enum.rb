@@ -28,13 +28,14 @@ module Dragnet
       self.const_set(name, subclass)
       instance = subclass.new(value)
 
+      define_singleton_method(instance.key) { instance }
       @members[name.to_s.underscore.to_sym] = instance
       @members_by_value[value] = instance
     end
 
     def self.of(value)
       (@members_by_value || EMPTY_HASH).fetch(value) do
-        raise TypeError, "#{key.inspect} is not a valid #{self} value"
+        raise TypeError, "#{value.inspect} is not a valid #{self} value"
       end
     end
 

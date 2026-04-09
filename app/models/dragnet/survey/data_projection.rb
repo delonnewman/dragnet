@@ -38,7 +38,7 @@ module Dragnet
         :description,
         :updated_at,
         :author_id,
-        :edits_status,
+        :editing_status,
         author: %i[id name nickname],
         questions: [
           :id,

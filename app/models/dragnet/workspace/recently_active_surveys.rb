@@ -12,7 +12,7 @@ module Dragnet
                           s.open,
                           s.created_at,
                           s.updated_at,
-                          s.edits_status
+                          s.editing_status
                      FROM users   AS u
                INNER JOIN surveys AS s ON u.id = s.author_id
                     WHERE s.created_at < ? AND u.id = ? AND s.retracted = false)
@@ -25,7 +25,7 @@ module Dragnet
                         s.open,
                         s.created_at,
                         s.updated_at,
-                        s.edits_status
+                        s.editing_status
                    FROM users   AS u
              INNER JOIN surveys AS s    ON u.id         = s.author_id
              INNER JOIN replies AS r    ON s.id         = r.survey_id

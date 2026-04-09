@@ -24,7 +24,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.index [:name, :author_id], unique: true
 
       t.uuid    :copy_of_id,            null: true, index: true
-      t.integer :edits_status,          null: true, index: true
+      t.integer :editing_status,        null: true, index: true
       t.integer :record_changes_status, null: true, index: true
 
       t.boolean :open,   index: true, null: false, default: false
@@ -40,6 +40,7 @@ class Initial < ActiveRecord::Migration[7.0]
 
     create_table :survey_edits do |t|
       t.uuid :survey_id, null: false, index: true
+      t.integer :op, null: false, index: true
       t.blob :survey_data
 
       t.boolean :applied, index: true, null: false, default: false
