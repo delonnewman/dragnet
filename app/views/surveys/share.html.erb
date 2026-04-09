@@ -1,32 +1,32 @@
 <%= render 'tabs', survey: survey, selected: :share %>
 
-<div class="container">
+<div class="container mt-4">
   <% if survey.not_ready_for_replies? %>
     <%= render 'shared/survey_no_questions', survey: survey %>
   <% else %>
     <ul class="nav nav-pills mb-3" hx-boost="true">
       <li class="nav-item">
         <%= nav_link share_survey_path(survey, method: 'email'), active: survey.share_email? do %>
-          <%= icon 'far', 'envelope' %>
-          <% if survey.share_email? %>Email<% end %>
+          <% if survey.share_email? %><%= icon 'far', 'envelope' %><% end %>
+          Send an Email
         <% end %>
       </li>
       <li class="nav-item">
         <%= nav_link share_survey_path(survey, method: 'qrcode'), active: survey.share_qrcode? do %>
-          <%= icon 'fas', 'qrcode' %>
-          <% if survey.share_qrcode? %>QRCode<% end %>
+          <% if survey.share_qrcode? %><%= icon 'fas', 'qrcode' %><% end %>
+          Scan QRCode
         <% end %>
       </li>
       <li class="nav-item">
         <%= nav_link share_survey_path(survey, method: 'link'), active: survey.share_link? do %>
-          <%= icon 'fas', 'link' %>
-          <% if survey.share_link? %>Link<% end %>
+          <% if survey.share_link? %><%= icon 'fas', 'link' %><% end %>
+          Share Link
         <% end %>
       </li>
       <li class="nav-item">
         <%= nav_link share_survey_path(survey, method: 'code'), active: survey.share_code? do %>
-          <%= icon 'fas', 'code' %>
-          <% if survey.share_code? %>Code<% end %>
+          <% if survey.share_code? %><%= icon 'fas', 'code' %><% end %>
+          Copy Code
         <% end %>
       </li>
     </ul>

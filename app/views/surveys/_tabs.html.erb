@@ -22,32 +22,38 @@
   </li>
   <li class="nav-item">
     <%= link_to survey_path(survey), class: "nav-link #{'active' if selected == :summary}" do %>
-      <%= icon 'fas', 'gauge' %> Summary
+      <% if selected == :summary %><%= icon 'fas', 'gauge' %><% end %>
+      Summary
     <% end %>
   </li>
   <li class="nav-item">
     <%= link_to survey_data_path(survey), 'hx-boost': false, class: "nav-link #{'active' if selected == :data}" do %>
-      <%= icon 'fas', 'table' %> Records
+      <% if selected == :data %><%= icon 'fas', 'table' %><% end %>
+      Records
     <% end %>
   </li>
   <li class="nav-item">
     <%= link_to edit_survey_path(survey), class: "nav-link #{'active' if selected == :edit}" do %>
-      <%= icon 'fas', 'hammer' %> Create
+      <% if selected == :edit %><%= icon 'fas', 'hammer' %><% end %>
+      Create
     <% end %>
   </li>
   <li class="nav-item">
     <%= link_to preview_survey_path(survey), class: "nav-link #{'active' if selected == :preview}" do %>
-      <%= icon 'fas', 'eye' %> Preview
+      <% if selected == :preview %><%= icon 'fas', 'eye' %><% end %>
+      Preview
     <% end %>
   </li>
   <li class="nav-item">
     <%= link_to share_survey_path(survey), class: "nav-link #{'active' if selected == :share}" do %>
-      <%= icon 'fas', 'paper-plane' %> Share
+      <% if selected == :share %><%= icon 'fas', 'paper-plane' %><% end %>
+      Share
     <% end %>
   </li>
   <li class="nav-item">
     <%= link_to survey_settings_path(survey), class: "nav-link #{'active' if selected == :settings}" do %>
-      <%= icon 'fas', 'gear' %> Settings
+      <% if selected == :settings %><%= icon 'fas', 'gear' %><% end %>
+      Settings
     <% end %>
   </li>
 </ul>
