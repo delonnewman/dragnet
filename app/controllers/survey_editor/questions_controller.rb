@@ -33,6 +33,9 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   end
   
   def question_params
-    params.require(:question).permit(:type, :text, :required)
+    hash = params.require(:survey).require(:question).permit(:type, :text, :required).to_h
+    type = hash.delete(:type).presence.to_sym
+    type_class = Dragnet::Type.find(type)
+    hash.merge!(type_class: type_class)
   end
 end

@@ -1,13 +1,21 @@
 <div class="card question mb-4 shadow-sm-hover" id="<%= dom_id question %>">
   <div class="card-body">
     <div class="card-title d-flex justify-content-between">
-      <div class="question-title w-100 d-flex me-1">
-        <%= text_field_tag field_name(:survey, :question, question.id, :text), question.text, title: "Enter question text", class: 'h5 w-100 border-0 border-bottom' %>
-        <% if question.required? %>
-          <span title="Required">*</span>
-        <% end %>
-      </div>
-      <%= select_tag field_name(:survey, :question, question.id, :type), options_from_collection_for_select(editor.types, :slug, :name, question.type.slug), class: 'form-select w-25' %>
+      <form
+        class="w-100 d-flex justify-content-between"
+        hx-put="<%= survey_editor_question_path(editor.survey, question) %>"
+        hx-trigger="input,select change delay:1s"
+        hx-target="#<%= dom_id question %>"
+        hx-swap="outerHTML">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <div class="question-title w-100 d-flex me-1">
+          <%= text_field_tag field_name(:survey, :question, :text), question.text, title: "Enter question text", class: 'h5 w-100 border-0 border-bottom' %>
+          <% if question.required? %>
+            <span title="Required">*</span>
+          <% end %>
+        </div>
+        <%= select_tag field_name(:survey, :question, :type), options_from_collection_for_select(editor.types, :slug, :name, question.type.slug), class: 'form-select w-25' %>
+      </form>
       <form
         hx-delete="<%= survey_editor_question_path(editor.survey, question) %>"
         hx-target="#questions"
