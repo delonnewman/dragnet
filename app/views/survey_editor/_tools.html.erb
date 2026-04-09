@@ -1,6 +1,7 @@
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <div>
-    <small class="me-1 text-muted">
+    <small class="me-1 text-muted d-flex">
+      <%= survey_status_indicator(editor.survey) %>
       <% if editor.survey_edited? %>
         Last saved <%= time_ago_in_words editor.last_updated_at %> ago
       <% else %>
@@ -10,8 +11,7 @@
   </div>
   <div>
     <%= button_tag type: 'button', class: 'btn btn-dark me-1 d-flex alignt-items-start', disabled: !editor.survey_edited? do %>
-      Publish&nbsp;
-      <%= survey_status_indicator(editor.survey) %>
+      Publish
     <% end %>
   </div>
 </div>
