@@ -6,6 +6,7 @@ class SurveyEditor::DetailsController < SurveyEditorController
   def update
     data = survey.projection.merge(details_params.to_h.symbolize_keys)
     edit = Dragnet::SurveyEdit.create_with!(survey, data:)
+
     render partial: 'details', locals: { survey: edit.edited_survey }
   end
 
