@@ -20,6 +20,11 @@ module Dragnet
       self.form_name = Utils.slug(text, delimiter: '_') if text.present? && !form_name
     end
 
+    before_validation do
+      self.text = UniqueName.new(record: self, scope: :survey_id, attribute_name: :text).to_s
+      self.type_class = Dragnet::Types::Text unless type_class_name
+    end
+
     def settings
       Settings.new(self)
     end

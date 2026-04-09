@@ -2,10 +2,10 @@
 <%= render 'survey_editor/details', survey: editor.current_edit.edited_survey %>
 
 <div class="mb-3 d-flex justify-content-end">
-  <%= button_tag type: 'button', class: 'btn btn-dark' do %>
+  <button type="button" class="btn btn-dark" hx-get="<%= new_survey_editor_question_path(editor.survey) %>" hx-target="#questions" hx-swap="beforeend">
     <%= icon 'fa-solid', 'plus' %>
     Add Question
-  <% end %>
+  </button>
 </div>
 
 <%= render 'survey_editor/questions', editor: %>

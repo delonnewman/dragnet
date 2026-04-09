@@ -4,6 +4,7 @@ class SurveyEditor::DetailsController < SurveyEditorController
   end
 
   def update
+    # TODO: just save the diff
     data = survey.projection.merge(details_params.to_h.symbolize_keys)
     edit = Dragnet::SurveyEdit.create_with!(survey, data:)
 

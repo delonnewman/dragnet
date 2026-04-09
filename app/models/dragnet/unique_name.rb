@@ -2,12 +2,13 @@
 
 module Dragnet
   class UniqueName
-    def initialize(record: nil, scope: nil, record_class: nil, root_name: nil, name: '')
+    def initialize(record: nil, scope: nil, record_class: nil, root_name: nil, name: '', attribute_name: :name)
       @record          = record
       @scope_attribute = scope
       @record_class    = record_class || record.class
       @root_name       = root_name || "New #{@record_class.model_name.human}"
-      @name            = name.presence || record&.name
+      @name            = name.presence || record&.public_send(attribute_name)
+      @attribute_name  = attribute_name
     end
 
     def as_slug
@@ -36,7 +37,7 @@ module Dragnet
     private
 
     def record_name?
-      @record && @record.name.present?
+      @record && @record.public_send(@attribute_name).present?
     end
 
     def record_new?
@@ -62,8 +63,8 @@ module Dragnet
     end
 
     def auto_named_count
-      field = @record_class.arel_table[:name]
-      query = @record_class.where(name: @root_name).or(@record_class.where(field.matches("#{@root_name} (%)")))
+      field = @record_class.arel_table[@attribute_name]
+      query = @record_class.where(@attribute_name => @root_name).or(@record_class.where(field.matches("#{@root_name} (%)")))
       return query.count unless @record && @scope_attribute
 
       query.where(@scope_attribute => record_scope_value).count
