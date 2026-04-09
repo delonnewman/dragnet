@@ -11,25 +11,5 @@
     <% end %>
   </div>
 
-  <div class="questions">
-    <% editor.survey.questions.each do |question| %>
-      <div class="card question mb-4" id="<%= dom_id question %>">
-        <div class="card-body">
-          <div class="card-title d-flex justify-content-between">
-            <div class="question-title w-100 d-flex me-1">
-              <%= text_field_tag field_name(:survey, :question, question.id, :text), question.text, title: "Enter question text", class: 'h5 w-100' %>
-              <% if question.required? %>
-                <span title="Required">*</span>
-              <% end %>
-            </div>
-            <%= select_tag field_name(:survey, :question, question.id, :type), options_from_collection_for_select(editor.types, :slug, :name, question.type.slug), class: 'form-select w-25' %>
-            <%= button_tag type: 'button', title: 'Remove', class: 'btn btn-light text-muted' do %>
-              <%= icon 'fa-solid', 'xmark' %>
-            <% end %>
-          </div>
-
-        </div>
-      </div>
-    <% end %>
-  </div>
+  <%= render 'survey_editor/questions', editor: %>
 </div>
