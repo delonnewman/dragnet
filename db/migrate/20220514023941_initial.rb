@@ -40,7 +40,7 @@ class Initial < ActiveRecord::Migration[7.0]
 
     create_table :survey_edits do |t|
       t.uuid :survey_id, null: false, index: true
-      t.integer :op, null: false, index: true
+      t.string :op, null: false, index: true
       t.jsonb :details
       t.timestamp :applied_at, index: true
       t.timestamp :created_at, index: true

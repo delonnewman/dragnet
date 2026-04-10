@@ -184,7 +184,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
 
   create_table "survey_edits", force: :cascade do |t|
     t.uuid "survey_id", null: false
-    t.integer "op", null: false
+    t.string "op", null: false
     t.jsonb "details"
     t.datetime "applied_at", precision: nil
     t.datetime "created_at", precision: nil
