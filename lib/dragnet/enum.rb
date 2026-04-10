@@ -29,8 +29,15 @@ module Dragnet
       end
     end
 
+    def to_json(...)
+      value.to_json(...)
+    end
+
+    # Class Methods
+
     def self.inherited(base)
       base.extend(ClassMethods)
+      base.extend(ActiveRecordType)
     end
 
     module ClassMethods
@@ -84,6 +91,42 @@ module Dragnet
   
       def members
         (@members || EMPTY_HASH).values
+      end
+    end
+
+    module ActiveRecordType
+      def cast(value)
+        coerce(value) unless value.nil?
+      end
+      alias deserialize cast
+
+      def assert_valid_value(value)
+        coerce(value)
+      end
+
+      def changed?(old_value, new_value, _new_value_before_type_cast)
+        old_value != new_value
+      end
+
+      def changed_in_place?(raw_old_value, new_value)
+        false
+      end
+
+      def serialize(value)
+        case value
+        when Enum
+          value.value
+        else
+          value
+        end
+      end
+
+      def type
+        if superclass == Enum
+          name.split('::').map(&:underscore).join('_').to_sym
+        else
+          superclass.type
+        end
       end
     end
   end
