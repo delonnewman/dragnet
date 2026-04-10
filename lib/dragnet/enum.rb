@@ -150,6 +150,10 @@ module Dragnet
         end
       end
 
+      def binary?
+        false
+      end
+
       def type
         if superclass == Enum
           name.split('::').map(&:underscore).join('_').to_sym
