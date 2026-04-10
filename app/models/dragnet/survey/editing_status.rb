@@ -17,14 +17,14 @@ module Dragnet
     end
 
     def self.saved!(survey)
-      survey.editing_status = published
+      survey.status = published
     end
 
     def self.update!(edit)
       return if edit.applied?
-      return edit.survey.update(editing_status: unpublished) if edit.edited_survey.valid?
+      return edit.survey.update(status: unpublished) if edit.edited_survey.valid?
 
-      edit.survey.update(editing_status: cannot_publish)
+      edit.survey.update(status: cannot_publish)
     end
   end
 end
