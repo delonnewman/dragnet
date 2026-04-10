@@ -18,6 +18,17 @@ module Dragnet
       def to_i
         value.to_i
       end
+
+      def ==(other)
+        case other
+        when String
+          key == other.downcase.underscore.to_sym
+        when Symbol
+          key == other.name.downcase.underscore.to_sym
+        else
+          value == other
+        end
+      end
     end
 
     def self.member(name, value: name.to_s, &block)
@@ -29,8 +40,27 @@ module Dragnet
       instance = subclass.new(value)
 
       define_singleton_method(instance.key) { instance }
-      @members[name.to_s.underscore.to_sym] = instance
+      @members[name.to_s.downcase.underscore.to_sym] = instance
       @members_by_value[value] = instance
+    end
+
+    def self.coerce(value)
+      return of(value) if value?(value)
+      return keyed(value) if key?(value)
+
+      member_missing(value)
+    end
+
+    def self.member_missing(value)
+      raise TypeError, "#{value.inspect} can't be coerced into a #{self} member"
+    end
+
+    def self.value?(value)
+      (@members_by_value || EMPTY_HASH).key?(value)
+    end
+
+    def self.key?(key)
+      (@members || EMPTY_HASH).key?(key.to_s.downcase.underscore.to_sym)
     end
 
     def self.of(value)
@@ -40,7 +70,7 @@ module Dragnet
     end
 
     def self.keyed(key)
-      (@members || EMPTY_HASH).fetch(key.to_s.underscore.to_sym) do
+      (@members || EMPTY_HASH).fetch(key.to_s.downcase.underscore.to_sym) do
         raise TypeError, "#{key.inspect} is not a valid #{self} key"
       end
     end
