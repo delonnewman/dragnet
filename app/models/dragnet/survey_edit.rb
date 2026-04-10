@@ -3,6 +3,11 @@
 module Dragnet
   # An individual edit to a survey
   class SurveyEdit < ApplicationRecord
+    attribute :op, Op, default: Op.add
+    attribute :applied, :boolean, default: false
+    attribute :applied_at, :datetime
+    attribute :created_at, :datetime
+
     belongs_to :survey, class_name: 'Dragnet::Survey'
 
     serialize :survey_data
