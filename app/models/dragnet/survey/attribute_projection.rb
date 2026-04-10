@@ -19,12 +19,10 @@ module Dragnet
 
     # @return [Array]
     def question_attributes
-      types = Type.index
       question_data.map do |(_, q)|
-        type = q[:type]
+        type = q.fetch(:type) { raise "missing :type key have keys: #{q.keys.inspect}" }
         q.slice(*question_keys(q)).tap do |new|
-          new[:type_class_name] =
-            types.fetch(type) { raise "invalid type #{type.inspect}" }.name
+          new[:type_class_name] = Type.find(type).name
           if q[:question_options].present?
             new[:question_options_attributes] = q[:question_options].map do |(_, opt)|
               opt.slice(*question_option_keys(opt))
@@ -36,7 +34,7 @@ module Dragnet
 
     # @return [Array]
     def question_data
-      @survey_data[:questions] || EMPTY_ARRAY
+      @survey_data[:questions] || EMPTY_HASH
     end
 
     # @param [Question] question
