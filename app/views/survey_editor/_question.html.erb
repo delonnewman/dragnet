@@ -5,7 +5,7 @@
         class="w-100 d-flex justify-content-between"
         hx-put="<%= survey_editor_question_path(editor.survey, question) %>"
         hx-trigger="input,select change delay:1s"
-        hx-target="#<%= dom_id question %>"
+        hx-target="#questions"
         hx-swap="outerHTML">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <div class="question-title w-100 d-flex me-1">

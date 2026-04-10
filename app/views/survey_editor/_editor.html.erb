@@ -2,7 +2,7 @@
 <%= render 'survey_editor/details', survey: editor.survey.edited %>
 
 <div class="mb-3 d-flex justify-content-end">
-  <form hx-post="<%= survey_editor_questions_path(editor.survey) %>" hx-target="#questions" hx-swap="beforeend">
+  <form hx-post="<%= survey_editor_questions_path(editor.survey) %>" hx-target="#questions" hx-swap="outerHTML">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
     <button type="submit" class="btn btn-dark">
       <%= icon 'fa-solid', 'plus' %>

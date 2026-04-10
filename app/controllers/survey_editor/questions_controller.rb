@@ -4,24 +4,19 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   end
 
   def create
-    # TODO: should create new edit with question data
-    question = survey.questions.create!
+    Dragnet::SurveyEdit.new_question(survey)
 
-    render partial: 'question', locals: { editor:, question: }
+    render partial: 'questions', locals: { editor: }
   end
 
   def update
-    # TODO: should create new edit with updated question data
-    if question.update(question_params)
-      render partial: 'question', locals: { editor:, question: }
-    else
-      # TODO: handle errors
-    end
+    Dragnet::SurveyEdit.update_question(survey, question, question_params.to_h.symbolize_keys)
+
+    render partial: 'questions', locals: { editor: }
   end
 
   def destroy
-    # TODO: should create new edit with question data removed
-    question.destroy
+    Dragnet::SurveyEdit.remove_question(survey, question)
 
     render partial: 'questions', locals: { editor: }
   end
@@ -33,9 +28,10 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   end
   
   def question_params
-    hash = params.require(:survey).require(:question).permit(:type, :text, :required).to_h
-    type = hash.delete(:type).presence.to_sym
+    hash       = params.require(:survey).require(:question).permit(:type, :text, :required).to_h
+    type       = hash.delete(:type).presence.to_sym
     type_class = Dragnet::Type.find(type)
+
     hash.merge!(type_class: type_class)
   end
 end

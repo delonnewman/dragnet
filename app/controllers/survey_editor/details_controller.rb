@@ -1,14 +1,12 @@
 class SurveyEditor::DetailsController < SurveyEditorController
   def show
-    render partial: 'details', locals: { survey: editor.survey }
+    render partial: 'details', locals: { survey: editor.survey.edited }
   end
 
   def update
-    # TODO: just save the diff
-    data = survey.projection.merge(details_params.to_h.symbolize_keys)
-    edit = Dragnet::SurveyEdit.create_with!(survey, data:)
+    edit = Dragnet::SurveyEdit.update_attributes(survey, details_params.to_h.symbolize_keys)
 
-    render partial: 'details', locals: { survey: edit.edited_survey }
+    render partial: 'details', locals: { survey: edit.survey.edited }
   end
 
   private

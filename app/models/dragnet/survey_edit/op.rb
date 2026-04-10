@@ -1,21 +1,21 @@
 module Dragnet
   # The survey edit operations that can be performed
   class SurveyEdit::Op < Enum
-    member :Update, value: 0 do
+    member :Update do
       def merge(edit, projection)
         projection.merge(edit.details.fetch(:updates))
       end
     end
 
-    member :NewQuestion, value: 1, key: :new_question do
+    member :NewQuestion, key: :new_question do
       def merge(edit, projection)
-        question = Question.new(id: Utils.uuid, survey_id: edit.survey_id).tap(&:validate!)
+        question = Question.find_or_create_by!(survey_id: edit.survey_id)
         projection.merge(
           questions: projection[:questions].merge(
             question.id => {
               id: question.id,
               text: question.text,
-              type_class_name: question.type_class_name,
+              type: question.type.symbol,
               display_order: question.display_order,
             }
           )
@@ -23,7 +23,7 @@ module Dragnet
       end
     end
 
-    member :UpdateQuestion, value: 2, key: :update_question do
+    member :UpdateQuestion, key: :update_question do
       def merge(edit, projection)
         question_id = edit.details.fetch(:question_id)
         updates = edit.details.fetch(:updates)
@@ -35,11 +35,11 @@ module Dragnet
       end
     end
 
-    member :RemoveQuestion, value: 3, key: :remove_question do
+    member :RemoveQuestion, key: :remove_question do
       def merge(edit, projection)
         question_id = edit.details.fetch(:question_id)
         projection.merge(
-          questions: projection[:questions].slice(question_id)
+          questions: projection[:questions].except(question_id)
         )
       end
     end

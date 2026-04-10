@@ -27,7 +27,8 @@ module Dragnet
       create!(survey:, op: Op.update_question, details: { question_id:, updates: })
     end
 
-    def self.remove_question(survey, question_id)
+    def self.remove_question(survey, question)
+      question_id = question.is_a?(Question) ? question.id : question
       create!(survey:, op: Op.remove_question, details: { question_id: })
     end
 
@@ -35,7 +36,7 @@ module Dragnet
       projection = edits.reduce(survey.projection) do |projection, edit| 
         edit.op.merge(edit, projection)
       end
-      Survey.new(Survey::AttributeProjection.new(projection).to_h)
+      EditedSurvey.new(Survey::AttributeProjection.new(projection).to_h)
     end
 
     def self.current(survey)
