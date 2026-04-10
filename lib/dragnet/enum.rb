@@ -75,32 +75,54 @@ module Dragnet
       end
   
       def member_missing(value)
-        raise TypeError, "#{value.inspect} can't be coerced into a #{self} member, valid keys are: #{@members.keys.inspect}, valid values are: #{@members_by_value.keys.inspect}"
+        valstr = values.map(&:inspect).join(', ')
+        keystr = keys.map(&:inspect).join(', ')
+
+        raise TypeError, "#{value.inspect} can't be coerced into a #{self} member, " \
+                         "valid keys are: #{keystr}, valid values are: #{valstr}"
+      end
+
+      def by_key
+        @members ||= {}
+      end
+
+      def by_value
+        @members_by_value ||= {}
+      end
+
+      def keys
+        by_key.keys
+      end
+
+      def values
+        by_value.keys
       end
   
       def value?(value)
-        (@members_by_value || EMPTY_HASH).key?(value)
+        by_value.key?(value)
       end
   
       def key?(key)
-        (@members || EMPTY_HASH).key?(Enum.encode_key(key))
+        by_key.key?(Enum.encode_key(key))
       end
   
       def of(value)
-        (@members_by_value || EMPTY_HASH).fetch(value) do
-          raise TypeError, "#{value.inspect} is not a valid #{self} value, valid values are: #{@members_by_value.keys.inspect}"
+        by_value.fetch(value) do
+          valstr = values.map(&:inspect).join(', ')
+          raise TypeError, "#{value.inspect} is not a valid #{self} value, valid values are: #{valstr}"
         end
       end
   
       def keyed(key)
         encoded = Enum.encode_key(key)
-        (@members || EMPTY_HASH).fetch(encoded) do
-          raise TypeError, "#{key.inspect} is not a valid #{self} key, valid keys are: #{@members.keys.inspect}"
+        by_key.fetch(encoded) do
+          keystr = keys.map(&:inspect).join(', ')
+          raise TypeError, "#{key.inspect} is not a valid #{self} key, valid keys are: #{keystr}"
         end
       end
   
       def members
-        (@members || EMPTY_HASH).values
+        by_key.values
       end
     end
 
