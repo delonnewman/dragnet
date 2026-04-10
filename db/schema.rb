@@ -185,11 +185,9 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   create_table "survey_edits", force: :cascade do |t|
     t.uuid "survey_id", null: false
     t.integer "op", null: false
-    t.binary "survey_data"
-    t.boolean "applied", default: false, null: false
+    t.jsonb "details"
     t.datetime "applied_at", precision: nil
     t.datetime "created_at", precision: nil
-    t.index ["applied"], name: "index_survey_edits_on_applied"
     t.index ["applied_at"], name: "index_survey_edits_on_applied_at"
     t.index ["created_at"], name: "index_survey_edits_on_created_at"
     t.index ["op"], name: "index_survey_edits_on_op"
