@@ -51,9 +51,6 @@ module Dragnet
 
     module ClassMethods
       def member(name, value: name.to_s, key: Enum.encode_key(name.to_s), &block)
-        @members ||= {}
-        @members_by_value ||= {}
-  
         subclass = Class.new(self, &block)
         self.const_set(name, subclass)
         instance = subclass.new(value, key)
@@ -62,8 +59,8 @@ module Dragnet
         subclass.define_method(:"#{instance.key}?") { true }
         define_singleton_method(instance.key) { instance }
   
-        @members[instance.key] = instance
-        @members_by_value[value] = instance
+        by_key[instance.key] = instance
+        by_value[value] = instance
       end
   
       def coerce(value)
@@ -82,22 +79,6 @@ module Dragnet
                          "valid keys are: #{keystr}, valid values are: #{valstr}"
       end
 
-      def by_key
-        @members ||= {}
-      end
-
-      def by_value
-        @members_by_value ||= {}
-      end
-
-      def keys
-        by_key.keys
-      end
-
-      def values
-        by_value.keys
-      end
-  
       def value?(value)
         by_value.key?(value)
       end
@@ -123,6 +104,22 @@ module Dragnet
   
       def members
         by_key.values
+      end
+
+      def by_key
+        @members ||= {}
+      end
+
+      def by_value
+        @members_by_value ||= {}
+      end
+
+      def keys
+        by_key.keys
+      end
+
+      def values
+        by_value.keys
       end
     end
 
