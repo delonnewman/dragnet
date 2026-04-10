@@ -25,6 +25,16 @@ RSpec.describe Dragnet::Enum do
     expect(enum.blue.value).to be 2
   end
 
+  describe 'predicates' do
+    it 'has predicates that correspond to itself' do
+      expect(enum.blue).to be_blue
+    end
+
+    it 'has predicates that correspond to other members' do
+      expect(enum.blue).not_to be_red
+    end
+  end
+
   describe 'value mapping' do
     it 'matches valid values' do
       expect(enum.of(1).key).to be :green
