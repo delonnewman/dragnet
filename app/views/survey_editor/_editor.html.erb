@@ -1,5 +1,5 @@
 <%= render 'survey_editor/tools', editor: %>
-<%= render 'survey_editor/details', survey: editor.current_edit.edited_survey %>
+<%= render 'survey_editor/details', survey: editor.survey.edited %>
 
 <div class="mb-3 d-flex justify-content-end">
   <form hx-post="<%= survey_editor_questions_path(editor.survey) %>" hx-target="#questions" hx-swap="beforeend">

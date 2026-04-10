@@ -1,5 +1,5 @@
 <div id="questions">
-  <% editor.current_edit.edited_survey.questions.each do |question| %>
+  <% editor.survey.edited.questions.each do |question| %>
     <%= render 'survey_editor/question', question:, editor: %>
   <% end %>
 </div>
