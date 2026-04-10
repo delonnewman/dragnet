@@ -49,11 +49,15 @@ module Dragnet
 
     # Editing
     attribute :editing_status, EditingStatus
-    has_many :edits, -> { where(applied: false) }, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
+    has_many :edits, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
     before_validation { EditingStatus.assign_default!(self) }
 
     def edited?
       SurveyEdit.present?(self)
+    end
+
+    def edited
+      SurveyEdit.merge(self, edits: edits.not_applied)
     end
 
     def projection
