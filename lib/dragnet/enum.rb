@@ -1,18 +1,27 @@
 module Dragnet
   class Enum
-    attr_reader :value
-    def initialize(value)
+    def self.encode_key(key)
+      case key
+      when Symbol
+        key
+      else
+        key.to_s.downcase.to_sym
+      end
+    end
+
+    attr_reader :value, :key
+    def initialize(value, key)
       @value = value
+      @key = key
     end
 
     def name
       self.class.name.split('::').last
     end
-    
-    def key
-      name.underscore.to_sym
+
+    def to_sym
+      key.to_sym
     end
-    alias to_sym key
 
     def to_i
       value.to_i
@@ -21,9 +30,9 @@ module Dragnet
     def ==(other)
       case other
       when String
-        key == other.downcase.underscore.to_sym
+        key == Enum.encode_key(other)
       when Symbol
-        key == other.name.downcase.underscore.to_sym
+        key == other
       else
         value == other
       end
@@ -41,19 +50,19 @@ module Dragnet
     end
 
     module ClassMethods
-      def member(name, value: name.to_s, &block)
+      def member(name, value: name.to_s, key: Enum.encode_key(name.to_s), &block)
         @members ||= {}
         @members_by_value ||= {}
   
         subclass = Class.new(self, &block)
         self.const_set(name, subclass)
-        instance = subclass.new(value)
+        instance = subclass.new(value, key)
   
         define_method(:"#{instance.key}?") { false }
         subclass.define_method(:"#{instance.key}?") { true }
         define_singleton_method(instance.key) { instance }
   
-        @members[name.to_s.downcase.underscore.to_sym] = instance
+        @members[instance.key] = instance
         @members_by_value[value] = instance
       end
   
@@ -66,7 +75,7 @@ module Dragnet
       end
   
       def member_missing(value)
-        raise TypeError, "#{value.inspect} can't be coerced into a #{self} member"
+        raise TypeError, "#{value.inspect} can't be coerced into a #{self} member, valid keys are: #{@members.keys.inspect}, valid values are: #{@members_by_value.keys.inspect}"
       end
   
       def value?(value)
@@ -74,18 +83,19 @@ module Dragnet
       end
   
       def key?(key)
-        (@members || EMPTY_HASH).key?(key.to_s.downcase.underscore.to_sym)
+        (@members || EMPTY_HASH).key?(Enum.encode_key(key))
       end
   
       def of(value)
         (@members_by_value || EMPTY_HASH).fetch(value) do
-          raise TypeError, "#{value.inspect} is not a valid #{self} value"
+          raise TypeError, "#{value.inspect} is not a valid #{self} value, valid values are: #{@members_by_value.keys.inspect}"
         end
       end
   
       def keyed(key)
-        (@members || EMPTY_HASH).fetch(key.to_s.downcase.underscore.to_sym) do
-          raise TypeError, "#{key.inspect} is not a valid #{self} key"
+        encoded = Enum.encode_key(key)
+        (@members || EMPTY_HASH).fetch(encoded) do
+          raise TypeError, "#{key.inspect} is not a valid #{self} key, valid keys are: #{@members.keys.inspect}"
         end
       end
   

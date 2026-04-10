@@ -46,16 +46,16 @@ RSpec.describe Dragnet::Enum do
   end
 
   describe 'key mapping' do
-    it 'matches the original symbol name' do
-      expect(enum.keyed(:Red).value).to be 0
+    it 'matches the downcased original symbol name' do
+      expect(enum.keyed(:red).value).to be 0
     end
 
     it 'matches strings case-insensitively' do
       expect(enum.keyed("grEEn").value).to be 1
     end
 
-    it 'matches symbols case-insensitively' do
-      expect(enum.keyed(:bluE).value).to be 2
+    it 'matches symbols case-sensitively' do
+      expect(enum.keyed(:blue).value).to be 2
     end
 
     it 'raises a type error of the key is invalid' do
@@ -87,7 +87,7 @@ RSpec.describe Dragnet::Enum do
     end
 
     it 'is equal to symbols that map to valid keys' do
-      expect(enum.blue).to eq :BluE
+      expect(enum.blue).to eq :blue
     end
 
     it 'is equal to values that map to valid values' do
