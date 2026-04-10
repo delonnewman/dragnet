@@ -3,15 +3,40 @@
 module Dragnet
   # An individual edit to a survey
   class SurveyEdit < ApplicationRecord
-    attribute :op, Op, default: Op.add
-    attribute :applied, :boolean, default: false
+    attribute :op, Op, default: Op.update
     attribute :applied_at, :datetime
     attribute :created_at, :datetime
 
     belongs_to :survey, class_name: 'Dragnet::Survey'
 
-    serialize :survey_data
-    after_save { Survey::EditingStatus.update!(self) }
+    attribute :details, :json_with_symbolized_keys
+    # after_save { Survey::EditingStatus.update!(self) }
+
+    scope :applied, -> { where.not(applied_at: nil) }
+    scope :not_applied, -> { where(applied_at: nil) }
+
+    def self.update_attributes(survey, updates)
+      create!(survey:, op: Op.update, details: { updates: })
+    end
+
+    def self.new_question(survey)
+      create!(survey:, op: Op.new_question)
+    end
+
+    def self.update_question(survey, question_id, updates)
+      create!(survey:, op: Op.update_question, details: { question_id:, updates: })
+    end
+
+    def self.remove_question(survey, question_id)
+      create!(survey:, op: Op.remove_question, details: { question_id: })
+    end
+
+    def self.merge(survey, edits:)
+      projection = edits.reduce(survey.projection) do |projection, edit| 
+        edit.op.merge(edit, projection)
+      end
+      Survey.new(Survey::AttributeProjection.new(projection).to_h)
+    end
 
     def self.current(survey)
       latest(survey) || build_with(survey)
@@ -30,16 +55,7 @@ module Dragnet
     end
 
     def self.latest(survey)
-      survey.edits.where(applied: false).order(created_at: :desc).first
-    end
-
-    def survey_attributes
-      Survey::AttributeProjection.new(survey_data).to_h
-    end
-
-    # @return [Survey]
-    def edited_survey
-      Survey.new(survey_attributes)
+      survey.edits.not_applied.order(created_at: :desc).first
     end
 
     # @param [Time] timestamp
