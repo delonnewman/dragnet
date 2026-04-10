@@ -48,16 +48,9 @@ module Dragnet
     has_many :records, -> { where(submitted: true) }, class_name: 'Dragnet::Reply', dependent: :restrict_with_error, inverse_of: :survey
 
     # Editing
+    attribute :editing_status, EditingStatus
     has_many :edits, -> { where(applied: false) }, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
     before_validation { EditingStatus.assign_default!(self) }
-
-    def status
-      editing_status && EditingStatus.of(editing_status)
-    end
-
-    def status=(value)
-      self.editing_status = value && EditingStatus.coerce(value)
-    end
 
     def edited?
       SurveyEdit.present?(self)

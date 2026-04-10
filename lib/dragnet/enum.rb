@@ -101,7 +101,7 @@ module Dragnet
       alias deserialize cast
 
       def assert_valid_value(value)
-        coerce(value)
+        value.nil? || coerce(value)
       end
 
       def changed?(old_value, new_value, _new_value_before_type_cast)
