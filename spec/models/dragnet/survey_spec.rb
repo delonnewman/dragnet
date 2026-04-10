@@ -28,14 +28,14 @@ describe Dragnet::Survey do
   end
 
   describe '#save' do
-    it 'sets the edit status to :saved when no edit status is given' do
-      expect(survey).to be_edits_saved
+    it 'sets the edit status to published when no edit status is given' do
+      expect(survey.status).to be_published
     end
 
     it 'sets the edit status to the given status when an edit status is given' do
-      survey = described_class.create!(name:, editing_status: Dragnet::Survey::EditingStatus.unpublished, author:)
+      survey = described_class.create!(name:, status: :unpublished, author:)
 
-      expect(survey.editing_status).to be(Dragnet::Survey::EditingStatus.unpublished)
+      expect(survey.status).to be_unpublished
     end
   end
 
