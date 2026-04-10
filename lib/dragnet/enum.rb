@@ -51,6 +51,7 @@ module Dragnet
       end
   
       def coerce(value)
+        return value if value.is_a?(self)
         return of(value) if value?(value)
         return keyed(value) if key?(value)
   

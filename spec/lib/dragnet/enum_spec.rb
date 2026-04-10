@@ -72,6 +72,10 @@ RSpec.describe Dragnet::Enum do
       expect(enum.coerce(:blue).value).to be 2
     end
 
+    it 'coerces members to themselves' do
+      expect(enum.coerce(enum.blue)).to be enum.blue
+    end
+
     it 'raises a type error of the value is not a valid key or value' do
       expect { enum.coerce(:yellow) }.to raise_error(TypeError)
     end
