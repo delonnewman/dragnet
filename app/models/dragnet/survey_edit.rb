@@ -10,7 +10,7 @@ module Dragnet
     belongs_to :survey, class_name: 'Dragnet::Survey'
 
     attribute :details, :json_with_symbolized_keys
-    # after_save { Survey::EditingStatus.update!(self) }
+    after_save { Survey::EditingStatus.update!(self) }
 
     scope :applied, -> { where.not(applied_at: nil) }
     scope :not_applied, -> { where(applied_at: nil) }
@@ -47,7 +47,7 @@ module Dragnet
     end
 
     def self.build_with(survey, data: survey.projection)
-      new(survey:, survey_data: data)
+      new(survey:, details: data)
     end
 
     def self.present?(survey)
@@ -58,11 +58,14 @@ module Dragnet
       survey.edits.not_applied.order(created_at: :desc).first
     end
 
+    def applied?
+      !applied_at.nil?
+    end
+
     # @param [Time] timestamp
     # @return [SurveyEdit]
     def applied!(timestamp = Time.zone.now)
       edited_survey.validate!(:application)
-      self.applied    = true
       self.applied_at = timestamp
       self
     end
