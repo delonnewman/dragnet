@@ -29,7 +29,8 @@ module Dragnet
         updates = edit.details.fetch(:updates)
         projection.merge(
           questions: projection[:questions].merge(
-            question_id => projection[:questions].fetch(question_id).merge(updates)
+            question_id =>
+              projection[:questions].fetch(question_id).merge(updates).merge(_update: true)
           )
         )
       end
@@ -39,7 +40,9 @@ module Dragnet
       def merge(edit, projection)
         question_id = edit.details.fetch(:question_id)
         projection.merge(
-          questions: projection[:questions].except(question_id)
+          questions: projection[:questions].merge(
+            question_id => projection[:questions].fetch(question_id).merge(_destroy: true)
+          )
         )
       end
     end

@@ -1,5 +1,6 @@
 <div id="questions">
-  <% editor.survey.edited.questions.each do |question| %>
+  <% questions = params[:removed] ? editor.survey.edited.questions : editor.survey.edited.questions.reject(&:removed?) %>
+  <% questions.each do |question| %>
     <%= render 'survey_editor/question', question:, editor: %>
   <% end %>
 </div>

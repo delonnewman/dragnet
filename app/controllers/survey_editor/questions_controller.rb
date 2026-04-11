@@ -10,8 +10,10 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   end
 
   def update
-    Dragnet::SurveyEdit.update_question(survey, question, question_params.to_h.symbolize_keys)
+    Dragnet::SurveyEdit.update_question(survey, question, question_params)
+    # question = editor.survey.edited.find_question(self.question.id)
 
+    # render partial: 'question', locals: { editor:, question: }
     render partial: 'questions', locals: { editor: }
   end
 
@@ -28,10 +30,6 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   end
   
   def question_params
-    hash       = params.require(:survey).require(:question).permit(:type, :text, :required).to_h
-    type       = hash.delete(:type).presence.to_sym
-    type_class = Dragnet::Type.find(type)
-
-    hash.merge!(type_class: type_class)
+    params.require(:survey).require(:question).permit(:type, :text, :required).to_h.symbolize_keys
   end
 end

@@ -41,7 +41,7 @@ module Dragnet
     #
     # @return [Array<Symbol>]
     def question_keys(question)
-      %i[text display_order required question_type_id settings _destroy].tap do |keys|
+      %i[text display_order required question_type_id settings _destroy _update].tap do |keys|
         keys << :id unless question[:id].is_a?(Integer) && question[:id].negative?
       end
     end

@@ -2,7 +2,7 @@ module Dragnet
   class EditedSurvey
     include ActiveModel::API
     include ActiveModel::Attributes
-    include ActiveModel::Conversion
+    include Memoizable
 
     attribute :id
     attribute :name
@@ -11,11 +11,22 @@ module Dragnet
     attribute :editing_status, Survey::EditingStatus
     attribute :questions_attributes
 
+    def self.build(survey, edits:)
+      projection = edits.merge(survey)
+      new(Survey::AttributeProjection.new(projection).to_h)
+    end
+
+    def find_question(question_id)
+      questions.find { |q| q.id == question_id } or
+        raise ActiveRecord::RecordNotFound
+    end
+    
     def questions
       questions_attributes.map do |attributes|
-        Question.new(attributes.merge(survey_id: id))
+        EditedQuestion.new(attributes)
       end
     end
+    memoize :questions
 
     def persisted?
       true

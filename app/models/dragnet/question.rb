@@ -30,6 +30,10 @@ module Dragnet
     end
     memoize :settings
 
+    def removed?
+      false
+    end
+
     def type
       type_class.new(self)
     end
