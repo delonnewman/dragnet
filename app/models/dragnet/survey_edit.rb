@@ -33,10 +33,6 @@ module Dragnet
       create!(survey:, op: Op.remove_question, details: { question_id: })
     end
 
-    def self.build_with(survey, data: survey.projection)
-      new(survey:, details: data)
-    end
-
     def self.present?(survey)
       latest(survey).present?
     end
