@@ -10,7 +10,7 @@ class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
   end
 
   def latest_edit
-    Dragnet::SurveyEdit.latest(survey)
+    survey.edits.latest
   end
 
   def types
