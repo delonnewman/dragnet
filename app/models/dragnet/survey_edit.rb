@@ -33,14 +33,6 @@ module Dragnet
       create!(survey:, op: Op.remove_question, details: { question_id: })
     end
 
-    def self.present?(survey)
-      latest(survey).present?
-    end
-
-    def self.latest(survey)
-      survey.edits.not_applied.order(created_at: :desc).first
-    end
-
     def applied?
       !applied_at.nil?
     end

@@ -53,7 +53,7 @@ module Dragnet
     has_many :edits, -> { extending EditsExtension }, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
 
     def edited?
-      SurveyEdit.present?(self)
+      edits.latest.present?
     end
 
     def edited

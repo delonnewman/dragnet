@@ -18,12 +18,6 @@ class Dragnet::SurveyEditingPresenter < Dragnet::View::Presenter
     QuestionTypesPresenter.new(TypeRegistration.where(abstract: false)).question_types_mapping
   end
 
-  def survey_data
-    return survey.projection unless survey.edited?
-
-    SurveyEdit.latest(survey).survey_data
-  end
-
   def survey_edits
     edits = survey.edits.pull(:id, :created_at)
 
