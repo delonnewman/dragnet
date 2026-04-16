@@ -9,16 +9,8 @@ class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
     latest_edit.created_at
   end
 
-  def current_edit
-    Dragnet::SurveyEdit.current(survey)
-  end
-
   def latest_edit
     Dragnet::SurveyEdit.latest(survey)
-  end
-
-  def new_edit
-    Dragnet::SurveyEdit.create_with!(survey)
   end
 
   def types

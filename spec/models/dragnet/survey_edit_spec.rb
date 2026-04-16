@@ -11,12 +11,6 @@ describe Dragnet::SurveyEdit do
       end
     end
 
-    describe '.current' do
-      it 'returns a new edit' do
-        expect(described_class.current(survey)).to be_new_record
-      end
-    end
-
     describe '.present?' do
       it 'is false' do
         expect(described_class).not_to be_present(survey)
@@ -26,18 +20,12 @@ describe Dragnet::SurveyEdit do
 
   context 'when the survey has an un-applied edit' do
     before do
-      described_class.create_with!(survey)
+      described_class.update_attributes(survey, name: "This is a test")
     end
 
     describe '.latest' do
       it 'returns that edit' do
-        expect(described_class.latest(survey)).to eq described_class.current(survey)
-      end
-    end
-
-    describe '.current' do
-      it 'returns the latest edit' do
-        expect(described_class.current(survey)).to eq described_class.latest(survey)
+        expect(described_class.latest(survey)).to eq survey.edits.order(created_at: :desc).first
       end
     end
 

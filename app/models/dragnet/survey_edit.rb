@@ -33,14 +33,6 @@ module Dragnet
       create!(survey:, op: Op.remove_question, details: { question_id: })
     end
 
-    def self.current(survey)
-      latest(survey) || build_with(survey)
-    end
-
-    def self.create_with!(survey, data: survey.projection)
-      build_with(survey, data:).tap(&:save!)
-    end
-
     def self.build_with(survey, data: survey.projection)
       new(survey:, details: data)
     end
@@ -57,59 +49,20 @@ module Dragnet
       !applied_at.nil?
     end
 
-    # @param [Time] timestamp
-    # @return [SurveyEdit]
     def applied!(timestamp = Time.zone.now)
-      edited_survey.validate!(:application)
+      survey.edited.validate!(:application)
       self.applied_at = timestamp
       self
     end
 
-    # @param [Time] timestamp
-    #
-    # @raise [ActiveRecord::RecordInvalid]
-    #
-    # @return [Survey, Class<ActiveRecord::Rollback>, false]
     def apply(timestamp = Time.zone.now)
       apply!(timestamp)
     rescue ActiveRecord::RecordInvalid
       false
     end
 
-    # @param [Time] timestamp
-    #
-    # @raise [ActiveRecord::RecordInvalid]
-    #
-    # @return [Survey, Class<ActiveRecord::Rollback>]
     def apply!(timestamp = Time.zone.now)
-      SurveyEdit.transaction do
-        mark_as_published(timestamp)
-        commit_changes(timestamp)
-        save!
-        clean_up_old_drafts
-        survey
-      end
-    end
-
-    private
-
-    # Mark as published and validate without saving
-    def mark_as_published(timestamp)
-      return unless applied!(timestamp)
-
-      errors.merge!(edited_survey.errors)
-      raise ActiveRecord::RecordInvalid, self
-    end
-
-    # Commit changes to survey
-    def commit_changes(timestamp)
-      survey.attributes = survey_attributes.merge(updated_at: timestamp)
-      Survey::EditingStatus.saved!(survey)
-      survey.save!
-    end
-
-    def clean_up_old_drafts
-      survey.edits.where.not(id:).delete_all
+      applied!(timestamp).save!
     end
   end
 end

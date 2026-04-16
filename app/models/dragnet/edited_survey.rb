@@ -11,9 +11,8 @@ module Dragnet
     attribute :editing_status, Survey::EditingStatus
     attribute :questions_attributes
 
-    def self.build(survey, edits:)
-      projection = edits.merge(survey)
-      new(Survey::AttributeProjection.new(projection).to_h)
+    def self.build(survey, edits: survey.edits.not_applied.order(created_at: :asc))
+      new(edits.merged_attributes)
     end
 
     def find_question(question_id)
