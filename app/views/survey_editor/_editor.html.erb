@@ -4,7 +4,7 @@
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <form action="." method="GET">
   <div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" name="removed" onclick="this.submit()" <%= 'checked' if params[:removed] %>>
+    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" name="removed" <%= 'checked' if params[:removed] %>>
     <label class="form-check-label" for="switchCheckDefault">Show removed questions</label>
   </div>
   </form>
@@ -17,4 +17,6 @@
   </form>
 </div>
 
-<%= render 'survey_editor/questions', editor: %>
+<div id="questions">
+  <%= render 'survey_editor/questions', editor: %>
+</div>
