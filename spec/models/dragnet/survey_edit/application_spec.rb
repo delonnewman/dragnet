@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Dragnet::SurveyEdit do
+RSpec.describe Dragnet::SurveyEdit do
   subject(:edit) { described_class.update_attributes(survey, name: "This is a test") }
 
   let(:survey) { Dragnet::Survey[author:].generate! }
