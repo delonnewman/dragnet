@@ -295,6 +295,8 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
+    pghero (3.8.0)
+      activerecord (>= 7.2)
     popper_js (2.11.8)
     pp (0.6.3)
       prettyprint
@@ -545,6 +547,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   pagy
   pg (~> 1.1)
+  pghero
   pstore
   puma
   rack-cors
