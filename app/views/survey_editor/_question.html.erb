@@ -31,7 +31,7 @@
       <form
         hx-delete="<%= survey_editor_question_path(editor.survey, question) %>"
         hx-target="#questions"
-        hx-swap="outerHTML">
+        hx-swap="innerHTML">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <button
           type="submit"
