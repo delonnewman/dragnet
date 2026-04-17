@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   devise_for :users, class_name: 'Dragnet::User'
+  authenticate :user, -> (user) { user.admin? } do
+    mount PgHero::Engine, at: 'pg'
+  end
+  
   root 'workspace#index'
-
   get 'surveys', to: 'workspace#surveys'
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'

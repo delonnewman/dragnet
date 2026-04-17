@@ -6,6 +6,9 @@ ruby '3.4.1'
 gem 'rails', '~> 7.2.1'
 
 gem 'pg', '~> 1.1'
+gem 'pghero'
+gem 'pg_query', '>= 2'
+
 gem 'activerecord-like'
 gem 'activerecord-pull-alpha'
 gem 'mini_sql'
@@ -62,7 +65,6 @@ gem 'rails-pattern_matching'
 gem 'faker'
 gem 'sentimental'
 
-gem 'pghero'
 
 # TODO: Move to Dart Sass
 gem 'sassc-rails'

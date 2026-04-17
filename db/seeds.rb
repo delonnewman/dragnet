@@ -58,7 +58,8 @@ unless Rails.env.test?
     email:    'contact@delonnewman.name',
     name:     'Delon Newman',
     nickname: 'Delon',
-    password: 'testing123'
+    password: 'testing123',
+    admin: true
   ).tap { |user| user.skip_confirmation!; user.save! }
 
   Survey.create!(
