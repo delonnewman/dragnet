@@ -17,7 +17,11 @@
         <input
           id="<%= dom_id(question, :required) %>"
           name="<%= field_name(:survey, :question, :required) %>"
-          value="<%= question.required %>" <%= 'checked' if question.required? %>
+          value="1"
+          <% if question.required? %>
+            checked
+            hx-vals="<%= { field_name(:survey, :question, :required) => 0 }.to_json %>"
+          <% end %>
           hx-put="<%= survey_editor_question_path(editor.survey, question) %>"
           hx-trigger="change"
           hx-target="#questions"

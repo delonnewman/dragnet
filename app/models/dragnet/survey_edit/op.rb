@@ -9,11 +9,12 @@ module Dragnet
 
     member :NewQuestion, key: :new_question do
       def merge(edit, projection)
-        question = Question.find_or_create_by!(survey_id: edit.survey_id)
+        question = Question.new(survey_id: edit.survey_id).tap(&:validate!)
+        id = edit.details.fetch(:id).to_s
         projection.merge(
           questions: projection[:questions].merge(
-            question.id => {
-              id: question.id,
+            id => {
+              id:,
               text: question.text,
               type: question.type.symbol,
               display_order: question.display_order,
@@ -39,6 +40,7 @@ module Dragnet
     member :RemoveQuestion, key: :remove_question do
       def merge(edit, projection)
         question_id = edit.details.fetch(:question_id)
+        return projection if question_id.to_i < 0
         projection.merge(
           questions: projection[:questions].merge(
             question_id => projection[:questions].fetch(question_id).merge(_destroy: true)

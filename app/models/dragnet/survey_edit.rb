@@ -20,7 +20,9 @@ module Dragnet
     end
 
     def self.new_question(survey)
-      create!(survey:, op: Op.new_question)
+      survey.meta[:new_question_id] ||= 0
+      id = survey.meta[:new_question_id] -= 1
+      create!(survey:, op: Op.new_question, details: { id: })
     end
 
     def self.update_question(survey, question, updates)

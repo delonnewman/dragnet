@@ -6,11 +6,11 @@ module Dragnet
     attribute :id
     attribute :text
     attribute :type_class_name
-    attribute :required
-    attribute :display_order
+    attribute :required, :boolean
+    attribute :display_order, :integer
     attribute :question_options_attributes
-    attribute :_destroy
-    attribute :_update
+    attribute :_destroy, :boolean
+    attribute :_update, :boolean
 
     def required?
       required
@@ -26,6 +26,11 @@ module Dragnet
 
     def persisted?
       true
+    end
+
+    def new_question?
+      int_id = id.to_i
+      int_id.to_s == id && int_id < 0
     end
 
     def readonly?

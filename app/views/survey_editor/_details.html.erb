@@ -5,7 +5,7 @@
                            survey.name,
                            class: 'h3 border-0 w-100 border-bottom',
                            'hx-put': survey_editor_details_path(survey),
-                           'hx-trigger': 'input changed delay:500ms',
+                           'hx-trigger': 'change',
                            'hx-target': '#survey-details',
                            'hx-swap': 'outerHTML',
                            'hx-vals': { authenticity_token: form_authenticity_token }.to_json
@@ -16,7 +16,7 @@
                           class: 'form-control',
                           rows: 3,
                           'hx-put': survey_editor_details_path(survey),
-                          'hx-trigger': 'input delay:500ms',
+                          'hx-trigger': 'change',
                           'hx-target': '#survey-details',
                           'hx-swap': 'outerHTML',
                           'hx-vals': { authenticity_token: form_authenticity_token }.to_json

@@ -10,13 +10,18 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   end
 
   def update
-    Dragnet::SurveyEdit.update_question(survey, question, question_params)
+    Dragnet::SurveyEdit.update_question(survey, question.id, question_params)
 
     render partial: 'questions', locals: { editor: }
   end
 
   def destroy
-    Dragnet::SurveyEdit.remove_question(survey, question)
+    if question.new_question?
+      id = question.id.to_s
+      survey.edits.where("details->>'id' = ? or details->>'question_id' = ?", id, id).delete_all
+    else
+      Dragnet::SurveyEdit.remove_question(survey, question.id)
+    end
 
     render partial: 'questions', locals: { editor: }
   end
@@ -24,7 +29,7 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   private
 
   def question
-    @question ||= survey.questions.find(params[:id])
+    @question ||= survey.edited.questions.find { |q| q.id == params[:id] }
   end
   
   def question_params
