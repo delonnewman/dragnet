@@ -30,5 +30,9 @@ module Dragnet
     def persisted?
       true
     end
+
+    def readonly?
+      true
+    end
   end
 end

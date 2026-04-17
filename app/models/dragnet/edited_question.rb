@@ -28,6 +28,10 @@ module Dragnet
       true
     end
 
+    def readonly?
+      true
+    end
+
     def type
       type_class.new(self)
     end
