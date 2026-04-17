@@ -11,9 +11,7 @@ class SurveyEditor::QuestionsController < SurveyEditorController
 
   def update
     Dragnet::SurveyEdit.update_question(survey, question, question_params)
-    # question = editor.survey.edited.find_question(self.question.id)
 
-    # render partial: 'question', locals: { editor:, question: }
     render partial: 'questions', locals: { editor: }
   end
 
