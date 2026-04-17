@@ -62,6 +62,8 @@ gem 'rails-pattern_matching'
 gem 'faker'
 gem 'sentimental'
 
+gem 'pghero'
+
 # TODO: Move to Dart Sass
 gem 'sassc-rails'
 
