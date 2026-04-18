@@ -16,7 +16,7 @@ module Dragnet
     end
 
     def self.assign_default!(survey)
-      saved!(survey) unless survey.editing_status?
+      published!(survey) unless survey.editing_status?
     end
 
     def self.published!(survey)
