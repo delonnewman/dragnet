@@ -6,6 +6,7 @@
 //= require popper
 //= require bootstrap
 //= require ahoy
+//= require Sortable
 
 //= require components
 //= require workspace
