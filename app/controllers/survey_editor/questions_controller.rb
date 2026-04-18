@@ -12,7 +12,7 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   def update
     Dragnet::SurveyEdit.update_question(survey, question.id, question_params)
 
-    render partial: 'questions', locals: { editor: }
+    render partial: 'editor', locals: { editor: }
   end
 
   def destroy
@@ -23,7 +23,7 @@ class SurveyEditor::QuestionsController < SurveyEditorController
       Dragnet::SurveyEdit.remove_question(survey, question.id)
     end
 
-    render partial: 'questions', locals: { editor: }
+    render partial: 'editor', locals: { editor: }
   end
 
   private

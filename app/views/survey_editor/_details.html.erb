@@ -6,8 +6,7 @@
                            class: 'h3 border-0 w-100 border-bottom',
                            'hx-put': survey_editor_details_path(survey),
                            'hx-trigger': 'change',
-                           'hx-target': '#survey-details',
-                           'hx-swap': 'outerHTML',
+                           'hx-target': '#editor',
                            'hx-vals': { authenticity_token: form_authenticity_token }.to_json
         %>
         <%= text_area_tag field_name(:survey, :description),
@@ -17,8 +16,7 @@
                           rows: 3,
                           'hx-put': survey_editor_details_path(survey),
                           'hx-trigger': 'change',
-                          'hx-target': '#survey-details',
-                          'hx-swap': 'outerHTML',
+                          'hx-target': '#editor',
                           'hx-vals': { authenticity_token: form_authenticity_token }.to_json
         %>
     </div>
