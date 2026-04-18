@@ -26,6 +26,13 @@ class SurveysController < ApplicationController
     render :edit, locals: { editor: }
   end
 
+  def update
+    survey.edits.not_applied.apply
+    editor = Dragnet::SurveyEditorPresenter.new(survey)
+
+    render partial: 'survey_editor/editor', locals: { editor: }
+  end
+
   def destroy
     survey.tap(&:delete)
 

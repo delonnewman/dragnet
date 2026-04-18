@@ -19,8 +19,8 @@ module Dragnet
       saved!(survey) unless survey.editing_status?
     end
 
-    def self.saved!(survey)
-      survey.editing_status = :published
+    def self.published!(survey)
+      survey.update(editing_status: :published)
     end
 
     def self.update!(edit)

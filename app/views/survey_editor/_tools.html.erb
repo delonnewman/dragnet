@@ -10,8 +10,14 @@
     </small>
   </div>
   <div>
-    <%= button_tag type: 'button', class: 'btn btn-primary me-1 d-flex alignt-items-start', disabled: !editor.survey_edited? do %>
+    <button
+      type="button"
+      class="btn btn-primary me-1"
+      <%= 'disabled' if !editor.survey_edited? %>
+      hx-put="<%= survey_path(editor.survey) %>"
+      hx-trigger="click"
+      hx-target="#editor">
       Publish
-    <% end %>
+    </button>
   </div>
 </div>

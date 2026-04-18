@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get 'report', to: 'reports#show'
   get 'stats', to: 'stats#show'
 
-  resources :surveys, only: %i[show new edit destroy] do
+  resources :surveys, only: %i[show new edit update destroy] do
     member do
       post 'copy'
       post 'open'

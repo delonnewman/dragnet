@@ -40,7 +40,6 @@ module Dragnet
     end
 
     def applied!(timestamp = Time.zone.now)
-      survey.edited.validate!(:application)
       self.applied_at = timestamp
       self
     end

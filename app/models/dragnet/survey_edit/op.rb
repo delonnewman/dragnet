@@ -31,7 +31,7 @@ module Dragnet
         projection.merge(
           questions: projection[:questions].merge(
             question_id =>
-              projection[:questions].fetch(question_id).merge(updates).merge(_update: true)
+              projection[:questions].fetch(question_id).merge(updates)
           )
         )
       end
