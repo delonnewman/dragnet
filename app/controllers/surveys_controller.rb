@@ -6,15 +6,13 @@ class SurveysController < ApplicationController
 
   layout 'survey'
 
-  def index; end
-
   def show
     presenter = Dragnet::SurveyPresenter.new(whole_survey, params)
 
     render :show, locals: { report: presenter.stats_report, survey: presenter }
   end
 
-  def new
+  def create
     survey = Dragnet::Survey.create!(author: current_user)
 
     redirect_to edit_survey_path(survey)
