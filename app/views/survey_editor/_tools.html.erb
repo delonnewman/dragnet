@@ -1,4 +1,4 @@
-<div class="mb-3 d-flex justify-content-between align-items-center">
+<div id="tools" class="mb-3 d-flex justify-content-between align-items-center">
   <div>
     <small class="me-1 text-muted d-flex">
       <%= survey_status_indicator(editor.survey) %>
@@ -16,7 +16,8 @@
       <%= 'disabled' if !editor.survey_edited? %>
       hx-put="<%= survey_path(editor.survey) %>"
       hx-trigger="click"
-      hx-target="#editor">
+      hx-swap="outerHTML"
+      hx-target="#tools">
       Publish
     </button>
   </div>

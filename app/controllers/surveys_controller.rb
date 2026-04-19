@@ -30,7 +30,7 @@ class SurveysController < ApplicationController
     survey.edits.not_applied.apply
     editor = Dragnet::SurveyEditorPresenter.new(survey)
 
-    render partial: 'survey_editor/editor', locals: { editor: }
+    render partial: 'survey_editor/tools', locals: { editor: }
   end
 
   def destroy

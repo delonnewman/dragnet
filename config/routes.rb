@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   post '/r/:survey_id/:survey_name', to: 'submission_request#submit'
 
   scope '/survey_editor/:survey_id', as: "survey_editor" do
-    resource :details, only: %i[show update], controller: 'survey_editor/details'
+    resource :details, only: %i[update], controller: 'survey_editor/details'
     resource :display_order, only: %[update], controller: 'survey_editor/display_order'
     resources :questions, except: %i[new edit index], controller: 'survey_editor/questions'
   end

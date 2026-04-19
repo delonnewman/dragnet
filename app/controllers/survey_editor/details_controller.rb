@@ -1,12 +1,8 @@
 class SurveyEditor::DetailsController < SurveyEditorController
-  def show
-    render partial: 'editor', locals: { editor: }
-  end
-
   def update
     Dragnet::SurveyEdit.update_attributes(survey, details_params)
 
-    render partial: 'editor', locals: { editor: }
+    render :details, locals: { editor: }
   end
 
   private

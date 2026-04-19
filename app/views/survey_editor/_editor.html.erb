@@ -2,20 +2,25 @@
 <%= render 'survey_editor/details', survey: editor.survey.edited %>
 
 <div class="mb-3 d-flex justify-content-end">
-  <form hx-post="<%= survey_editor_questions_path(editor.survey) %>" hx-target="#editor">
-    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-    <button type="submit" class="btn btn-dark">
-      <%= icon 'fa-solid', 'plus' %>
-      Add Question
-    </button>
-  </form>
+  <button
+    type="button"
+    class="btn btn-dark"
+    hx-post="<%= survey_editor_questions_path(editor.survey) %>"
+    hx-target="#questions"
+    hx-select-oob="#tools">
+    <%= icon 'fa-solid', 'plus' %>
+    Add Question
+  </button>
 </div>
 
-<form
+<div
   id="questions"
   class="sortable"
   hx-put="<%= survey_editor_display_order_path(editor.survey) %>"
   hx-trigger="end"
-  hx-params="<%= field_name(:survey, :question, :id, multiple: true) %>">
+  hx-disinherit="*"
+  hx-target="#questions"
+  hx-select-oob="#tools"
+  hx-include="[name='<%= field_name(:survey, :question, :id, multiple: true) %>']">
   <%= render 'survey_editor/questions', editor: %>
-</form>
+</div>

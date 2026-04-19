@@ -2,7 +2,7 @@ class SurveyEditor::QuestionsController < SurveyEditorController
   def create
     Dragnet::SurveyEdit.new_question(survey)
 
-    render partial: 'editor', locals: { editor: }
+    render :questions, locals: { editor: }
   end
 
   def update

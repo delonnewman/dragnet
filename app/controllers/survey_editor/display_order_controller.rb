@@ -7,7 +7,7 @@ class SurveyEditor::DisplayOrderController < SurveyEditorController
       end
     end
 
-    render partial: 'questions', locals: { editor: }
+    render :questions, locals: { editor: }
   end
 
   private

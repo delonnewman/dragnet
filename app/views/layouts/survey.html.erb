@@ -17,21 +17,18 @@
       document.body.addEventListener('htmx:configRequest', (e) => {
         e.detail.parameters['authenticity_token'] = "<%= form_authenticity_token %>";
       });
-
       // Initialize drag-and-drop
       htmx.onLoad((content) => {
-        let sortables = content.querySelectorAll(".sortable");
-        for (let i = 0; i < sortables.length; i++) {
-          let element = sortables[i];
+        let elements = content.querySelectorAll(".sortable");
+        elements.forEach((element) => {
           let sortable = new Sortable(element, {
             animation: 150,
             ghostClass: 'bg-primary-subtle',
             handle: '.sortable-grip',
-  
+
             // Make the `.htmx-indicator` unsortable
             filter: ".htmx-indicator",
             onMove: (e) => {
-              console.log(e.target);
               return e.related.className.indexOf('htmx-indicator') === -1;
             },
             
@@ -40,12 +37,12 @@
               sortable.option("disabled", true);
             }
           });
-    
+
           // Re-enable sorting on the `htmx:afterSwap` event
           element.addEventListener("htmx:afterSwap", function() {
             sortable.option("disabled", false);
           });
-        }
+        });
       });
     </script>
   </body>

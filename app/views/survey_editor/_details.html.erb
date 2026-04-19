@@ -1,4 +1,4 @@
-<div id="survey-details" class="card mb-4 shadow-sm-hover">
+<div id="details" class="card mb-4 shadow-sm-hover">
   <div class="card-body">
     <div class="card-title pb-3">
         <%= text_field_tag field_name(:survey, :name),
@@ -6,9 +6,9 @@
                            class: 'h3 border-0 w-100 border-bottom',
                            'hx-put': survey_editor_details_path(survey),
                            'hx-trigger': 'change',
-                           'hx-target': '#editor',
-                           'hx-vals': { authenticity_token: form_authenticity_token }.to_json
-        %>
+                           'hx-swap': 'outerHTML',
+                           'hx-target': '#details',
+                           'hx-select-oob': '#tools' %>
         <%= text_area_tag field_name(:survey, :description),
                           survey.description,
                           placeholder: "Description",
@@ -16,9 +16,9 @@
                           rows: 3,
                           'hx-put': survey_editor_details_path(survey),
                           'hx-trigger': 'change',
-                          'hx-target': '#editor',
-                          'hx-vals': { authenticity_token: form_authenticity_token }.to_json
-        %>
+                          'hx-swap': 'outerHTML',
+                          'hx-target': '#details',
+                          'hx-select-oob': '#tools' %>
     </div>
   </div>
 </div>

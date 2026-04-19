@@ -1,16 +1,14 @@
 <div class="card question mb-4 shadow-sm-hover<%= question.updated? ? ' border-warning' : '' %>" id="<%= dom_id question %>">
-  <span class="sortable-grip text-muted"><%= icon 'fas', 'grip-lines' %></span>
-  <div class="card-body">
+  <div class="sortable-grip text-muted text-center"><%= icon 'fas', 'grip-lines' %></div>
+  <div class="card-body pt-0">
     <div class="card-title d-flex justify-content-between align-items-center">
       <div class="question-title w-100 d-flex me-1">
         <%= hidden_field_tag field_name(:survey, :question, :id, multiple: true), question.id %>
-        <%= hidden_field_tag field_name(:survey, :question, :display_order), question.display_order %>
         <%= text_field_tag field_name(:survey, :question, :text),
                            question.text,
                            id: dom_id(question, :text),
                            title: "Enter question text",
                            class: 'h5 w-100 border-0 border-bottom',
-                           disabled: question.removed?,
                            'hx-put': survey_editor_question_path(editor.survey, question),
                            'hx-trigger': 'change',
                            'hx-target': "#editor",
@@ -38,7 +36,6 @@
                      options_from_collection_for_select(editor.types, :slug, :name, question.type.slug),
                      id: dom_id(question, :type),
                      class: 'form-select w-25',
-                     disabled: question.removed?,
                      'hx-put': survey_editor_question_path(editor.survey, question),
                      'hx-trigger': 'input, change',
                      'hx-target': "#editor",
@@ -46,7 +43,7 @@
       <button
         type="submit"
         title="Remove"
-        class="btn btn-white text-muted" <%= 'disabled' if question.removed? %>
+        class="btn btn-white text-muted"
         hx-delete="<%= survey_editor_question_path(editor.survey, question) %>"
         hx-target="#editor"
         hx-swap="morph:innerHTML">
