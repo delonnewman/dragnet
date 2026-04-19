@@ -23,7 +23,7 @@ module Dragnet
     def questions
       questions_attributes.map do |attributes|
         EditedQuestion.new(attributes)
-      end
+      end.sort_by(&:display_order)
     end
     memoize :questions
 

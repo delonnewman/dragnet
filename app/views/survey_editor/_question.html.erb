@@ -1,7 +1,10 @@
 <div class="card question mb-4 shadow-sm-hover<%= question.updated? ? ' border-warning' : '' %>" id="<%= dom_id question %>">
+  <span class="sortable-grip text-muted"><%= icon 'fas', 'grip-lines' %></span>
   <div class="card-body">
     <div class="card-title d-flex justify-content-between align-items-center">
       <div class="question-title w-100 d-flex me-1">
+        <%= hidden_field_tag field_name(:survey, :question, :id, multiple: true), question.id %>
+        <%= hidden_field_tag field_name(:survey, :question, :display_order), question.display_order %>
         <%= text_field_tag field_name(:survey, :question, :text),
                            question.text,
                            id: dom_id(question, :text),
