@@ -1,19 +1,18 @@
-<main
-  id="survey-submitter"
-  data-is-preview="<%= reply.new_record? %>"
-  data-reply-id="<%= reply.id %>"
-  data-survey-id="<%= reply.survey_id %>"
->
-</main>
-<script>
- (function() {
-   const script = document.createElement("script");
-   const element = document.getElementById("survey-submitter");
+<div class="mb-3 border-bottom pb-2">
+  <h1><%= reply.survey.name %></h1>
+  <% if reply.survey.description %>
+    <p><%= reply.survey.description %></p>
+  <% end %>
+</div>
 
-   script.src = "<%= request.base_url %>/js/submitter/shell.js";
-   script.onload = function() {
-    dragnet.submitter.init("survey-submitter");
-   };
-   document.head.append(script);
- }.call(window))
-</script>
+<form>
+  <% reply.survey.questions.order(:display_order).each do |question| %>
+    <div class="mb-3">
+      <label for="<%= dom_id question %>" class="form-label">
+        <%= question.text %>
+        <%= '*' if question.required? %>
+      </label>
+      <%= reply_component question %>
+    </div>
+  <% end %>
+</form>

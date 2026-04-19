@@ -1,0 +1,7 @@
+<input
+  type="date"
+  name="<%= field_name(:reply, :answers_attributes, question.id) %>"
+  id="<%= dom_id question %>"
+  class="form-control"
+  <%= 'required' if question.required? %>
+>

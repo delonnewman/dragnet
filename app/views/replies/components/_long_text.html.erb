@@ -1,0 +1,7 @@
+<textarea
+  name="<%= field_name(:reply, :answer_attributes, question.id, :value) %>"
+  id="<%= dom_id question %>"
+  class="form-control"
+  <%= 'required' if question.required? %>
+>
+</textarea>

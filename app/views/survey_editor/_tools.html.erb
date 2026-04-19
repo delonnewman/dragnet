@@ -9,11 +9,16 @@
       <% end %>
     </small>
   </div>
-  <div>
+  <div class="btn-group">
     <button
       type="button"
-      class="btn btn-dark me-1"
-      <%= 'disabled' if !editor.survey_edited? %>
+      class="btn btn-sm btn-dark">
+      <%= icon 'far', 'eye' %>
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm btn-dark"
+      <%= 'disabled' unless editor.survey_edited? %>
       hx-put="<%= survey_path(editor.survey) %>"
       hx-trigger="click"
       hx-swap="outerHTML"
