@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module DataGridHelper
-  def grid(**attributes, &)
-    GridTag.new(self, attributes, &)
-  end
-  
   # Return an appropriate sort link for this column
   #
   # @param [DataGridPresenter] grid
