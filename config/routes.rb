@@ -56,11 +56,6 @@ Rails.application.routes.draw do
 
   # TODO: remove
   scope '/api/v1', defaults: { format: :transit } do
-    scope '/editing' do
-      resources :survey_editor, path: '/surveys', only: %i[show update]
-      post '/surveys/:id/apply', to: 'survey_editor#apply', as: 'survey_editor_apply'
-    end
-
     scope '/submission' do
       resources :reply_submission, path: '/replies', only: %i[show]
 
