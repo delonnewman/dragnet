@@ -50,7 +50,7 @@ Rails.application.routes.draw do
 
   scope '/survey_editor/:survey_id', as: "survey_editor" do
     resource :details, only: %i[show update], controller: 'survey_editor/details'
-    resources :questions, except: %i[new edit], controller: 'survey_editor/questions'
+    resources :questions, except: %i[new edit index], controller: 'survey_editor/questions'
   end
 
   scope '/api/v1', defaults: { format: :transit } do
