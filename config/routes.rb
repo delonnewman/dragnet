@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     resources :questions, except: %i[new edit index], controller: 'survey_editor/questions'
   end
 
+  # TODO: remove
   scope '/api/v1', defaults: { format: :transit } do
     scope '/editing' do
       resources :survey_editor, path: '/surveys', only: %i[show update]
