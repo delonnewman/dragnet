@@ -8,5 +8,4 @@
 //= require ahoy
 //= require Sortable
 
-//= require components
 //= require workspace
