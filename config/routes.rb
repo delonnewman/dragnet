@@ -51,6 +51,7 @@ Rails.application.routes.draw do
   scope '/survey_editor/:survey_id', as: "survey_editor" do
     resource :details, only: %i[update], controller: 'survey_editor/details'
     resource :display_order, only: %[update], controller: 'survey_editor/display_order'
+    resource :preview, only: %i[show edit update], controller: 'survey_editor/preview'
     resources :questions, except: %i[new edit index], controller: 'survey_editor/questions'
   end
 

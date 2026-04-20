@@ -6,7 +6,7 @@
 </div>
 
 <form>
-  <% reply.survey.questions.order(:display_order).each do |question| %>
+  <% survey.questions.each do |question| %>
     <div class="mb-3">
       <label for="<%= dom_id question %>" class="form-label">
         <%= question.text %>

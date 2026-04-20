@@ -43,10 +43,6 @@ class SurveysController < ApplicationController
     redirect_to edit_survey_path(copy)
   end
 
-  def preview
-    render :preview, locals: { survey: Dragnet::SurveyPresenter.new(survey, params) }
-  end
-
   def settings
     render :settings, locals: { survey: }
   end

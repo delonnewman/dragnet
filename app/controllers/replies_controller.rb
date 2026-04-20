@@ -21,7 +21,7 @@ class RepliesController < ApplicationController
 
   def edit
     tracker.view_submission_form(reply)
-    render :edit, locals: { reply: }
+    render :edit, locals: { reply:, survey: }
   end
 
   def update
@@ -44,10 +44,6 @@ class RepliesController < ApplicationController
 
   def complete
     render :success, locals: { reply: }
-  end
-
-  def preview
-    render :edit, locals: { reply: survey.replies.build }
   end
 
   private
