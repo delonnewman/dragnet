@@ -7,7 +7,7 @@ namespace :docs do
   end
 
   desc 'Generate API documentation'
-  task generate: %i[environment frontend:docs] do
+  task generate: :environment do
     sh 'bundle exec yard doc `find {lib,app} -name *.rb`'
   end
 end

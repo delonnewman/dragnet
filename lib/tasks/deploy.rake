@@ -1,7 +1,7 @@
 namespace :deployment do
   namespace :build do
-    desc 'Build assets for deployment (including frontend code)'
-    task assets: %i[assets:precompile frontend:build]
+    desc 'Build assets for deployment'
+    task assets: %i[assets:precompile]
 
     task all: %i[deploy:build:assets docker:image:build]
   end
