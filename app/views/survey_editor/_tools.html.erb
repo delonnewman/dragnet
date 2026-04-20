@@ -9,7 +9,7 @@
       <% end %>
     </small>
   </div>
-  <div class="btn-group">
+  <div>
     <button
       type="button"
       hx-get="<%= survey_editor_preview_path(editor.survey) %>"
@@ -17,12 +17,12 @@
       hx-trigger="click"
       data-bs-toggle="modal"
       data-bs-target="#preview-modal"
-      class="btn btn-sm btn-dark">
-      <%= icon 'far', 'eye' %>
+      class="btn btn-sm btn-dark me-1">
+      <%= icon 'far', 'eye' %> Preview
     </button>
     <button
       type="button"
-      class="btn btn-sm btn-dark"
+      class="btn btn-sm btn-success"
       <%= 'disabled' unless editor.survey_edited? %>
       hx-put="<%= survey_path(editor.survey) %>"
       hx-trigger="click"
