@@ -17,7 +17,7 @@ class RepliesController < ApplicationController
 
   def edit
     tracker.view_submission_form(reply)
-    render :edit, locals: { reply:, survey:, submission_url: submit_reply_path(reply) }
+    render :edit, locals: { reply: }
   end
 
   def update
@@ -25,7 +25,7 @@ class RepliesController < ApplicationController
       tracker.update_submission_form(reply)
       redirect_to edit_reply_path(reply)
     else
-      render :edit, locals: { reply:, survey:, submission_url: submit_reply_path(reply) }
+      render :edit, locals: { reply: }
     end
   end
 
@@ -34,7 +34,7 @@ class RepliesController < ApplicationController
       tracker.complete_submission_form(reply)
       redirect_to complete_reply_path(reply.id)
     else
-      render :edit, locals: { reply:, survey:, submission_url: submit_reply_path(reply) }
+      render :edit, locals: { reply: }
     end
   end
 
@@ -52,12 +52,8 @@ class RepliesController < ApplicationController
     @tracker ||= Dragnet::ReplyTracker.new(ahoy)
   end
 
-  def survey
-    reply.survey
-  end
-
   def reply
-    @reply ||= replies.find(params[:id])
+    @reply ||= Dragnet::ReplyFormPresenter.new(replies.find(params[:id]))
   end
 
   def replies

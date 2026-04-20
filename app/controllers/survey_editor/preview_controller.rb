@@ -4,9 +4,16 @@ class SurveyEditor::PreviewController < SurveyEditorController
   end
 
   def edit
-    render 'replies/edit', locals: { reply: survey.replies.build, survey: survey.edited }, layout: 'external'
+    render 'replies/edit', locals: { reply: }, layout: 'external'
   end
 
   def update
+    render 'replies/success', locals: { reply: }, layout: 'external'
+  end
+
+  private
+
+  def reply
+    Dragnet::PreviewPresenter.new(survey.replies.build)
   end
 end

@@ -1,21 +1,22 @@
 <div class="mb-3 border-bottom pb-2">
-  <h1><%= survey.name %></h1>
-  <% if survey.description %>
+  <h1><%= reply.survey.name %></h1>
+  <% if reply.show_description? %>
     <p><%= survey.description %></p>
   <% end %>
 </div>
 
-<%= reply.errors.inspect %>
-
-<form action="<%= submission_url %>" method="POST">
+<form action="<%= reply.submission_action %>" method="POST">
+  <% if reply.non_post_method? %>
+    <%= hidden_field_tag :_method, reply.submission_method %>
+  <% end %>
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <% survey.questions.each do |question| %>
+  <% reply.survey.questions.each do |question| %>
     <div class="mb-3">
       <label for="<%= dom_id question %>" class="form-label">
         <%= question.text %>
         <%= '*' if question.required? %>
       </label>
-      <%= hidden_field_tag field_name(:reply, :answers_attributes, question.id, :survey_id), survey.id %>
+      <%= hidden_field_tag field_name(:reply, :answers_attributes, question.id, :survey_id), reply.survey_id %>
       <%= hidden_field_tag field_name(:reply, :answers_attributes, question.id, :question_id), question.id %>
       <%= hidden_field_tag field_name(:reply, :answers_attributes, question.id, :type), question.type.symbol %>
       <%= reply_component question %>
