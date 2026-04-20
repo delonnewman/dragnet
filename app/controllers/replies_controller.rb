@@ -3,7 +3,7 @@
 class RepliesController < ApplicationController
   layout 'external'
 
-  before_action only: %i[edit] do
+  before_action only: %i[edit complete] do
     forbid unless reply.can_edit_reply?(current_user)
   end
 

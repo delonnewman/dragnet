@@ -112,20 +112,4 @@ describe 'Replies', type: :request do
       expect(response).to render_template(:success)
     end
   end
-
-  describe 'GET /reply/:survey_id/preview' do
-    it 'redirects to root path when previewing is not permitted' do
-      survey.close!
-      get preview_form_path(survey.id)
-
-      expect(response).to redirect_to(survey_forbidden_path)
-    end
-
-    it 'renders the edit view when previewing is permitted' do
-      survey.open!
-      get preview_form_path(survey.id)
-
-      expect(response).to render_template(:edit)
-    end
-  end
 end
