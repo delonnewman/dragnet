@@ -39,12 +39,6 @@
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to preview_survey_path(survey), class: "nav-link #{'active' if selected == :preview}" do %>
-      <% if selected == :preview %><%= icon 'fas', 'eye' %><% end %>
-      Preview
-    <% end %>
-  </li>
-  <li class="nav-item">
     <%= link_to share_survey_path(survey), class: "nav-link #{'active' if selected == :share}" do %>
       <% if selected == :share %><%= icon 'fas', 'paper-plane' %><% end %>
       Share

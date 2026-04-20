@@ -12,6 +12,11 @@
   <div class="btn-group">
     <button
       type="button"
+      hx-get="<%= preview_survey_path(editor.survey) %>"
+      hx-target="#preview-modal-body"
+      hx-trigger="click"
+      data-bs-toggle="modal"
+      data-bs-target="#preview-modal"
       class="btn btn-sm btn-dark">
       <%= icon 'far', 'eye' %>
     </button>

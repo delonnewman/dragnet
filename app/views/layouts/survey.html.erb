@@ -11,6 +11,21 @@
 
   <body>
     <%= yield %>
+
+    <div class="modal fade" id="preview-modal" tabindex="-1"  aria-labelledby="preview-modal" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header p-1 bg-light text-center">
+            <span class="modal-title ms-3">Preview</span>
+            <button type="button" class="btn btn-sm btn-white" data-bs-dismiss="modal" aria-label="Close">
+              <%= icon 'fa-solid', 'xmark' %>
+            </button>
+          </div>
+          <div class="modal-body" id="preview-modal-body"></div>
+        </div>
+      </div>
+    </div>
+
     <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
     <script>
       // Initialize authenticity token for HTMX requests

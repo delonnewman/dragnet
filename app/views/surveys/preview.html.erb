@@ -1,9 +1,7 @@
-<%= render 'tabs', survey: survey, selected: :preview %>
-
 <% if survey.not_ready_for_replies? %>
   <%= render 'shared/survey_no_questions', survey: survey %>
 <% else %>
-  <div class="d-flex justify-content-center align-items-center pb-3">
+  <div class="d-flex justify-content-center align-items-center pb-1">
     <div class="btn-group">
       <%= survey_preview_button(title: 'Desktop', width: 1280, height: 800) %>
       <%= survey_preview_button(title: 'Tablet', width: 810, height: 1080) %>
@@ -15,7 +13,7 @@
     id="preview-frame"
     width="1280"
     height="800"
-    class="d-block mx-auto border mt-2"
+    class="d-block mx-auto border mt-2 rounded"
     src="<%= preview_form_path(survey.id) %>">
   </iframe>
 <% end %>
