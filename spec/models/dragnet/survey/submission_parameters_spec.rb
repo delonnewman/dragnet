@@ -20,8 +20,8 @@ describe Dragnet::Survey::SubmissionParameters do
 
   it "includes question type ids in the answers attributes of it's form data for all of the surveys questions" do
     data = parameters.submission_data(reply, params)
-    type_ids = data[:answers_attributes].map { _1[:type_class_name] }.uniq
-    types = survey.questions.map(&:type_class_name).uniq
+    type_ids = data[:answers_attributes].map { _1[:type] }.uniq
+    types = survey.questions.map { _1.type.symbol }.uniq
 
     expect(types).to include(*type_ids)
   end
