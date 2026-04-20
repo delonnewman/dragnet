@@ -80,10 +80,6 @@ module ApplicationHelper
     link_to version, url, class: 'text-muted'
   end
 
-  def ui_tests_link
-    link_to 'UI Tests', '/js/test/index.html', class: 'text-muted', target: '_blank', rel: 'noopener'
-  end
-
   def github_link
     icon_link Dragnet.github_url.to_s, icon: 'github', icon_type: 'fab', class: 'text-muted fa-xl'
   end
