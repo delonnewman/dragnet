@@ -3,6 +3,7 @@
 module Dragnet
   class Answer < ApplicationRecord
     include Retractable
+    include Typable
 
     belongs_to :survey,   class_name: 'Dragnet::Survey'
     belongs_to :reply,    class_name: 'Dragnet::Reply'
@@ -40,22 +41,6 @@ module Dragnet
 
     def number_value
       type.dispatch(:get_number_value, answer: self)
-    end
-
-    def type
-      type_class&.new(self)
-    end
-
-    def type=(type)
-      self.type_class = Dragnet::Type.find(type)
-    end
-
-    def type_class=(klass)
-      self.type_class_name = klass.name
-    end
-
-    def type_class
-      type_class_name&.constantize
     end
   end
 end

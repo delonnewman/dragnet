@@ -5,6 +5,7 @@ module Dragnet
     include SelfDescribable
     include Retractable
     include Presentable
+    include Typeable
 
     validates :text, presence: true, uniqueness: { scope: :survey_id }
 
@@ -17,7 +18,7 @@ module Dragnet
 
     before_save do
       self.hash_code = Utils.hash_code(text) if text.present? && !hash_code
-      self.form_name = Utils.slug(text, delimiter: '_') if text.present? && !form_name
+      self.form_name = Utils.slug(text, delimiter: '_') if text.present?
     end
 
     before_validation do
@@ -32,18 +33,6 @@ module Dragnet
 
     def removed?
       false
-    end
-
-    def type
-      type_class.new(self)
-    end
-
-    def type_class=(klass)
-      self.type_class_name = klass.name
-    end
-
-    def type_class
-      type_class_name.constantize
     end
   end
 end
