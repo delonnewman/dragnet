@@ -54,14 +54,4 @@ Rails.application.routes.draw do
     resource :preview, only: %i[show edit update], controller: 'survey_editor/preview'
     resources :questions, except: %i[new edit index], controller: 'survey_editor/questions'
   end
-
-  # TODO: remove
-  scope '/api/v1', defaults: { format: :transit } do
-    scope '/submission' do
-      resources :reply_submission, path: '/replies', only: %i[show]
-
-      post '/replies/:survey_id', to: 'reply_submission#new', as: 'new_reply' # for generating a reply through the API
-      get '/replies/:survey_id/preview', to: 'reply_submission#preview'
-    end
-  end
 end
