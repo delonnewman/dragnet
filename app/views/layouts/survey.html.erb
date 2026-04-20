@@ -30,7 +30,9 @@
     <script>
       // Initialize authenticity token for HTMX requests
       document.body.addEventListener('htmx:configRequest', (e) => {
-        e.detail.parameters['authenticity_token'] = "<%= form_authenticity_token %>";
+        if (e.detail.verb !== 'get') {
+          e.detail.parameters['authenticity_token'] = "<%= form_authenticity_token %>";
+        }
       });
       // Initialize drag-and-drop
       htmx.onLoad((content) => {
