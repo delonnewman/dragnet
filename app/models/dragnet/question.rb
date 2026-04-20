@@ -5,7 +5,7 @@ module Dragnet
     include SelfDescribable
     include Retractable
     include Presentable
-    include Typeable
+    include Typable
 
     validates :text, presence: true, uniqueness: { scope: :survey_id }
 
