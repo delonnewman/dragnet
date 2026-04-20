@@ -1,7 +1,5 @@
-class Dragnet
+module Dragnet
   module Typable
-    attribute :type_class_name
-    
     def type
       type_class&.new(self)
     end
