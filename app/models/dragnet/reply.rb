@@ -3,7 +3,7 @@
 module Dragnet
   class Reply < ApplicationRecord
     include Retractable
-
+    
     belongs_to :survey, class_name: 'Dragnet::Survey'
     has_many :questions, class_name: 'Dragnet::Question', through: :survey
 
@@ -41,7 +41,7 @@ module Dragnet
 
     delegate :submission_parameters, to: :survey
 
-    scope :incomplete, -> { where(submitted: false) }
+    scope :submitted, -> { where.not(submitted_at: nil)}
 
     validates :csrf_token, presence: true
 

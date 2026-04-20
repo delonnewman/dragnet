@@ -16,7 +16,7 @@ module Dragnet
         @offset = offset
         @items  = items
 
-        @base_relation = replies.includes(
+        @base_relation = replies.submitted.includes(
           questions: %i[question_options],
           answers:   { question: %i[question_options] }
         )

@@ -11,17 +11,13 @@ class RepliesController < ApplicationController
     forbid unless reply.can_update_reply?(current_user)
   end
 
-  before_action only: %i[submit complete] do
+  before_action only: %i[submit] do
     forbid unless reply.can_complete_reply?(current_user)
-  end
-
-  before_action only: %i[preview] do
-    forbid unless survey.can_preview?(current_user)
   end
 
   def edit
     tracker.view_submission_form(reply)
-    render :edit, locals: { reply:, survey: }
+    render :edit, locals: { reply:, survey:, submission_url: submit_reply_path(reply) }
   end
 
   def update
@@ -29,7 +25,7 @@ class RepliesController < ApplicationController
       tracker.update_submission_form(reply)
       redirect_to edit_reply_path(reply)
     else
-      render :edit, locals: { reply: }
+      render :edit, locals: { reply:, survey:, submission_url: submit_reply_path(reply) }
     end
   end
 
@@ -38,7 +34,7 @@ class RepliesController < ApplicationController
       tracker.complete_submission_form(reply)
       redirect_to complete_reply_path(reply.id)
     else
-      render :edit, locals: { reply: }
+      render :edit, locals: { reply:, survey:, submission_url: submit_reply_path(reply) }
     end
   end
 
@@ -57,7 +53,7 @@ class RepliesController < ApplicationController
   end
 
   def survey
-    @survey ||= Dragnet::Survey.whole.find(params[:survey_id])
+    reply.survey
   end
 
   def reply

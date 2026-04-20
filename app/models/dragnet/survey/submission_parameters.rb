@@ -13,19 +13,19 @@ module Dragnet
       questions = survey.questions.where(form_name: data.keys)
 
       {
-        answers_attributes: questions.map do |question|
+        answers_attributes: questions.map { |question|
           {
             question_id: question.id,
-            type_class_name: question.type_class_name,
+            type: question.type.symbol,
             reply_id: reply.id,
             survey_id: survey.id,
             value: data[question.form_name],
           }
-        end,
+        },
       }
     end
 
-    ANSWER_ATTRIBUTES = %i[question_id question_type_id reply_id survey_id value].freeze
+    ANSWER_ATTRIBUTES = %i[question_id question_type_id reply_id survey_id type value].freeze
 
     def reply_attributes
       answers_attributes = survey.questions.reduce({}) do |attributes, question|
