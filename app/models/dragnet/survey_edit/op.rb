@@ -8,16 +8,32 @@ module Dragnet
     end
 
     member :NewQuestion, key: :new_question do
+      def temp_id(survey)
+        survey.meta[:new_question_id] ||= 0
+        survey.meta[:new_question_id] -= 1
+      end
+
+      def new_text(survey)
+        root  = 'New Question'
+        count = survey.edited.questions.count { |q| q.text =~ /#{root}( \(\d\))?/ }
+        if count < 1
+          root
+        else
+          "#{root} (#{count})"
+        end
+      end
+
+      def default_type = :text
+
       def merge(edit, projection)
-        question = Question.new(survey_id: edit.survey_id).tap(&:validate!)
-        id = edit.details.fetch(:id).to_s
+        (id, text, type) = edit.details.values_at(:id, :text, :type)
         projection.merge(
           questions: projection[:questions].merge(
-            id => {
-              id:,
-              text: question.text,
-              type: question.type.symbol,
-              display_order: question.display_order,
+            id.to_s => {
+              id: id.to_s,
+              text:,
+              type: type.to_sym,
+              display_order: id,
             }
           )
         )
