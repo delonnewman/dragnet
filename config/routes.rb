@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     end
 
     get 'qrcode', to: 'surveys/qr_code#show'
-    get 'settings'
+    get 'settings', to: 'surveys/settings#show'
 
     get 'stats', to: 'stats#show'
 

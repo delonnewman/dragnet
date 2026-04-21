@@ -36,10 +36,6 @@ class SurveysController < ApplicationController
     redirect_to root_path, notice: "You've deleted #{survey.name.inspect}"
   end
 
-  def settings
-    render :settings, locals: { survey: }
-  end
-
   private
 
   def whole_survey
