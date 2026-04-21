@@ -11,15 +11,14 @@ Rails.application.routes.draw do
 
   resources :surveys, only: %i[show create edit update destroy] do
     member do
-      post 'copy'
-      post 'open'
-      post 'close'
-      get 'preview'
-      get 'share'
-      get 'share/:method', to: 'surveys#share'
+      post 'copy',  to: 'surveys/copy#create'
+      post 'open',  to: 'surveys/access#open'
+      post 'close', to: 'surveys/access#close'
+      get 'share',  to: 'surveys/sharing#show'
+      get 'share/:method', to: 'surveys/sharing#show'
     end
 
-    get 'qrcode'
+    get 'qrcode', to: 'surveys/qr_code#show'
     get 'settings'
 
     get 'stats', to: 'stats#show'

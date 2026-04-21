@@ -2,7 +2,6 @@
 
 class SurveysController < ApplicationController
   include Authenticated
-  include QRCodeHelper
 
   layout 'survey'
 
@@ -37,38 +36,8 @@ class SurveysController < ApplicationController
     redirect_to root_path, notice: "You've deleted #{survey.name.inspect}"
   end
 
-  def copy
-    copy = survey.copy!
-
-    redirect_to edit_survey_path(copy)
-  end
-
   def settings
     render :settings, locals: { survey: }
-  end
-
-  def open
-    survey.open!
-
-    render partial: 'workspace/survey_card', locals: { survey: }
-  end
-
-  def close
-    survey.close!
-
-    render partial: 'workspace/survey_card', locals: { survey: }
-  end
-
-  def share
-    render :share, locals: { survey: Dragnet::SurveyPresenter.new(survey, params) }
-  end
-
-  def qrcode
-    respond_to do |format|
-      format.html { render :qrcode, locals: { survey: } }
-      format.png  { send_qrcode_data survey, format: :png }
-      format.svg  { send_qrcode_data survey, format: :svg }
-    end
   end
 
   private
