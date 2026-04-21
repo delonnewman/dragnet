@@ -36,7 +36,6 @@ Rails.application.routes.draw do
       post 'submit'
     end
   end
-  get '/reply/:survey_id/preview', to: 'replies#preview', as: 'preview_form'
 
   # survey name is optional
   get '/r/:survey_id/:survey_name', to: 'submission_request#new', as: 'reply_to'
