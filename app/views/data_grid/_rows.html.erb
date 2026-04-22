@@ -1,7 +1,7 @@
 <% grid.records.each do |record| %>
   <tr>
     <td class="text-nowrap text-muted">
-      <small><%= fmt_datetime record.created_at %></small>
+      <%= fmt_datetime record.created_at %>
     </td>
     <% grid.questions.each do |question| %>
       <td><%= answers_text record, question %></td>
