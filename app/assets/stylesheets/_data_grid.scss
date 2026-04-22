@@ -16,4 +16,10 @@
       min-width: 200px;
     }
   }
+  td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
 }
