@@ -14,7 +14,7 @@ module DataGridHelper
     table_path = survey_data_table_path(grid.survey_id, sort_by: column, sort_direction: direction)
 
     htmx_options = { push_url: push_url, get: table_path, target: '#data-grid-table', swap: 'morph:innerHTML' }
-    html_options = { class: 'btn btn-outline-primary', title: alt_label }
+    html_options = { class: 'btn btn-outline-dark', title: alt_label }
 
     htmx :button, htmx_options, html_options do
       label.html_safe + ' ' + column_sort_icon(grid, column).html_safe
@@ -59,7 +59,7 @@ module DataGridHelper
   # @return [String] the corresponding HTML
   def answers_text(reply, question, alt: '-')
     answers = reply.answers_to(question)
-    question.type.dispatch(:render_answers_text, context: self, answers:, question:, alt_text: alt) # rescue binding.pry
+    question.type.dispatch(:render_answers_text, context: self, answers:, question:, alt_text: alt)
   end
 
   def fmt_date(date)
