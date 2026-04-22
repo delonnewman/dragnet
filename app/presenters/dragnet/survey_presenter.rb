@@ -10,7 +10,7 @@ class Dragnet::SurveyPresenter < Dragnet::View::Presenter
   end
 
   def no_data?
-    survey.replies.empty? && survey.events.empty?
+    survey.replies.submitted.empty? || survey.events.empty?
   end
 
   def share_email?
