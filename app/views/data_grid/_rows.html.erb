@@ -16,9 +16,9 @@
     hx-swap="outerHTML"
   >
     <td colspan="<%= grid.questions.count + 1 %>">
-      <%= htmx :button, { get: survey_data_rows_path(grid.survey, page: grid.pager.next), target: '#the-end', swap: 'outerHTML' }, { class: 'btn btn-sm btn-light' } do %>
-        Load more...
-      <% end %>
+      <div class="spinner-grow" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </td>
   </tr>
 <% end %>
