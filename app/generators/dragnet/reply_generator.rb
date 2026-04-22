@@ -15,7 +15,26 @@ class Dragnet::ReplyGenerator < Dragnet::ActiveRecordGenerator
     end
   end
 
+  def generate!(*other_attributes)
+    reply = generate(*other_attributes)
+    reply.save!
+    create_ahoy_events(reply)
+    reply
+  end
+
   private
+
+  def create_ahoy_events(reply)
+    visit = Ahoy::Visit.generate!
+
+    Ahoy::Event[name: ReplyTracker.event_name(:view), visit:, survey_id: reply.survey_id, reply_id: reply.id].generate!
+    Ahoy::Event[name: ReplyTracker.event_name(:update), visit:, survey_id: reply.survey_id, reply_id: reply.id].generate!
+    if reply.submitted?
+      Ahoy::Event[name: ReplyTracker.event_name(:complete), visit:, survey_id: reply.survey_id, reply_id: reply.id].generate!
+    end
+
+    reply.update!(ahoy_visit: visit)
+  end
 
   def generate_answers(survey, reply)
     survey.questions.each do |question|
