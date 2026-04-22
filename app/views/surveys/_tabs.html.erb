@@ -27,7 +27,7 @@
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to survey_data_path(survey), 'hx-boost': false, class: "nav-link #{'active' if selected == :data}" do %>
+    <%= link_to survey_data_path(survey), class: "nav-link #{'active' if selected == :data}" do %>
       <% if selected == :data %><%= icon 'fas', 'table' %><% end %>
       Records
     <% end %>
