@@ -96,8 +96,9 @@ module Dragnet
             current_scope.where(field => value)
           elsif @query.question?(field)
             join_name = join_alias(field)
-            narrowed  = narrowed_scope(current_scope, field, join_name)
-            question.type.dispatch(:filter_data_grid, relation: narrowed, table:, value:)
+            narrowed = narrowed_scope(current_scope, field, join_name)
+            question = @query.question(field)
+            question.type.dispatch(:filter_data_grid, relation: narrowed, table: join_name, value:)
           else
             current_scope
           end
