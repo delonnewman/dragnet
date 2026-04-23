@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "ahoy_events", force: :cascade do |t|
@@ -132,8 +133,8 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.boolean "retraction", default: false, null: false
     t.string "record_class_name", null: false
     t.uuid "record_id", null: false
-    t.binary "changes"
-    t.binary "diff"
+    t.jsonb "changes"
+    t.jsonb "diff"
     t.boolean "applied", default: false, null: false
     t.datetime "applied_at", precision: nil
     t.datetime "created_at", precision: nil, null: false

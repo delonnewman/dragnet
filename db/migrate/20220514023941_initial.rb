@@ -152,8 +152,8 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean    :retraction,                     null: false, index: true, default: false
       t.string     :record_class_name,              null: false, index: true
       t.uuid       :record_id,                      null: false, index: true
-      t.blob       :changes
-      t.blob       :diff
+      t.jsonb      :changes
+      t.jsonb      :diff
       t.boolean    :applied,                        null: false, index: true, default: false
       t.timestamp  :applied_at,                                  index: true
       t.timestamp  :created_at,                     null: false, index: true

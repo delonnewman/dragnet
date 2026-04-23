@@ -4,11 +4,14 @@ module Dragnet
   class RecordChange < ApplicationRecord
     belongs_to :survey, class_name: 'Dragnet::Survey', inverse_of: :record_changes
 
-    serialize :changes
-    serialize :diff
+    attribute :changes, :json_with_symbolized_keys
+    attribute :diff, :json_with_symbolized_keys
 
     with TriggerExecution
     after_create { trigger_execution.async.execute_triggers }
+
+    scope :applied, -> { where.not(applied_at: nil) }
+    scope :not_applied, -> { where(applied_at: nil) }
 
     # @return [Class<ActiveRecord::Base>]
     def record_class
