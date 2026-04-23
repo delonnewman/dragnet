@@ -7,6 +7,8 @@ module Dragnet
     belongs_to :survey, class_name: 'Dragnet::Survey'
     has_many :questions, class_name: 'Dragnet::Question', through: :survey
 
+    belongs_to :user, class_name: 'Dragnet::User'
+
     # Answers
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :reply
     accepts_nested_attributes_for :answers, reject_if: ->(attrs) { Answer.new(attrs).blank? }
