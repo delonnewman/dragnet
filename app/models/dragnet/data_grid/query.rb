@@ -56,7 +56,7 @@ module Dragnet
 
     # @param [Symbol, Question] column
     def sorted_by_column?(column)
-      return sort_by == column.id if sorted_by_question? && column.is_a?(Question)
+      return sort_by == column.id if sorted_by_question? && column.respond_to?(:id)
 
       sort_by == column.to_s
     end
