@@ -40,7 +40,6 @@ Rails.application.routes.draw do
   # survey name is optional
   get '/r/:survey_id/:survey_name', to: 'submission_request#new', as: 'reply_to'
   get '/r/:survey_id', to: 'submission_request#new'
-  get '/reply/:survey_id', to: 'submission_request#new'
   match '/reply/404', to: 'submission_request#not_found', as: :survey_not_found, via: :all
   match '/reply/403', to: 'submission_request#forbidden', as: :survey_forbidden, via: :all
 

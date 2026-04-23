@@ -50,14 +50,14 @@ describe 'Submission Requests', type: :request do
 
   describe 'GET /reply/404' do
     it 'returns http not found' do
-      get '/reply/404'
+      get survey_not_found_path
       expect(response).to have_http_status(:not_found)
     end
   end
 
   describe 'GET /reply/403' do
     it 'returns http forbidden' do
-      get '/reply/403'
+      get survey_forbidden_path
       expect(response).to have_http_status(:forbidden)
     end
   end
