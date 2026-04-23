@@ -2,7 +2,7 @@ RailsLiveReload.configure do |config|
   # config.url = "/rails/live/reload"
 
   config.watch %r{app/views/.+\.(erb|haml)$}
-  config.watch %r{(app|vendor)/(assets|javascript)/\w+/(.+\.(css|scss|js|html|png|jpg|cljs|cljc)).*}, reload: :always
+  config.watch %r{(app|vendor)/(assets|javascript)/\w+/(.+\.(css|scss|js|html|png|jpg)).*}, reload: :always
   config.watch %r{app/helpers/.+\.rb}, reload: :always
   config.watch %r{app/presenters/.+\.rb}, reload: :always
 
