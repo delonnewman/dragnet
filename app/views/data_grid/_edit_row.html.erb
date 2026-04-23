@@ -1,0 +1,19 @@
+<tr id="<%= dom_id record %>">
+  <td></td>
+  <% grid.questions.each do |question| %>
+    <td>
+      <%= hidden_field_tag field_name(:reply, :answers_attributes, question.id, :question_id), question.id %>
+      <input
+        type="text"
+        id="<%= dom_id(record, question.id) %>"
+        name="<%= field_name(:reply, :answers_attributes, question.id, :value) %>"
+        value="<%= record.answers_to(question).join(' ') %>"
+      >
+    </td>
+  <% end %>
+  <td>
+    <%= link_to survey_data_row_path(grid.survey, record), class: 'btn btn-sm btn-success disabled' do %>
+      <%= icon 'fas', 'check' %>
+    <% end %>
+  </td>
+</tr>
