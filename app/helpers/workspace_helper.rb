@@ -79,7 +79,7 @@ module WorkspaceHelper
   def edit_survey_link(survey, include_label: false)
     icon_link(
       include_label ? 'Edit' : nil, edit_survey_path(survey),
-      icon:  'hammer',
+      icon:  'pencil',
       class: 'btn btn-sm btn-outline-secondary me-1',
       data:  { bs_toggle: 'tooltip' },
       title: 'Edit survey'
