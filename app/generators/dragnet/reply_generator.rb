@@ -18,7 +18,7 @@ class Dragnet::ReplyGenerator < Dragnet::ActiveRecordGenerator
   def generate!(*other_attributes)
     reply = generate(*other_attributes)
     reply.save!
-    create_ahoy_events(reply)
+    create_ahoy_events(reply) if attributes.fetch(:create_ahoy_visit, false)
     reply
   end
 
