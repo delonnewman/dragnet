@@ -7,7 +7,7 @@ module Dragnet
     belongs_to :survey, class_name: 'Dragnet::Survey'
     has_many :questions, class_name: 'Dragnet::Question', through: :survey
 
-    belongs_to :user, class_name: 'Dragnet::User'
+    belongs_to :user, class_name: 'Dragnet::User', optional: true
 
     # Answers
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :reply
