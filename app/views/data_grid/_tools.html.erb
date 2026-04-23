@@ -1,7 +1,8 @@
 <div class="d-flex justify-content-between align-items-center mb-2">
   <div class="d-flex justify-content-start align-items-center">
     <div class="me-2 text-muted">
-      <%= number_with_delimiter grid.record_count %> records
+      <%= number_with_delimiter grid.record_count %>
+      <%= grid.record_count == 1 ? 'record' : 'records' %>
     </div>
     <% if grid.show_clear_filter? %>
       <%= link_to survey_data_path(grid.survey), class: 'btn btn-sm btn-outline-secondary' do %>
@@ -11,6 +12,15 @@
     <% end %>
   </div>
   <div class="d-flex justify-content-end align-items-center">
+    <a href="<%= new_survey_data_row_path(grid.survey) %>"
+       class="btn btn-sm btn-dark me-1"
+       hx-post=<%= survey_data_rows_path(grid.survey) %>
+       hx-trigger="click"
+       hx-target=".data-grid tbody"
+       hx-swap="afterbegin">
+      <%= icon 'fa', 'plus' %> Add
+    </a>
+    
     <div class="dropdown">
       <a href="#" class="btn btn-sm btn-dark dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         Export

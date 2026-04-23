@@ -3,9 +3,17 @@
     <td class="text-nowrap text-muted">
       <%= fmt_datetime record.created_at %>
     </td>
+    <td class="text-nowrap text-muted">
+      <%= record.user || '-' %>
+    </td>
     <% grid.questions.each do |question| %>
       <td><%= answers_text record, question %></td>
     <% end %>
+    <td>
+      <%= link_to edit_survey_data_row_path(grid.survey, record), class: 'btn btn-sm btn-dark' do %>
+        <%= icon 'fas', 'pencil' %>
+      <% end %>
+    </td>
   </tr>
 <% end %>
 
@@ -15,7 +23,7 @@
     hx-trigger="revealed"
     hx-swap="outerHTML"
   >
-    <td colspan="<%= grid.questions.count + 1 %>">
+    <td colspan="<%= grid.questions.count + 2 %>">
       <div class="spinner-grow" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>

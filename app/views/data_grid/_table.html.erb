@@ -1,7 +1,5 @@
 <% if grid.not_ready_for_replies? %>
   <%= render 'shared/survey_no_questions', survey: grid.survey %>
-<% elsif grid.no_data? %>
-  <%= render 'shared/survey_no_replies', survey: grid.survey %>
 <% else %>
   <%= render 'data_grid/tools', grid: grid %>
 
