@@ -19,6 +19,7 @@ module Dragnet
       user == survey.author || survey.public? || survey.open?
     end
     alias can_preview? can_submit_reply?
+    alias can_complete_reply? can_submit_reply?
 
     # @param  [Reply] reply
     #
@@ -27,6 +28,5 @@ module Dragnet
       can_submit_reply?(user) && !reply.submitted? && !reply.expired?
     end
     alias can_update_reply? can_edit_reply?
-    alias can_complete_reply? can_edit_reply?
   end
 end

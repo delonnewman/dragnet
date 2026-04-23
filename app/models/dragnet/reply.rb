@@ -34,7 +34,7 @@ module Dragnet
     end
 
     # Submission
-    with ReplySubmissionPolicy, delegating: %i[can_edit_reply? can_update_reply? can_complete_reply?]
+    with ReplySubmissionPolicy, delegating: %i[can_submit_reply? can_edit_reply? can_update_reply? can_complete_reply?]
 
     CSRF_TOKEN_PRECISION = 256
     EXPIRATION_DURATION  = 30.minutes # TODO: move this to configration
