@@ -23,8 +23,9 @@ Rails.application.routes.draw do
 
     get 'stats', to: 'stats#show'
 
-    get 'data', to: 'data_grid#show'
-    get 'data/rows', to: 'data_grid#rows'
+    resource :data, controller: 'data_grid', only: %i[show] do
+      resources :rows, controller: 'data_grid/rows'
+    end
     get 'data/table', to: 'data_grid#table'
 
     get 'changes', to: 'record_changes#index'

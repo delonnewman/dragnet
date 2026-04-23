@@ -15,10 +15,6 @@ class DataGridController < ApplicationController
     end
   end
 
-  def rows
-    render partial: 'data_grid/rows', locals: { grid: }
-  end
-
   def table
     render partial: 'data_grid/table', locals: { grid: }
   end
