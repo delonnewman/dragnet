@@ -48,6 +48,30 @@ describe 'Submission Requests', type: :request do
     end
   end
 
+  describe 'POST /r/:survey_id' do
+    it 'redirects to survey forbidden path when a new reply is not permitted' do
+      survey.close!
+      post reply_to_path(survey.short_id, survey.slug)
+
+      expect(response).to redirect_to(survey_forbidden_path)
+    end
+
+    it 'redirects to survey forbidden path when a reply has already been submitted by the current visitor' do
+      survey.open!
+      create_reply submitted: true
+      post reply_to_path(survey.short_id, survey.slug)
+
+      expect(response).to redirect_to(survey_forbidden_path)
+    end
+
+    it 'renders replies/success template when the submission has been successful' do
+      survey.open!
+      post reply_to_path(survey.short_id, survey.slug), params: submission_data
+
+      expect(response).to render_template('replies/success')
+    end
+  end
+
   describe 'GET /reply/404' do
     it 'returns http not found' do
       get survey_not_found_path
