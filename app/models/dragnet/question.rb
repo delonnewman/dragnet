@@ -17,13 +17,10 @@ module Dragnet
     scope :whole, -> { eager_load(:question_options) }
 
     before_save do
-      self.hash_code = Utils.hash_code(text) if text.present? && !hash_code
-      self.form_name = Utils.slug(text, delimiter: '_') if text.present?
-    end
-
-    before_validation do
-      self.text = UniqueName.new(record: self, scope: :survey_id, attribute_name: :text).to_s
-      self.type_class = Dragnet::Types::Text unless type_class_name
+      if text.present? && text_changed?
+        self.hash_code = Utils.hash_code(text)
+        self.form_name = Utils.slug(text, delimiter: '_')
+      end
     end
 
     def settings
