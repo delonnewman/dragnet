@@ -4,18 +4,10 @@
 class SubmissionRequestController < ApplicationController
   layout 'external'
 
-  before_action :check_permissions, only: %i[new submit]
+  before_action :check_permissions, only: %i[new]
 
   def new
     redirect_to edit_reply_path(reply)
-  end
-
-  def submit
-    if reply.submit(submission_params)
-      render 'replies/success', locals: { reply: }
-    else
-      render body: reply.errors.full_messages.join(', '), status: :unproccessable_entity
-    end
   end
 
   def not_found
