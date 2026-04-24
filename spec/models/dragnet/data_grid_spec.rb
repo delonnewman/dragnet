@@ -1,19 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Dragnet::DataGrid do
-  let(:user) { Dragnet::User.generate! }
-  let(:survey) { Dragnet::Survey[author: user].generate! }
+  let(:author) { Dragnet::User.generate! }
+  let(:survey) { Dragnet::Survey[author:].generate! }
 
   describe '.find_or_create!' do
     it "creates a new grid if one doesn't already exist" do
-      grid = described_class.find_or_create!(survey, user:)
+      grid = described_class.find_or_create!(survey, author:)
 
       expect(grid).to be_previously_new_record
     end
 
     it 'loads the existing grid if one has already been created' do
-      described_class.create!(user:, survey:)
-      grid = described_class.find_or_create!(survey, user:)
+      described_class.create!(author:, survey:)
+      grid = described_class.find_or_create!(survey, author:)
 
       expect(grid).to be_persisted
     end
@@ -21,7 +21,7 @@ RSpec.describe Dragnet::DataGrid do
 
   describe 'whole value' do
     before do
-      described_class[survey:, user:].generate!
+      described_class[survey:, author:].generate!
     end
 
     it "loads all of a survey's componets in one query when the whole value is not requested" do

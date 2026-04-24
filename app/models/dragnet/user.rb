@@ -4,7 +4,7 @@ module Dragnet
   class User < ApplicationRecord
     has_many :surveys, -> { where(retracted: false) }, class_name: 'Dragnet::Survey', dependent: :delete_all, foreign_key: :author_id, inverse_of: :author
     has_many :saved_reports, class_name: 'Dragnet::SavedReport', dependent: :delete_all, foreign_key: :author_id, inverse_of: :author
-    has_many :data_grids, class_name: 'Dragnet::DataGrid', inverse_of: :user, dependent: :delete_all
+    has_many :data_grids, class_name: 'Dragnet::DataGrid', inverse_of: :author, dependent: :delete_all
 
     # To satisfy the Reportable protocol
     has_many :questions, through: :surveys

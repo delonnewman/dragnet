@@ -5,5 +5,6 @@ module Dragnet
     include SelfDescribable
 
     belongs_to :author, class_name: 'Dragnet::User'
+    has_many :question_aliases, as: :reportable
   end
 end

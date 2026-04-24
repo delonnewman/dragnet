@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "ahoy_events", force: :cascade do |t|
@@ -72,7 +71,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.date "date_value"
     t.boolean "retracted", default: false, null: false
     t.datetime "retracted_at", precision: nil
-    t.json "meta_data"
+    t.jsonb "meta_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["boolean_value"], name: "index_answers_on_boolean_value"
@@ -91,12 +90,24 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["type_class_name"], name: "index_answers_on_type_class_name"
   end
 
-  create_table "data_grids", force: :cascade do |t|
+  create_table "data_grids", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "survey_id", null: false
-    t.uuid "user_id", null: false
-    t.index ["survey_id", "user_id"], name: "index_data_grids_on_survey_id_and_user_id", unique: true
+    t.uuid "author_id", null: false
+    t.jsonb "meta_data"
+    t.index ["author_id"], name: "index_data_grids_on_author_id"
+    t.index ["survey_id", "author_id"], name: "index_data_grids_on_survey_id_and_author_id", unique: true
     t.index ["survey_id"], name: "index_data_grids_on_survey_id"
-    t.index ["user_id"], name: "index_data_grids_on_user_id"
+  end
+
+  create_table "question_aliases", force: :cascade do |t|
+    t.string "reportable_type", null: false
+    t.bigint "reportable_id", null: false
+    t.uuid "question_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_question_aliases_on_question_id"
+    t.index ["reportable_type", "reportable_id"], name: "index_question_aliases_on_reportable"
   end
 
   create_table "question_options", force: :cascade do |t|
@@ -175,7 +186,6 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   create_table "saved_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "author_id", null: false
     t.string "name", null: false
-    t.string "question_ids", null: false
     t.string "filters"
     t.string "sort_by"
     t.string "sort_direction"
@@ -300,6 +310,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["updated_at"], name: "index_users_on_updated_at"
   end
 
+  add_foreign_key "data_grids", "users", column: "author_id", on_delete: :cascade
   add_foreign_key "question_options", "questions", on_delete: :cascade
   add_foreign_key "questions", "surveys", on_delete: :cascade
   add_foreign_key "saved_reports", "users", column: "author_id", on_delete: :cascade

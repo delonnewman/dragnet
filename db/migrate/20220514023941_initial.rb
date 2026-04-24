@@ -143,7 +143,7 @@ class Initial < ActiveRecord::Migration[7.0]
       t.boolean :retracted, default: false, null: false, index: true
       t.timestamp :retracted_at, index: true
 
-      t.json :meta_data
+      t.jsonb :meta_data
       t.timestamps
     end
 
@@ -160,10 +160,13 @@ class Initial < ActiveRecord::Migration[7.0]
       t.uuid       :created_by,                                  index: true
     end
 
-    create_table :data_grids do |t|
-      t.belongs_to :survey, type: :uuid, null: false, index: true
-      t.belongs_to :user,   type: :uuid, null: false, index: true
-      t.index [:survey_id, :user_id], unique: true
+    create_table :data_grids, id: :uuid do |t|
+      t.belongs_to :survey, type: :uuid, null: false
+      t.belongs_to :author,   type: :uuid, null: false
+
+      t.jsonb :meta_data
+      t.index [:survey_id, :author_id], unique: true
+      t.foreign_key :users, column: :author_id, primary_key: :id, on_delete: :cascade
     end
 
     create_table :saved_reports, id: :uuid do |t|
@@ -171,11 +174,17 @@ class Initial < ActiveRecord::Migration[7.0]
       t.foreign_key :users,     column: :author_id, primary_key: :id, on_delete: :cascade
 
       t.string :name,         null: false
-      t.string :question_ids, null: false
       t.string :filters
       t.string :sort_by
       t.string :sort_direction
       t.json :meta_data
+    end
+
+    create_table :question_aliases do |t|
+      t.belongs_to :reportable, polymorphic: true,              null: false
+      t.belongs_to :question,                      type: :uuid, null: false, index: true
+      t.string     :name,                                       null: false
+      t.timestamps
     end
   end
 end
