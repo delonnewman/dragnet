@@ -20,11 +20,11 @@ module Dragnet
     end
 
     def text
-      if answer.question.settings.long_answer?
-        answer.long_text_value = value
-      else
-        answer.short_text_value = value
-      end
+      answer.short_text_value = value
+    end
+
+    def long_text
+      answer.long_text_value = value
     end
 
     def time

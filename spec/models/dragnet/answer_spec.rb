@@ -22,21 +22,27 @@ RSpec.describe Dragnet::Answer do
     end
   end
 
-  describe '#save' do
-    it 'dispatches do_before_saving_answer type method' do
-      survey = Survey.create!(
+  describe Dragnet::Answer::DoBeforeSaving do
+    subject(:survey) do
+      Survey.create!(
         name: Dragnet::Generators::Name.generate,
         author: Dragnet::User.generate,
-        public: true,
         questions_attributes: [
           { text: 'Comments', type_class: Dragnet::Types::LongText, meta: { countable: true } },
         ]
       );
+    end
 
-      reply = survey.replies.create!
-      question = survey.questions.find_by({ text: 'Comments' })
-      answer = reply.answers.create!(survey:, question:, value: Dragnet::Generators::LongAnswer.generate)
+    let(:reply) { survey.replies.create! }
+    let(:value) { Dragnet::Generators::LongAnswer.generate }
+    let(:question) { survey.questions.find_by({ text: 'Comments' }) }
+    let(:answer) { reply.answers.create!(survey:, question:, value:) }
 
+    it 'sets LongText value' do
+      expect(answer.long_text_value).to eq(value)
+    end
+
+    it 'sets Float value' do
       expect(answer.float_value).not_to be(nil)
     end
   end
