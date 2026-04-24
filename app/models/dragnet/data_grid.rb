@@ -26,6 +26,7 @@ module Dragnet
       grid = find_by(author_id: author.id, survey_id: survey.id)
       return grid if grid
 
+      # TODO: create default question_aliases
       create!(author:, survey:)
     end
 

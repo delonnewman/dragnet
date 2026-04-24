@@ -33,6 +33,7 @@ module Dragnet
       create!(survey:, op: Op.update_question, details: { question_id:, updates: })
     end
 
+    # TODO: when a survey has data it should just only retract the question
     def self.remove_question(survey, question)
       question_id = question.is_a?(Question) ? question.id : question
       create!(survey:, op: Op.remove_question, details: { question_id: })
