@@ -44,7 +44,7 @@ module WorkspaceHelper
         icon('fas', 'share') + '&nbsp;Share'.html_safe
       }
 
-      concat tag.ul(class: "dropdown-menu #{'dropdown-menu-end' if align_menu_end}") {
+      concat tag.ul(class: [ "dropdown-menu", 'dropdown-menu-end': align_menu_end ]) {
         concat tag.li(class: 'dropdown-item', onclick: "dragnet.copyToClipboard('#{reply_url}', '#{tooltip_target}')") { 'Copy Link' }
         concat tag.li { tag.a(class: 'dropdown-item', href: "mailto:?body=#{reply_url}") { 'Email' } }
       }
