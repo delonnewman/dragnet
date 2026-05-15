@@ -1,11 +1,11 @@
 <ul class="nav nav-tabs mb-3" hx-boost="true">
   <li class="nav-item">
-    <%= link_to root_path, class: "nav-link #{'active' if selected == :overview}" do %>
+    <%= link_to root_path, class: ["nav-link", active: selected == :overview] do %>
       <%= icon 'fas', 'binoculars' %> Overview
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to surveys_path, class: "nav-link #{'active' if selected == :surveys}" do %>
+    <%= link_to surveys_path, class: ["nav-link", active: selected == :surveys] do %>
       <%= icon 'fas', 'square-poll-vertical' %> Surveys
       <span class="badge bg-primary"><%= survey_count %></span>
     <% end %>
