@@ -15,30 +15,6 @@ module Dragnet
     scope :applied, -> { where.not(applied_at: nil) }
     scope :not_applied, -> { where(applied_at: nil) }
 
-    def self.update_attributes(survey, updates)
-      create!(survey:, op: Op.update, details: { updates: })
-    end
-
-    def self.new_question(survey)
-      details = {
-        id: Op.new_question.temp_id(survey),
-        text: Op.new_question.new_text(survey),
-        type: Op.new_question.default_type,
-      }
-      create!(survey:, op: Op.new_question, details:)
-    end
-
-    def self.update_question(survey, question, updates)
-      question_id = question.is_a?(Question) ? question.id : question
-      create!(survey:, op: Op.update_question, details: { question_id:, updates: })
-    end
-
-    # TODO: when a survey has data it should just only retract the question
-    def self.remove_question(survey, question)
-      question_id = question.is_a?(Question) ? question.id : question
-      create!(survey:, op: Op.remove_question, details: { question_id: })
-    end
-
     def applied?
       !applied_at.nil?
     end

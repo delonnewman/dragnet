@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Dragnet::SurveyEdit do
-  subject(:edit) { described_class.update_attributes(survey, name: "This is a test") }
+  subject(:edit) { survey.edits.update_attributes(name: "This is a test") }
 
   let(:survey) { Dragnet::Survey[author:].generate! }
   let(:author) { Dragnet::User.generate! }
