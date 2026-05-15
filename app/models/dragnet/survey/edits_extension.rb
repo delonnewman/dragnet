@@ -54,6 +54,5 @@ module Dragnet
       survey      = proxy_association.owner
       create!(survey:, op: SurveyEdit::Op.remove_question, details: { question_id: })
     end
-
   end
 end
