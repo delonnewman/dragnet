@@ -15,8 +15,8 @@
           </th>
           <th>
             <div class="d-flex justify-content-start align-items-center">
-              <%= column_sort_link(grid, :created_by, label: icon('fas', 'user'), alt_label: 'Created By') %>
-              <%= text_field_tag :created_by, params[:created_by], class: 'form-control' %>
+              <%= column_sort_link(grid, :user_id, label: icon('fas', 'user'), alt_label: 'Created By') %>
+              <%= text_field_tag :user_id, params[:user_id], class: 'form-control' %>
             </div>
           </th>
           <% grid.questions.each do |question| %>
