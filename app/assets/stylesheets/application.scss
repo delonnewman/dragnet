@@ -54,3 +54,9 @@ a {
 a.btn, a.dropdown-item, a.nav-link {
   text-decoration: none !important;
 }
+
+.fade-out {
+  visibility: collapse;
+  opacity: 0;
+  transition: visibility 0s 300ms, opacity 300ms linear;
+}

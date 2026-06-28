@@ -1,10 +1,10 @@
 <% grid.records.each do |record| %>
   <tr>
-    <td class="text-nowrap text-muted">
+    <td class="text-nowrap text-muted align-middle">
       <%= fmt_datetime record.created_at %>
     </td>
-    <td class="text-nowrap text-muted">
-      <%= record.user || '-' %>
+    <td class="text-nowrap text-muted align-middle">
+      <%= record.user&.name || '-' %>
     </td>
     <% grid.questions.each do |question| %>
       <td><%= answers_text record, question %></td>
