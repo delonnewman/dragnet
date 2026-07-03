@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     resource :data, controller: 'data_grid', only: %i[show] do
       resources :rows, controller: 'data_grid/rows'
+      resource :tools, controller: 'data_grid/tools', only: %i[show]
     end
     get 'data/table', to: 'data_grid#table'
 
