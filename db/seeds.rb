@@ -77,7 +77,7 @@ unless Rails.env.test?
 end
 
 # Generate some sample data if in development
-if Rails.env.development? && User.count == 1
+if false # Rails.env.development? && User.count == 1
   puts 'Generating some data that should aid development 🦫🚧 ...'
 
   print 'Generating Users...'
