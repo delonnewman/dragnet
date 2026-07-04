@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "ahoy_events", force: :cascade do |t|
