@@ -67,17 +67,17 @@ unless Rails.env.test?
     author: user,
     public: true,
     questions_attributes: [
-      { text: 'Name',     type_class: Dragnet::Types::Text },
-      { text: 'Email',    type_class: Dragnet::Ext::Email },
-      { text: 'Address',  type_class: Dragnet::Types::Text },
+      { text: 'Name',     type_class: Dragnet::Types::Text, required: true },
+      { text: 'Email',    type_class: Dragnet::Ext::Email, required: true },
       { text: 'Phone',    type_class: Dragnet::Ext::Phone },
+      { text: 'Address',  type_class: Dragnet::Types::Text },
       { text: 'Comments', type_class: Dragnet::Types::LongText, meta: { countable: true } },
     ]
   ) unless Survey.exists?(name: 'Contact Information')
 end
 
 # Generate some sample data if in development
-if Rails.env.development? && User.count == 1
+if false # Rails.env.development? && User.count == 1
   puts 'Generating some data that should aid development 🦫🚧 ...'
 
   print 'Generating Users...'
