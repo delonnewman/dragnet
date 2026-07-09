@@ -1,6 +1,6 @@
 class SurveyEditor::DetailsController < SurveyEditorController
   def update
-    Dragnet::SurveyEdit.update_attributes(survey, details_params)
+    survey.edits.update_attributes(details_params)
 
     render :details, locals: { editor: }
   end

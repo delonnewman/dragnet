@@ -1,10 +1,10 @@
 <% grid.records.each do |record| %>
   <tr>
-    <td class="text-nowrap text-muted">
+    <td class="text-nowrap text-muted align-middle">
       <%= fmt_datetime record.created_at %>
     </td>
-    <td class="text-nowrap text-muted">
-      <%= record.user || '-' %>
+    <td class="text-nowrap text-muted align-middle">
+      <%= record.user&.name || '-' %>
     </td>
     <% grid.questions.each do |question| %>
       <td><%= answers_text record, question %></td>
@@ -13,12 +13,22 @@
       <%= link_to edit_survey_data_row_path(grid.survey, record), class: 'btn btn-sm btn-dark' do %>
         <%= icon 'fas', 'pencil' %>
       <% end %>
+      <button
+        type="button"
+        class="btn btn-sm btn-danger"
+        hx-delete="<%= survey_data_row_path(grid.survey, record) %>"
+        hx-target="#data-grid-rows"
+        hx-confirm="Are you sure you want to delete this row?"
+      >
+        <%= icon 'fas', 'trash' %>
+      </button>
     </td>
   </tr>
 <% end %>
 
 <% if grid.show_load_more? %>
-  <tr id="the-end"
+  <tr
+    id="the-end"
     hx-get="<%= survey_data_rows_path(grid.survey, page: grid.pager.next) %>"
     hx-trigger="revealed"
     hx-swap="outerHTML"

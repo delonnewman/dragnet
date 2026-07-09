@@ -44,6 +44,7 @@ module Dragnet
       ahoy_visits.of_visitor(visitor_token).first&.reply
     end
 
+    # FIXME: this probably should go
     # To satisfy the Reportable protocol, along with #questions above
     has_many :records, -> { where(submitted: true) }, class_name: 'Dragnet::Reply', dependent: :restrict_with_error, inverse_of: :survey
 

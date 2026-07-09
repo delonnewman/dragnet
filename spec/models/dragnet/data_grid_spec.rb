@@ -6,14 +6,14 @@ RSpec.describe Dragnet::DataGrid do
 
   describe '.find_or_create!' do
     it "creates a new grid if one doesn't already exist" do
-      grid = described_class.find_or_create!(survey, author:)
+      grid = described_class.find_or_create!(survey.id, author_id: author.id)
 
       expect(grid).to be_previously_new_record
     end
 
     it 'loads the existing grid if one has already been created' do
       described_class.create!(author:, survey:)
-      grid = described_class.find_or_create!(survey, author:)
+      grid = described_class.find_or_create!(survey.id, author_id: author.id)
 
       expect(grid).to be_persisted
     end

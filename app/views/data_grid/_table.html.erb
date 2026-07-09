@@ -13,6 +13,12 @@
               <%= date_field_tag :created_at, params[:created_at], class: 'form-control' %>
             </div>
           </th>
+          <th>
+            <div class="d-flex justify-content-start align-items-center">
+              <%= column_sort_link(grid, :user_id, label: icon('fas', 'user'), alt_label: 'Created By') %>
+              <%= text_field_tag :user_id, params[:user_id], class: 'form-control' %>
+            </div>
+          </th>
           <% grid.questions.each do |question| %>
             <th data-question-id="<%= question.id %>">
               <div class="d-flex justify-content-start align-items-center">
@@ -21,9 +27,10 @@
               </div>
             </th>
           <% end %>
+          <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="data-grid-rows">
         <%= render 'data_grid/rows', grid: grid %>
       </tbody>
     </table>

@@ -1,12 +1,12 @@
 class SurveyEditor::QuestionsController < SurveyEditorController
   def create
-    Dragnet::SurveyEdit.new_question(survey)
+    survey.edits.new_question
 
     render :questions, locals: { editor: }
   end
 
   def update
-    Dragnet::SurveyEdit.update_question(survey, question.id, question_params)
+    survey.edits.update_question(question.id, question_params)
 
     render :question, locals: { editor:, question: }
   end
@@ -17,7 +17,7 @@ class SurveyEditor::QuestionsController < SurveyEditorController
       id = question.id.to_s
       survey.edits.where("details->>'id' = ? or details->>'question_id' = ?", id, id).delete_all
     else
-      Dragnet::SurveyEdit.remove_question(survey, question.id)
+      survey.edits.remove_question(question)
     end
 
     render :questions, locals: { editor: }

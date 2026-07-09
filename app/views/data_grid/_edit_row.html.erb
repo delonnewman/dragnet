@@ -1,5 +1,10 @@
 <tr id="<%= dom_id record %>">
-  <td></td>
+  <td class="text-nowrap text-muted align-middle">
+    <%= fmt_datetime record.created_at %>
+  </td>
+  <td class="text-nowrap text-muted align-middle">
+    <%= record.user&.name || '-' %>
+  </td>
   <% grid.questions.each do |question| %>
     <td>
       <%= hidden_field_tag field_name(:reply, :answers_attributes, question.id, :question_id), question.id %>
@@ -15,5 +20,8 @@
     <%= link_to survey_data_row_path(grid.survey, record), class: 'btn btn-sm btn-success disabled' do %>
       <%= icon 'fas', 'check' %>
     <% end %>
+    <button class="btn btn-sm btn-warning" type="button" hx-on:click="if (confirm('Are you sure you want to cancel your edits?')) document.getElementById('<%= dom_id record %>').classList.add('fade-out')">
+      <%= icon 'fas', 'times' %>
+    </button>
   </td>
 </tr>

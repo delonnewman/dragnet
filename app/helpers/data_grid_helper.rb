@@ -37,10 +37,6 @@ module DataGridHelper
     end
   end
 
-  def data_grid_params
-    params.permit(:sort_by, :sort_direction, filter_by: {}).to_h
-  end
-
   # Render a filter control as HTML according to the question type.
   #
   # @param [Question] question

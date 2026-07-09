@@ -34,7 +34,7 @@
         <div>
           <div class="d-flex justify-content-end align-items-center">
             <%= edit_survey_link(survey, include_label: true) %>
-            <%= survey_share_dropdown(survey) %>
+            <%= survey_share_dropdown(survey, align_menu_end: true) %>
           </div>
           <div class="mt-2 d-flex justify-content-end align-items-center">
             <%= sparklines listing.reply_counts_for(survey) %>

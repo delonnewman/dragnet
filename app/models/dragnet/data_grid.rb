@@ -22,12 +22,12 @@ module Dragnet
 
     scope :whole, -> { eager_load(survey: %i[author], questions: %i[question_options]) }
 
-    def self.find_or_create!(survey, author: survey.author)
-      grid = find_by(author_id: author.id, survey_id: survey.id)
+    def self.find_or_create!(survey_id, author_id:)
+      grid = find_by(author_id:, survey_id:)
       return grid if grid
 
       # TODO: create default question_aliases
-      create!(author:, survey:)
+      create!(author_id:, survey_id:)
     end
 
     def query(params)

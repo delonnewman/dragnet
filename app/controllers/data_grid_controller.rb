@@ -5,6 +5,8 @@ class DataGridController < ApplicationController
 
   layout 'survey'
 
+  helper_method :data_grid_params
+
   def show
     respond_to do |format|
       format.html { render :show, locals: { grid: } }
@@ -28,15 +30,23 @@ class DataGridController < ApplicationController
   end
 
   def export_name(survey)
-    "#{survey.slug}-#{Dragnet::Utils.slug(Time.zone.now)}.#{params[:format]}"
+    "#{survey.slug}-#{Dragnet::Utils.slug(Time.zone.now)}.#{data_grid_params[:format]}"
   end
 
   def grid
-    Dragnet::DataGrid.find_or_create!(survey, author: current_user).present(with: data_grid_params)
+    params    = data_grid_params
+    survey_id = params[:survey_id]
+    author_id = current_user.id
+    current_user.data_grids.includes(
+      :author,
+      questions: %i[question_options],
+      replies: { answers: %i[question] }
+    ).find_or_create_by!(survey_id:, author_id:).present(with: params)
   end
 
+  # TODO: may not be using this
   def survey
-    @survey ||= Dragnet::Survey.whole.find(params[:survey_id])
+    @survey ||= Dragnet::Survey.whole.find(data_grid_params[:survey_id])
   end
 
   def data_grid_params
