@@ -25,7 +25,7 @@ module Dragnet
       }
     end
 
-    ANSWER_ATTRIBUTES = %i[question_id question_type_id reply_id survey_id type value].freeze
+    ANSWER_ATTRIBUTES = %i[id question_id question_type_id reply_id survey_id type value].freeze
 
     def reply_attributes
       answers_attributes = survey.questions.reduce({}) do |attributes, question|
