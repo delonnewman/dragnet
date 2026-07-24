@@ -23,6 +23,7 @@ module Dragnet
       @reply.update_attribute(:cached_answers_data, pull_data)
       @setting = false
     end
+    alias reset! set!
 
     def should_set?
       @reply.submitted? && !set? && !@setting

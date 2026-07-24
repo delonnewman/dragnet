@@ -18,7 +18,7 @@ class DataGrid::RowsController < DataGridController
   def update
     record = survey.replies.find(params[:id])
     record.update!(reply_params)
-    record.answers_cache.set!
+    record.answers_cache.reset!
 
     render partial: 'data_grid/rows', locals: { grid: }
   end
