@@ -30,13 +30,13 @@ class DataGridController < ApplicationController
   end
 
   def export_name(survey)
-    "#{survey.slug}-#{Dragnet::Utils.slug(Time.zone.now)}.#{data_grid_params[:format]}"
+    "#{survey.slug}-#{Dragnet::Utils.slug(Time.zone.now)}.#{params[:format]}"
   end
 
   def grid
-    params    = data_grid_params
     survey_id = params[:survey_id]
     author_id = current_user.id
+
     current_user.data_grids.includes(
       :author,
       questions: %i[question_options],
@@ -46,7 +46,7 @@ class DataGridController < ApplicationController
 
   # TODO: may not be using this
   def survey
-    @survey ||= Dragnet::Survey.whole.find(data_grid_params[:survey_id])
+    @survey ||= Dragnet::Survey.whole.find(params[:survey_id])
   end
 
   def data_grid_params
