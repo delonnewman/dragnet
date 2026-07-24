@@ -49,6 +49,7 @@ class DataGridController < ApplicationController
     @survey ||= Dragnet::Survey.whole.find(params[:survey_id])
   end
 
+  # TODO: we may not need this
   def data_grid_params
     params.permit(
       :format,
