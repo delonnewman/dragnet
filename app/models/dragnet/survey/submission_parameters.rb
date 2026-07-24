@@ -32,7 +32,7 @@ module Dragnet
         attributes.merge!(question.id => ANSWER_ATTRIBUTES)
       end
 
-      [{ answers_attributes: }]
+      { answers_attributes: }
     end
   end
 end

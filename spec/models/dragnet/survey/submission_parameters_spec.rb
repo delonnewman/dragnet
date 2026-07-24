@@ -55,8 +55,8 @@ describe Dragnet::Survey::SubmissionParameters do
   end
 
   it 'provides reply attributes for restricting parameter reply parameters' do
-    keys = parameters.reply_attributes.last[:answers_attributes].keys.sort
-    a_value = parameters.reply_attributes.last[:answers_attributes].values.first
+    keys = parameters.reply_attributes[:answers_attributes].keys.sort
+    a_value = parameters.reply_attributes[:answers_attributes].values.first
 
     expect(keys).to eq(survey.question_ids.sort)
     expect(a_value).to include(:survey_id, :question_id, :reply_id, :value)
