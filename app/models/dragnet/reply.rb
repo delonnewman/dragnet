@@ -3,7 +3,7 @@
 module Dragnet
   class Reply < ApplicationRecord
     include Retractable
-    
+
     belongs_to :survey, class_name: 'Dragnet::Survey'
     has_many :questions, class_name: 'Dragnet::Question', through: :survey
 
