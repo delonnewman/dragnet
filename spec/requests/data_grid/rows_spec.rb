@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe 'DataGrid::Rows', type: :request do
+  let(:reply) do
+    survey.replies.create!(
+      user:,
+      answers_attributes: [{ question_id: question.id, survey_id: survey.id, value: 'this is a test' }]
+    )
+  end
+
   let(:user)     { Dragnet::User.generate! }
   let(:survey)   { Dragnet::Survey[author: user, questions: { count: 1, type_class: Dragnet::Types::Text }].generate! }
-  let(:reply)    { survey.replies.create!(user:) }
   let(:question) { survey.questions.first }
 
   before { sign_in user }
@@ -19,10 +25,12 @@ RSpec.describe 'DataGrid::Rows', type: :request do
   describe 'PATCH /surveys/:survey_id/data/rows/:id' do
     let(:new_value) { 'updated answer text' }
     let(:update_params) do
+      answer = reply.answers.find_by(question_id: question.id)
       {
         reply: {
           answers_attributes: {
             question.id => {
+              id: answer.id,
               question_id: question.id,
               value:       new_value,
             },

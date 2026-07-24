@@ -1,5 +1,5 @@
 <% grid.records.each do |record| %>
-  <tr>
+  <tr id="<%= dom_id record %>">
     <td class="text-nowrap text-muted align-middle">
       <%= fmt_datetime record.created_at %>
     </td>
@@ -10,7 +10,11 @@
       <td><%= answers_text record, question %></td>
     <% end %>
     <td>
-      <%= link_to edit_survey_data_row_path(grid.survey, record), class: 'btn btn-sm btn-dark' do %>
+      <%= link_to edit_survey_data_row_path(grid.survey, record),
+            class: 'btn btn-sm btn-dark',
+            'hx-get': edit_survey_data_row_path(grid.survey, record),
+            'hx-target': "##{dom_id record}",
+            'hx-swap': 'outerHTML' do %>
         <%= icon 'fas', 'pencil' %>
       <% end %>
       <button
