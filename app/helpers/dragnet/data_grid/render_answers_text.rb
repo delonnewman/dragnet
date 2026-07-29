@@ -9,31 +9,29 @@ module Dragnet
     def boolean
       return alt_text if answers.blank?
 
-      answers.map do |answer|
-        case answer.value
-        when true
-          'Yes'
-        when false
-          'No'
-        else
-          alt_text
-        end
-      end.join(', ')
+      value = answers.first.value
+      case value
+      when true
+        'Yes'
+      when false
+        'No'
+      else
+        alt_text
+      end
     end
 
     def temporal
       return alt_text if answers.blank?
 
+      value = answers.first.value
       tag.div(class: 'text-nowrap text-end') do
-        answers.map do |answer|
-          if question.settings.include_date_and_time?
-            context.format_datetime(answer.value)
-          elsif question.settings.include_time?
-            context.format_time(answer.value)
-          else
-            context.format_date(answer.value)
-          end
-        end.join(', ')
+        if question.settings.include_date_and_time?
+          context.format_datetime(value)
+        elsif question.settings.include_time?
+          context.format_time(value)
+        else
+          context.format_date(value)
+        end
       end
     end
 
@@ -43,7 +41,7 @@ module Dragnet
 
       tag.div(class: classes) do
         if answers.present?
-          answers.join(', ')
+          answers.first.text_value
         else
           alt_text
         end

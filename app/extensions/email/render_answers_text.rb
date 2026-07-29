@@ -6,9 +6,8 @@ module Dragnet
           if answers.blank?
             alt_text
           else
-            answers.each do |answer|
-              context.concat tag.a(href: "mailto:#{answer.text_value}") { answer.text_value }
-            end
+            value = answers.first.text_value
+            tag.a(href: "mailto:#{value}") { value }
           end
         end
       end # email

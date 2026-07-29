@@ -3,12 +3,11 @@ module Dragnet
     class Phone::RenderAnswersText < DataGrid::RenderAnswersText
       def phone
         tag.div(class: 'text-nowrap') do
-          if answers.present?
-            answers.each do |answer|
-              context.concat tag.a(href: "tel:#{answer.text_value}") { answer.text_value }
-            end
-          else
+          if answers.blank?
             alt_text
+          else
+            value = answers.first.text_value
+            tag.a(href: "tel:#{value}") { value }
           end
         end
       end # phone
