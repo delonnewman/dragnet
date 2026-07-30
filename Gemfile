@@ -64,6 +64,7 @@ gem 'rails-pattern_matching'
 # Data
 gem 'faker'
 gem 'sentimental'
+gem 'geocoder'
 
 
 # TODO: Move to Dart Sass

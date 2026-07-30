@@ -49,6 +49,10 @@ TypeRegistration.create!(
       slug: 'phone',
       type_class_name: 'Dragnet::Ext::Phone',
       meta: { fa_icon_class: 'fa-regular fa-envelope' } },
+    { name: 'Address',
+      slug: 'address',
+      type_class_name: 'Dragnet::Ext::Address',
+      meta: { fa_icon_class: 'fa-regular fa-map-pin' } },
   ]
 ) if TypeRegistration.none?
 
@@ -70,7 +74,7 @@ unless Rails.env.test?
       { text: 'Name',     type_class: Dragnet::Types::Text, required: true },
       { text: 'Email',    type_class: Dragnet::Ext::Email, required: true },
       { text: 'Phone',    type_class: Dragnet::Ext::Phone },
-      { text: 'Address',  type_class: Dragnet::Types::Text },
+      { text: 'Address',  type_class: Dragnet::Ext::Address },
       { text: 'Comments', type_class: Dragnet::Types::LongText, meta: { countable: true } },
     ]
   ) unless Survey.exists?(name: 'Contact Information')
