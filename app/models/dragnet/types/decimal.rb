@@ -8,7 +8,7 @@ module Dragnet
         when Float, Rational
           value
         else
-          raise "Don't know how to decode #{value.inspect} to #{symbol}"
+          raise Type::EncodingError, "Don't know how to decode #{value.inspect} to #{symbol}"
         end
       end
     end

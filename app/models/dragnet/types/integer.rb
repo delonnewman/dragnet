@@ -11,7 +11,7 @@ module Dragnet
           result = Integer.try_convert(value)
           return result if result
 
-          raise "Don't know how to decode #{value.inspect} to integer"
+          raise Type::EncodingError, "Don't know how to decode #{value.inspect} to integer"
         end
       end
     end

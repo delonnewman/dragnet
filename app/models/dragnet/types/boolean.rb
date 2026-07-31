@@ -11,7 +11,7 @@ module Dragnet
         in false, 'false', '0', 0, 'no'
           false
         else
-          raise "Don't know how to decode #{value.inspect} into a boolean"
+          raise Type::EncodingError, "Don't know how to decode #{value.inspect} into a boolean"
         end
       end
     end
