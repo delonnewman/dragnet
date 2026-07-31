@@ -5,7 +5,13 @@ module Dragnet
       @value_type
     end
 
-    delegate :value_type, to: 'self.class'
+    def self.input_type(type = nil)
+      @input_type = type if type
+      @input_type
+    end
+
+    attribute :label
+    delegate :value_type, :input_type, to: 'self.class'
 
     def initialize(**attributes)
       super(**attributes)
@@ -22,6 +28,19 @@ module Dragnet
       return super unless value_type
 
       value_type.decode(params[name])
+    end
+
+    def html
+      <<~HTML.squish!
+        <input
+          type="#{input_type}"
+          class="form-control"
+          id="#{id}"
+          name="#{name}
+          value="#{value}"
+          placeholder="#{label}"
+          aria-label="#{label}">
+      HTML
     end
   end
 end

@@ -1,7 +1,6 @@
 module Dragnet
   module Formlets
     class RadioInput < InputFormlet
-      attribute :label
       attribute :checked
 
       def html

@@ -37,6 +37,10 @@ module Dragnet
       @name = attributes.fetch(:name, @id)
     end
 
+    def html
+      raise NoMethodError
+    end
+
     def render_in(_context)
       html
     end

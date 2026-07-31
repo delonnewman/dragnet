@@ -4,7 +4,6 @@ module Dragnet
   module Formlets
     class BooleanInput < InputFormlet
       value_type Types::Boolean
-      attribute :label
 
       def html
         <<~HTML.squish!
