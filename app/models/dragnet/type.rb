@@ -5,6 +5,10 @@ module Dragnet
         value.to_s
       end
 
+      def decode(_value)
+        raise NoMethodError
+      end
+
       def slug
         name.demodulize.underscore
       end
@@ -89,7 +93,7 @@ module Dragnet
 
     attr_reader :question
     delegate :meta, :meta=, to: :question
-    delegate :tags, :slug, :symbol, to: 'self.class'
+    delegate :tags, :slug, :symbol, :decode, :encode, to: 'self.class'
 
     def initialize(question)
       @question = question
