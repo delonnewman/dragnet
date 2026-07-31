@@ -48,6 +48,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Rails.application.load_seed # loading seeds
+    Geocoder.configure(lookup: :test, ip_lookup: :test)
   end
 
   config.include Devise::Test::IntegrationHelpers, type: :request
