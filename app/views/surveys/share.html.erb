@@ -77,7 +77,7 @@
         </div>
         <div class="mb-3">
           <label for="share-email-message" class="form-label">Message</label>
-          <textarea name="body" class="form-control" id="share-email-message" rows="3">Please fill out this survey for me! <%= reply_to_url(survey.short_id, survey.slug) %></textarea>
+          <textarea name="body" class="form-control" id="share-email-message" rows="3">Please fill out this <%= survey.kind_name %> for me! <%= reply_to_url(survey.short_id, survey.slug) %></textarea>
         </div>
 
         <button type="submit" class="btn btn-dark">Send</button>
