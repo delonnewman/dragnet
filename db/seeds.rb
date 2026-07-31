@@ -66,7 +66,7 @@ unless Rails.env.test?
     admin: true
   ).tap { |user| user.skip_confirmation!; user.save! }
 
-  Survey.create!(
+  Form.create!(
     name: 'Contact Information',
     author: user,
     public: true,
