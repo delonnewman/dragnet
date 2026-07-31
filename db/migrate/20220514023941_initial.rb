@@ -17,6 +17,7 @@ class Initial < ActiveRecord::Migration[7.0]
     create_table :surveys, id: :uuid do |t|
       t.string :name, null: false, index: true
       t.string :slug, null: false, index: true
+      t.string :type, null: false, index: true, default: 'Dragnet::Survey'
       t.string :description
 
       t.uuid :author_id, null: false, index: true

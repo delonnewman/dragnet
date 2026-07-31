@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "ahoy_events", force: :cascade do |t|
@@ -209,6 +208,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
   create_table "surveys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
+    t.string "type", default: "Dragnet::Survey", null: false
     t.string "description"
     t.uuid "author_id", null: false
     t.uuid "copy_of_id"
@@ -235,6 +235,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_07_07_221532) do
     t.index ["retracted"], name: "index_surveys_on_retracted"
     t.index ["retracted_at"], name: "index_surveys_on_retracted_at"
     t.index ["slug"], name: "index_surveys_on_slug"
+    t.index ["type"], name: "index_surveys_on_type"
     t.index ["updated_at"], name: "index_surveys_on_updated_at"
   end
 
