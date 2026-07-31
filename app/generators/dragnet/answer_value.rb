@@ -34,6 +34,8 @@ class Dragnet::AnswerValue < Dragnet::ParameterizedGenerator
       Email[].generate
     when :phone
       Phone.generate
+    when :address
+      Address[].generate
     else
       raise "Don't know how to generate an answer for #{type}"
     end
