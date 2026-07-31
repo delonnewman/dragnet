@@ -26,6 +26,10 @@ module Dragnet
         super(obj)
         @params = params
       end
+
+      def presented_class
+        __getobj__.class
+      end
     end
   end
 end

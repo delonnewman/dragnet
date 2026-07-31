@@ -41,4 +41,8 @@ class Dragnet::SurveyPresenter < Dragnet::View::Presenter
     StatsReport.new(survey)
   end
   memoize :stats_report
+
+  def kind_name
+    presented_class.model_name.human.downcase
+  end
 end

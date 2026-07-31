@@ -2,10 +2,10 @@
   <%= icon 'far', 'paper-plane', class: 'h1 text-muted' %>
 </p>
 <p class="mx-auto text-center lead mb-0" style="max-width: 500px">
-  Awesome! You've created a new survey.
+  Awesome! You've created a new <%= survey.kind_name %>.
 </p>
 <p class="mx-auto" style="max-width: 500px">
-  Now you can send out a link to your survey.
-  <%= link_to 'Click here', share_survey_path(survey) %> or select the "Share" tab above.
-  Comeback here once you've gotten some replies to see your data.
+  Now you can send out a link.
+  <%= link_to 'Click here', share_survey_path(survey) %> or select "Share".
+  Comeback here to see your data.
 </p>
