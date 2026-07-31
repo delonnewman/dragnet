@@ -21,15 +21,21 @@
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to survey_path(survey), class: "nav-link #{'active' if selected == :summary}" do %>
-      <% if selected == :summary %><%= icon 'fas', 'gauge' %><% end %>
-      Summary
+    <%= link_to edit_survey_path(survey), class: "nav-link #{'active' if selected == :edit}" do %>
+      <% if selected == :edit %><%= icon 'fas', 'pencil' %><% end %>
+      Edit
     <% end %>
   </li>
   <li class="nav-item">
-    <%= link_to survey_data_path(survey), class: "nav-link #{'active' if selected == :data}" do %>
-      <% if selected == :data %><%= icon 'fas', 'table' %><% end %>
-      Records
+    <%= link_to share_survey_path(survey), class: "nav-link #{'active' if selected == :share}" do %>
+      <% if selected == :share %><%= icon 'fas', 'paper-plane' %><% end %>
+      Share
+    <% end %>
+  </li>
+  <li class="nav-item">
+    <%= link_to survey_settings_path(survey), class: "nav-link #{'active' if selected == :settings}" do %>
+      <% if selected == :settings %><%= icon 'fas', 'gear' %><% end %>
+      Settings
     <% end %>
   </li>
 </ul>
