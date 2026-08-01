@@ -34,8 +34,8 @@ Dragnet::Generator.include(Dragnet::Generators)
 Dragnet::ParameterizedGenerator.include(Dragnet::Generators)
 
 # View Layer
-require_relative 'dragnet/view/presenter'
-require_relative 'dragnet/view/paged_presenter'
+require_relative 'dragnet/presenter'
+require_relative 'dragnet/paged_presenter'
 
 module Dragnet
   EMPTY_HASH   = {}.freeze
