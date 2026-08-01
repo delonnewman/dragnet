@@ -44,7 +44,7 @@ with ReplySubmissionPolicy, delegating: %i[can_submit_reply? can_preview?]
 The composed object is accessible as a method named after the class (snake_cased). This is how cross-cutting behaviour (policies, caches, submission logic) is kept out of model classes.
 
 ### Presenter pattern
-Models include `Dragnet::Presentable`. `model.present` returns `#{ClassName}Presenter.new(model)` (resolved by convention). Presenters inherit `Dragnet::View::Presenter` or `Dragnet::View::PagedPresenter` and declare `presents SomeClass, as: :name`.
+Models include `Dragnet::Presentable`. `model.present` returns `#{ClassName}Presenter.new(model)` (resolved by convention). Presenters inherit `Dragnet::Presenter` or `Dragnet::PagedPresenter` and declare `presents SomeClass, as: :name`.
 
 ---
 

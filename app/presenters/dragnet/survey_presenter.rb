@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::SurveyPresenter < Dragnet::View::Presenter
+class Dragnet::SurveyPresenter < Dragnet::Presenter
   include Dragnet::Memoizable
 
   presents Survey, as: :survey

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Presents surveys for the data grid
-class Dragnet::DataGridPresenter < Dragnet::View::PagedPresenter
+class Dragnet::DataGridPresenter < Dragnet::PagedPresenter
   presents DataGrid, as: :grid
   default_items 20
 

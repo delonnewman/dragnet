@@ -82,7 +82,7 @@ The composed object is exposed as a method named after the class in snake case. 
 
 Models include `Dragnet::Presentable`. Calling `model.present` returns `#{ClassName}Presenter.new(model)` by convention.
 
-Presenters inherit from `Dragnet::View::Presenter` or `Dragnet::View::PagedPresenter` and declare what they present, for example:
+Presenters inherit from `Dragnet::Presenter` or `Dragnet::PagedPresenter` and declare what they present, for example:
 
 ```ruby
 presents SomeClass, as: :name

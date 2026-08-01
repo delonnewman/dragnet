@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::OverviewPresenter < Dragnet::View::Presenter
+class Dragnet::OverviewPresenter < Dragnet::Presenter
   presents Workspace, as: :space
 
   delegate :replies_by_date, to: :space

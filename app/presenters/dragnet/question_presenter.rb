@@ -1,5 +1,5 @@
 module Dragnet
-  class QuestionPresenter < View::Presenter
+  class QuestionPresenter < Presenter
     presents Question, as: :question
 
     def field_name

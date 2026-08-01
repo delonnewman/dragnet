@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::QuestionTypesPresenter < Dragnet::View::Presenter
+class Dragnet::QuestionTypesPresenter < Dragnet::Presenter
   presents as: :registrations
 
   def question_types_mapping

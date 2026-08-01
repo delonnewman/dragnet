@@ -1,4 +1,4 @@
-class Dragnet::ReplyFormPresenter < Dragnet::View::Presenter
+class Dragnet::ReplyFormPresenter < Dragnet::Presenter
   include Rails.application.routes.url_helpers
 
   presents Reply, as: :reply

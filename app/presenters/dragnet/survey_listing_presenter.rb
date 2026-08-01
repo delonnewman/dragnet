@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dragnet::SurveyListingPresenter < Dragnet::View::PagedPresenter
+class Dragnet::SurveyListingPresenter < Dragnet::PagedPresenter
   presents Workspace, as: :space
   default_items 7
 

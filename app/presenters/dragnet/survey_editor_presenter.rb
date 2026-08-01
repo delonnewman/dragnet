@@ -1,4 +1,4 @@
-class Dragnet::SurveyEditorPresenter < Dragnet::View::Presenter
+class Dragnet::SurveyEditorPresenter < Dragnet::Presenter
   presents Survey, as: :survey
 
   delegate :edited?, to: :survey, prefix: :survey
