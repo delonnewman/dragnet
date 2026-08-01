@@ -19,6 +19,10 @@ module Dragnet
     has_many :questions, -> { order(:display_order) }, class_name: 'Dragnet::Question', dependent: :delete_all, inverse_of: :survey
     accepts_nested_attributes_for :questions, allow_destroy: true
 
+    def types
+      questions.map { it.type.class }
+    end
+
     # Treat surveys as whole values
     scope :whole, -> { eager_load(:author, questions: %i[question_options]) }
 

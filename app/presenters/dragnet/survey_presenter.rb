@@ -5,6 +5,11 @@ class Dragnet::SurveyPresenter < Dragnet::Presenter
 
   presents Survey, as: :survey
 
+  def views
+    Dragnet::Survey::Views.present(survey)
+  end
+  memoize :views
+
   def not_ready_for_replies?
     survey.questions.empty?
   end
