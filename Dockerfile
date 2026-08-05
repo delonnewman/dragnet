@@ -5,6 +5,10 @@ ARG RUBY_VERSION="3.4.9"
 ARG TARGETPLATFORM=linux/amd64
 FROM ruby:$RUBY_VERSION-slim AS base
 
+LABEL org.opencontainers.image.description="A programable system for data collection and analysis."
+LABEL org.opencontainers.image.source="https://github.com/delonnewman/dragnet"
+LABEL org.opencontainers.image.licenses=GPL2
+
 ARG BUNDLE_WITHOUT="development:test"
 ARG RAILS_ENV="production"
 ENV DEBIAN_FRONTEND=noninteractive \
