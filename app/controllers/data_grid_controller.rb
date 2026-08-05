@@ -12,7 +12,6 @@ class DataGridController < ApplicationController
       format.html { render :show, locals: { grid: } }
       format.csv  { render_file :show, locals: { grid: } }
       format.xlsx { render_file :show, locals: { grid: } }
-      format.transit { render transit: grid.to_h }
       format.json { render :show, locals: { grid: } }
     end
   end
