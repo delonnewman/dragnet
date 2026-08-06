@@ -6,7 +6,7 @@ Guidance for AI coding agents working in this repository.
 
 Dragnet is a Rails 7.2 survey-builder and form-submission application using Ruby 3.4.9 and PostgreSQL.
 
-Most UI is Rails views with Bootstrap 5 and helper-driven markup. Domain code is organized under the `Dragnet::` namespace and favors small service objects, presenters, concerns, and explicit composition over large model/controller classes.
+Most UI is Rails views with Bootstrap 5, HTMX, and helper-driven markup. Domain code is organized under the `Dragnet::` namespace and favors small service objects, presenters, concerns, and explicit composition over large model/controller classes.
 
 ## Setup And Common Commands
 
@@ -24,6 +24,7 @@ bundle exec rubocop
 bundle exec brakeman -q -w2
 bundle exec rake bundle:audit:update bundle:audit:check
 bin/rails server
+bin/dev             # also starts the component watcher via Procfile.dev
 ```
 
 Notes:
@@ -55,7 +56,10 @@ Dragnet::Type
   Basic
     Countable
       Number
+        Integer
+        Decimal
       Text
+        LongText
       Choice
   Temporal
     Date
@@ -64,7 +68,7 @@ Dragnet::Type
   Boolean
 ```
 
-Custom extension types live in `app/extensions/`, for example `Dragnet::Ext::Address`.
+Custom extension types live in `app/extensions/`: `Dragnet::Ext::Address`, `Dragnet::Ext::Email`, `Dragnet::Ext::Phone`, and `Dragnet::Ext::Link`.
 
 Types declare service objects with `perform :action_name, class_name: '...'` and can opt out with `ignore :action_name`.
 
@@ -77,6 +81,8 @@ with ReplySubmissionPolicy, delegating: %i[can_submit_reply? can_preview?]
 ```
 
 The composed object is exposed as a method named after the class in snake case. Use this pattern for cross-cutting behavior such as policies, caches, and submission logic instead of adding too much behavior directly to Active Record models.
+
+Standalone policy objects should inherit from `Dragnet::Policy` (in `lib/dragnet/policy.rb`), which itself extends `Dragnet::Composed`.
 
 ### Presenters
 
@@ -95,7 +101,7 @@ presents SomeClass, as: :name
 - `ApplicationRecord` uses `Dragnet::Memoizable`; use `memoize :method_name`, not `memoize_all`.
 - Use the `Authenticated` concern for controllers that require login instead of inline authentication callbacks.
 - Use `Retractable` for soft-delete behavior and `retract_associated :association_name` for cascades.
-- Reuse shared RSpec examples from `spec/support/`, including retractable and resumable examples where applicable.
+- Reuse shared RSpec examples from `spec/support/`, including `retractable`, `resumable`, `'an abstract class'`, and `'an action'` examples where applicable.
 - Multi-line arrays and hashes should include trailing commas.
 - RuboCop allows either nested or compact module/class syntax because `Style/ClassAndModuleChildren` is disabled.
 - Keep changes small and cohesive. Prefer explicit dependencies and single-responsibility objects.

@@ -1,6 +1,6 @@
 # Dragnet – Copilot Instructions
 
-Dragnet is a Rails 7.2 survey-builder and form-submission app (Ruby 3.4.1, PostgreSQL).
+Dragnet is a Rails 7.2 survey-builder and form-submission app (Ruby 3.4.9, PostgreSQL).
 
 ## Build, Test & Lint
 
@@ -15,7 +15,7 @@ bundle exec rake bundle:audit:update bundle:audit:check  # dependency audit
 
 ### Dev server
 ```bash
-bin/rails server   # or use Procfile.dev which also starts the components watcher
+bin/rails server   # or use bin/dev which also starts the component watcher via Procfile.dev
 ```
 
 ---
@@ -32,7 +32,7 @@ bin/rails server   # or use Procfile.dev which also starts the components watche
 - `Answer` value behaviour is delegated to the question's type.
 
 ### Question type hierarchy
-`Dragnet::Type` → `Basic` → `Countable` → `Number`, `Text`, `Choice`; `Temporal` → `Date`, `Time`, `DateAndTime`; `Boolean`. Custom extension types live in `app/extensions/` (e.g. `Dragnet::Ext::Address`).
+`Dragnet::Type` → `Basic` → `Countable` → `Number` (`Integer`, `Decimal`), `Text` (`LongText`), `Choice`; `Temporal` → `Date`, `Time`, `DateAndTime`; `Boolean`. Custom extension types live in `app/extensions/`: `Dragnet::Ext::Address`, `Dragnet::Ext::Email`, `Dragnet::Ext::Phone`, `Dragnet::Ext::Link`.
 
 Types declare their service objects via `perform :action_name, class_name: '...'` and can opt out with `ignore :action_name`.
 
@@ -41,7 +41,7 @@ Types declare their service objects via `perform :action_name, class_name: '...'
 ```ruby
 with ReplySubmissionPolicy, delegating: %i[can_submit_reply? can_preview?]
 ```
-The composed object is accessible as a method named after the class (snake_cased). This is how cross-cutting behaviour (policies, caches, submission logic) is kept out of model classes.
+The composed object is accessible as a method named after the class (snake_cased). This is how cross-cutting behaviour (policies, caches, submission logic) is kept out of model classes. Standalone policy objects should inherit from `Dragnet::Policy` (`lib/dragnet/policy.rb`), which extends `Dragnet::Composed`.
 
 ### Presenter pattern
 Models include `Dragnet::Presentable`. `model.present` returns `#{ClassName}Presenter.new(model)` (resolved by convention). Presenters inherit `Dragnet::Presenter` or `Dragnet::PagedPresenter` and declare `presents SomeClass, as: :name`.
@@ -55,7 +55,7 @@ Models include `Dragnet::Presentable`. `model.present` returns `#{ClassName}Pres
 - `ApplicationRecord` uses `Dragnet::Memoizable` — call `memoize :method_name` (not `memoize_all`).
 - Use `Authenticated` concern (not inline `before_action`) in controllers that require login.
 - `Retractable` provides soft-delete; call `retract_associated :assoc` to cascade.
-- Shared RSpec examples live in `spec/support/`; reuse `retractable_shared_examples`, `resumable_shared_examples`, etc.
+- Shared RSpec examples live in `spec/support/`; reuse `retractable_shared_examples`, `resumable_shared_examples`, `'an abstract class'`, and `'an action'` where applicable.
 - Trailing commas on multi-line arrays and hashes are enforced by RuboCop.
 - `Style/ClassAndModuleChildren` is disabled – nested vs. compact module syntax is allowed.
 - The `.rspec` file sets `--format documentation`, so specs print full descriptions by default.
