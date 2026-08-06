@@ -51,3 +51,4 @@ app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 /app/frontends/.calva/
 /app/components/bun.lockb
 /.agent-shell/
+/coverage/
