@@ -92,6 +92,8 @@ GEM
       minitest (>= 5.1, < 6)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     aes_key_wrap (1.1.0)
     ahoy_matey (5.3.0)
       activesupport (>= 7)
@@ -317,12 +319,20 @@ GEM
       google-protobuf (>= 3.25.3)
     pghero (3.8.0)
       activerecord (>= 7.2)
+    phlex (2.4.1)
+      refract (~> 1.0)
+      zeitwerk (~> 2.7)
+    phlex-rails (2.4.0)
+      phlex (~> 2.4.0)
+      railties (>= 7.1, < 9)
+      zeitwerk (~> 2.7)
     popper_js (2.11.8)
     pp (0.6.4)
       prettyprint
     prettyprint (0.2.0)
     prism (1.9.0)
     pstore (0.2.0)
+    public_suffix (7.0.5)
     puma (8.0.2)
       nio4r (~> 2.0)
     racc (1.8.1)
@@ -400,6 +410,9 @@ GEM
       prism (>= 1.6.0)
       rbs (>= 4.0.0)
       tsort
+    refract (1.1.0)
+      prism
+      zeitwerk
     regexp-examples (1.5.1)
     regexp_parser (2.10.0)
     reline (0.6.3)
@@ -534,6 +547,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-like
   activerecord-pull-alpha
+  addressable
   ahoy_matey
   bootstrap (~> 5.2.3)
   brakeman
@@ -568,6 +582,7 @@ DEPENDENCIES
   pg (~> 1.1)
   pg_query (>= 2)
   pghero
+  phlex-rails
   pstore
   puma
   rack-cors

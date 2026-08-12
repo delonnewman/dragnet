@@ -30,6 +30,7 @@ gem 'mapkick-rb'
 gem 'murmurhash3'
 gem 'rqrcode'
 gem 'shortuuid'
+gem 'addressable'
 
 gem 'pagy'
 
@@ -67,6 +68,7 @@ gem 'geocoder'
 
 # TODO: Move to Dart Sass
 gem 'sassc-rails'
+gem 'phlex-rails'
 
 gem 'el-toolkit', require: 'el/data_utils', github: 'delonnewman/el-toolkit'
 
