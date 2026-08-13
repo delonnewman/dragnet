@@ -1,5 +1,5 @@
-module Dragnet
-  class Views::TabbedView < View
+module Dragnet::Views
+  class TabbedView < Base
     def tab_name
       raise NoMethodError
     end

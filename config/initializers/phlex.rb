@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-module Views
+module Dragnet::Views
 end
 
-module Components
+module Dragnet::Components
   extend Phlex::Kit
 end
 
 Rails.autoloaders.main.push_dir(
-  Rails.root.join("app/views"), namespace: Views
+  Rails.root.join("app/views"), namespace: Dragnet::Views
 )
 
 Rails.autoloaders.main.push_dir(
-  Rails.root.join("app/components"), namespace: Components
+  Rails.root.join("app/components"), namespace: Dragnet::Components
 )
