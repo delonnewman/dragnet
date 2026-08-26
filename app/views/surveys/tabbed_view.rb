@@ -1,5 +1,7 @@
-module Dragnet::Views
-  class TabbedView < Base
+# frozen_string_literal: true
+
+module Dragnet::Views::Surveys
+  class TabbedView < Dragnet::Views::Base
     def tab_name
       raise NoMethodError
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dragnet::Views
   class Summary < TabbedView
     def tab_name
