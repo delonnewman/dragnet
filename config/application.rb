@@ -39,7 +39,5 @@ module Dragnet
     #   ActiveRecord::Base,
     #   ActiveSupport::HashWithIndifferentAccess,
     # ]
-
-    config.autoload_lib(ignore: %w[extensions])
   end
 end
