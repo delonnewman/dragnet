@@ -25,7 +25,10 @@ module Dragnet
 
     def self.update!(edit)
       return if edit.applied?
-      return edit.survey.update(editing_status: :unpublished) if edit.survey.edited.valid?(:application)
+
+      if edit.survey.edited.valid?(:application)
+        return edit.survey.update(editing_status: :unpublished)
+      end
 
       edit.survey.update(editing_status: :cannot_publish)
     end
