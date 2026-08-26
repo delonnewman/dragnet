@@ -15,5 +15,6 @@ Rails.autoloaders.main.push_dir(
 unless Rails.application.config.eager_load
   Rails.application.config.to_prepare do
     Rails.autoloaders.main.eager_load_dir("#{Rails.root}/app/types")
+    Rails.autoloaders.main.eager_load_dir("#{Rails.root}/app/extensions")
   end
 end
