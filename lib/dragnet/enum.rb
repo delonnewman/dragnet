@@ -10,6 +10,7 @@ module Dragnet
     end
 
     attr_reader :value, :key
+
     def initialize(value, key)
       @value = value
       @key = key
