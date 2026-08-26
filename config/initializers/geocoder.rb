@@ -3,7 +3,7 @@ Geocoder.configure(
   lookup: :google,
 
   # to use an API key:
-  api_key: "...",
+  api_key: Rails.application.credentials[:google_maps_api_key],
 
   # geocoding service request timeout, in seconds (default 3):
   timeout: 5,
@@ -11,4 +11,3 @@ Geocoder.configure(
   # set default units to kilometers:
   units: :km,
 )
-
