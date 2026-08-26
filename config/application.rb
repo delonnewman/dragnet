@@ -21,23 +21,5 @@ module Dragnet
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-
-    config.active_record.use_yaml_unsafe_load = true # FIXME: failing on symbol keys without this
-    # ActiveRecord
-    # config.active_record.yaml_column_permitted_classes = [
-    #   TrueClass,
-    #   FalseClass,
-    #   NilClass,
-    #   Integer,
-    #   Float,
-    #   String,
-    #   Symbol,
-    #   Array,
-    #   Hash,
-    #   Time,
-    #   DateTime,
-    #   ActiveRecord::Base,
-    #   ActiveSupport::HashWithIndifferentAccess,
-    # ]
   end
 end
