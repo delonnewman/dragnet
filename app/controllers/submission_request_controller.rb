@@ -49,7 +49,7 @@ class SubmissionRequestController < ApplicationController
   end
 
   def not_permitted?
-    !survey.can_submit_reply?(current_user)
+    !survey.reply_submission_policy.can_submit_reply?(current_user)
   end
 
   def revisit?
