@@ -65,6 +65,9 @@ class SubmissionRequestController < ApplicationController
   end
 
   def submission_params
-    survey.submission_data(reply, params.permit(*survey.submission_attributes))
+    survey.submission_parameters.submission_data(
+      reply,
+      params.permit(*survey.submission_parameters.submission_attributes)
+    )
   end
 end

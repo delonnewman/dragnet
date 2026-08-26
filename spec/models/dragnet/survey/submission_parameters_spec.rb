@@ -6,7 +6,7 @@ describe Dragnet::Survey::SubmissionParameters do
   let(:survey) { Dragnet::Survey.generate! }
 
   let(:reply) { Dragnet::Reply[survey:].generate! }
-  let(:params) { ActionController::Parameters.new(form_data).permit(*survey.submission_attributes) }
+  let(:params) { ActionController::Parameters.new(form_data).permit(*survey.submission_parameters.submission_attributes) }
 
   def form_data
     survey.questions.each_with_object({}) do |question, h|
