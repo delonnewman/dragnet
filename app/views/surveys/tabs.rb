@@ -34,7 +34,7 @@ module Dragnet::Views::Surveys
         li(class: 'nav-item') do
           a(href: survey_map_path(@survey), class: ['nav-link', ('active' if @selected == :map)]) do
             if @selected == :map
-              render Icon['fas', 'location-pin-alt']
+              render Icon['fas', 'location-dot']
               plain ' '
             end
             plain 'Map'
