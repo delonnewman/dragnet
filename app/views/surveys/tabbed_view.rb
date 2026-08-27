@@ -12,13 +12,14 @@ module Dragnet::Views::Surveys
 
     def self.types = nil
 
-    def initialize(survey:)
+    def initialize(survey:, selected: self.class.name.split('::').last.downcase.to_sym)
       @survey = survey
+      @selected = selected
     end
 
     def around_template
       render Navbar.new(survey: @survey)
-      render Tabs.new(selected: :map, survey: @survey)
+      render Tabs.new(selected: @selected, survey: @survey)
       super
     end
   end

@@ -8,7 +8,7 @@ class SurveysController < ApplicationController
   def show
     presenter = Dragnet::SurveyPresenter.new(whole_survey, params)
 
-    render :show, locals: { report: presenter.stats_report, survey: presenter }
+    render Dragnet::Views::Surveys::Summary.new(survey: presenter)
   end
 
   def create
