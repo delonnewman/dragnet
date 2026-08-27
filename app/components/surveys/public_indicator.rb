@@ -1,5 +1,5 @@
 module Dragnet::Components
-  class PublicIndicator < Base
+  class Surveys::PublicIndicator < Base
     EARTH_REGIONS = %w[americas europe asia oceania africa].freeze
 
     def initialize(survey:)
@@ -15,4 +15,3 @@ module Dragnet::Components
     end
   end
 end
-
