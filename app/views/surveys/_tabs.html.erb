@@ -14,22 +14,4 @@
     </div>
   </div>
 </div>
-<ul class="nav nav-tabs mb-3" hx-boost="true">
-  <li class="nav-item">
-    <%= link_to root_path, 'hx-boost': false, class: 'nav-link' do %>
-      <%= icon 'fas', 'arrow-left' %> Back to Workspace
-    <% end %>
-  </li>
-  <li class="nav-item">
-    <%= link_to survey_path(survey), class: "nav-link #{'active' if selected == :summary}" do %>
-      <% if selected == :summary %><%= icon 'fas', 'gauge' %><% end %>
-      Summary
-    <% end %>
-  </li>
-  <li class="nav-item">
-    <%= link_to survey_data_path(survey), class: "nav-link #{'active' if selected == :data}" do %>
-      <% if selected == :data %><%= icon 'fas', 'table' %><% end %>
-      Records
-    <% end %>
-  </li>
-</ul>
+<%= render Dragnet::Views::Surveys::Tabs.new(survey:, selected:) %>
