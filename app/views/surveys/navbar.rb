@@ -1,5 +1,6 @@
 module Dragnet::Views::Surveys
   class Navbar < Dragnet::Views::Base
+    include Dragnet::Components::Surveys
 
     def initialize(survey:)
       @survey = survey
@@ -16,10 +17,11 @@ module Dragnet::Views::Surveys
             end
           end
           div(class: 'd-flex justify-content-end align-items-center') do
+            render OpenIndicator.new(survey: @survey) unless @survey.public?
+            render CopyButton.new(survey: @survey, include_label: true)
           end
         end
       end
     end
   end
 end
-
