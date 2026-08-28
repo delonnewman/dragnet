@@ -107,5 +107,17 @@ module Dragnet
     def countable?
       is_a?(Types::Countable)
     end
+
+    # @param answer [Dragnet::Answer]
+    # @return [Dragnet::Value]
+    def build_value(_answer)
+      raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
+    end
+
+    # @param answer [Dragnet::Answer]
+    # @param value [Dragnet::Value]
+    def assign_value(_answer, _value)
+      raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
+    end
   end
 end
