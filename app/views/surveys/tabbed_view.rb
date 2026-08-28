@@ -20,7 +20,9 @@ module Dragnet::Views::Surveys
     def around_template
       render Navbar.new(survey: @survey)
       render Tabs.new(selected: @selected, survey: @survey)
-      super
+      div(class: 'container-fluid mt-3 mb-4') do
+        super
+      end
     end
   end
 end
