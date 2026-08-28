@@ -7,9 +7,6 @@ module Dragnet
     include Retractable
     include Presentable
 
-    # Survey specific concerns
-    include Reporting
-
     retract_associated :questions, :replies
 
     belongs_to :author, class_name: 'Dragnet::User'
@@ -32,24 +29,6 @@ module Dragnet
     # Record Data
     has_many :replies, class_name: 'Dragnet::Reply', dependent: :delete_all, inverse_of: :survey
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :survey
-
-    # Analytics / Submission
-    has_many :ahoy_visits, through: :replies
-    has_many :events, through: :replies # Used by StatsReport
-    with ReplySubmissionPolicy
-    with SubmissionParameters
-
-    def reply_created?(visitor_token)
-      !ahoy_visits.of_visitor(visitor_token).empty?
-    end
-
-    def reply_completed?(visitor_token)
-      !ahoy_visits.of_visitor(visitor_token).where(replies: { submitted: true }).empty?
-    end
-
-    def existing_reply(visitor_token)
-      ahoy_visits.of_visitor(visitor_token).first&.reply
-    end
 
     # Editing
     attribute :editing_status, EditingStatus
@@ -114,5 +93,9 @@ module Dragnet
     def close!
       closed!.tap(&:save!)
     end
+
+    # Survey specific mixins
+    include Reporting
+    include Submissions
   end
 end
