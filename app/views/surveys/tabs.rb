@@ -6,7 +6,7 @@ module Dragnet::Views::Surveys
     end
 
     def view_template
-      ul(class: 'nav nav-tabs mb-3', hx: { boost: true }) do
+      ul(class: 'nav nav-tabs', hx: { boost: true }) do
         li(class: 'nav-item') do
           a(href: root_path, hx: { boost: false }, class: 'nav-link') do
             render Icon['fas', 'arrow-left']
