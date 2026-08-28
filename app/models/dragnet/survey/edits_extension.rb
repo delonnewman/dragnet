@@ -3,7 +3,7 @@ module Dragnet
     def latest
       not_applied.order(created_at: :desc).first
     end
-    
+
     def merge
       reduce(proxy_association.owner.projection) do |projection, edit| 
         edit.op.merge(edit, projection)
