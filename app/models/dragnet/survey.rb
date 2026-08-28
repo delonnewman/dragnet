@@ -42,28 +42,11 @@ module Dragnet
     with RecordChangeManagement, delegating: %i[record_changes? new_record_change set_default_changes_status apply_record_changes apply_record_changes!]
     before_validation :set_default_changes_status
 
-    def opened!
-      self.open = true
-      self
-    end
-
-    def open!
-      opened!.tap(&:save!)
-    end
-
-    def closed!
-      self.open = false
-      self
-    end
-
-    def close!
-      closed!.tap(&:save!)
-    end
-
     # Survey specific mixins
     include Reporting
     include Submissions
     include Editing
     include Copying
+    include Access
   end
 end
