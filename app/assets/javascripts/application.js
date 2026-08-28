@@ -7,6 +7,5 @@
 //= require bootstrap
 //= require ahoy
 //= require Sortable
-//= require mapkick.bundle
 
 //= require workspace
