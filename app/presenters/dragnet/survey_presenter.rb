@@ -14,10 +14,6 @@ class Dragnet::SurveyPresenter < Dragnet::Presenter
     survey.questions.empty?
   end
 
-  def no_data?
-    survey.replies.submitted.empty? || survey.events.empty?
-  end
-
   def share_email?
     share_by?('email')
   end

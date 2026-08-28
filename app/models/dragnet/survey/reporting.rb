@@ -9,4 +9,8 @@ module Dragnet::Survey::Reporting
   end
 
   def fields = questions
+
+  def no_data?
+    survey.replies.submitted.empty? || survey.events.empty?
+  end
 end
