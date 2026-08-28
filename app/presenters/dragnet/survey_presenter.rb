@@ -10,6 +10,10 @@ class Dragnet::SurveyPresenter < Dragnet::Presenter
   end
   memoize :views
 
+  def no_data?
+    survey.records.empty?
+  end
+
   def not_ready_for_replies?
     survey.questions.empty?
   end
