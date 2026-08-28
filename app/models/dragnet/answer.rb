@@ -27,20 +27,25 @@ module Dragnet
     delegate :to_s, :blank?, to: :value, allow_nil: true
     delegate :to_i, :to_f, :to_r, to: :number_value, allow_nil: true
 
+    # TODO: remove
     def text_value
       value.to_s
     end
 
     def value
       type.dispatch(:get_value, answer: self)
+      # type.build_value(self)
     end
 
     def value=(value)
-      type.dispatch(:assign_value, answer: self, value:)
+      # type.dispatch(:assign_value, answer: self, value:)
+      type.assign_value(self, value)
     end
 
+    # TODO: remove
     def number_value
       type.dispatch(:get_number_value, answer: self)
+      # value.number_value
     end
   end
 end
