@@ -119,4 +119,63 @@ describe Dragnet::Survey do
       expect(survey.existing_reply(ahoy.visitor_token)).to be_nil
     end
   end
+
+  describe 'Copying' do
+    subject(:survey) { described_class.generate!(author:) }
+
+    it 'is not a copy by default' do
+      expect(survey).not_to be_copy
+    end
+
+    it 'is a copy once copy_of is set' do
+      original = described_class.generate!(author:)
+      survey.update!(copy_of: original)
+
+      expect(survey).to be_copy
+    end
+
+    describe '#copy!' do
+      it 'returns a persisted copy of the survey' do
+        copy = survey.copy!
+
+        expect(copy).to be_a(described_class).and be_persisted
+      end
+
+      it 'sets copy_of on the new survey to the original survey' do
+        copy = survey.copy!
+
+        expect(copy.copy_of).to eq survey
+      end
+
+      it "adds the new survey to the original survey's copies" do
+        copy = survey.copy!
+
+        expect(survey.copies).to include(copy)
+      end
+
+      it 'gives the copy a name different from the original' do
+        copy = survey.copy!
+
+        expect(copy.name).not_to eq(survey.name)
+      end
+
+      it "gives the copy a name derived from the original's name" do
+        copy = survey.copy!
+
+        expect(copy.name).to start_with(survey.name)
+      end
+
+      it "copies the original survey's question text" do
+        copy = survey.copy!
+
+        expect(copy.questions.map(&:text)).to match_array(survey.questions.map(&:text))
+      end
+
+      it "gives the copied questions new ids, distinct from the original survey's questions" do
+        copy = survey.copy!
+
+        expect(copy.questions.map(&:id)).not_to include(*survey.questions.map(&:id))
+      end
+    end
+  end
 end
