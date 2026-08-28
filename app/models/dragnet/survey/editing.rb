@@ -17,7 +17,7 @@ class Dragnet::Survey
     end
 
     def edited
-      EditedSurvey.build(self)
+      Dragnet::EditedSurvey.build(self)
     end
 
     def projection
