@@ -37,6 +37,9 @@ module Dragnet::Views::Stats
             h2 { plain question.text }
             auto_chart @report.answer_occurrence(question)
           end
+          div(class: 'pb-5') do
+            render DataTable.new(data: @report.answer_stats(question))
+          end
         end
       end
     end
