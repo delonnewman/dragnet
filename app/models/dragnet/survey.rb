@@ -30,17 +30,8 @@ module Dragnet
     has_many :replies, class_name: 'Dragnet::Reply', dependent: :delete_all, inverse_of: :survey
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :survey
 
-    # Execute code on record changes
-    has_many :trigger_registrations, class_name: 'Dragnet::TriggerRegistration', dependent: :delete_all, inverse_of: :survey
-
     # DataGrids
     has_many :data_grids, class_name: 'Dragnet::DataGrid', dependent: :delete_all, inverse_of: :survey
-
-    # Record Changes
-    has_many :record_changes, class_name: 'Dragnet::RecordChange', dependent: :nullify, inverse_of: :survey
-    enum :record_changes_status, { applied: 0, unapplied: 1, cannot_apply: -1 }
-    with RecordChangeManagement, delegating: %i[record_changes? new_record_change set_default_changes_status apply_record_changes apply_record_changes!]
-    before_validation :set_default_changes_status
 
     # Survey specific mixins
     include Reporting
@@ -48,5 +39,6 @@ module Dragnet
     include Editing
     include Copying
     include Access
+    include Recording
   end
 end
