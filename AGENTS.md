@@ -36,6 +36,21 @@ Notes:
 
 ## Architecture Notes
 
+### Terminology
+
+Some definitions that are relevant for understanding requests for this project:
+
+- Domain Object: an object that some knowledge in the applications business domain.
+- Associated Object: an object that functions in a subdomain of another object (often subclasses of `Dragnet::Composed`)
+  e.g. `Dragnet::Survey::Copy`, `Dragnet::EditedSurvey`, `Dragnet::EditedQuestion`, `Dragnet::DataGrid::Query`,
+  `Dragnet::DataGrid::QueryRelation`, `Dragnet::UniqueName`.
+- Policy Object: an associated object that is used to define domain policies or rules (e.g `Dragnet::ReplySubmissionPolicy`)
+- Service Object: an associated object that performs a specific task, usually having one principle method
+  (basically the OOP equivalent of a procedure) e.g. `Dragnet::Survey::DataProjection`.
+- Value Object: a domain object that has value semantics, they are also usually immutable, e.g. `Dragnet::Type`, `Dragnet::MetaData`
+- Query Object: a Service Object that encapsulates an SQL query (usually subclasses of `Dragnet::Query`)
+  e.g. `Dragnet::Workspace::RecentlyActiveSurveys`, `Dragnet::Workspace::RepliesByDate`, `Dragnet::Workspace::RepliesBySurveyAndDate`.
+
 ### Domain Model
 
 Core survey concepts live under the `Dragnet::` namespace:
