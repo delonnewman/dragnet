@@ -14,6 +14,14 @@ module Dragnet
           raise Type::EncodingError, "Don't know how to decode #{value.inspect} into a boolean"
         end
       end
+
+      def build_value(answer)
+        Value.new(answer.boolean_value)
+      end
+
+      def assign_value(answer, value)
+        answer.boolean_value = !!value
+      end
     end
   end
 end
