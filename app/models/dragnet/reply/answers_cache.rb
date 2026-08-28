@@ -51,6 +51,7 @@ module Dragnet
         :date_value,
         :meta_data,
         :created_at,
+        :question_option_id,
         question_option: %i[id question_id text weight display_order]
       )
 
