@@ -19,7 +19,7 @@ module Dragnet
       questions.find { |q| q.id == question_id } or
         raise ActiveRecord::RecordNotFound
     end
-    
+
     def questions
       questions_attributes.map do |attributes|
         EditedQuestion.new(attributes)
