@@ -30,23 +30,6 @@ module Dragnet
     has_many :replies, class_name: 'Dragnet::Reply', dependent: :delete_all, inverse_of: :survey
     has_many :answers, class_name: 'Dragnet::Answer', dependent: :delete_all, inverse_of: :survey
 
-    # Editing
-    attribute :editing_status, EditingStatus
-    before_validation { EditingStatus.assign_default!(self) }
-    has_many :edits, -> { extending EditsExtension }, class_name: 'Dragnet::SurveyEdit', dependent: :delete_all, inverse_of: :survey
-
-    def edited?
-      edits.not_applied.latest.present?
-    end
-
-    def edited
-      EditedSurvey.build(self)
-    end
-
-    def projection
-      DataProjection.new(self).to_h
-    end
-
     # Copying
     belongs_to :copy_of, class_name: 'Dragnet::Survey', optional: true
     accepts_nested_attributes_for :copy_of, update_only: true, reject_if: ->(attrs) { attrs.compact_blank!.empty? }
@@ -97,5 +80,6 @@ module Dragnet
     # Survey specific mixins
     include Reporting
     include Submissions
+    include Editing
   end
 end
