@@ -9,3 +9,37 @@ see https://github.com/AllenDowney/ThinkStats2
 - Dragnet::Stats::PMF
 - Dragnet::Stats::CDF
 - Dragnet::Stats::PDF
+
+* Add interface for values associated with a type
+Probably Dragnet::Value
+
+#+begin_src ruby
+class Dragnet::Value
+  abstract do
+    def text_value = :required
+    def number_value = :optional
+    def to_h = :optional
+    def to_a = :optional
+  end
+
+  def ==(other)
+    return false unless other.is_a?(self.class)
+    
+    text_value == other.text_value
+  end
+
+  def hash
+    text_value.hash
+  end
+
+  def eql?(other)
+    return false unless other.is_a?(self.class)
+
+    super
+  end
+
+  def ===(other)
+    text_value == other
+  end
+end
+#+end_src
