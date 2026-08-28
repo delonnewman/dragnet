@@ -2,3 +2,10 @@
 
 * Bitemporal PG Extension
 https://github.com/arkhipov/temporal_tables
+
+* Add types for data analysis
+see https://github.com/AllenDowney/ThinkStats2
+- Dragnet::Stats::Histogram
+- Dragnet::Stats::PMF
+- Dragnet::Stats::CDF
+- Dragnet::Stats::PDF
