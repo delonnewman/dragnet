@@ -92,6 +92,7 @@ module Dragnet
     end
 
     attr_reader :question
+
     delegate :meta, :meta=, to: :question
     delegate :tags, :slug, :symbol, :decode, :encode, to: 'self.class'
 
