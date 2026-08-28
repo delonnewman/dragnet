@@ -2,18 +2,12 @@
 
 module Dragnet
   # Logic for record changes in the data grid
-  class Survey::RecordChangeManagement < Advice
-    advises Survey
-
-    def set_default_changes_status
-      survey.record_changes_status = :applied unless survey.record_changes_status?
-    end
-
+  module Survey::RecordChangesExtension
     # @param [ActiveRecord::Base] record
     # @param [Hash] changes
     #
     # @return [RecordChange]
-    def new_record_change(record, changes)
+    def build_from_changes(record, changes)
       RecordChange.new(
         survey:            survey,
         record_class_name: record.class.name,
@@ -22,11 +16,11 @@ module Dragnet
       )
     end
 
-    def record_changes?
+    def empty?
       survey.record_changes.exists?(applied: false)
     end
 
-    def apply_record_changes
+    def apply
       result = true
       RecordChange.transaction do
         survey.record_changes.find_each do |change|
@@ -36,7 +30,7 @@ module Dragnet
       result
     end
 
-    def apply_record_changes!
+    def apply!
       RecordChange.transaction do
         survey.record_changes.find_each do |change|
           change.apply_changes!(timestamp)
