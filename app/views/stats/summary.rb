@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dragnet::Views::Stats
   class Summary < Dragnet::Views::Base
     include Phlex::Rails::Helpers::Chartkick
