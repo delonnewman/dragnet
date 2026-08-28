@@ -11,7 +11,8 @@ see https://github.com/AllenDowney/ThinkStats2
 - Dragnet::Stats::PDF
 
 * Add interface for values associated with a type
-Probably Dragnet::Value
+- Probably named Dragnet::Value
+- Will be able to remove GetNumberValue typed method
 
 #+begin_src ruby
 class Dragnet::Value
