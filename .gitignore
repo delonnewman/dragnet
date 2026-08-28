@@ -52,3 +52,4 @@ app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 /app/components/bun.lockb
 /.agent-shell/
 /coverage/
+/.eca/
