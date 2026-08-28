@@ -14,6 +14,10 @@ describe Dragnet::Survey do
     let(:retractable) { survey }
   end
 
+  it_behaves_like Dragnet::Reportable do
+    let(:reportable) { survey }
+  end
+
   describe '.whole' do
     before do
       described_class.generate!
