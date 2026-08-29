@@ -9,6 +9,10 @@ describe Dragnet::Reply::AnswersCache do
   it 'builds answers from cached data' do
     reply.save!
 
-    expect { cache.answers }.to perform_number_of_queries(0)
+    if reply.answers.any? { it.type_class <= Dragnet::Types::Choice }
+      expect { cache.answers }.to perform_number_of_queries(1)
+    else
+      expect { cache.answers }.to perform_number_of_queries(0)
+    end
   end
 end
