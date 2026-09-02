@@ -11,6 +11,7 @@ module Dragnet
     delegate :new_record?, :persisted?, to: :@self_describable
 
     def initialize(self_describable, prefix: nil)
+      @mutex = Mutex.new
       @self_describable = self_describable
       @data = load_data
       @prefix = prefix
@@ -24,12 +25,16 @@ module Dragnet
     def data
       return @data if @data
 
-      @data = load_data(reload: true)
+      @mutex.synchronize do
+        @data = load_data(reload: true)
+      end
     end
     alias to_h data
 
     def reset_cache!
-      @data = nil
+      @mutex.synchronize do
+        @data = nil
+      end
     end
 
     def add!(key, value)
@@ -77,11 +82,13 @@ module Dragnet
     private
 
     def assign_data(data)
-      if @prefix
-        @self_describable.meta_data ||= {}
-        @self_describable.meta_data[@prefix] = data
-      else
-        @self_describable.meta_data = data
+      @mutex.synchronize do
+        if @prefix
+          @self_describable.meta_data ||= {}
+          @self_describable.meta_data[@prefix] = data
+        else
+          @self_describable.meta_data = data
+        end
       end
     end
     
