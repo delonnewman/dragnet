@@ -32,7 +32,7 @@ module Dragnet
     # @rbs question: Dragnet::Question
     # @rbs return: Dragnet::Value
     def value(question)
-      question.type.build_value_from_reply(question)
+      question.type.build_value_from_reply(self)
     end
 
     # Analytics
@@ -44,7 +44,9 @@ module Dragnet
     end
 
     # Submission
-    with ReplySubmissionPolicy, delegating: %i[can_submit_reply? can_edit_reply? can_update_reply? can_complete_reply?]
+    with ReplySubmissionPolicy,
+         delegating: %i[can_submit_reply? can_edit_reply? can_update_reply?
+                        can_complete_reply?]
 
     CSRF_TOKEN_PRECISION = 256
     EXPIRATION_DURATION  = 30.minutes # TODO: move this to configration
