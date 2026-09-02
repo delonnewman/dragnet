@@ -108,14 +108,23 @@ module Dragnet
       is_a?(Types::Countable)
     end
 
-    # @param answer [Dragnet::Answer]
-    # @return [Dragnet::Value]
+    # @abstract
+    # @rbs _answer: Dragnet::Answer
+    # @rbs return: Dragnet::Value
     def build_value(_answer)
       raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
     end
 
-    # @param answer [Dragnet::Answer]
-    # @param value [Dragnet::Value]
+    # @rbs reply: Dragnet::Reply
+    # @rbs return: Dragnet::Value
+    def build_value_from_reply(reply)
+      build_value(reply.answers.first)
+    end
+
+    # @abstract
+    # @rbs answer: Dragnet::Answer
+    # @rbs value: Dragnet::Value
+    # @rbs return: void
     def assign_value(_answer, _value)
       raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
     end
