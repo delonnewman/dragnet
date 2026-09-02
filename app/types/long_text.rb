@@ -1,7 +1,7 @@
 module Dragnet
   module Types
     class LongText < Text
-      perform :do_before_saving_answer, class_name: 'Dragnet::Answer::DoBeforeSaving'
+      def do_before_saving_answer(...) = Answer::DoBeforeSaving.new(question, ...)
 
       def build_value(answer)
         Value.new(answer.long_text_value, answer.float_value)
