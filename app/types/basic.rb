@@ -8,6 +8,10 @@ module Dragnet
       def sort_data_grid(...)      = DataGrid::Sort.new(question, ...)
       def render_answers_text(...) = DataGrid::RenderAnswersText.new(question, ...)
       def get_text_alignment(...)  = DataGrid::GetTextAlignment.new(question, ...)
+
+      def countable?
+        is_a?(Types::Countable)
+      end
     end
   end
 end
