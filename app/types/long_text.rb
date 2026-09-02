@@ -3,6 +3,13 @@ module Dragnet
     class LongText < Text
       def do_before_saving_answer(...) = Answer::DoBeforeSaving.new(question, ...)
 
+      # TODO: rename to calculate_stats
+      def calculate_stats_table(...) =
+        StatsReport::CalculateStatsTable.new(question, ...)
+      # TODO: rename to calculate_tallies
+      def calculate_occurrence_table(...) =
+        StatsReport::CalculateOccurrenceTable.new(question, ...)
+
       def build_value(answer)
         Value.new(answer.long_text_value, answer.float_value)
       end
