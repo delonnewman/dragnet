@@ -1,7 +1,7 @@
 module Dragnet
   module Types
     class Choice < Countable
-      def do_before_saving_answer = DoNothing.new
+      def do_before_saving_answer(...) = DoNothing.new
 
       def build_value(answer)
         option = answer.question_option
