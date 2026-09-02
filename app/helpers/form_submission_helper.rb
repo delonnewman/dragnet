@@ -21,7 +21,6 @@ module FormSubmissionHelper
     eval(Erubi::Engine.new(FORM_TEMPLATE).src) # rubocop:disable Security/Eval
   end
 
-
   def reply_component(question)
     render Dragnet::TypeView.new('replies/components', question.type, question:)
   end
