@@ -15,7 +15,7 @@ module Dragnet
       end
 
       def assign_value(answer, value)
-        answer.long_text_value = encode(value)
+        answer.long_text_value = value.to_s
       end
 
       def countable?
