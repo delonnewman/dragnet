@@ -1,7 +1,7 @@
 module Dragnet
   module Types
     class Boolean < Basic
-      ignore :do_before_saving_answer
+      def do_before_saving_answer(...) = DoNothing.new
 
       def self.decode(value)
         value = value.is_a?(String) ? value.downcase : value
