@@ -39,24 +39,24 @@ require_relative 'dragnet/presenter'
 require_relative 'dragnet/paged_presenter'
 
 module Dragnet
-  EMPTY_HASH   = {}.freeze
-  EMPTY_ARRAY  = [].freeze
-  EMPTY_SET    = Set.new.freeze
-  EMPTY_STRING = ''.freeze
+  EMPTY_HASH   = {}.freeze #: Hash
+  EMPTY_ARRAY  = [].freeze #: Array
+  EMPTY_SET    = Set.new.freeze #: Set
+  EMPTY_STRING = '' #: String
 
-  GITHUB_URL = 'https://github.com/delonnewman/dragnet/'
+  GITHUB_URL = 'https://github.com/delonnewman/dragnet/' #: String
   private_constant :GITHUB_URL
 
   # Return the GitHub url of the project.
   #
-  # @return [Addressable::URI]
+  #: () -> Addressable::URI
   def self.github_url
     @github_url ||= Addressable::URI.parse(GITHUB_URL)
   end
 
   # Return the current version of the system (based on git SHA).
   #
-  # @return [String, nil]
+  #: () -> String | nil
   def self.version
     current_git_sha[0, 8]
   end
@@ -64,14 +64,14 @@ module Dragnet
   # Return the current git SHA hash.  It will first look for the GIT_SHA environment variable
   # if this is not set then it will attempt to get the latest hash from git.
   #
-  # @return [String]
+  #: () -> String
   def self.current_git_sha
     @current_git_sha ||= ENV.fetch('GIT_SHA') { `git log -n 1 --format="%H"` } # use latest git hash as version
   end
 
   # Return the current release of the system (see RELEASE.txt in project root)
   #
-  # @return [String]
+  #: () -> String
   def self.release
     Rails.root.join('RELEASE.txt').read
   end
