@@ -1,14 +1,13 @@
 module Dragnet
   module Types
     class Basic < Type
-      # perform :assign_value, class_name: 'Dragnet::Answer::AssignValue'
-      perform :get_value, class_name: 'Dragnet::Answer::GetValue'
-      perform :get_number_value, class_name: 'Dragnet::Answer::GetNumberValue'
+      def get_value(...)        = Answer::GetValue.new(question, ...)
+      def get_number_value(...) = Answer::GetNumberValue.new(question, ...)
 
-      perform :filter_data_grid, class_name: 'Dragnet::DataGrid::Filter'
-      perform :sort_data_grid, class_name: 'Dragnet::DataGrid::Sort'
-      perform :render_answers_text, class_name: 'Dragnet::DataGrid::RenderAnswersText'
-      perform :get_text_alignment, class_name: 'Dragnet::DataGrid::GetTextAlignment'
+      def filter_data_grid(...)    = DataGrid::Filter.new(question, ...)
+      def sort_data_grid(...)      = DataGrid::Sort.new(question, ...)
+      def render_answers_text(...) = DataGrid::RenderAnswersText.new(question, ...)
+      def get_text_alignment(...)  = DataGrid::GetTextAlignment.new(question, ...)
     end
   end
 end
