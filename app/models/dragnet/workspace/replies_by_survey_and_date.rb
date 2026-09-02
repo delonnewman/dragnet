@@ -24,12 +24,12 @@ module Dragnet
     #
     # @return [Hash{Date, Integer}]
     def call(after: Date.today - 180)
-      hash_query(user.id, after)
-        .group_by { |r| r[:survey_id] }
-        .transform_values { |rs|
-          rs.group_by { |r| r[:reply_date] }
-            .transform_values! { |r| r.first[:reply_count] }
-            .transform_keys! { |d| Date.parse(d) } }
+      grouped = hash_query(user.id, after).group_by { |r| r[:survey_id] }
+      grouped.transform_values do |rs|
+        rs.group_by { |r| r[:reply_date] }
+          .transform_values! { |r| r.first[:reply_count] }
+          .transform_keys! { |d| Date.parse(d) }
+      end
     end
   end
 end
