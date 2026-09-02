@@ -1,7 +1,7 @@
 module Dragnet
   module Types
     class Date < Temporal
-      def self.decode(value)
+      def decode(value)
         super(value).to_date
       end
 

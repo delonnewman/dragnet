@@ -3,7 +3,7 @@ module Dragnet
     class Temporal < Basic
       def do_before_saving_answer(...) = DoNothing.new
 
-      def self.decode(value)
+      def decode(value)
         case value
         when String
           ::DateTime.parse(value)

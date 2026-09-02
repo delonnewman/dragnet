@@ -3,7 +3,7 @@ module Dragnet
     class Boolean < Basic
       def do_before_saving_answer(...) = DoNothing.new
 
-      def self.decode(value)
+      def decode(value)
         value = value.is_a?(String) ? value.downcase : value
         case value
         in true, 'true', '1', 1, 'yes'

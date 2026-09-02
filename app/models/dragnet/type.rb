@@ -1,14 +1,6 @@
 module Dragnet
   class Type
     class << self
-      def encode(value)
-        value.to_s
-      end
-
-      def decode(_value)
-        raise NoMethodError
-      end
-
       def slug
         name.demodulize.underscore
       end
@@ -78,8 +70,7 @@ module Dragnet
 
     attr_reader :question
 
-    delegate :meta, :meta=, to: :question
-    delegate :tags, :slug, :symbol, :decode, :encode, to: 'self.class'
+    delegate :tags, :slug, :symbol, to: 'self.class'
 
     # @rbs question: Dragnet::Question
     # @rbs return: void
@@ -88,12 +79,19 @@ module Dragnet
       freeze
     end
 
-    def dispatch(action_name, ...)
-      public_send(action_name, ...).dispatch(self)
+    #: () -> Dragnet::MetaData
+    def meta
+      @meta = MetaData.new(question, prefix: :type)
     end
 
-    def countable?
-      is_a?(Types::Countable)
+    #: (Hash) -> void
+    def meta=(data)
+      meta.data = data
+    end
+
+    # TODO: remove
+    def dispatch(action_name, ...)
+      public_send(action_name, ...).dispatch(self)
     end
 
     # @abstract
@@ -115,6 +113,16 @@ module Dragnet
     # @rbs return: void
     def assign_value(_answer, _value)
       raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
+    end
+
+    #: (untyped) -> String
+    def encode(value)
+      value.to_s
+    end
+
+    #: (String) -> untyped
+    def decode(_value)
+      raise NoMethodError
     end
   end
 end

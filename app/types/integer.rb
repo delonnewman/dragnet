@@ -1,7 +1,7 @@
 module Dragnet
   module Types
     class Integer < Number
-      def self.decode(value)
+      def decode(value)
         case value
         when /\A\d+\z/
           value.to_i
