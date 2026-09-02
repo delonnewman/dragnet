@@ -100,15 +100,15 @@ group :development do
 
   gem 'dockerfile-rails'
 
-  gem 'rubocop'
+  gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rake', require: false
   gem 'rubocop-performance', require: false
 
-  gem 'rbs'
-  gem 'rbs-inline'
+  gem 'rbs', require: false
+  gem 'steep', require: false
 
-  gem 'rdoc'
-  gem 'rorvswild_theme_rdoc'
+  gem 'rdoc', require: false
+  gem 'rorvswild_theme_rdoc', require: false
 end
