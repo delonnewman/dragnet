@@ -1,7 +1,7 @@
 module Dragnet
   module Types
     class Temporal < Basic
-      ignore :do_before_saving_answer
+      def do_before_saving_answer(...) = DoNothing.new
 
       def self.decode(value)
         case value
