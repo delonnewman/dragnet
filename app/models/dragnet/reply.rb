@@ -31,7 +31,7 @@ module Dragnet
 
     # @rbs question: Dragnet::Question
     # @rbs return: Dragnet::Value
-    def get(question)
+    def value(question)
       question.type.build_value_from_reply(question)
     end
 
