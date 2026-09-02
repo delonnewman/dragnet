@@ -232,6 +232,7 @@ GEM
     jwt (3.2.0)
       base64
     language_server-protocol (3.17.0.4)
+    lint_roller (1.1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -312,7 +313,7 @@ GEM
     ostruct (0.6.3)
     pagy (9.3.3)
     parallel (1.26.3)
-    parser (3.3.7.1)
+    parser (3.3.12.0)
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
@@ -447,18 +448,23 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.2)
-    rubocop (1.71.2)
-      json (~> 2.3)
-      language_server-protocol (>= 3.17.0)
-      parallel (~> 1.10)
+    rubocop (1.90.0)
+      json (>= 2.3)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
+      parallel (>= 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.38.0)
-      parser (>= 3.3.1.0)
+    rubocop-ast (1.50.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.7)
+    rubocop-i18n (3.3.0)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.72.1)
     rubocop-performance (1.23.1)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
@@ -469,8 +475,18 @@ GEM
       rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (3.4.0)
-      rubocop (~> 1.61)
+    rubocop-rspec (3.10.2)
+      lint_roller (~> 1.1)
+      regexp_parser (>= 2.0)
+      rubocop (~> 1.86, >= 1.86.2)
+    rubocop-rspec_rails (2.32.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
+      rubocop-rspec (~> 3.5)
+    rubocop-thread_safety (0.7.3)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
+      rubocop-ast (>= 1.44.0, < 2.0)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
     safely_block (0.4.1)
@@ -611,10 +627,13 @@ DEPENDENCIES
   rspec
   rspec-rails
   rubocop
+  rubocop-i18n
   rubocop-performance
   rubocop-rails
   rubocop-rake
   rubocop-rspec
+  rubocop-rspec_rails
+  rubocop-thread_safety
   sassc-rails
   sentimental
   shortuuid
