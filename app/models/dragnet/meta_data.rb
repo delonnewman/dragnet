@@ -3,12 +3,17 @@
 module Dragnet
   # A proxy for meta data and their life-cycle
   class MetaData
-    delegate :each, :include?, :key?, :keys, :values, :empty?, :[], :fetch, :to_a, to: :data
+    attr_reader :prefix #: Symbol
+
+    delegate :include?, :key?, :keys, :values, to: :data
+    delegate :each, :empty?, :[], :fetch, :to_a, to: :data
+
     delegate :new_record?, :persisted?, to: :@self_describable
 
-    def initialize(self_describable)
+    def initialize(self_describable, prefix: nil)
       @self_describable = self_describable
       @data = load_data
+      @prefix = prefix
     end
 
     def to_s
@@ -45,7 +50,7 @@ module Dragnet
     end
 
     def update_data!(data)
-      @self_describable.meta_data = data
+      assign_data(data)
 
       if persisted?
         @self_describable.save!
@@ -57,7 +62,7 @@ module Dragnet
     alias data= update_data!
 
     def update_data(data)
-      @self_describable.meta_data = data
+      assign_data(data)
 
       if new_record?
         return true
@@ -71,6 +76,15 @@ module Dragnet
 
     private
 
+    def assign_data(data)
+      if @prefix
+        @self_describable.meta_data ||= {}
+        @self_describable.meta_data[@prefix] = data
+      else
+        @self_describable.meta_data = data
+      end
+    end
+    
     def load_data(reload: false)
       @self_describable.reload if persisted? && reload
 
@@ -78,6 +92,9 @@ module Dragnet
       return EMPTY_HASH unless data
 
       data.deep_symbolize_keys!.freeze
+      return data unless @prefix
+
+      data.fetch(@prefix)
     end
   end
 end
