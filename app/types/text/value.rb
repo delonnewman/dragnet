@@ -11,7 +11,7 @@ module Dragnet::Types
     end
 
     def number_value
-      @number || raise "No number value for #{inspect}"
+      @number or raise "No number value for #{inspect}"
     end
   end
 end
