@@ -1,8 +1,10 @@
 module Dragnet
   module Types
     class Countable < Basic
-      perform :calculate_stats_table, class_name: 'Dragnet::StatsReport::CalculateStatsTable'
-      perform :calculate_occurrence_table, class_name: 'Dragnet::StatsReport::CalculateOccurrenceTable'
+      def calculate_stats_table(...) =
+        StatsReport::CalculateStatsTable.new(question, ...)
+      def calculate_occurrence_table(...) =
+        StatsReport::CalculateOccurrenceTable.new(question, ...)
     end
   end
 end
