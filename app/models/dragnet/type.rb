@@ -81,8 +81,11 @@ module Dragnet
     delegate :meta, :meta=, to: :question
     delegate :tags, :slug, :symbol, :decode, :encode, to: 'self.class'
 
+    # @rbs question: Dragnet::Question
+    # @rbs return: void
     def initialize(question)
       @question = question
+      freeze
     end
 
     def dispatch(action_name, ...)
