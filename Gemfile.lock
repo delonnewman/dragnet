@@ -405,6 +405,9 @@ GEM
       logger
       prism (>= 1.6.0)
       tsort
+    rbs-inline (0.14.0)
+      prism (>= 0.29)
+      rbs (~> 4.0)
     rdoc (8.0.0)
       erb
       prism (>= 1.6.0)
@@ -420,6 +423,7 @@ GEM
     responders (3.2.0)
       actionpack (>= 7.0)
       railties (>= 7.0)
+    rorvswild_theme_rdoc (0.3.0)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -524,14 +528,6 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    yard (0.9.45)
-    yard-activerecord (0.0.17)
-      activesupport
-      yard (>= 0.8.3)
-    yard-rspec (0.1)
-      yard
-    yardstick (0.9.9)
-      yard (~> 0.8, >= 0.8.7.2)
     zeitwerk (2.8.2)
 
 PLATFORMS
@@ -591,6 +587,10 @@ DEPENDENCIES
   rails-controller-testing
   rails-pattern_matching
   rails_live_reload
+  rbs
+  rbs-inline
+  rdoc
+  rorvswild_theme_rdoc
   rqrcode
   rspec
   rspec-rails
@@ -606,10 +606,6 @@ DEPENDENCIES
   simplecov-lcov
   sprockets-rails
   web-console
-  yard
-  yard-activerecord
-  yard-rspec
-  yardstick
 
 RUBY VERSION
   ruby 3.4.9p82

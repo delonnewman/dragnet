@@ -98,11 +98,6 @@ group :development do
   gem "rails_live_reload"
   gem 'rack-mini-profiler'
 
-  gem 'yard'
-  gem 'yard-activerecord'
-  gem 'yardstick'
-  gem 'yard-rspec'
-
   gem 'dockerfile-rails'
 
   gem 'rubocop'
@@ -110,4 +105,10 @@ group :development do
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rake', require: false
   gem 'rubocop-performance', require: false
+
+  gem 'rbs'
+  gem 'rbs-inline'
+
+  gem 'rdoc'
+  gem 'rorvswild_theme_rdoc'
 end
