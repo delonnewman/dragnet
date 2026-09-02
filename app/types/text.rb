@@ -1,6 +1,6 @@
 module Dragnet
   module Types
-    class Text < Countable
+    class Text < Basic
       def do_before_saving_answer(...) = DoNothing.new
 
       def build_value_from_answer(answer)

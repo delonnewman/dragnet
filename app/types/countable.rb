@@ -1,12 +1,8 @@
 module Dragnet
   module Types
-    class Countable < Basic
-      # TODO: rename to calculate_stats
-      def calculate_stats_table(...) =
-        StatsReport::CalculateStatsTable.new(question, ...)
-      # TODO: rename to calculate_tallies
-      def calculate_occurrence_table(...) =
-        StatsReport::CalculateOccurrenceTable.new(question, ...)
+    module Countable
+      def stats_table(...)   = StatsReport::CollectStats.new(question, ...)
+      def tallies_table(...) = StatsReport::CreateHistogram.new(question, ...)
     end
   end
 end
