@@ -7,6 +7,7 @@ require:
 AllCops:
   Exclude:
     - 'Gemfile'
+    - 'Steepfile'
     - 'bin/rake'
     - 'bin/setup'
     - 'config.ru'
@@ -15,6 +16,9 @@ AllCops:
     - 'db/migrate/*.rb'
     - 'spec/spec_helper.rb'
     - 'spec/rails_helper.rb'
+
+Layout/LineLength:
+  Max: 80
 
 Layout/HashAlignment:
   Enabled: false
