@@ -2,7 +2,7 @@ module Dragnet
   module Types
     class Date < Temporal
       def decode(value)
-        super(value).to_date
+        super.to_date
       end
 
       def build_value_from_answer(answer)

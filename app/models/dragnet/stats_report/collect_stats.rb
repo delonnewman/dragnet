@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class StatsReport::CalculateStatsTable < TypeMethod
+  class StatsReport::CollectStats < TypeMethod
     attribute :reportable
     attribute :question
 

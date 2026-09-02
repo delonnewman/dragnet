@@ -1,5 +1,5 @@
 module Dragnet
-  class StatsReport::CalculateOccurrenceTable < TypeMethod
+  class StatsReport::CreateHistogram < TypeMethod
     attribute :reportable
     attribute :question
 

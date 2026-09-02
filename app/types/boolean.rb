@@ -4,8 +4,7 @@ module Dragnet
       def do_before_saving_answer(...) = DoNothing.new
 
       def decode(value)
-        value = value.is_a?(String) ? value.downcase : value
-        case value
+        case value.is_a?(String) ? value.downcase : value
         in true, 'true', '1', 1, 'yes'
           true
         in false, 'false', '0', 0, 'no'

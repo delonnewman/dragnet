@@ -24,8 +24,8 @@ module Dragnet
       @filter_by = (params[:filter_by] || defaults.fetch(:filter_by, EMPTY_HASH)).to_h
     end
 
-    def relation(replies, **options)
-      DataGrid::QueryRelation.new(self, replies, **options)
+    def relation(replies, **)
+      DataGrid::QueryRelation.new(self, replies, **)
     end
 
     def sort_by_question?

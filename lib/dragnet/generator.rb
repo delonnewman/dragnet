@@ -5,13 +5,13 @@ module Dragnet
         false
       end
 
-      def generate(*args)
-        new.generate(*args)
+      def generate(*)
+        new.generate(*)
       end
     end
 
-    def generate(*args)
-      call(*args)
+    def generate(*)
+      call(*)
     end
   end
 end

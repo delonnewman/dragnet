@@ -32,6 +32,7 @@ module Dragnet
     def page
       page = params.fetch(:page, 1).to_i
       return 1 if page < 1
+
       page
     end
   end

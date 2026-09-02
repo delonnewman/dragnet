@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FormSubmissionHelper
-  FORM_TEMPLATE = <<~ERB.strip_heredoc.squish
+  FORM_TEMPLATE = <<~ERB.squish
     <div id="dragnet-survey-form-<%= survey_id %>"></div>
     <script>
       (function () {

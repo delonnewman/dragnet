@@ -12,11 +12,11 @@ module StatsHelper
   # @param [Hash{Object => Numeric}]
   #
   # @return [String] html string
-  def data_table(data, **options)
+  def data_table(data, **)
     tag.table(class: 'table') do
       tag.tbody do
         data.map do |key, value|
-          tag.th(key) + tag.td(number_with_delimiter(value, **options))
+          tag.th(key) + tag.td(number_with_delimiter(value, **))
         end.join(' ').html_safe
       end
     end
@@ -28,10 +28,10 @@ module StatsHelper
   # @see NumberHelper#number_with_delimiter for options
   #
   # @return [Numeric, String]
-  def stats_value(value, **options)
+  def stats_value(value, **)
     return '&mdash;'.html_safe unless value
 
-    number_with_delimiter(value, **options)
+    number_with_delimiter(value, **)
   end
 
   # @param [Numeric, nil] value
@@ -40,9 +40,9 @@ module StatsHelper
   # @see NumberHelper#number_to_percentage for options
   #
   # @return [Numeric, String]
-  def stats_percentage(value, **options)
+  def stats_percentage(value, **)
     return '&mdash;'.html_safe unless value
 
-    number_to_percentage(value, **options)
+    number_to_percentage(value, **)
   end
 end

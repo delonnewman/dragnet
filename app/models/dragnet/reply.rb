@@ -77,12 +77,14 @@ module Dragnet
 
     def submit(attributes, timestamp: Time.zone.now)
       return if submitted?
+
       perform_submission(attributes, timestamp)
       save
     end
 
     def submit!(attributes, timestamp: Time.zone.now)
-      raise "Reply has already been submitted" if submitted;
+      raise "Reply has already been submitted" if submitted
+
       perform_submission(attributes, timestamp)
       save!
     end

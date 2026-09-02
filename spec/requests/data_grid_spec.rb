@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'DataGrid', type: :request do
+RSpec.describe 'DataGrid' do
   subject(:survey) { Dragnet::Survey[author: user].generate! }
 
   let(:user) { Dragnet::User.generate! }

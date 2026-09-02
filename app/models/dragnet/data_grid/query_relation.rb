@@ -62,17 +62,17 @@ module Dragnet
       end
 
       def no_joins?
-        join_aliases.count.zero?
+        join_aliases.none?
       end
 
       def ordered_records(scope)
-        if !sort_by_question?
-          scope.order(sort_by => sort_direction)
-        else
+        if sort_by_question?
           question = @query.question(sort_by)
           scope = sorting_scope(scope, question.id)
           join_name = join_aliases.fetch(:sorting, :answers)
           question.type.dispatch(:sort_data_grid, scope:, direction: sort_direction, join_name:)
+        else
+          scope.order(sort_by => sort_direction)
         end
       end
 

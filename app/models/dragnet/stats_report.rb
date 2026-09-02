@@ -16,7 +16,7 @@ module Dragnet
 
     # @return [ActiveRecord::Relation<Question>]
     def countable_questions
-      questions.select { _1.type.countable? }
+      questions.select { it.type.countable? }
     end
 
     # @return [Integer]
@@ -81,14 +81,14 @@ module Dragnet
     #
     # @return [Hash{String, Integer}]
     def answer_occurrence(question)
-      question.type.dispatch(:calculate_occurrence_table, reportable:, question:)
+      question.type.dispatch(:create_histogram, reportable:, question:)
     end
 
     # @param question [Question]
     #
     # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
     def answer_stats(question)
-      question.type.dispatch(:calculate_stats_table, reportable:, question:)
+      question.type.dispatch(:collect_stats, reportable:, question:)
     end
   end
 end

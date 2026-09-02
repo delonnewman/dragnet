@@ -21,7 +21,7 @@ module HTMXHelper
     htmx(:button, opts.htmx_options, opts.html_options, &block)
   end
 
-  def htmx(element = :div, htmx_options = EMPTY_HASH, html_options = EMPTY_HASH, &block)
+  def htmx(element = :div, htmx_options = EMPTY_HASH, html_options = EMPTY_HASH, &)
     vals = htmx_options.delete(:vals) || EMPTY_HASH
     vals = vals.merge(authenticity_token: session[:_csrf_token]) unless htmx_options.key?(:get)
 
@@ -30,6 +30,6 @@ module HTMXHelper
       h["hx-#{attr}".dasherize] = htmx_options[attr]
     end
 
-    content_tag(element, **attrs, &block)
+    content_tag(element, **attrs, &)
   end
 end

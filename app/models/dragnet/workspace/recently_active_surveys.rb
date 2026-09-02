@@ -3,7 +3,7 @@
 module Dragnet
   class Workspace::RecentlyActiveSurveys < Query
     query_doc 'Your surveys that have recently been created or most recently been replied to'
-    query_text <<~SQL
+    query_text <<~SQL.squish
       /* created surveys */
                   (SELECT s.id,
                           s.name,

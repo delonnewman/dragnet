@@ -3,7 +3,7 @@
 module Dragnet
   # An individual edit to a survey
   class SurveyEdit < ApplicationRecord
-    attribute :op, Op, default: Op.update
+    attribute :op, Op, default: -> { Op.update }
     attribute :applied_at, :datetime
     attribute :created_at, :datetime
 

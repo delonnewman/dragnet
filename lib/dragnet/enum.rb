@@ -51,8 +51,8 @@ module Dragnet
     end
 
     module ClassMethods
-      def member(name, value: name.to_s, key: Enum.encode_key(name.to_s), &block)
-        subclass = Class.new(self, &block)
+      def member(name, value: name.to_s, key: Enum.encode_key(name.to_s), &)
+        subclass = Class.new(self, &)
         self.const_set(name, subclass)
         instance = subclass.new(value, key)
   

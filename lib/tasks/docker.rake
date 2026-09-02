@@ -2,11 +2,11 @@ namespace :docker do
   namespace :image do
     desc 'Build Docker image'
     task build: :environment do
-      sh "docker build -t ghcr.io/delonnewman/dragnet:#{Dragnet.release}" \
-         " -t ghcr.io/delonnewman/dragnet:#{Dragnet.version} -t ghcr.io/delonnewman/dragnet:latest" \
-         ' --build-arg BUNDLE_WITHOUT="development:test"' \
-         ' --build-arg RAILS_ENV="production"' \
-         ' --secret id=master_key,src=config/credentials/production.key .'
+      sh "docker build -t ghcr.io/delonnewman/dragnet:#{Dragnet.release} " \
+         "-t ghcr.io/delonnewman/dragnet:#{Dragnet.version} -t ghcr.io/delonnewman/dragnet:latest " \
+         '--build-arg BUNDLE_WITHOUT="development:test" ' \
+         '--build-arg RAILS_ENV="production" ' \
+         '--secret id=master_key,src=config/credentials/production.key .'
     end
 
     desc 'Push Docker image'

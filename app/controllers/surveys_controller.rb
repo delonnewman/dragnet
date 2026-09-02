@@ -11,16 +11,16 @@ class SurveysController < ApplicationController
     render Dragnet::Views::Surveys::Summary.new(survey: presenter)
   end
 
-  def create
-    survey = Dragnet::Survey.create!(author: current_user)
-
-    redirect_to edit_survey_path(survey)
-  end
-
   def edit
     editor = Dragnet::SurveyEditorPresenter.new(survey)
 
     render :edit, locals: { editor: }
+  end
+
+  def create
+    survey = Dragnet::Survey.create!(author: current_user)
+
+    redirect_to edit_survey_path(survey)
   end
 
   def update

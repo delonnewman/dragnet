@@ -2,7 +2,7 @@
 
 module Dragnet
   class Workspace::RepliesBySurveyAndDate < Query
-    query_text <<~SQL
+    query_text <<~SQL.squish
       SELECT
         r.survey_id,
         EXTRACT(YEAR FROM r.updated_at) || '-' ||

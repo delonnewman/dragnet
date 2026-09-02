@@ -1,10 +1,16 @@
+inherit_from: .rubocop_todo.yml
+
 require:
   - rubocop-rake
-  - rubocop-rspec
   - rubocop-rails
   - rubocop-performance
 
+plugins:
+  - rubocop-rspec
+  - rubocop-rspec_rails
+
 AllCops:
+  NewCops: enable
   Exclude:
     - 'Gemfile'
     - 'Steepfile'
@@ -12,6 +18,7 @@ AllCops:
     - 'bin/setup'
     - 'config.ru'
     - 'config/**/*.rb'
+    - 'db/seeds.rb'
     - 'db/schema.rb'
     - 'db/migrate/*.rb'
     - 'spec/spec_helper.rb'
@@ -55,3 +62,11 @@ Style/Alias:
 
 Rails/DynamicFindBy:
   Enabled: false
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - app/helpers/dragnet/type_view.rb
+
+Naming/PredicateMethod:
+  Exclude:
+    - app/models/dragnet/meta_data.rb

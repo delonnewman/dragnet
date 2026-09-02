@@ -57,6 +57,7 @@ module Dragnet
       def merge(edit, projection)
         question_id = edit.details.fetch(:question_id)
         return projection if question_id.to_i < 0
+
         projection.merge(
           questions: projection[:questions].merge(
             question_id => projection[:questions].fetch(question_id).merge(_destroy: true)

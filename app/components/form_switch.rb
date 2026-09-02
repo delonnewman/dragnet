@@ -8,10 +8,10 @@ module Dragnet::Components
       @label_attributes = label_attributes
     end
 
-    def view_template(&content)
+    def view_template(&)
       div(class: 'form-check form-switch') do
         input(class: 'form-check-input', type: 'checkbox', role: 'switch', id: @id, **@input_attributes)
-        label(class: 'form-check-label', for: @id, **@label_attributes, &content)
+        label(class: 'form-check-label', for: @id, **@label_attributes, &)
       end
     end
   end

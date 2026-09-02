@@ -8,8 +8,8 @@ module Dragnet
         true
       end
 
-      def [](*args)
-        new(active_record_class, *args)
+      def [](*)
+        new(active_record_class, *)
       end
 
       def generate(*args)
@@ -19,8 +19,8 @@ module Dragnet
         obj.generate(*args)
       end
 
-      def generate!(*args)
-        generate(*args).tap(&:save!)
+      def generate!(*)
+        generate(*).tap(&:save!)
       end
 
       def active_record_class_name

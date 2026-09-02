@@ -5,13 +5,13 @@ module Dragnet
         true
       end
 
-      def [](*args, **kwargs)
-        new(*args, **kwargs)
+      def [](*, **)
+        new(*, **)
       end
     end
 
-    def generate(*args, **kwargs)
-      call(*args, **kwargs)
+    def generate(*, **)
+      call(*, **)
     end
   end
 end

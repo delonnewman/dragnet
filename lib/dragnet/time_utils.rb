@@ -11,7 +11,7 @@ module Dragnet
       hour = value.is_a?(Integer) ? value : value.hour
       ampm = hour >= 12 && hour != 24 ? 'PM' : 'AM'
       hr   = hour > 12 ? hour % 12 : hour
-      hr   = hr.zero? ? 12 : hr
+      hr   = 12 if hr.zero?
 
       "#{hr} #{ampm}"
     end

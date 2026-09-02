@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Submission Requests', type: :request do
+describe 'Submission Requests' do
   let(:survey) { Dragnet::Survey[public: false].generate! }
 
   def create_reply(submitted: false)
@@ -10,8 +10,8 @@ describe 'Submission Requests', type: :request do
   end
 
   def submission_data
-    survey.questions.each_with_object({}) do |question, form_data|
-      form_data[question.form_name] = Dragnet::AnswerValue[question:].generate
+    survey.questions.to_h do |question|
+      [question.form_name, Dragnet::AnswerValue[question:].generate]
     end
   end
 

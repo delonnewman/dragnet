@@ -11,15 +11,15 @@ module Dragnet
         advised_class.name.split('::').last.underscore.to_sym
       end
 
-      def after(name, &block)
-        advise_method(name, :after, &block)
+      def after(name, &)
+        advise_method(name, :after, &)
       end
 
-      def before(name, &block)
-        advise_method(name, :before, &block)
+      def before(name, &)
+        advise_method(name, :before, &)
       end
 
-      def advise_method(name, phase, &block)
+      def advise_method(name, phase, &)
         raise 'can only advise methods on classes' unless advised_class.is_a?(Class)
 
         aliased = :"#{name}_without_advice"
@@ -28,13 +28,13 @@ module Dragnet
         case phase
         when :before
           advised_class.define_method(name) do |*args, **kwargs|
-            advised_object.instance_exec(*args, **kwargs, &block)
+            advised_object.instance_exec(*args, **kwargs, &)
             send(aliased, *args, **kwargs)
           end
         when :after
           advised_class.define_method(name) do |*args, **kwargs|
             result = send(aliased, *args, **kwargs)
-            advised_object.instance_exec(result, &block)
+            advised_object.instance_exec(result, &)
           end
         else
           raise "invalid phase #{phase.inspect}"
