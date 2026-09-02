@@ -23,8 +23,16 @@ module Dragnet
       answers_cache.answers
     end
 
+    # @rbs question: Dragnet::Question
+    # @rbs return: Array[Dragnet::Answer]
     def answers_to(question)
       cached_answers.select { |a| a.question_id == question.id }
+    end
+
+    # @rbs question: Dragnet::Question
+    # @rbs return: Dragnet::Value
+    def get(question)
+      question.type.build_value_from_reply(question)
     end
 
     # Analytics
