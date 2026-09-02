@@ -10,7 +10,7 @@ module Dragnet
       def calculate_occurrence_table(...) =
         StatsReport::CalculateOccurrenceTable.new(question, ...)
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         Value.new(answer.long_text_value, answer.float_value)
       end
 

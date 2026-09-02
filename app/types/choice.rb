@@ -3,7 +3,7 @@ module Dragnet
     class Choice < Countable
       def do_before_saving_answer(...) = DoNothing.new
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         option = answer.question_option
         Value.new(text: option.text, weight: option.weight)
       end

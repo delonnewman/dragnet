@@ -5,7 +5,7 @@ module Dragnet
         super(value).to_time
       end
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         Temporal::Value.new(answer.time_value)
       end
 

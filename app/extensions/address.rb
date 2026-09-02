@@ -5,7 +5,7 @@ module Dragnet
       def render_answers_text(...)     = RenderAnswersText.new(question, ...)
       def get_number_value(...)        = GetNumerValue.new(question, ...)
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         build_value_from_reply(answer.reply)
       end
 

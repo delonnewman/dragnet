@@ -15,7 +15,7 @@ module Dragnet
         end
       end
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         Value.new(answer.boolean_value)
       end
 

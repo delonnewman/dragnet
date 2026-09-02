@@ -12,7 +12,7 @@ module Dragnet
         end
       end
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         Number::Value.new(answer.float_value)
       end
 

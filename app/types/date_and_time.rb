@@ -5,7 +5,7 @@ module Dragnet
         super(value).to_time
       end
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         date = answer.date_value
         time = answer.time_value
         value = DateTime.new(

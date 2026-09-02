@@ -3,7 +3,7 @@ module Dragnet
     class Text < Countable
       def do_before_saving_answer(...) = DoNothing.new
 
-      def build_value(answer)
+      def build_value_from_answer(answer)
         Value.new(answer.short_text_value)
       end
 
