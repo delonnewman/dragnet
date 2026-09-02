@@ -31,21 +31,6 @@ module Dragnet
         @tags = array
       end
 
-      def perform(action, class_name: nil)
-        klass = (class_name || name.to_s.classify).constantize
-        define_method action do |**args|
-          klass.new(question, **args)
-        end
-      end
-
-      def ignore(*action_names)
-        action_names.each do |name|
-          define_method name do |**_|
-            DoNothing.new
-          end
-        end
-      end
-
       def find(symbol)
         index.fetch(symbol.to_sym) do
           raise TypeError, "#{symbol.inspect} is not a valid #{self}"
@@ -111,14 +96,14 @@ module Dragnet
     # @abstract
     # @rbs _answer: Dragnet::Answer
     # @rbs return: Dragnet::Value
-    def build_value(_answer)
+    def build_value_from_answer(_answer)
       raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
     end
 
     # @rbs reply: Dragnet::Reply
     # @rbs return: Dragnet::Value
     def build_value_from_reply(reply)
-      build_value(reply.answers.first)
+      build_value_from_answer(reply.answers.first)
     end
 
     # @abstract
