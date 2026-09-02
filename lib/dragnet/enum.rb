@@ -1,5 +1,32 @@
 module Dragnet
   class Enum
+    class Error < TypeError
+      def self.member_missing(enum, value)
+        valstr = enum.values.map(&:inspect).join(', ')
+        keystr = enum.keys.map(&:inspect).join(', ')
+        msg    = "#{value.inspect} can't be coerced into a #{enum} member, " \
+                 "valid keys are: #{keystr}, valid values are: #{valstr}"
+
+        new(msg)
+      end
+
+      def self.invalid_value(enum, value)
+        valstr = enum.values.map(&:inspect).join(', ')
+        msg    = "#{value.inspect} is not a valid #{enum} value, valid " \
+                 "value are: #{valstr}"
+
+        new(msg)
+      end
+
+      def self.invalid_key(enum, key)
+        keystr = enum.keys.map(&:inspect).join(', ')
+        msg    = "#{key.inspect} is not a valid #{enum} key, valid keys " \
+                 "are: #{keystr}"
+
+        new(msg)
+      end
+    end 
+    
     def self.encode_key(key)
       case key
       when Symbol
@@ -73,11 +100,7 @@ module Dragnet
       end
   
       def member_missing(value)
-        valstr = values.map(&:inspect).join(', ')
-        keystr = keys.map(&:inspect).join(', ')
-
-        raise TypeError, "#{value.inspect} can't be coerced into a #{self} member, " \
-                         "valid keys are: #{keystr}, valid values are: #{valstr}"
+        raise Error.member_missing(self, value)
       end
 
       def value?(value)
@@ -90,16 +113,14 @@ module Dragnet
   
       def of(value)
         by_value.fetch(value) do
-          valstr = values.map(&:inspect).join(', ')
-          raise TypeError, "#{value.inspect} is not a valid #{self} value, valid values are: #{valstr}"
+          raise Error.invalid_value(self, value)
         end
       end
   
       def keyed(key)
         encoded = Enum.encode_key(key)
         by_key.fetch(encoded) do
-          keystr = keys.map(&:inspect).join(', ')
-          raise TypeError, "#{key.inspect} is not a valid #{self} key, valid keys are: #{keystr}"
+          raise Error.invalid_key(self, key)
         end
       end
   
