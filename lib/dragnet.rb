@@ -61,12 +61,16 @@ module Dragnet
     current_git_sha[0, 8]
   end
 
-  # Return the current git SHA hash.  It will first look for the GIT_SHA environment variable
-  # if this is not set then it will attempt to get the latest hash from git.
+  # Return the current git SHA hash.  It will first look for the GIT_SHA
+  # environment variable if this is not set then it will attempt to get
+  # the latest hash from git.
   #
   #: () -> String
   def self.current_git_sha
-    @current_git_sha ||= ENV.fetch('GIT_SHA') { `git log -n 1 --format="%H"` } # use latest git hash as version
+    @current_git_sha ||= # use latest git hash as version
+      ENV.fetch('GIT_SHA') do
+        `git log -n 1 --format="%H"`
+      end
   end
 
   # Return the current release of the system (see RELEASE.txt in project root)

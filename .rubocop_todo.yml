@@ -6,22 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 26
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment, AllowRBSInlineAnnotation, AllowSteepAnnotation, AllowYARDCommentBlockSeparator.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'app/models/dragnet/meta_data.rb'
-    - 'app/models/dragnet/type.rb'
-    - 'app/models/dragnet/value.rb'
-    - 'lib/dragnet.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Layout/LeadingEmptyLines:
-  Exclude:
-    - 'app/views/data_grid/show.json.jbuilder'
-
 # Offense count: 282
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: Max, AllowHeredoc, AllowURI, AllowQualifiedName, URISchemes, AllowRBSInlineAnnotation, AllowCopDirectives, AllowedPatterns, SplitStrings.

@@ -7,38 +7,30 @@ module Dragnet::Views::Surveys
 
     def view_template
       ul(class: 'nav nav-tabs', hx: { boost: true }) do
-        li(class: 'nav-item') do
-          a(href: root_path, hx: { boost: false }, class: 'nav-link') do
-            render Icon['fas', 'arrow-left']
-            plain ' Back to Workspace'
-          end
+        render NavItem.new(href: root_path, hx: { boost: false }) do
+          render Icon['fas', 'arrow-left']
+          plain ' Back to Workspace'
         end
-        li(class: 'nav-item') do
-          a(href: survey_path(@survey), class: ['nav-link', ('active' if @selected == :summary)]) do
-            if @selected == :summary
-              render Icon['fas', 'gauge']
-              plain ' '
-            end
-            plain 'Summary'
+        render NavItem.new(href: survey_path(@survey), active: @selected == :summary) do
+          if @selected == :summary
+            render Icon['fas', 'gauge']
+            plain ' '
           end
+          plain 'Summary'
         end
-        li(class: 'nav-item') do
-          a(href: survey_data_path(@survey), class: ['nav-link', ('active' if @selected == :data)]) do
-            if @selected == :data
-              render Icon['fas', 'table']
-              plain ' '
-            end
-            plain 'Records'
+        render NavItem.new(href: survey_data_path(@survey), active: @selected == :data) do
+          if @selected == :data
+            render Icon['fas', 'table']
+            plain ' '
           end
+          plain 'Records'
         end
-        li(class: 'nav-item') do
-          a(href: survey_map_path(@survey), class: ['nav-link', ('active' if @selected == :map)]) do
-            if @selected == :map
-              render Icon['fas', 'location-dot']
-              plain ' '
-            end
-            plain 'Map'
+        render NavItem.new(href: survey_map_path(@survey), active: @selected == :map) do
+          if @selected == :map
+            render Icon['fas', 'location-dot']
+            plain ' '
           end
+          plain 'Map'
         end
       end
     end # template

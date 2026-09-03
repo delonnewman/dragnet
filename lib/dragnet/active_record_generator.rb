@@ -47,8 +47,13 @@ module Dragnet
 
     # TODO: add logic for generating instances through reflection
     def generate(other_attributes = EMPTY_HASH)
-      return call                            if respond_to?(:call) && other_attributes.empty?
-      return call(other_attributes.generate) if respond_to?(:call)
+      if respond_to?(:call) && other_attributes.empty?
+        return call
+      end
+
+      if respond_to?(:call)
+        return call(other_attributes.generate)
+      end
 
       active_record_class.new(attributes.merge(other_attributes.generate))
     end

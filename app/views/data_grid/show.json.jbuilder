@@ -1,4 +1,3 @@
-
 json.id grid.survey.id
 json.name grid.survey.name
 json.page grid.page

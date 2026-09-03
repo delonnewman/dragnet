@@ -20,7 +20,9 @@ module Dragnet
       end
 
       def advise_method(name, phase, &)
-        raise 'can only advise methods on classes' unless advised_class.is_a?(Class)
+        unless advised_class.is_a?(Class)
+          raise 'can only advise methods on classes'
+        end
 
         aliased = :"#{name}_without_advice"
         advised_class.alias_method(aliased, name)
@@ -41,7 +43,8 @@ module Dragnet
         end
       end
 
-      def advises(advised_class, as: advised_object_method_name(advised_class), args: EMPTY_ARRAY)
+      def advises(advised_class, as: advised_object_method_name(advised_class),
+                  args: EMPTY_ARRAY)
         self.advised_class = advised_class
         self.advised_object_alias = as
         self.advised_args = args
@@ -70,7 +73,9 @@ module Dragnet
       end
 
       unless args.count == advised_args.count
-        raise ArgumentError, "wrong number of arguments (given #{args.count + 1} expected #{advised_args.count + 1}"
+        msg = "wrong number of arguments (given #{args.count + 1} " \
+              "expected #{advised_args.count + 1}"
+        raise ArgumentError, msg
       end
 
       @advised_object = advised_object

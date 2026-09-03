@@ -26,6 +26,10 @@ AllCops:
 
 Layout/LineLength:
   Max: 80
+  Exclude:
+    - 'spec/**/*_spec.rb'
+    - 'spec/support/**/*.rb'
+    - 'lib/**/*.rake'
 
 Layout/HashAlignment:
   Enabled: false
@@ -33,10 +37,16 @@ Layout/HashAlignment:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented_relative_to_receiver
 
+Layout/LeadingCommentSpace:
+  AllowSteepAnnotation: true
+
 Metrics/MethodLength:
   Enabled: false
 
 Metrics/ModuleLength:
+  Enabled: false
+
+Style/ExplicitBlockArgument:
   Enabled: false
 
 Style/ClassAndModuleChildren:
@@ -70,3 +80,4 @@ Rails/HelperInstanceVariable:
 Naming/PredicateMethod:
   Exclude:
     - app/models/dragnet/meta_data.rb
+

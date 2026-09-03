@@ -1,8 +1,9 @@
 module Dragnet
   module Types
     module Countable
-      def stats_table(...)   = StatsReport::CollectStats.new(question, ...)
-      def tallies_table(...) = StatsReport::CreateHistogram.new(question, ...)
+      S = StatsReport
+      def collect_stats(...)    = S::CollectStats.new(question, ...)
+      def create_histogram(...) = S::CreateHistogram.new(question, ...)
     end
   end
 end

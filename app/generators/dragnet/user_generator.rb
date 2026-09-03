@@ -9,6 +9,13 @@ class Dragnet::UserGenerator < Dragnet::ActiveRecordGenerator
     nick  = name.split.first
     pass  = 'testing123'
 
-    User.new(name: name, login: login, email: email, nickname: nick, password: pass, &:skip_confirmation!)
+    User.new(
+      name:,
+      login:,
+      email:,
+      nickname: nick,
+      password: pass,
+      &:skip_confirmation!
+    )
   end
 end

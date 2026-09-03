@@ -20,7 +20,7 @@ module Dragnet
     end
 
     def choice
-      opts = question.question_options.reduce({}) { |table, opt| table.merge!(opt.id => opt.text) }
+      opts = question.question_options.to_h { [it.id, it.text] }
       data = reportable.answers.where(question:).group(:question_option_id).count
 
       data.transform_keys(&opts)
