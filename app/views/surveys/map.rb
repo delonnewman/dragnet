@@ -25,6 +25,7 @@ module Dragnet::Views::Surveys
     def self.tab_name = 'Map'
     def self.tab_icon_class = 'fas fa-location-dot'
     def self.types = [Dragnet::Ext::Address]
+    def self.path(survey, context) = context.survey_map_path(survey)
 
     CODE = <<~JAVASCRIPT
       (function () {

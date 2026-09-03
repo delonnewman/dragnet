@@ -2,6 +2,8 @@
 
 module Dragnet::Views::Surveys
   class TabbedView < Dragnet::Views::Base
+    extend Phlex::Rails::Helpers::Routes
+
     def self.tab_name
       raise NoMethodError
     end
@@ -10,9 +12,23 @@ module Dragnet::Views::Surveys
       raise NoMethodError
     end
 
+    def self.path(_survey, _context)
+      raise NoMethodError
+    end
+
+    def self.symbol
+      name.split('::').last.downcase.to_sym
+    end
+
+    def self.selected?(value)
+      symbol == value
+    end
+
     def self.types = nil
 
-    def initialize(survey:, selected: self.class.name.split('::').last.downcase.to_sym)
+    delegate :symbol, to: 'self.class'
+
+    def initialize(survey:, selected: symbol)
       @survey = survey
       @selected = selected
     end

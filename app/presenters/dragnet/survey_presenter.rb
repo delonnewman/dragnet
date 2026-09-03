@@ -6,7 +6,7 @@ class Dragnet::SurveyPresenter < Dragnet::Presenter
   presents Survey, as: :survey
 
   def views
-    Dragnet::Survey::Views.present(survey)
+    Dragnet::Survey::Views.default.present(survey)
   end
   memoize :views
 

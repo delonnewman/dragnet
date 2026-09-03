@@ -3,10 +3,10 @@
 module Dragnet
   class Survey::Views
     def self.default
-      @default = new.tap do |views|
-        views[:summary] = :summary
-        views[:table] = :table
-        views[:map] = :map
+      @default ||= new.tap do |views|
+        views[:summary] = Dragnet::Views::Surveys::Summary
+        views[:table] = Dragnet::Views::Surveys::Table
+        views[:map] = Dragnet::Views::Surveys::Map
         views.filter(
           :map,
           ->(survey, _) { survey.types.include?(Ext::Address) }
@@ -21,7 +21,7 @@ module Dragnet
     end
 
     def []=(name, view)
-      raise TypeError, 'Not a valid view' unless view.is_a?(Symbol)
+      raise TypeError, 'Not a valid view' unless view <= Dragnet::Views::Base
 
       @views[name.to_sym] = view
     end

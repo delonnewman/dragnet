@@ -44,7 +44,14 @@ module Dragnet
     retract_associated :replies
 
     # DataGrids
-    has_many :data_grids, class_name: 'Dragnet::DataGrid', dependent: :delete_all, inverse_of: :survey
+    has_many :data_grids,
+             class_name: 'Dragnet::DataGrid',
+             dependent: :delete_all,
+             inverse_of: :survey
+
+    def views
+      Views.default.present(self)
+    end
 
     # Survey specific mixins
     include Reporting

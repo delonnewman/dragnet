@@ -3,7 +3,8 @@
 module Dragnet::Views::Surveys
   class Summary < TabbedView
     def self.tab_name = 'Summary'
-    def self.tab_icon_class = 'fas ga-guage'
+    def self.tab_icon_class = 'fas fa-gauge'
+    def self.path(survey, context) = context.survey_path(survey)
 
     def view_template
       if @survey.not_ready_for_replies?

@@ -11,26 +11,14 @@ module Dragnet::Views::Surveys
           render Icon['fas', 'arrow-left']
           plain ' Back to Workspace'
         end
-        render NavItem.new(href: survey_path(@survey), active: @selected == :summary) do
-          if @selected == :summary
-            render Icon['fas', 'gauge']
-            plain ' '
+        @survey.views.each do |view| 
+          render NavItem.new(href: view.path(@survey, view_context), active: view.selected?(@selected)) do
+            if view.selected?(@selected)
+              render Icon[view.tab_icon_class]
+              plain ' '
+            end
+            plain view.tab_name
           end
-          plain 'Summary'
-        end
-        render NavItem.new(href: survey_data_path(@survey), active: @selected == :data) do
-          if @selected == :data
-            render Icon['fas', 'table']
-            plain ' '
-          end
-          plain 'Records'
-        end
-        render NavItem.new(href: survey_map_path(@survey), active: @selected == :map) do
-          if @selected == :map
-            render Icon['fas', 'location-dot']
-            plain ' '
-          end
-          plain 'Map'
         end
       end
     end # template
