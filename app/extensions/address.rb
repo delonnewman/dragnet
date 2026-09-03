@@ -3,7 +3,7 @@ module Dragnet
     class Address < Types::Text
       def do_before_saving_answer(...) = DoBeforeSavingAnswer.new(question, ...)
       def render_answers_text(...)     = RenderAnswersText.new(question, ...)
-      def get_number_value(...)        = GetNumerValue.new(question, ...)
+      def get_number_value(...)        = GetNumberValue.new(question, ...)
 
       def build_value_from_answer(answer)
         build_value_from_reply(answer.reply)
@@ -27,7 +27,10 @@ module Dragnet
       end
 
       class Value < Dragnet::Value
-        attr_reader :text, :position, :province, :country # : String # : ?Dragnet::Ext::Address::Position # : ?String # : ?String
+        attr_reader :text #: String
+        attr_reader :position #: ?Dragnet::Ext::Address::Position
+        attr_reader :province #: ?String
+        attr_reader :country #: ?String
 
         def initialize(text:, position: nil, province: nil, country: nil)
           @text     = text
