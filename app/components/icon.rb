@@ -1,17 +1,22 @@
 module Dragnet::Components
   class Icon < Base
-    def self.[](style, name, **attributes)
-      new(style:, name:, **attributes)
+    def self.[](style, name = nil, **attributes)
+      klass = if name
+                "#@style fa-#@name"
+              else
+                style
+              end
+
+      new(klass, **attributes)
     end
 
-    def initialize(style:, name:, **attributes)
-      @style      = style
-      @name       = name
+    def initialize(icon_class, **attributes)
+      @icon_class = icon_class
       @attributes = attributes
     end
 
     def view_template
-      i(**mix({ class: "#@style fa-#@name" }, @attributes))
+      i(**mix({ class: @icon_class }, @attributes))
     end
   end
 end
