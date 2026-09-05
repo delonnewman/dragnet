@@ -2,7 +2,7 @@ module Dragnet::Components
   class Icon < Base
     def self.[](style, name = nil, **attributes)
       klass = if name
-                "#@style fa-#@name"
+                "#{style} fa-#{name}"
               else
                 style
               end
