@@ -40,7 +40,7 @@ module Dragnet::Views::Surveys
 
     def view_template
       id  = dom_id(@survey, :map)
-      lib = render_library(:maplibre)
+      lib = render_library(:mapbox)
       script(src: 'https://unpkg.com/mapkick@0.2.6/dist/mapkick.js')
 
       div(id:, style: 'height:800px')
