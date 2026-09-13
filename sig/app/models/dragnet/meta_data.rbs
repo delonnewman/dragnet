@@ -1,0 +1,48 @@
+module Dragnet
+  # A proxy for meta data and their life-cycle
+  class MetaData
+    @mutex: untyped
+
+    @self_describable: untyped
+
+    @data: untyped
+
+    @prefix: untyped
+
+    attr_reader prefix: untyped
+
+    def initialize: (untyped self_describable, ?prefix: untyped?) -> void
+
+    def to_s: () -> ::String
+
+    alias inspect to_s
+
+    def data: () -> untyped
+
+    alias to_h data
+
+    def reset_cache!: () -> untyped
+
+    def add!: (untyped key, untyped value) -> untyped
+
+    alias []= add!
+
+    def add: (untyped key, untyped value) -> untyped
+
+    def remove!: (untyped key) -> untyped
+
+    def remove: (untyped key) -> untyped
+
+    def update_data!: (untyped data) -> self
+
+    alias data= update_data!
+
+    def update_data: (untyped data) -> (true | false)
+
+    private
+
+    def assign_data: (untyped data) -> untyped
+
+    def load_data: (?reload: bool) -> untyped
+  end
+end

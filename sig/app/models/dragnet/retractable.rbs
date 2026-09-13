@@ -1,0 +1,9 @@
+module Dragnet
+  module Retractable
+    extend ActiveSupport::Concern
+
+    def retracted!: (?Time timestamp) -> self
+    def retract: (?Time timestamp) -> (ActiveRecord::Base | false)
+    def retract!: (?Time timestamp) -> ActiveRecord::Base
+  end
+end

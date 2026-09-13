@@ -1,0 +1,11 @@
+module Dragnet
+  module Views
+    module Surveys
+      class TabbedView
+        def self.path: (Dragnet::Survey, ActionView::Base) -> String
+        def self.tab_icon_class: -> String
+        def self.tab_name: -> String
+      end
+    end
+  end
+end

@@ -1,0 +1,9 @@
+module Dragnet
+  # An individual edit to a survey
+  class SurveyEdit < ApplicationRecord
+    def applied?: () -> bool
+    def applied!: (?Time timestamp) -> self
+    def apply: (?Time timestamp) -> (self | false)
+    def apply!: (?Time timestamp) -> self
+  end
+end

@@ -1,0 +1,28 @@
+module Dragnet
+  class Survey < ApplicationRecord
+    include SelfDescribable
+
+    include UniquelyIdentifiable
+
+    include Retractable
+
+    include Presentable
+
+    def types: () -> untyped
+
+    def views: () -> untyped
+
+    # Survey specific mixins
+    include Reporting
+
+    include Submissions
+
+    include Editing
+
+    include Copying
+
+    include Access
+
+    include Recording
+  end
+end

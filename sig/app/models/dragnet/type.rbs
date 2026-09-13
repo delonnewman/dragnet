@@ -1,0 +1,30 @@
+module Dragnet
+  class Type
+    self.@tags: Array[Symbol]
+    @question: Question
+    @meta: MetaData
+
+    def self.slug: () -> String
+    def self.symbol: () -> Symbol
+
+    alias self.to_sym self.symbol
+
+    def self.tags: () -> Array[Symbol]
+    def self.find: (Symbol symbol) -> Type?
+    def self.index: () -> Hash[Symbol, Type]
+    def self.all: (?reference: ::Symbol) -> Array[Symbol]
+    def self.hierarchy: (?reference: ::Symbol) -> Hash[Symbol, Array[Symbol]]
+
+    attr_reader question: Question
+
+    def initialize: (Question question) -> void
+    def meta: () -> MetaData
+    def meta=: (Hash[untyped, untyped] data) -> void
+    def dispatch: (untyped action_name, *untyped, **untyped) ?{ (?) -> untyped } -> untyped
+    def build_value_from_answer: (untyped _answer) -> untyped
+    def build_value_from_reply: (untyped reply) -> untyped
+    def assign_value: (untyped _answer, untyped _value) -> untyped
+    def encode: (untyped value) -> untyped
+    def decode: (untyped _value) -> untyped
+  end
+end

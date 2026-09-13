@@ -1,0 +1,8 @@
+module Dragnet
+  module Typable
+    def type: () -> Type
+    def type=: (Type type) -> void
+    def type_class=: (Class klass) -> void
+    def type_class: () -> Class
+  end
+end

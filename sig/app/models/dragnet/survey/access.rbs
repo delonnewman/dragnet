@@ -1,0 +1,8 @@
+class Dragnet::Survey
+  module Access
+    def opened!: () -> self
+    def open!: () -> untyped
+    def closed!: () -> self
+    def close!: () -> untyped
+  end
+end

@@ -1,0 +1,7 @@
+module Dragnet
+  module Views
+    class Base
+      def cache_store: -> Rails::Cache::Store
+    end
+  end
+end

@@ -1,0 +1,7 @@
+module Dragnet::Survey::Submissions
+  extend ActiveSupport::Concern
+
+  def reply_created?: (String visitor_token) -> bool
+  def reply_completed?: (String visitor_token) -> bool
+  def existing_reply: (String visitor_token) -> Dragnet::Reply
+end

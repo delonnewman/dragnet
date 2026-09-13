@@ -1,0 +1,15 @@
+module Dragnet
+  class Question < ApplicationRecord
+    include SelfDescribable
+
+    include Retractable
+
+    include Presentable
+
+    include Typable
+
+    def settings: () -> untyped
+
+    def removed?: () -> false
+  end
+end

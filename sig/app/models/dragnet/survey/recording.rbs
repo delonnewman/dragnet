@@ -1,0 +1,7 @@
+class Dragnet::Survey
+  module Recording
+    extend ActiveSupport::Concern
+
+    def set_default_changes_status: () -> void
+  end
+end

@@ -1,0 +1,7 @@
+module Dragnet
+  module Presentable
+    def present: (?with: untyped?) -> (self | untyped)
+    def presenter_class: () -> untyped
+    def presenter_class_name: () -> ::String
+  end
+end

@@ -1,0 +1,11 @@
+module Dragnet
+  module SelfDescribable
+    @meta: untyped
+
+    extend ActiveSupport::Concern
+
+    def meta: () -> MetaData
+
+    def meta=: (Hash[untyped, untyped] data_hash) -> untyped
+  end
+end

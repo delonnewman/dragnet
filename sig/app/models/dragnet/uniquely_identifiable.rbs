@@ -1,0 +1,7 @@
+module Dragnet
+  module UniquelyIdentifiable
+    extend ActiveSupport::Concern
+
+    def short_id: () -> String
+  end
+end

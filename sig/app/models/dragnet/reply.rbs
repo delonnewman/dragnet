@@ -1,0 +1,22 @@
+module Dragnet
+  class Reply < ApplicationRecord
+    include Retractable
+
+    def cached_answers: () -> untyped
+    def answers_to: (untyped question) -> untyped
+    def value: (untyped question) -> untyped
+    def ensure_visit: (untyped visit) -> (untyped | nil)
+
+    CSRF_TOKEN_PRECISION: 256
+    EXPIRATION_DURATION: untyped
+
+    def expired?: (?untyped now) -> untyped
+    def submitted!: (untyped timestamp) -> self
+    def submit: (untyped attributes, ?timestamp: untyped) -> (nil | untyped)
+    def submit!: (untyped attributes, ?timestamp: untyped) -> untyped
+
+    private
+
+    def perform_submission: (untyped attributes, untyped timestamp) -> untyped
+  end
+end

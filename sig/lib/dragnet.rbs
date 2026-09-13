@@ -34,8 +34,8 @@ module Dragnet
     def self.tagged_uuid: (String) -> String
     def self.short_uuid: () -> String
     def self.uuid: () -> String
-    def self.shorten_uuid: (untyped) -> String
-    def self.expand_short_uuid: (untyped) -> String
+    def self.shorten_uuid: (String) -> String
+    def self.expand_short_uuid: (String) -> String
   end
 
   class Composed

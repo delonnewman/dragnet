@@ -1,0 +1,9 @@
+class Dragnet::Survey
+  module Editing
+    extend ActiveSupport::Concern
+
+    def edited?: () -> bool
+    def edited: () -> Dragnet::EditedSurvey
+    def projection: () -> Hash[untyped, untyped]
+  end
+end

@@ -1,0 +1,8 @@
+class Dragnet::Survey
+  module Copying
+    extend ActiveSupport::Concern
+
+    def copy?: () -> bool
+    def copy!: () -> (Dragnet::Survey | false)
+  end
+end

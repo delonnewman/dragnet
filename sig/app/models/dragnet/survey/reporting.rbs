@@ -1,0 +1,5 @@
+module Dragnet::Survey::Reporting
+  extend ActiveSupport::Concern
+
+  def fields: () -> Enumerable[Dragnet::Question]
+end

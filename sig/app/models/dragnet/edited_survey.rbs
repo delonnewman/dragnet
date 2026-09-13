@@ -1,0 +1,14 @@
+module Dragnet
+  class EditedSurvey
+    include ActiveModel::API
+    include ActiveModel::Attributes
+    include Memoizable
+
+    def self.build: (Survey, ?edits: Enumerable[SurveyEdit]) -> EditedSurvey
+
+    def find_question: (String question_id) -> Question?
+    def questions: () -> Array[Question]
+    def persisted?: () -> true
+    def readonly?: () -> true
+  end
+end
