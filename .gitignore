@@ -53,3 +53,4 @@ app/assets/javascripts/frontend/.calva/output-window/output.calva-repl
 /.agent-shell/
 /coverage/
 /.eca/
+/sig/gems/
