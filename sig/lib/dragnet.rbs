@@ -75,9 +75,9 @@ module Dragnet
     def type: () -> Symbol
 
     class Error < TypeError
-      def self.member_missing: (Enum[_EnumValue], _EnumValue) -> Error
-      def self.invalid_value: (Enum[_EnumValue], _EnumValue) -> Error
-      def self.invalid_key: (Enum[_EnumValue], Symbol) -> Error
+      def self.member_missing: (Enum[_EnumValue], untyped) -> Error
+      def self.invalid_value: (Enum[_EnumValue], untyped) -> Error
+      def self.invalid_key: (Enum[_EnumValue], untyped) -> Error
     end
   end
 
