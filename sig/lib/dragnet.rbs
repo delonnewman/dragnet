@@ -1,7 +1,7 @@
 module Dragnet
-  @github_url: Addressable::URI
+  @github_url: untyped
   @current_git_sha: String
-  def self.github_url: () -> Addressable::URI
+  def self.github_url: () -> untyped
   def self.version: () -> String
   def self.current_git_sha: () -> String
   def self.release: () -> String
@@ -73,6 +73,12 @@ module Dragnet
     def serialize: (untyped) -> void
     def binary?: () -> false
     def type: () -> Symbol
+
+    class Error < TypeError
+      def self.member_missing: (Enum[_EnumValue], _EnumValue) -> Error
+      def self.invalid_value: (Enum[_EnumValue], _EnumValue) -> Error
+      def self.invalid_key: (Enum[_EnumValue], Symbol) -> Error
+    end
   end
 
   module ClassMetaData
