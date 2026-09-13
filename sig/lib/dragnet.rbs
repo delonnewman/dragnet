@@ -1,7 +1,7 @@
 module Dragnet
-  @github_url: untyped
+  @github_url: Addressable::URI
   @current_git_sha: String
-  def self.github_url: () -> untyped
+  def self.github_url: () -> Addressable::URI
   def self.version: () -> String
   def self.current_git_sha: () -> String
   def self.release: () -> String
