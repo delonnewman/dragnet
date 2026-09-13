@@ -2,26 +2,26 @@ module Dragnet
   class Enum
     class Error < TypeError
       def self.member_missing(enum, value)
-        valstr = enum.values.map(&:inspect).join(', ')
-        keystr = enum.keys.map(&:inspect).join(', ')
+        val_str = enum.values.map(&:inspect).join(', ')
+        key_str = enum.keys.map(&:inspect).join(', ')
         msg    = "#{value.inspect} can't be coerced into a #{enum} member, " \
-                 "valid keys are: #{keystr}, valid values are: #{valstr}"
+                 "valid keys are: #{key_str}, valid values are: #{val_str}"
 
         new(msg)
       end
 
       def self.invalid_value(enum, value)
-        valstr = enum.values.map(&:inspect).join(', ')
+        val_str = enum.values.map(&:inspect).join(', ')
         msg    = "#{value.inspect} is not a valid #{enum} value, valid " \
-                 "value are: #{valstr}"
+                 "value are: #{val_str}"
 
         new(msg)
       end
 
       def self.invalid_key(enum, key)
-        keystr = enum.keys.map(&:inspect).join(', ')
+        key_str = enum.keys.map(&:inspect).join(', ')
         msg    = "#{key.inspect} is not a valid #{enum} key, valid keys " \
-                 "are: #{keystr}"
+                 "are: #{key_str}"
 
         new(msg)
       end
@@ -68,7 +68,7 @@ module Dragnet
     # Class Methods
 
     class << self
-      def member(name, value: name.to_s, key: Enum.encode_key(name.to_s), &block)
+      def member(name, value: name.to_s, key: Enum.encode_key(name), &block)
         subclass = Class.new(self, &block)
         const_set(name, subclass)
         instance = subclass.new(value, key)
