@@ -34,6 +34,6 @@ class DataGrid::RowsController < DataGridController
   private
 
   def reply_params
-    params.require(:reply).permit(survey.reply_attributes)
+    params.require(:reply).permit(survey.submission_parameters.reply_attributes)
   end
 end

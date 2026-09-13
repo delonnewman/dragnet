@@ -232,6 +232,7 @@ GEM
     jwt (3.2.0)
       base64
     language_server-protocol (3.17.0.4)
+    lint_roller (1.1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -402,7 +403,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
-    rbs (4.0.3)
+    rbs (4.2.0)
       logger
       prism (>= 1.6.0)
       tsort
@@ -421,6 +422,7 @@ GEM
     responders (3.2.0)
       actionpack (>= 7.0)
       railties (>= 7.0)
+    rorvswild_theme_rdoc (0.3.0)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -446,18 +448,23 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.2)
-    rubocop (1.71.2)
-      json (~> 2.3)
-      language_server-protocol (>= 3.17.0)
-      parallel (~> 1.10)
+    rubocop (1.90.0)
+      json (>= 2.3)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
+      parallel (>= 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.38.0)
-      parser (>= 3.3.1.0)
+    rubocop-ast (1.50.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.7)
+    rubocop-i18n (3.3.0)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.72.1)
     rubocop-performance (1.23.1)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
@@ -468,8 +475,18 @@ GEM
       rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (3.4.0)
-      rubocop (~> 1.61)
+    rubocop-rspec (3.10.2)
+      lint_roller (~> 1.1)
+      regexp_parser (>= 2.0)
+      rubocop (~> 1.86, >= 1.86.2)
+    rubocop-rspec_rails (2.32.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
+      rubocop-rspec (~> 3.5)
+    rubocop-thread_safety (0.7.3)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
+      rubocop-ast (>= 1.44.0, < 2.0)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
     safely_block (0.4.1)
@@ -501,7 +518,7 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    steep (2.0.0)
+    steep (2.1.0)
       concurrent-ruby (>= 1.1.10)
       csv (>= 3.0.9)
       fileutils (>= 1.1.0)
@@ -512,7 +529,7 @@ GEM
       parser (>= 3.2)
       prism (>= 0.25.0)
       rainbow (>= 2.2.2, < 4.0)
-      rbs (~> 4.0)
+      rbs (~> 4.2)
       securerandom (>= 0.1)
       strscan (>= 1.0.0)
       terminal-table (>= 2, < 5)
@@ -547,14 +564,6 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    yard (0.9.45)
-    yard-activerecord (0.0.17)
-      activesupport
-      yard (>= 0.8.3)
-    yard-rspec (0.1)
-      yard
-    yardstick (0.9.9)
-      yard (~> 0.8, >= 0.8.7.2)
     zeitwerk (2.8.2)
 
 PLATFORMS
@@ -615,14 +624,20 @@ DEPENDENCIES
   rails-controller-testing
   rails-pattern_matching
   rails_live_reload
+  rbs
+  rdoc
+  rorvswild_theme_rdoc
   rqrcode
   rspec
   rspec-rails
   rubocop
+  rubocop-i18n
   rubocop-performance
   rubocop-rails
   rubocop-rake
   rubocop-rspec
+  rubocop-rspec_rails
+  rubocop-thread_safety
   sassc-rails
   sentimental
   shortuuid
@@ -632,10 +647,6 @@ DEPENDENCIES
   steep
   typeprof
   web-console
-  yard
-  yard-activerecord
-  yard-rspec
-  yardstick
 
 RUBY VERSION
   ruby 3.4.9p82

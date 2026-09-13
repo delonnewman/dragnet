@@ -23,8 +23,16 @@ module Dragnet
       answers_cache.answers
     end
 
+    # @rbs question: Dragnet::Question
+    # @rbs return: Array[Dragnet::Answer]
     def answers_to(question)
       cached_answers.select { |a| a.question_id == question.id }
+    end
+
+    # @rbs question: Dragnet::Question
+    # @rbs return: Dragnet::Value
+    def value(question)
+      question.type.build_value_from_reply(self)
     end
 
     # Analytics
@@ -36,7 +44,9 @@ module Dragnet
     end
 
     # Submission
-    with ReplySubmissionPolicy, delegating: %i[can_submit_reply? can_edit_reply? can_update_reply? can_complete_reply?]
+    with ReplySubmissionPolicy,
+         delegating: %i[can_submit_reply? can_edit_reply? can_update_reply?
+                        can_complete_reply?]
 
     CSRF_TOKEN_PRECISION = 256
     EXPIRATION_DURATION  = 30.minutes # TODO: move this to configration
@@ -69,12 +79,14 @@ module Dragnet
 
     def submit(attributes, timestamp: Time.zone.now)
       return if submitted?
+
       perform_submission(attributes, timestamp)
       save
     end
 
     def submit!(attributes, timestamp: Time.zone.now)
-      raise "Reply has already been submitted" if submitted;
+      raise "Reply has already been submitted" if submitted
+
       perform_submission(attributes, timestamp)
       save!
     end

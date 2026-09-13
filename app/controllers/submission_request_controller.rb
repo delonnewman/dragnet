@@ -49,7 +49,7 @@ class SubmissionRequestController < ApplicationController
   end
 
   def not_permitted?
-    !survey.can_submit_reply?(current_user)
+    !survey.reply_submission_policy.can_submit_reply?(current_user)
   end
 
   def revisit?
@@ -65,6 +65,9 @@ class SubmissionRequestController < ApplicationController
   end
 
   def submission_params
-    survey.submission_data(reply, params.permit(*survey.submission_attributes))
+    survey.submission_parameters.submission_data(
+      reply,
+      params.permit(*survey.submission_parameters.submission_attributes)
+    )
   end
 end

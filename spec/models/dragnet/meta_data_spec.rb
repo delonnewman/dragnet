@@ -27,5 +27,12 @@ describe Dragnet::MetaData do
     it 'does not perform any queries' do
       expect { described_class.new(self_describable) }.to perform_number_of_queries 0
     end
+
+    it 'can accept and optional `prefix` parameter' do
+      meta = described_class.new(self_describable, prefix: :type)
+      meta.data = { a: 1 }
+
+      expect(self_describable.meta_data).to include({ 'type' => { 'a' => 1 } })
+    end
   end
 end

@@ -1,6 +1,6 @@
 atom_feed do |feed|
   feed.title("Record Changes for #{survey.name}")
-  feed.updated(record_changes.first.created_at) if record_changes.count > 0
+  feed.updated(record_changes.first.created_at) if record_changes.any?
 
   record_changes.each do |change|
     feed.entry(change.record) do |entry|

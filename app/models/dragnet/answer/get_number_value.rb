@@ -16,6 +16,10 @@ module Dragnet
       answer.float_value
     end
 
+    def text
+      nil
+    end
+
     def temporal
       super&.to_i
     end

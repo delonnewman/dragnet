@@ -98,20 +98,20 @@ group :development do
   gem "rails_live_reload"
   gem 'rack-mini-profiler'
 
-  gem 'yard'
-  gem 'yard-activerecord'
-  gem 'yardstick'
-  gem 'yard-rspec'
-
   gem 'dockerfile-rails'
 
-  gem 'rubocop'
+  gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
-  gem 'rubocop-rspec', require: false
   gem 'rubocop-rake', require: false
   gem 'rubocop-performance', require: false
+  gem 'rubocop-thread_safety', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec_rails', require: false
+  gem 'rubocop-i18n', require: false
 
-  gem 'parser'
-  gem 'steep'
-  gem 'typeprof'
+  gem 'rbs', require: false
+  gem 'steep', require: false
+
+  gem 'rdoc', require: false
+  gem 'rorvswild_theme_rdoc', require: false
 end

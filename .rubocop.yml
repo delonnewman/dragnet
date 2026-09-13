@@ -1,20 +1,35 @@
+inherit_from: .rubocop_todo.yml
+
 require:
   - rubocop-rake
-  - rubocop-rspec
   - rubocop-rails
   - rubocop-performance
 
+plugins:
+  - rubocop-rspec
+  - rubocop-rspec_rails
+
 AllCops:
+  NewCops: enable
   Exclude:
     - 'Gemfile'
+    - 'Steepfile'
     - 'bin/rake'
     - 'bin/setup'
     - 'config.ru'
     - 'config/**/*.rb'
+    - 'db/seeds.rb'
     - 'db/schema.rb'
     - 'db/migrate/*.rb'
     - 'spec/spec_helper.rb'
     - 'spec/rails_helper.rb'
+
+Layout/LineLength:
+  Max: 80
+  Exclude:
+    - 'spec/**/*_spec.rb'
+    - 'spec/support/**/*.rb'
+    - 'lib/**/*.rake'
 
 Layout/HashAlignment:
   Enabled: false
@@ -22,10 +37,16 @@ Layout/HashAlignment:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented_relative_to_receiver
 
+Layout/LeadingCommentSpace:
+  AllowSteepAnnotation: true
+
 Metrics/MethodLength:
   Enabled: false
 
 Metrics/ModuleLength:
+  Enabled: false
+
+Style/ExplicitBlockArgument:
   Enabled: false
 
 Style/ClassAndModuleChildren:
@@ -51,3 +72,12 @@ Style/Alias:
 
 Rails/DynamicFindBy:
   Enabled: false
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - app/helpers/dragnet/type_view.rb
+
+Naming/PredicateMethod:
+  Exclude:
+    - app/models/dragnet/meta_data.rb
+

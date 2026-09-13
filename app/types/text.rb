@@ -1,7 +1,15 @@
 module Dragnet
   module Types
-    class Text < Countable
-      ignore :do_before_saving_answer
+    class Text < Basic
+      def do_before_saving_answer(...) = DoNothing.new
+
+      def build_value_from_answer(answer)
+        Value.new(answer.short_text_value)
+      end
+
+      def assign_value(answer, value)
+        answer.short_text_value = value.to_s
+      end
 
       def countable?
         false

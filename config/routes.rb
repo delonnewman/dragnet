@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 
     get 'stats', to: 'stats#show'
 
+    resource :map, controller: 'surveys/maps', only: %i[show]
+
     resource :data, controller: 'data_grid', only: %i[show] do
       resources :rows, controller: 'data_grid/rows'
       resource :tools, controller: 'data_grid/tools', only: %i[show]

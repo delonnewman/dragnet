@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Replies', type: :request do
+describe 'Replies' do
   let(:survey) { Dragnet::Survey[public: false, questions: { type_class: }].generate! }
   let(:reply) { Dragnet::Reply[survey:, submitted: false].generate! }
   let(:type_class) { Dragnet::Types::Integer }

@@ -22,8 +22,8 @@ class DataGridController < ApplicationController
 
   private
 
-  def render_file(view, **options)
-    render view, **options
+  def render_file(view, **)
+    render view, **
     filename = export_name(survey)
     response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
   end

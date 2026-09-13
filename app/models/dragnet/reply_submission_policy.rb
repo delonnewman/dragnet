@@ -3,7 +3,8 @@ module Dragnet
     attr_reader :reply, :survey
 
     def initialize(subject)
-      super(subject)
+      super
+
       if subject.is_a?(Reply)
         @reply = subject
         @survey = subject.survey

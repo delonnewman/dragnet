@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'DataGrid::Rows', type: :request do
+RSpec.describe 'DataGrid::Rows' do
   let(:reply) do
     survey.replies.create!(
       user:,

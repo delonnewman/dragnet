@@ -6,16 +6,16 @@ class Dragnet::SurveyPresenter < Dragnet::Presenter
   presents Survey, as: :survey
 
   def views
-    Dragnet::Survey::Views.present(survey)
+    Dragnet::Survey::Views.default.present(survey)
   end
   memoize :views
 
-  def not_ready_for_replies?
-    survey.questions.empty?
+  def no_data?
+    survey.records.empty?
   end
 
-  def no_data?
-    survey.replies.submitted.empty? || survey.events.empty?
+  def not_ready_for_replies?
+    survey.questions.empty?
   end
 
   def share_email?

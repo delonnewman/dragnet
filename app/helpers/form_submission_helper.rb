@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FormSubmissionHelper
-  FORM_TEMPLATE = <<~ERB.strip_heredoc.squish
+  FORM_TEMPLATE = <<~ERB.squish
     <div id="dragnet-survey-form-<%= survey_id %>"></div>
     <script>
       (function () {
@@ -20,7 +20,6 @@ module FormSubmissionHelper
     # to lexical binding which is needed in the template
     eval(Erubi::Engine.new(FORM_TEMPLATE).src) # rubocop:disable Security/Eval
   end
-
 
   def reply_component(question)
     render Dragnet::TypeView.new('replies/components', question.type, question:)

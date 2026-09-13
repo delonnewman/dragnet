@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dragnet
-  class StatsReport::CalculateStatsTable < TypeMethod
+  class StatsReport::CollectStats < TypeMethod
     attribute :reportable
     attribute :question
 
@@ -14,7 +14,7 @@ module Dragnet
     end
 
     def long_text
-      raise "can't collect stats for text unless the setting is turned on" unless type.calculate_sentiment?(question)
+      raise "can't collect stats for text unless the setting is turned on" unless type.calculate_sentiment?
 
       collect_stats(question, column: Answer.arel_table[:float_value])
     end

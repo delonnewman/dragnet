@@ -10,7 +10,7 @@ module Dragnet
       # TODO: memoize?
       def connection
         conn = ActiveRecord::Base.connection
-        conn = conn.active? ? conn : ActiveRecord::Base.establish_connection
+        conn = ActiveRecord::Base.establish_connection unless conn.active?
 
         MiniSql::Connection.get(conn)
       end
@@ -37,7 +37,8 @@ module Dragnet
       Rails.logger.info "SQL Query - #{query_text.inspect} #{params.inspect}"
       connection
         .query_hash(query_text, *params)
-        .lazy.map { El::DataUtils.parse_nested_hash_keys(_1) }
+        .lazy
+        .map { El::DataUtils.parse_nested_hash_keys(it) }
     end
 
     def query_text

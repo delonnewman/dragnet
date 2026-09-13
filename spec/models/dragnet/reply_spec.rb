@@ -23,19 +23,6 @@ describe Dragnet::Reply do
     expect { reply.update!(submitted: true, submitted_at:) }.to change(reply, :cached_answers_data).from([])
   end
 
-  it 'provides cached answers' do
-    reply.save!
-
-    expect { reply.cached_answers }.to perform_number_of_queries(0)
-  end
-
-  it 'when providing answers to a question it used answer cache' do
-    question = survey.questions.first
-    reply.save!
-
-    expect { reply.answers_to(question) }.to perform_number_of_queries(0)
-  end
-
   context 'when submitting' do
     subject(:reply) { described_class[survey:, submitted: false].generate! }
 

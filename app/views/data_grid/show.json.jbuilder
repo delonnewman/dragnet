@@ -1,4 +1,3 @@
-
 json.id grid.survey.id
 json.name grid.survey.name
 json.page grid.page
@@ -9,5 +8,5 @@ json.query do
   json.sql grid.records.to_sql
 end
 json.records grid.records.map { |record|
-  { created_at: fmt_datetime(record.created_at), user_id: record.user_id || '-' }.merge!(grid.questions.map { |q| [q.id, answers_text(record, q)] }.to_h)
+  { created_at: fmt_datetime(record.created_at), user_id: record.user_id || '-' }.merge!(grid.questions.to_h { |q| [q.id, answers_text(record, q)] })
 }

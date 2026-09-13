@@ -7,12 +7,16 @@ module Dragnet
 
       def initialize(attributes)
         @name, @advice, @args, @delegate_methods, @options =
-          attributes.values_at(:name, :advice, :args, :delegate_methods, :options)
+          attributes
+            .values_at(:name, :advice, :args, :delegate_methods, :options)
       end
 
       def method_name
         return @name if @name
-        raise "can't generate method name for anonymous class" unless advice.name
+
+        unless advice.name
+          raise "can't generate method name for anonymous class"
+        end
 
         advice.name.split('::').last.underscore.to_sym
       end

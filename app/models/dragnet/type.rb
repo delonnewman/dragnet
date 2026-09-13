@@ -1,14 +1,6 @@
 module Dragnet
   class Type
     class << self
-      def encode(value)
-        value.to_s
-      end
-
-      def decode(_value)
-        raise NoMethodError
-      end
-
       def slug
         name.demodulize.underscore
       end
@@ -29,21 +21,6 @@ module Dragnet
         end
 
         @tags = array
-      end
-
-      def perform(action, class_name: nil)
-        klass = (class_name || name.to_s.classify).constantize
-        define_method action do |**args|
-          klass.new(question, **args)
-        end
-      end
-
-      def ignore(*action_names)
-        action_names.each do |name|
-          define_method name do |**_|
-            DoNothing.new
-          end
-        end
       end
 
       def find(symbol)
@@ -92,19 +69,60 @@ module Dragnet
     end
 
     attr_reader :question
-    delegate :meta, :meta=, to: :question
-    delegate :tags, :slug, :symbol, :decode, :encode, to: 'self.class'
 
+    delegate :tags, :slug, :symbol, to: 'self.class'
+
+    # @rbs question: Dragnet::Question
+    # @rbs return: void
     def initialize(question)
       @question = question
+      freeze
     end
 
+    #: () -> Dragnet::MetaData
+    def meta
+      @meta = MetaData.new(question, prefix: :type)
+    end
+
+    #: (Hash) -> void
+    def meta=(data)
+      meta.data = data
+    end
+
+    # TODO: remove
     def dispatch(action_name, ...)
       public_send(action_name, ...).dispatch(self)
     end
 
-    def countable?
-      is_a?(Types::Countable)
+    # @abstract
+    # @rbs _answer: Dragnet::Answer
+    # @rbs return: Dragnet::Value
+    def build_value_from_answer(_answer)
+      raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
+    end
+
+    # @rbs reply: Dragnet::Reply
+    # @rbs return: Dragnet::Value
+    def build_value_from_reply(reply)
+      build_value_from_answer(reply.answers.first)
+    end
+
+    # @abstract
+    # @rbs answer: Dragnet::Answer
+    # @rbs value: Dragnet::Value
+    # @rbs return: void
+    def assign_value(_answer, _value)
+      raise NoMethodError, "no implemented by #{self.class}, subclasses should implement"
+    end
+
+    #: (untyped) -> String
+    def encode(value)
+      value.to_s
+    end
+
+    #: (String) -> untyped
+    def decode(_value)
+      raise NoMethodError
     end
   end
 end
