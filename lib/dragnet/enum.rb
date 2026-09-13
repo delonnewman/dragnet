@@ -39,14 +39,7 @@ module Dragnet
     end
 
     # Class Methods
-
-    def self.inherited(base)
-      super
-      base.extend(ClassMethods)
-      base.extend(ActiveRecordType)
-    end
-
-    module ClassMethods
+    class << self
       def member(name, value: name.to_s, key: Enum.encode_key(name.to_s), &block)
         subclass = Class.new(self, &block)
         const_set(name, subclass)
@@ -86,16 +79,16 @@ module Dragnet
 
       def of(value)
         by_value.fetch(value) do
-          valstr = values.map(&:inspect).join(', ')
-          raise TypeError, "#{value.inspect} is not a valid #{self} value, valid values are: #{valstr}"
+          val_str = values.map(&:inspect).join(', ')
+          raise TypeError, "#{value.inspect} is not a valid #{self} value, valid values are: #{val_str}"
         end
       end
 
       def keyed(key)
         encoded = Enum.encode_key(key)
         by_key.fetch(encoded) do
-          keystr = keys.map(&:inspect).join(', ')
-          raise TypeError, "#{key.inspect} is not a valid #{self} key, valid keys are: #{keystr}"
+          key_str = keys.map(&:inspect).join(', ')
+          raise TypeError, "#{key.inspect} is not a valid #{self} key, valid keys are: #{key_str}"
         end
       end
 
@@ -120,43 +113,43 @@ module Dragnet
       end
     end
 
-    module ActiveRecordType
-      def cast(value)
-        coerce(value) unless value.nil?
-      end
-      alias deserialize cast
+    # ActiveRecord Type
 
-      def assert_valid_value(value)
-        value.nil? || coerce(value)
-      end
+    def cast(value)
+      coerce(value) unless value.nil?
+    end
+    alias deserialize cast
 
-      def changed?(old_value, new_value, _new_value_before_type_cast)
-        old_value != new_value
-      end
+    def assert_valid_value(value)
+      value.nil? || coerce(value)
+    end
 
-      def changed_in_place?(_raw_old_value, _new_value)
-        false
-      end
+    def changed?(old_value, new_value, _new_value_before_type_cast)
+      old_value != new_value
+    end
 
-      def serialize(value)
-        case value
-        when Enum
-          value.value
-        else
-          value
-        end
-      end
+    def changed_in_place?(_raw_old_value, _new_value)
+      false
+    end
 
-      def binary?
-        false
+    def serialize(value)
+      case value
+      when Enum
+        value.value
+      else
+        value
       end
+    end
 
-      def type
-        if superclass == Enum
-          name.split('::').map(&:underscore).join('_').to_sym
-        else
-          superclass.type
-        end
+    def binary?
+      false
+    end
+
+    def type
+      if superclass == Enum
+        name.split('::').map(&:underscore).join('_').to_sym
+      else
+        superclass.type
       end
     end
   end
