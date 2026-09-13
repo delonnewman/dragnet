@@ -56,7 +56,7 @@ module Dragnet
 
   # Return the current version of the system (based on git SHA).
   #
-  #: () -> String | nil
+  #: () -> String?
   def self.version
     current_git_sha[0, 8]
   end
