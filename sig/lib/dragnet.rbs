@@ -1,0 +1,252 @@
+module Dragnet
+  @github_url: Addressable::URI
+  @current_git_sha: String
+  def self.github_url: () -> Addressable::URI
+  def self.version: () -> String
+  def self.current_git_sha: () -> String
+  def self.release: () -> String
+
+  module Memoizable
+    def self.included: (untyped) -> void
+  end
+
+  module StatsUtils
+    def self.time_series: (Enumerable[Date]) -> Hash[Date, Integer]
+    def self.normalize_values: (Array[Numeric]) -> Array[Numeric]
+  end
+
+  module TimeUtils
+    def self.fmt_hour: (untyped) -> String
+  end
+
+  module Utils
+    def self.slug: (String, String) -> String
+    def self.hash_code: (String) -> Integer
+    def self.hash_combine: (Integer, Integer) -> Integer
+    def self.uuid?: (String) -> bool
+    def self.tagged_uuid: (String) -> String
+    def self.short_uuid: () -> String
+    def self.uuid: () -> String
+    def self.shorten_uuid: (untyped) -> String
+    def self.expand_short_uuid: (untyped) -> String
+  end
+
+  class Composed
+    @subject: untyped
+    def initialize: (untyped) -> untyped
+  end
+
+  class Enum[V < _EnumValue]
+    interface _EnumValue
+      def to_s: -> String
+      def hash: -> Integer
+    end
+    @value: V
+    @key: Symbol
+    attr_reader value: V
+    attr_reader key: Symbol
+    def initialize: (V, Symbol) -> void
+
+    def name: () -> String
+    def ==: (Enum[V]) -> bool
+    def to_json: () -> String
+    def self.encode_key: (String | Symbol) -> Symbol
+    def self.inherited: (untyped) -> void 
+
+    def self.member: (String | Symbol, ?_EnumValue, ?Symbol) -> void
+    def self.coerce: (_EnumValue) -> Enum[_EnumValue]
+    def self.member_missing: (untyped) -> void
+    def self.value?: (untyped) -> bool
+    def self.key?: (untyped) -> bool
+    def self.of: (untyped) -> Enum[_EnumValue]
+    def self.keyed: (untyped) -> Enum[_EnumValue]
+    def self.members: () -> Array[Enum[_EnumValue]]
+    def self.by_key: () -> Hash[Symbol, Enum[_EnumValue]]
+    def self.by_value: () -> Hash[_EnumValue, Enum[_EnumValue]]
+    def self.keys: () -> Array[Symbol]
+    def self.values: () -> Array[_EnumValue]
+
+    def cast: (untyped) -> nil
+    def assert_valid_value: (untyped) -> bool
+    def changed?: (untyped, untyped, untyped) -> bool
+    def changed_in_place?: (untyped, untyped) -> bool
+    def serialize: (untyped) -> void
+    def binary?: () -> false
+    def type: () -> Symbol
+  end
+
+  module ClassMetaData
+    @method_metadata: Hash[Symbol, Hash[Symbol, untyped]]
+    @metadata: Hash[Symbol, untyped]
+    @_new_method_metadata: Hash[Symbol, untyped]?
+
+    def class_doc: () -> String
+    def class_meta: (Hash[Symbol, untyped]) -> void
+    def metadata: () -> Hash[Symbol, untyped]
+    def doc: (String) -> void
+    def meta: (Hash[Symbol, untyped]) -> void
+    def add_method_metadata: (Symbol, Hash[Symbol, untyped]) -> void
+    def method_metadata: (Symbol?) -> Hash[Symbol, untyped]
+    def method_added: (Symbol) -> void
+  end
+
+  module Advising
+    @advice: Hash[untyped, untyped]
+    def advice: () -> Hash[untyped, untyped]
+    def add_point_cut: (PointCut) -> PointCut
+    def remove_point_cut: (PointCut) -> PointCut
+    def remove_advice: (Class) -> void
+    def remove_all_advice: () -> void
+    def define_advising_method: (Symbol | String, Class, ?Array[untyped], ?Symbol?, ?bool) -> void
+    def define_advising_object_memos: () -> void
+    def advising_object_memos: () -> Hash[untyped, untyped]
+    def with: (Class, Array[untyped], ?Symbol?, Array[Symbol], **Hash[Symbol, untyped]) -> void
+  end
+
+  class PointCut
+    @name: String
+    @advice: Class
+    @args: Array[untyped]
+    @delegate_methods: Array[untyped]
+    @options: Hash[Symbol, untyped]
+    def initialize: (**Hash[Symbol, untyped]) -> void
+    def method_name: () -> Symbol
+  end
+
+  class Advice
+    @advised_object: untyped
+    def initialize: (untyped, Array[untyped]) -> void # spinel: widened to untyped (slow path)
+    def self.advised_object_method_name: (untyped) -> untyped # spinel: widened to untyped (slow path)
+    def self.after: (untyped) -> void # spinel: widened to untyped (slow path)
+    def self.before: (untyped) -> void # spinel: widened to untyped (slow path)
+    def self.advise_method: (untyped, Symbol) -> void # spinel: widened to untyped (slow path)
+    def self.advises: (untyped, untyped, Array[untyped]) -> nil # spinel: widened to untyped (slow path)
+  end
+
+  class Policy < Composed
+    @subject: untyped
+  end
+
+  class Query < Composed
+    @subject: untyped
+    @query_text: String | nil
+    @metadata: untyped
+    @method_metadata: untyped
+    @_metadata: Hash[Symbol, untyped]
+    def model_query: (untyped, Array[untyped]) -> void
+    def hash_query: (Array[untyped]) -> void
+    def query_text: () -> String?
+    def self.connection: () -> untyped
+    def self.query_text: (String?) -> void
+    def self.class_doc: (String?) -> void
+    def self.class_meta: (Hash[Symbol, untyped]) -> Hash[Symbol, untyped]
+    def self.metadata: () -> Hash[Symbol, untyped]
+    def self.doc: (untyped) -> Hash[Symbol, untyped]
+    def self.meta: (Hash[Symbol, untyped]) -> Hash[Symbol, untyped]
+    def self.add_method_metadata: (untyped, Hash[Symbol, untyped]) -> untyped
+    def self.method_metadata: (untyped) -> untyped
+    def self.method_added: (untyped) -> Hash[Symbol, untyped]
+  end
+
+  class TextSentiment
+    @text: untyped
+    @analyzer: untyped
+    @score: untyped
+    def initialize: (untyped) -> untyped
+    def score: () -> untyped
+    def percentage: () -> untyped
+    def to_s: () -> String
+    def self.analyzer: () -> untyped
+  end
+
+  class Generator
+    def generate: (Array[untyped]) -> untyped # spinel: widened to untyped (slow path)
+    def self.parameterized?: () -> bool
+    def self.generate: (Array[untyped]) -> untyped # spinel: widened to untyped (slow path)
+  end
+
+  class ParameterizedGenerator
+    def generate: (Array[untyped], Hash[Symbol, untyped]) -> untyped # spinel: widened to untyped (slow path)
+    def self.parameterized?: () -> bool
+    def self.[]: (Array[untyped], Hash[Symbol, untyped]) -> ParameterizedGenerator # spinel: widened to untyped (slow path)
+  end
+
+  module Generators
+    class Name < Generator
+      def call: () -> String
+      def self.generate: (Array[untyped]) -> Name # spinel: widened to untyped (slow path)
+    end
+
+    class Login < ParameterizedGenerator
+      @name: untyped
+      def initialize: (untyped) -> untyped # spinel: widened to untyped (slow path)
+      def name: () -> untyped # spinel: widened to untyped (slow path)
+      def call: () -> untyped # spinel: widened to untyped (slow path)
+    end
+
+    class Email < ParameterizedGenerator
+      @domain: untyped
+      @name: untyped
+      @login: untyped
+      def initialize: (untyped, untyped, String) -> untyped # spinel: widened to untyped (slow path)
+      def name: () -> untyped # spinel: widened to untyped (slow path)
+      def login: () -> untyped # spinel: widened to untyped (slow path)
+      def call: () -> String
+    end
+
+    class Paragraph < Generator
+      def call: (Array[untyped]) -> void # spinel: widened to untyped (slow path)
+    end
+
+    class ShortAnswer < Generator
+      def call: (Array[untyped]) -> void # spinel: widened to untyped (slow path)
+    end
+
+    class LongAnswer < Generator
+      def call: (Array[untyped]) -> void # spinel: widened to untyped (slow path)
+    end
+
+    class Request < Generator
+      def call: () -> Request
+    end
+  end
+
+  class ActiveRecordGenerator
+    @attributes: untyped
+    @active_record_class: Generation
+    def initialize: (Generation, untyped) -> Generation # spinel: widened to untyped (slow path)
+    def []: (untyped) -> ActiveRecordGenerator # spinel: widened to untyped (slow path)
+    def generate: (untyped) -> void # spinel: widened to untyped (slow path)
+    def generate!: (untyped) -> void # spinel: widened to untyped (slow path)
+    def self.parameterized?: () -> bool
+    def self.[]: (Array[untyped]) -> ActiveRecordGenerator # spinel: widened to untyped (slow path)
+    def self.generate: (Array[untyped]) -> void # spinel: widened to untyped (slow path)
+    def self.generate!: (Array[untyped]) -> void # spinel: widened to untyped (slow path)
+    def self.active_record_class_name: () -> String
+    def self.active_record_class: () -> untyped # spinel: widened to untyped (slow path)
+  end
+
+  module Generation
+    def generator_class_name: () -> String
+    def generator_class: () -> untyped # spinel: widened to untyped (slow path)
+    def generator: () -> ActiveRecordGenerator
+  end
+
+  class Presenter
+    @params: untyped
+    def initialize: (untyped, untyped) -> untyped # spinel: widened to untyped (slow path)
+    def presented_class: () -> void
+    def self.presents: (Array[untyped], untyped) -> nil # spinel: widened to untyped (slow path)
+  end
+
+  class PagedPresenter < Presenter
+    @params: untyped
+    @default_items: untyped
+    def pager: () -> void
+    def records: () -> void
+    def items: () -> Integer
+    def page: () -> Integer
+    def self.default_items: (untyped) -> untyped # spinel: widened to untyped (slow path)
+  end
+end
+

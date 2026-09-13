@@ -1,0 +1,4 @@
+class Hash
+  def transform: () -> Hash
+  def transform!: () -> Hash
+end
