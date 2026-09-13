@@ -69,7 +69,7 @@ module Dragnet
         if sort_by_question?
           question = @query.question(sort_by)
           scope = sorting_scope(scope, question.id)
-          join_name = join_aliases.fetch(:sorting, :answers)
+          join_name = join_aliases.fetch(:sorting, :answers) # FIXME: This is a type error
           question.type.dispatch(:sort_data_grid, scope:, direction: sort_direction, join_name:)
         else
           scope.order(sort_by => sort_direction)
@@ -105,10 +105,10 @@ module Dragnet
         end
       end
 
-      def narrowed_scope(scope, field, join_name)
+      def narrowed_scope(scope, question_id, join_name)
         scope
           .joins(Arel.sql("inner join answers #{join_name} on replies.id = #{join_name}.reply_id"))
-          .where(join_name => { question_id: field })
+          .where(join_name => { question_id: })
       end
     end
   end

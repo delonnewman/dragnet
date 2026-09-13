@@ -8,15 +8,15 @@ module Dragnet
     def ensure_visit: (untyped visit) -> (untyped | nil)
 
     CSRF_TOKEN_PRECISION: 256
-    EXPIRATION_DURATION: untyped
+    EXPIRATION_DURATION: ActiveSupport::Duration
 
-    def expired?: (?untyped now) -> untyped
-    def submitted!: (untyped timestamp) -> self
-    def submit: (untyped attributes, ?timestamp: untyped) -> (nil | untyped)
-    def submit!: (untyped attributes, ?timestamp: untyped) -> untyped
+    def expired?: (?ActiveSupport::TimeWithZone now) -> bool
+    def submitted!: (ActiveSupport::TimeWithZone timestamp) -> self
+    def submit: (Hash[Symbol | String, untyped] attributes, ?timestamp: ActiveSupport::TimeWithZone) -> (false | self)
+    def submit!: (Hash[Symbol | String, untyped] attributes, ?timestamp: ActiveSupport::TimeWithZone) -> void
 
     private
 
-    def perform_submission: (untyped attributes, untyped timestamp) -> untyped
+    def perform_submission: (Hash[Symbol | String, untyped] attributes, ActiveSupport::TimeWithZone timestamp) -> void
   end
 end

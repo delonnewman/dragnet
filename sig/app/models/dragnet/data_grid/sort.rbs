@@ -1,0 +1,14 @@
+module Dragnet
+  class DataGrid::Sort < TypeMethod[relation]
+    include ActiveRecord::Sanitization::ClassMethods
+    def boolean: () -> relation
+    def decimal: () -> relation
+    def integer: () -> relation
+    def text: () -> relation
+    def long_text: () -> relation
+    def time: () -> relation
+    def date_and_time: () -> relation
+    def date: () -> relation
+    def choice: () -> relation
+  end
+end

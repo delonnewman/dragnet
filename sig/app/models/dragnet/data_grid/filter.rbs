@@ -1,0 +1,13 @@
+module Dragnet
+  class DataGrid::Filter < TypeMethod[relation]
+    def boolean: () -> relation
+    def decimal: () -> relation
+    def integer: () -> relation
+    def time: () -> relation
+    def date: () -> relation
+    alias date_and_time date
+    def text: () -> relation
+    def long_text: () -> relation
+    def choice: () -> relation
+  end
+end

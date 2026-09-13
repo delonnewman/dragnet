@@ -1,0 +1,5 @@
+module Dragnet
+  class QuestionOption < ApplicationRecord
+    def to_s: () -> String
+  end
+end

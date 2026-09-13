@@ -1,0 +1,37 @@
+module Dragnet
+  type relation = ActiveRecord::Relation | ActiveRecord::QueryMethods::WhereChain[Reply]
+  class DataGrid
+    class QueryRelation
+
+      @query: DataGrid::Query
+      @offset: Integer?
+      @items: Integer?
+      @base_relation: ActiveRecord::Relation
+      @join_alias_index: Integer
+
+      include Dragnet
+      include Memoizable
+
+      attr_reader offset: Integer?
+      attr_reader items: Integer?
+
+      def initialize: (DataGrid::Query query, untyped replies, ?offset: Integer?, ?items: Integer?) -> void
+      def build: () -> relation
+      def records: () -> relation
+
+      private
+
+      attr_writer join_alias_index: Integer
+
+      def join_alias_index: () -> Integer
+      def next_join_alias: () -> String
+      def join_aliases: () -> Hash[uuid, String]
+      def join_alias: (uuid question_id) -> String
+      def no_joins?: () -> bool
+      def ordered_records: (relation scope) -> relation
+      def sorting_scope: (relation scope, uuid question_id) -> relation
+      def filtered_records: (relation scope) -> relation
+      def narrowed_scope: (relation scope, uuid question_id, String join_name) -> relation
+    end
+  end
+end

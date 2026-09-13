@@ -1,0 +1,7 @@
+module Dragnet
+  class DataGrid::RenderAnswersText < TypeHelperMethod
+    def boolean: () -> String?
+    def temporal: () -> String?
+    def basic: () -> String?
+  end
+end

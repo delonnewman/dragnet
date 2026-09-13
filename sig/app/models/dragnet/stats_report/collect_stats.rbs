@@ -1,0 +1,22 @@
+module Dragnet
+  class StatsReport::CollectStats < TypeMethod[untyped]
+    def decimal: () -> untyped
+    def integer: () -> untyped
+    def long_text: () -> untyped
+    def choice: () -> untyped
+
+    private
+
+    attr_reader reportable: untyped
+    attr_reader question: untyped
+
+    def collect_stats: (untyped question, column: untyped) -> untyped
+    def project_stats_table: (untyped data) -> { "Min" => untyped, "Max" => untyped, "Sum" => untyped, "Average" => untyped, "Std. Dev." => untyped }
+
+    def min: (untyped column) -> untyped
+    def max: (untyped column) -> untyped
+    def avg: (untyped column) -> untyped
+    def sum: (untyped column) -> untyped
+    def stddev: (untyped column) -> untyped
+  end
+end

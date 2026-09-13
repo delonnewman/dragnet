@@ -1,0 +1,51 @@
+module Dragnet
+  # Report stats for a reportable object
+  class StatsReport
+    @reportable: untyped
+
+    include Constants
+
+    attr_reader reportable: untyped
+
+    # @param reportable [#records, #answers, #events]
+    def initialize: (untyped reportable) -> void
+
+    # @return [ActiveRecord::Relation<Question>]
+    def countable_questions: () -> untyped
+
+    # @return [Integer]
+    def reply_count: () -> untyped
+
+    # @return [ActiveRecord::Relation<Ahoy::View>]
+    def views: () -> untyped
+
+    # @return [Integer]
+    def view_count: () -> untyped
+
+    # TODO: Add average time to complete
+    # @return [Float, nil]
+    def completion_rate: () -> (nil | untyped)
+
+    # @return [Hash{Date, Integer}]
+    def replies_by_date: () -> untyped
+
+    # @return [Hash{String, Integer}]
+    def replies_by_month: () -> untyped
+
+    # @return [Hash{String, Integer}]
+    def replies_by_time_of_day: () -> untyped
+
+    # @return [Hash{String, Integer}]
+    def replies_by_weekday: () -> untyped
+
+    # @param question [Question]
+    #
+    # @return [Hash{String, Integer}]
+    def answer_occurrence: (untyped question) -> untyped
+
+    # @param question [Question]
+    #
+    # @return [{ 'Min' => Integer, 'Max' => Integer, 'Sum' => Integer, 'Average' => Float, 'Std. Dev.' => Float }]
+    def answer_stats: (untyped question) -> untyped
+  end
+end

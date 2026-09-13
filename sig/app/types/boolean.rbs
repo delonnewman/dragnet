@@ -1,0 +1,10 @@
+module Dragnet
+  module Types
+    class Boolean < Basic
+      def do_before_saving_answer: (*untyped, **untyped) -> DoNothing
+      def decode: (untyped value) -> bool
+      def build_value_from_answer: (Answer) -> Value
+      def assign_value: (Answer, Value | bool) -> void
+    end
+  end
+end

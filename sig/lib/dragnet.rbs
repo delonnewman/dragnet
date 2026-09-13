@@ -1,3 +1,5 @@
+type uuid = String
+
 module Dragnet
   EMPTY_ARRAY: []
   EMPTY_HASH: {}
@@ -113,7 +115,7 @@ module Dragnet
     def define_advising_method: (Symbol | String, Class, ?Array[untyped], ?Symbol?, ?bool) -> void
     def define_advising_object_memos: () -> void
     def advising_object_memos: () -> Hash[untyped, untyped]
-    def with: (Class, Array[untyped], ?Symbol?, Array[Symbol], **Hash[Symbol, untyped]) -> void
+    def with: (Class, **Hash[Symbol, untyped]) -> void
   end
 
   class PointCut

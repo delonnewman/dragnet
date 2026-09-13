@@ -1,0 +1,13 @@
+module Dragnet
+  class Answer::GetValue < TypeMethod[untyped]
+    def boolean: () -> bool?
+    def choice: () -> String?
+    def decimal: () -> Float?
+    def integer: () -> Integer?
+    def text: () -> String?
+    def long_text: () -> String?
+    def time: () -> Time?
+    def date: () -> Date?
+    def date_and_time: () -> DateTime?
+  end
+end

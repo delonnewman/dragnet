@@ -1,0 +1,15 @@
+class Dragnet::Value
+  def text_value: () -> String
+  def number_value: () -> Numeric
+  def to_h: () -> Hash[untyped, untyped]
+  def to_a: () -> Array[untyped]
+  def to_s: () -> String
+  alias to_str to_s
+  def to_i: () -> Integer
+  def to_f: () -> Float
+  def to_r: () -> Rational
+  def ==: (untyped other) -> bool
+  def hash: () -> Integer
+  def eql?: (untyped other) -> bool
+  def ===: (untyped other) -> bool
+end

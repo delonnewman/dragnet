@@ -1,0 +1,8 @@
+module Dragnet
+  module Types
+    class Temporal < Basic
+      def do_before_saving_answer: (*untyped, **untyped) -> DoNothing
+      def decode: (untyped value) -> (Date | Time | DateTime)
+    end
+  end
+end

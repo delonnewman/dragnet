@@ -1,0 +1,11 @@
+module Dragnet
+  class Answer < ApplicationRecord
+    include Retractable
+    include Typable
+
+    def text_value: () -> String
+    def value: () -> untyped
+    def value=: (untyped value) -> untyped
+    def number_value: () -> Numeric
+  end
+end

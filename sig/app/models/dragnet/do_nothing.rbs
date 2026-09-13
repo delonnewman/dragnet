@@ -1,0 +1,6 @@
+module Dragnet
+  class DoNothing < TypeMethod[nil]
+    def initialize: () -> void
+    def dispatch: (Type) -> nil
+  end
+end

@@ -1,0 +1,9 @@
+module Dragnet
+  class Answer::GetNumberValue < Answer::GetValue
+    def boolean: () -> untyped
+    def choice: () -> Integer?
+    def long_text: () -> Float?
+    def text: () -> nil
+    def temporal: () -> Integer?
+  end
+end

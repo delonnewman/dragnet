@@ -1,0 +1,8 @@
+module Dragnet::Types
+  class Boolean::Value < Dragnet::Value
+    @value: bool
+    def initialize: (bool value) -> void
+    def text_value: () -> ("Yes" | "No")
+    def !: () -> bool
+  end
+end

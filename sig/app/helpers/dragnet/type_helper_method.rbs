@@ -1,0 +1,7 @@
+module Dragnet
+  class TypeHelperMethod < TypeMethod[untyped]
+    include ActionView::Helpers::TagHelper
+
+    ALT_TEXT: "-"
+  end
+end

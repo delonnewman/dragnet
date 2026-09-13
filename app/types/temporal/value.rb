@@ -7,11 +7,11 @@ module Dragnet::Types
     end
 
     def text_value
-      @value&.to_s
+      @value.to_s
     end
 
     def number_value
-      @value&.to_i
+      @value.to_i
     end
   end
 end

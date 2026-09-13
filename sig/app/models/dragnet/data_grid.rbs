@@ -1,0 +1,16 @@
+module Dragnet
+  # Provides data access and business rules for survey data grids
+  class DataGrid < ApplicationRecord
+    include Presentable
+
+    def self.find_or_create!: (String survey_id, author_id: String) -> DataGrid
+
+    def query: (ActionController::Parameters params) -> DataGrid::Query
+    def default_sort_direction: () -> Symbol
+    def default_sort_by: () -> Symbol
+    def default_filter_by: () -> untyped
+
+    # TODO: make this configurable, probably should be meta data
+    def defaults: () -> { sort_direction: :desc, sort_by: :created_at, filter_by: untyped }
+  end
+end

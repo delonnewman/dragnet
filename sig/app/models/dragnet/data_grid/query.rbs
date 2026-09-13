@@ -1,0 +1,41 @@
+module Dragnet
+  class DataGrid::Query
+    type sort_direction = (:desc | :asc)
+
+    @questions: Enumerable[Question]
+    @sort_by: Symbol | uuid
+    @sort_direction: sort_direction
+    @filter_by: Hash[Symbol | uuid, untyped]
+
+    include Dragnet
+    include Memoizable
+
+    PRIMITIVE_FILTER_ATTRIBUTES: Set[Symbol]
+
+    def self.primitive_attribute?: (untyped name) -> bool
+
+    attr_reader sort_by: Symbol | uuid
+    attr_reader sort_direction: sort_direction
+    attr_reader filter_by: Hash[Symbol | uuid, untyped]
+    attr_reader questions: Enumerable[Question]
+
+    alias filters filter_by
+    alias sorted_by sort_by
+
+    def initialize: (Enumerable[Question] questions,
+          ActionController::Parameters | Hash[Symbol | String, untyped] params,
+          ?Hash[untyped, untyped] defaults) -> void
+    def relation: (ActiveRecord::Relation replies, **untyped) -> DataGrid::QueryRelation
+    def sort_by_question?: () -> bool
+    alias sorted_by_question? sort_by_question?
+    def filtered?: () -> bool
+    alias has_filters? filtered?
+    def question?: (uuid question_id) -> bool
+    def question: (uuid question_id) -> Question
+    def questions_map: () -> Hash[uuid, Question]
+    def sorted_by_column?: (Symbol | uuid column) -> bool
+    def opposite_sort_direction: () -> sort_direction
+    def sorted_ascending?: () -> bool
+    def sorted_descending?: () -> bool
+  end
+end

@@ -1,0 +1,13 @@
+module Dragnet
+  module Types
+    class Basic < Type
+      def get_value: (*untyped, **untyped) -> Answer::GetValue
+      def get_number_value: (*untyped, **untyped) -> Answer::GetNumberValue
+      def filter_data_grid: (*untyped, **untyped) -> DataGrid::Filter
+      def sort_data_grid: (*untyped, **untyped) -> DataGrid::Sort
+      def render_answers_text: (*untyped, **untyped) -> Answer::RenderAnswersText
+      def get_text_alignment: (*untyped, **untyped) -> Answer::GetTextAlignment
+      def countable?: () -> bool
+    end
+  end
+end

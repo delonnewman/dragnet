@@ -1,0 +1,9 @@
+module Dragnet::Types
+  type temporal_value = Date | Time | DateTime | ActiveSupport::TimeWithZone
+  class Temporal::Value < Dragnet::Value
+    @value: temporal_value
+    def initialize: (temporal_value value) -> void
+    def text_value: () -> String
+    def number_value: () -> Integer
+  end
+end

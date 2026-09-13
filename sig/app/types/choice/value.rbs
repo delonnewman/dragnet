@@ -1,0 +1,15 @@
+module Dragnet::Types
+  class Choice::Value < Dragnet::Value
+    @text: String
+    @weight: Integer
+
+    attr_reader text: String
+    attr_reader weight: Integer
+
+    def initialize: (text: String, weight: Integer) -> void
+    def text_value: () -> String
+    def number_value: () -> Integer
+    def to_h: () -> { text: String, weight: Integer }
+    def to_a: () -> [String, Integer]
+  end
+end

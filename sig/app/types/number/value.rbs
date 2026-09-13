@@ -1,0 +1,8 @@
+module Dragnet::Types
+  class Number::Value < Dragnet::Value
+    @value: Numeric
+    def initialize: (Numeric value) -> void
+    def text_value: () -> String
+    def number_value: () -> Numeric
+  end
+end

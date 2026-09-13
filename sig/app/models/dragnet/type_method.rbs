@@ -1,0 +1,17 @@
+module Dragnet
+  class TypeMethod[T]
+    self.@attributes: Array[Symbol]
+    @question: Question
+
+    def self.message_name: () -> Symbol
+    def self.attributes: () -> Array[Symbol]
+    def self.attribute: (Symbol name) -> untyped
+
+    def initialize: (Question question, **Hash[Symbol, untyped] attributes) -> void
+    def dispatch: (Type) -> T
+
+    private
+
+    attr_reader question: Question
+  end
+end

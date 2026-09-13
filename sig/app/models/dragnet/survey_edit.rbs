@@ -2,8 +2,8 @@ module Dragnet
   # An individual edit to a survey
   class SurveyEdit < ApplicationRecord
     def applied?: () -> bool
-    def applied!: (?Time timestamp) -> self
-    def apply: (?Time timestamp) -> (self | false)
-    def apply!: (?Time timestamp) -> self
+    def applied!: (?ActiveSupport::TimeWithZone timestamp) -> self
+    def apply: (?ActiveSupport::TimeWithZone timestamp) -> (self | false)
+    def apply!: (?ActiveSupport::TimeWithZone timestamp) -> self
   end
 end

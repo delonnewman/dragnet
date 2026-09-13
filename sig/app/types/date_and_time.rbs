@@ -1,0 +1,9 @@
+module Dragnet
+  module Types
+    class DateAndTime < Temporal
+      def decode: (untyped value) -> temporal_value
+      def build_value_from_answer: (Answer) -> Temporal::Value
+      def assign_value: (Answer, temporal_value) -> void
+    end
+  end
+end

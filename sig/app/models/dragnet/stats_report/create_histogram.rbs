@@ -1,0 +1,8 @@
+module Dragnet
+  class StatsReport::CreateHistogram < TypeMethod[untyped]
+    def long_text: () -> untyped
+    def decimal: () -> untyped
+    def integer: () -> untyped
+    def choice: () -> untyped
+  end
+end

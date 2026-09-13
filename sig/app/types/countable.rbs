@@ -1,0 +1,8 @@
+module Dragnet
+  module Types
+    module Countable
+      def collect_stats: (*untyped, **untyped) -> StatsReport::CollectStats
+      def create_histogram: (*untyped, **untyped) -> StatsReport::CreateHistogram
+    end
+  end
+end

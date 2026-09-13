@@ -1,0 +1,7 @@
+module Dragnet
+  class DataGrid::GetTextAlignment < TypeHelperMethod
+    def basic: () -> "start"
+    def number: () -> "end"
+    def temporal: () -> "end"
+  end
+end

@@ -1,0 +1,10 @@
+module Dragnet
+  module Types
+    class Choice < Basic
+      include Countable
+      def do_before_saving_answer: (*untyped, **untyped) -> DoNothing
+      def build_value_from_answer: (Answer) -> Value
+      def assign_value: (Answer, QuestionOption | Integer) -> void
+    end
+  end
+end
