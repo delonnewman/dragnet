@@ -133,45 +133,45 @@ module Dragnet
       def values
         by_value.keys
       end
-    end
 
-    # ActiveRecord Type
+      # ActiveRecord Type
 
-    def cast(value)
-      coerce(value) unless value.nil?
-    end
-    alias deserialize cast
-
-    def assert_valid_value(value)
-      value.nil? || coerce(value)
-    end
-
-    def changed?(old_value, new_value, _new_value_before_type_cast)
-      old_value != new_value
-    end
-
-    def changed_in_place?(_raw_old_value, _new_value)
-      false
-    end
-
-    def serialize(value)
-      case value
-      when Enum
-        value.value
-      else
-        value
+      def cast(value)
+        coerce(value) unless value.nil?
       end
-    end
+      alias deserialize cast
 
-    def binary?
-      false
-    end
+      def assert_valid_value(value)
+        value.nil? || coerce(value)
+      end
 
-    def type
-      if superclass == Enum
-        name.split('::').map(&:underscore).join('_').to_sym
-      else
-        superclass.type
+      def changed?(old_value, new_value, _new_value_before_type_cast)
+        old_value != new_value
+      end
+
+      def changed_in_place?(_raw_old_value, _new_value)
+        false
+      end
+
+      def serialize(value)
+        case value
+        when Enum
+          value.value
+        else
+          value
+        end
+      end
+
+      def binary?
+        false
+      end
+
+      def type
+        if superclass == Enum
+          name.split('::').map(&:underscore).join('_').to_sym
+        else
+          superclass.type
+        end
       end
     end
   end

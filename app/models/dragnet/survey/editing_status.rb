@@ -1,11 +1,11 @@
 module Dragnet
   class Survey::EditingStatus < Enum
-    member :Published, value: 0 do
+    member :Published, value: 0, key: :published do
       def bg_color_class = 'bg-success'
       def description = 'All changes published'
     end
 
-    member :Unpublished, value: 1 do
+    member :Unpublished, value: 1, key: :unpublished do
       def bg_color_class = 'bg-warning'
       def description = 'Unpublished changes'
     end
