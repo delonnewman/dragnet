@@ -168,7 +168,7 @@ module Dragnet
 
       def type
         if superclass == Enum
-          name.split('::').map(&:underscore).join('_').to_sym
+          values.first.class.name.downcase.to_sym
         else
           superclass.type
         end
