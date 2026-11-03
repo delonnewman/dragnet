@@ -4,24 +4,24 @@ module Dragnet
       def self.member_missing(enum, value)
         val_str = enum.values.map(&:inspect).join(', ')
         key_str = enum.keys.map(&:inspect).join(', ')
-        msg    = "#{value.inspect} can't be coerced into a #{enum} member, " \
-                 "valid keys are: #{key_str}, valid values are: #{val_str}"
+        msg     = "#{value.inspect} can't be coerced into a #{enum} member, " \
+                  "valid keys are: #{key_str}, valid values are: #{val_str}"
 
         new(msg)
       end
 
       def self.invalid_value(enum, value)
         val_str = enum.values.map(&:inspect).join(', ')
-        msg    = "#{value.inspect} is not a valid #{enum} value, valid " \
-                 "value are: #{val_str}"
+        msg     = "#{value.inspect} is not a valid #{enum} value, valid " \
+                  "value are: #{val_str}"
 
         new(msg)
       end
 
       def self.invalid_key(enum, key)
         key_str = enum.keys.map(&:inspect).join(', ')
-        msg    = "#{key.inspect} is not a valid #{enum} key, valid keys " \
-                 "are: #{key_str}"
+        msg     = "#{key.inspect} is not a valid #{enum} key, valid keys " \
+                  "are: #{key_str}"
 
         new(msg)
       end
